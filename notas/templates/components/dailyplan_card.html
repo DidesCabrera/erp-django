@@ -1,0 +1,36 @@
+<div class="card">
+
+    <!-- HEADER -->
+    <div class="card-header">
+      <div class="card-header-left">
+        <h3>{{ obj.dailyplan.name }}</h3>
+        <h2>{{ obj.dailyplan.total_kcal|floatformat:0 }} kcal</h2>
+      </div>
+  
+      <div class="card-header-right">
+        <p>{{ obj.dailyplan.created_by }}</p>
+        <p class="card-subtitle">
+          {{ obj.dailyplan.created_at|date:"Y-m-d" }}
+        </p>
+      </div>
+    </div>
+  
+    <!-- BODY -->
+    <div class="card-body">
+  
+      <!-- KPI -->
+      {% include "components/kpi_table.html" with entity=obj.dailyplan %}
+
+  
+      <!-- MEALS TABLE (análoga a foods_table) -->
+      {% include "components/meals_table.html" with meals=obj.children %}
+  
+    </div>
+  
+    <!-- ACTIONS -->
+    <div class="card-actions">
+      {% include "components/card_actions.html" with obj=obj %}
+    </div>
+  
+  </div>
+  

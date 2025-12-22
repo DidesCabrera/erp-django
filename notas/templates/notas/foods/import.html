@@ -1,0 +1,23 @@
+{% extends "notas/base.html" %}
+
+{% block title %}Import foods{% endblock %}
+
+{% block content %}
+<h2>Import foods from Excel</h2>
+
+<p>
+Upload an Excel file (.xlsx) with columns:
+<strong>name, protein, carbs, fat (100g)</strong>
+</p>
+<p>
+    <a href="{% url 'download_food_template' %}">
+      ⬇ Download Excel template
+    </a>
+</p>  
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="file" accept=".xlsx" required>
+  <br><br>
+  <button type="submit">Import foods</button>
+</form>
+{% endblock %}

@@ -1,0 +1,13 @@
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 30px 48px;
+    border-radius: 8px;
+    border: 1px solid rgb(235, 235, 235);
+  }
+  
+
+  .header-body {
+    margin-bottom: 30px;
+  }

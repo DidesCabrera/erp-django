@@ -1,0 +1,34 @@
+/* Celda base */
+.alloc-cell {
+    position: relative;
+    padding: 6px 8px;
+    overflow: hidden;
+    background-color: #f3f3f100;   /* fondo base */
+    font-variant-numeric: tabular-nums;
+  }
+  
+  /* Barra de fondo */
+  .alloc-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: calc(var(--alloc) * 1%);
+    background-color: #ffa01a;  /* color fijo */
+    z-index: 0;
+    transition: width 0.25s ease;
+  }
+  
+  /* Texto por encima */
+  .alloc-text {
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  
+/* components/alloc-bar.css */
+.alloc-bar--protein { background: var(--accent-protein); }
+.alloc-bar--carbs   { background: var(--accent-carbs); }
+.alloc-bar--fat     { background: var(--accent-fat); }

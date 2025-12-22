@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Notas{% endblock %}</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'notas/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/utilities.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/card.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/table.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/columns.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/alloc-bar.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/breadcrumbs.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/pages/dailyplan.css' %}">
+
+      
+</head>
+<body>
+    <div class="container">
+    
+
+        <header>
+                            
+        {% if request.user.profile.role == "member" %}
+            <h2>Member {{ request.user.username }}</h2>
+        {% endif %}
+
+        {% if request.user.profile.role == "nutritionist" %}
+            <h2>Nutri {{ request.user.username }}</h2>
+        {% endif %}
+        
+            <nav>
+                <a href="{% url 'food_list' %}">Foods</a> |
+                <a href="{% url 'meal_list' %}">Meals</a> |
+                <a href="{% url 'dailyplan_list' %}">Daily Plans</a> |
+                <a href="{% url 'program_list' %}">My Programs</a> |
+                <a href="{% url 'program_create' %}">Create Program</a> |
+                <a href="{% url 'import_foods' %}">Import foods from Excel</a>
+
+            </nav>
+<br>
+
+
+            {% include "components/breadcrumbs.html" %}
+        </header>
+        <hr>
+
+        {% if messages %}
+            <div>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+        
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+</body>
+</html>

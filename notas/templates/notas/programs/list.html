@@ -1,0 +1,55 @@
+{% extends "notas/base.html" %}
+
+{% block title %}Programs{% endblock %}
+
+{% block content %}
+<h2>My Programs</h2>
+<p>
+    <a href="{% url 'program_create' %}">+ Create Program</a>
+</p>
+<ul>
+<table>
+  <thead>
+    <tr>
+      <th align="left">Program</th>
+      <th align="right">Duration</th>
+      <th align="right">Kcal</th>
+      <th align="right">Protein (g)</th>
+      <th align="right">Carbs (g)</th>
+      <th align="right">Fat (g)</th>
+      <th align="right">Alloc %</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for program in programs %}
+      {% with program.alloc as alloc %}
+      <tr>
+        <td>
+          <a href="{% url 'program_detail' program.id %}">
+            {{ program.name }}
+          </a>
+        </td>
+        <td align="right">
+          {{ program.duration_days }} days
+        </td>
+        <td align="right">{{ program.total_kcal|floatformat:0 }}</td>
+        <td align="right">{{ program.total_protein_g|floatformat:1 }}</td>
+        <td align="right">{{ program.total_carbs_g|floatformat:1 }}</td>
+        <td align="right">{{ program.total_fat_g|floatformat:1 }}</td>
+        <td align="right">
+          {{ alloc.protein|floatformat:0 }} /
+          {{ alloc.carbs|floatformat:0 }} /
+          {{ alloc.fat|floatformat:0 }}
+        </td>
+      </tr>
+      {% endwith %}
+    {% empty %}
+      <tr>
+        <td colspan="7">No programs yet.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+

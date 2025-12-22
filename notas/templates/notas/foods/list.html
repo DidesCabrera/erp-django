@@ -1,0 +1,78 @@
+{% extends "notas/base.html" %}
+
+{% block title %}Foods{% endblock %}
+
+{% block content %}
+<h2>Foods</h2>
+
+<p>
+    <a href="{% url 'import_foods' %}">Import foods</a>
+</p>
+
+<table class="foods-table">
+    <!-- Control de anchos -->
+    <colgroup>
+        <col class="col-name">
+        <col span="7" class="col-macro">
+    </colgroup>
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th align="right">Calories</th>
+            <th align="right">Protein (g)</th>
+            <th align="right">Carbs (g)</th>
+            <th align="right">Fat (g)</th>
+            <th align="right">P %</th>
+            <th align="right">C %</th>
+            <th align="right">F %</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for food in foods %}
+        {% with food.alloc as alloc %}
+        <tr>
+            <td class="col-name">
+                {{ food.name }}
+            </td>
+
+            <td align="right">{{ food.total_kcal|floatformat:0 }}</td>
+            <td align="right">{{ food.protein|floatformat:1 }}</td>
+            <td align="right">{{ food.carbs|floatformat:1 }}</td>
+            <td align="right">{{ food.fat|floatformat:1 }}</td>
+
+            <!-- Protein alloc -->
+            <td class="alloc-cell">
+                <div class="alloc-bar" style="width: {{ alloc.protein }}%;"></div>
+                <span class="alloc-text">
+                    {{ alloc.protein|floatformat:1 }}%
+                </span>
+            </td>
+
+            <!-- Carbs alloc -->
+            <td class="alloc-cell">
+                <div class="alloc-bar" style="width: {{ alloc.carbs }}%;"></div>
+                <span class="alloc-text">
+                    {{ alloc.carbs|floatformat:1 }}%
+                </span>
+            </td>
+
+            <!-- Fat alloc -->
+            <td class="alloc-cell">
+                <div class="alloc-bar" style="width: {{ alloc.fat }}%;"></div>
+                <span class="alloc-text">
+                    {{ alloc.fat|floatformat:1 }}%
+                </span>
+            </td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr>
+            <td colspan="8">No foods yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

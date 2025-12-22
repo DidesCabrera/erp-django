@@ -1,0 +1,24 @@
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="card-header">
+    {% include "components/card_header_meta.html" with obj=obj %}
+  </div>
+
+  <!-- BODY -->
+  <div class="card-body">
+
+    <!-- KPI TABLE -->
+    {% include "components/kpi_table.html" with entity=obj.meal %}
+
+    <!-- FOODS TABLE -->
+    {% include "components/foods_table.html" with foods=obj.meal.mealfood_set.all %}
+
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="card-actions">
+    {% include "components/card_actions.html" with obj=obj %}
+  </div>
+
+</div>

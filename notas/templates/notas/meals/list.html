@@ -1,0 +1,18 @@
+{% extends "notas/base.html" %}
+
+{% block title %}Meals{% endblock %}
+
+{% block content %}
+
+<div class="header-body">
+    <h2>My Meals</h2>
+    <p><a href="{% url 'meal_create' %}">+ Create Meal</a></p>
+</div>
+
+{% for item in items %}
+  {% include "components/meal_card.html" with obj=item %}
+  {% empty %}
+    <p>No meals yet.</p>
+{% endfor %}
+
+{% endblock %}

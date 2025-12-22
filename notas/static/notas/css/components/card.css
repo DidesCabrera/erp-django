@@ -1,0 +1,83 @@
+.card {
+  background: #fff;
+  border: 1px solid #e3e3e0;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
+.card-header {
+  font-size: 12px;
+  overflow: hidden; /* limpia floats */
+  padding: 0px 0px;
+}
+
+.card-header h3 {
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 0px;
+}
+
+.card-header-left {
+  float: left;
+}
+
+.card-header-right {
+  float: right;
+  text-align: right;
+}
+
+/* =========================
+   SUBTITLE
+   ========================= */
+
+.card-subtitle {
+  font-size: 13px;
+  color: #777;
+  margin-top: 4px;
+}
+
+/* =========================
+   BODY
+   ========================= */
+
+.card-body {
+  margin-top: 16px;
+  padding: 0px;
+}
+
+/* =========================
+   ACTIONS
+   ========================= */
+
+.card-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* =========================
+   ACTION LINKS / BUTTONS
+   ========================= */
+
+.card-actions a,
+.card-actions button {
+  font-size: 13px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #555;
+}
+
+.card-actions a:hover,
+.card-actions button:hover {
+  text-decoration: underline;
+}

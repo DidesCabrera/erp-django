@@ -1,0 +1,11 @@
+{# components/card_actions.html #}
+
+<div class="card-actions">
+        {% if obj.actions %}
+          <div class="meal-actions">
+            {% for action in obj.actions %}
+              <a href="{{ action.url }}">{{ action.label }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+</div>

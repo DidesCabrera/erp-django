@@ -1,0 +1,142 @@
+{% extends "notas/base.html" %}
+
+{% block title %}
+Program – {{ program.name }}
+{% endblock %}
+
+{% block content %}
+<h2>{{ program.name }}</h2>
+
+{% if program.is_draft %}
+  <p><em>Programa tu planificacion nutricional asignando tus minutas diarias a las fechas correspondientes</em></p>
+{% endif %}
+
+{% if program.is_draft %}
+<h3>Add daily plan</h3>
+
+<form method="post" action="{% url 'add_dailyplan_to_program' program.id %}">
+  {% csrf_token %}
+
+  <select name="dailyplan_id">
+    {% for dailyplan in dailyplans %}
+      <option value="{{ dailyplan.id }}">{{ dailyplan.name }}</option>
+    {% endfor %}
+  </select>
+
+  <input type="date" name="date">
+
+  <button type="submit">Add</button>
+</form>
+{% endif %}
+
+<h3>Días del programa</h3>
+<ul>
+    {% for day in program.program_days.all %}
+        <li>
+            {{ day.date }} – {{ day.daily_plan.name }}
+        </li>
+    {% empty %}
+        <li>No hay días asignados.</li>
+    {% endfor %}
+</ul>
+
+
+
+<hr>
+<h3>Program nutrition summary</h3>
+
+{% with program.alloc as alloc %}
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th align="right">Protein</th>
+      <th align="right">Carbs</th>
+      <th align="right">Fat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Grams</strong></td>
+      <td align="right">{{ program.total_protein_g|floatformat:1 }}</td>
+      <td align="right">{{ program.total_carbs_g|floatformat:1 }}</td>
+      <td align="right">{{ program.total_fat_g|floatformat:1 }}</td>
+    </tr>
+    <tr>
+      <td><strong>Kcal</strong></td>
+      <td align="right">{{ program.kcal_protein|floatformat:1 }}</td>
+      <td align="right">{{ program.kcal_carbs|floatformat:1 }}</td>
+      <td align="right">{{ program.kcal_fat|floatformat:1 }}</td>
+    </tr>
+    <tr>
+      <td><strong>Alloc %</strong></td>
+      <td align="right">{{ alloc.protein|floatformat:1 }}%</td>
+      <td align="right">{{ alloc.carbs|floatformat:1 }}%</td>
+      <td align="right">{{ alloc.fat|floatformat:1 }}%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Total program energy:</strong> {{ program.total_kcal|floatformat:0 }} kcal</p>
+{% endwith %}
+
+
+
+
+
+<!-- ========================= -->
+<!-- DETAILS (METADATA) -->
+<!-- ========================= -->
+
+{% if not program.is_draft %}
+<hr>
+<p>
+    Creado por: <strong>{{ program.created_by.username }}</strong>
+</p>
+
+<p>
+    Duración: {{ program.start_date }} → {{ program.end_date }}
+</p>
+{% endif %}
+
+{% if not program.is_draft %}
+    <a href="{% url 'configure_program' program.id %}">Settings</a>
+{% endif %}
+
+<!-- ========================= -->
+<!-- ACTIONS -->
+<!-- ========================= -->
+
+{% if program.is_draft %}
+<hr>
+  <a href="{% url 'configure_program' program.id %}">Next: configura este Programa >></a>
+{% endif %}
+
+
+
+<!-- ========================= -->
+<!-- BTN FORK/COPY -->
+<!-- ========================= -->
+
+{% if not program.is_draft %}
+    <hr>
+    <form method="post" action="{% url 'fork_program' program.id %}">
+        {% csrf_token %}
+        <button type="submit">Fork Progra</button>
+    </form>
+
+    <form method="post" action="{% url 'copy_program' program.id %}">
+        {% csrf_token %}
+        <button type="submit">Copy Program</button>
+    </form>
+    <br>
+    <br>
+    <p>
+        <strong>Fork:</strong> create a variant linked to the original author.<br>
+        <strong>Copy:</strong> create an independent copy.
+    </p>
+{% endif %}
+
+
+
+{% endblock %}

@@ -1,0 +1,35 @@
+/* --- Reset suave --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Inter, Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+    background-color: #f7f7f5;
+    color: #37352f;
+  }
+  
+  /* --- Tipografía --- */
+  h1, h2, h3 {
+    font-weight: 600;
+    margin-top: 0;
+  }
+  
+  h1 { font-size: 28px; }
+  h2 { font-size: 24px; margin-bottom: 8px; }
+  h3 { font-size: 18px; margin-top: 32px; }
+  
+  p {
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  /* --- Links --- */
+  a {
+    color: #37352f;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  

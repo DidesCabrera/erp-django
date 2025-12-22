@@ -1,0 +1,79 @@
+{% extends "notas/base.html" %}
+
+{% block title %}
+Configure Program – {{ program.name }}
+{% endblock %}
+
+{% block content %}
+
+<h2>Configure program</h2>
+<br>
+
+<form method="post">
+  {% csrf_token %}
+
+  <!-- ========================= -->
+  <!-- PUBLIC -->
+  <!-- ========================= -->
+  <p>
+    <label>
+      <input type="checkbox" name="is_public"
+        {% if not can_publish %}disabled{% endif %}
+        {% if program.is_public %}checked{% endif %}
+      >
+      Make this program public
+    </label>
+
+    {% if not can_publish %}
+      <br>
+      <small>🔒 Public programs are available for nutritionists only</small>
+    {% endif %}
+  </p>
+
+  <hr>
+
+  <!-- ========================= -->
+  <!-- FORKABLE -->
+  <!-- ========================= -->
+  <p>
+    <label>
+      <input type="checkbox" name="is_forkable"
+        {% if program.is_forkable %}checked{% endif %}
+      >
+      Allow forks
+    </label>
+  </p>
+
+  <hr>
+
+  <!-- ========================= -->
+  <!-- COPIABLE -->
+  <!-- ========================= -->
+  <p>
+    <label>
+      <input type="checkbox" name="is_copiable"
+        {% if not can_copy %}disabled{% endif %}
+        {% if program.is_copiable %}checked{% endif %}
+      >
+      Allow copies
+    </label>
+
+    {% if not can_copy %}
+      <br>
+      <small>🔒 Copiable programs are available on higher plans</small>
+    {% endif %}
+  </p>
+
+  <hr>
+
+  <button type="submit">
+    {% if program.is_draft %}
+      Finalize program
+    {% else %}
+      Save settings
+    {% endif %}
+  </button>
+
+</form>
+
+{% endblock %}

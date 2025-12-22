@@ -1,0 +1,55 @@
+<div class="mf-table">
+    <table class="foods-table">
+  
+        <colgroup>
+            <col class="col-lg">  <!-- time -->
+            <col class="col-md">  <!-- name -->
+            <col class="col-md">  <!-- kcal -->
+            <col class="col-md">  <!-- protein -->
+            <col class="col-md">  <!-- carbs -->
+            <col class="col-md">  <!-- fat -->
+            <col class="col-md">  <!-- protein -->
+            <col class="col-md">  <!-- carbs -->
+            <col class="col-md">
+        </colgroup>
+          
+  
+      <thead>
+        <tr>
+          <th>Foods</th>
+          <th>Cantidad (gr|ml)</th>
+          <th>Calories</th>
+          <th>Protein (g)</th>
+          <th>Carbs (g)</th>
+          <th>Fat (g)</th>
+          <th>P %</th>
+          <th>C %</th>
+          <th>F %</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        {% for mf in foods %}
+          {% with mf.alloc as alloc %}
+          <tr>
+            <td class="col-name">{{ mf.food.name }}</td>
+            <td>{{ mf.quantity|floatformat:0 }}</td>
+            <td>{{ mf.total_kcal|floatformat:0 }}</td>
+            <td>{{ mf.protein|floatformat:1 }}</td>
+            <td>{{ mf.carbs|floatformat:1 }}</td>
+            <td>{{ mf.fat|floatformat:1 }}</td>
+            {% include "components/alloc_cell.html" with value=alloc.protein bar_class="alloc-bar--protein" %}
+            {% include "components/alloc_cell.html" with value=alloc.carbs   bar_class="alloc-bar--carbs" %}
+            {% include "components/alloc_cell.html" with value=alloc.fat     bar_class="alloc-bar--fat" %}
+          </tr>
+          {% endwith %}
+        {% empty %}
+          <tr>
+            <td colspan="9">No foods yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  
+    </table>
+  </div>
+  

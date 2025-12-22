@@ -1,0 +1,3 @@
+MEAL_CONTEXT_LIST = "meal_list"
+MEAL_CONTEXT_DAILYPLAN = "dailyplan"
+MEAL_CONTEXT_PROGRAM = "program"
