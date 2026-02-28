@@ -417,9 +417,15 @@ def meal_builder(request, pk):
     )
 
     if meal.pending_dailyplan:
-        continue_url = f"/dailyplans/{meal.pending_dailyplan.id}/attach-meal/{meal.id}/"
+        continue_url = reverse(
+            "dailyplan_attach_meal",
+            args=[meal.pending_dailyplan.id, meal.id],
+        )
     else:
-        continue_url = f"/meals/{meal.id}/configure/"
+        continue_url = reverse(
+            "meal_configure",
+            args=[meal.id],
+        )
 
 
     context = vm.as_context()
