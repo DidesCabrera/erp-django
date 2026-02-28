@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'notas.apps.NotasConfig',
     'accounts',
+    'core',
 ]
 
 MIDDLEWARE = [
