@@ -37,7 +37,7 @@
 </head>
 
 <body>
-<div class="container">
+<div class="app">
 
     <!-- ======== HEADER ===================================== -->
     <header>
@@ -186,9 +186,11 @@
 
 
     <!-- ======== CONTENT ========================== -->
-    <main>
+    <div class="app-body">
+        <main class="app-content">
         {% block content %}{% endblock %}
-    </main>
+        </main>
+    </div>
 
 </div>
 </body>

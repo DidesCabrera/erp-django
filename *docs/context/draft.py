@@ -1,156 +1,195 @@
-<div class="card-title-comp">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Notas{% endblock %}</title>
 
-  <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
-    {{ titulo.label }}
-  </div>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'notas/css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/utilities.css' %}">
 
-  <div class="label-fork">#variante</div>
+    
+    <link rel="stylesheet" href="{% static 'notas/css/components/page.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/page_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/modal_create.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/toast.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/main_header.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/header_list.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/header_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/card_mini_dpm.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/card_child.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/card_father.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/card_title.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/dash_kpi.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/table.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/card_foods_aggregation.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/alloc-bar.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/alloc-cell.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'notas/css/components/actions.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/breadcrumbs.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'notas/css/components/food_picker.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/picker_list.css' %}">
 
-  <h3>{{ titulo.name }}</h3>
+</head>
 
-  <div class="label-class">
-    {% for class in titulo.classes %}
-      <span class="class-tag">{{ class }}</span>
-    {% endfor %}
-  </div>
+<body>
+<div class="container">
 
-  <div class="structural-indicators">
-    <p>
-      {% if titulo.structural_indicators.meals_count %}
-        {{ titulo.structural_indicators.meals_count }} Comidas | 
-      {% endif %}
-      {{ titulo.structural_indicators.foods_count }} Alimentos
-    </p>
-  </div>
+    <!-- ======== HEADER ===================================== -->
+    <header>
+        <div class="header">
+            <div class="main-header">
 
-  <p class="btn-desplegar-tabla">Ver tabla</p>
+                <!-- ===== FIRST ROW ===== -->
+                <div class="header-first-row">
+                    <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
+
+                    <div class="user">
+                        <div>
+                            <p>
+                                Mi peso corporal:
+                                <button class="btn-weight" onclick="openWeightModal()">
+                                    {{ current_weight }}
+                                </button> kg
+                            </p>
+                        </div>
+
+                        {% if request.user.is_authenticated %}
+                        <div class="label-rol">
+                            {% if request.user.profile.role == "member" %}Member{% endif %}
+                            {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
+                        </div>
+
+                        <h2>
+                            <a href="{% url 'profile_detail' %}">
+                                {{ request.user.username }}
+                            </a>
+                        </h2>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- ===== SECOND ROW ===== -->
+                <div class="header-second-row">
+
+                    <div class="mn-navbar">
+                        <nav>
+
+                            <a href="{% url 'project_view' %}"
+                                class="nav-tab nav-tab--project {% if header.nav_context == 'project' %}is-active{% endif %}">
+                                <span class="nav-text">Proyecto</span>
+                                <div class="nav-indicator"></div>
+                            </a>
+
+                            <a href="{% url 'elemental_context' %}"
+                                class="nav-tab nav-tab--elemental {% if ui.header.nav_context == 'nutrition' %}is-active{% endif %}">
+                                <span class="nav-text">Elementales Nutricion</span>
+                                <div class="nav-indicator"></div>
+                            </a>
+
+                        </nav>
+                    </div>
+                
+                    <div class="my-navbar">
+                        <nav>
+
+                            <a href="{% url 'dailyplan_list' %}"
+                                class="nav-tab nav-tab--dailyplan {% if ui.header.nav_context == 'dailyplan' %}is-active{% endif %}">
+                                <span class="nav-text">Planes Diarios</span>
+                                <div class="nav-indicator"></div>
+                            </a>
+                            
+                            <a href="{% url 'meal_list' %}"
+                                class="nav-tab nav-tab--meal {% if ui.header.nav_context == 'meal' %}is-active{% endif %}">
+                                <span class="nav-text">Comidas</span>
+                                <div class="nav-indicator"></div>
+                            </a>
+                            
+                            <a href="{% url 'food_list' %}"
+                                class="nav-tab nav-tab--food {% if vm.header.nav_context == 'food' %}is-active{% endif %}">
+                                <span class="nav-text">Alimentos</span>
+                                <div class="nav-indicator"></div>
+                            </a>
+
+                            <a href="{% url 'inbox_list' %}"
+                                class="nav-tab nav-tab--inbox {% if vm.header.nav_context == 'inbox' %}is-active{% endif %}">
+                                <span class="nav-text">Notificaciones</span>
+                                <div class="nav-indicator"></div>
+                            </a>
+                        
+                         
+                        </nav>
+                    </div>
+                
+                </div>
+                
+
+            </div>
+        </div>
+    </header>
+
+
+    <!-- ========= MODAL PESO ====================== -->
+    <div id="weightModal" class="modal hidden">
+        <div class="modal-content">
+
+            <h3>Registrar un nuevo peso corporal</h3>
+
+            <form method="post" action="{% url 'weight_register' %}">
+                {% csrf_token %}
+
+                <label>Peso (kg)</label>
+                <input id="weightInput" type="number" step="0.1" name="weight" required>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Confirmar</button>
+                    <button type="button" onclick="closeWeightModal()">Cancelar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        function openWeightModal(){
+            const modal = document.getElementById('weightModal');
+            modal.classList.remove('hidden');
+
+            // focus automático
+            const input = document.getElementById('weightInput');
+            if (input) input.focus();
+        }
+
+        function closeWeightModal(){
+            document.getElementById('weightModal').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- ========= MENSAJES DJANGO ================= -->
+    {% if messages %}
+    <div class="toast-container">
+        {% for message in messages %}
+            <div class="toast">
+                <span>{{ message }}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+
+
+    <!-- ======== CONTENT ========================== -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 
 </div>
-
-
-
------
-
-/* =========================
---------- TITLE -----------
-========================= */
-
-.card-title {
-    font-size: 12px;
-    width: 250px;
-    padding: 4px 8px 4px 4px;
-    margin-right: 5px;
-}
-
-/* Variacion para detail*/
-.card-title.main {
-  padding: 0px;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-  /* Contenedor relativo para posicionar label-fork */
-.card-title-comp {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Esto hace que los hijos se ajusten a su contenido, no al ancho completo. */
-    height: 100%; /* importante si quieres que tenga fondo completo */
-}
-
-.card-title-comp h3 {
-  margin: 0;
-  margin-bottom: 0px;
-  font-size: 18px;
-  font-weight: 600;
-  padding: 0px;
-}
-
-.card-title-comp.mini h3 {
-  color: white;
-}
-
-  /*--- LABEL ------ */
-.label-entity{
-  padding: 1px 6px;
-  margin-bottom: 5px;
-  border-radius: 3px;
-  color: white;
-  font-weight: 500;
-  display: inline-block;
-}
-
-.label-entity.page-modal{
-  margin-bottom: 10px;
-}
-
-.label-entity--meal {background-color: var(--color-meal);}
-.label-entity--dailyplan {background-color: var(--color-dailyplan);}
-.label-entity--program {background-color: var(--color-program);}
-
-
-/* label-fork arriba derecha */
-.label-fork {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0px 4px; 
-  font-size: 11px;
-  font-weight: 300;
-  opacity: 0.7;
-}
-
-.label-fork.mini {
-  color:rgba(255, 255, 255, 0.9);
-}
-
-
-/* Classes horizontales */
-.label-class {
-  display: flex;
-  gap: 6px;              /* espacio entre etiquetas */
-  margin-bottom: 8px;
-}
-
-/* Tag individual (opcional pero limpio) */
-.class-tag {
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  background: rgba(0,0,0,0.06);
-}
-
-/* Botón azul pegado a la derecha */
-.btn-desplegar-tabla {
-  /*margin-top: auto;    🔥 lo empuja hacia abajo */
-  
-  width: fit-content;
-  color: #1e6bff;
-  height: 12px;
-  font-size: 12px;
-  font-weight: 400;
-  cursor: pointer;
-}
-
-
-.block-title-card-edit {
-  display: flex;
-  align-items: center;        /* ← centra verticalmente */
-  justify-content: space-between; /* ← separa izquierda / derecha */
-  /* width: 100%; */
-}
-
-.block-title-card-edit button{
-  height: 33px;
-  margin-left: 20px;
-}
-
-.structural-indicators{
-  background-color: rgb(88, 88, 88);
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 1px 6px;
-  border-radius: 4px;
-
-}
+</body>
+</html>
