@@ -1,0 +1,18 @@
+{# components/header.html #}
+
+<div class="page-header">
+
+    <div class="page-header-left">
+        <!-- Breadcrumb / navegación -->
+        {% include "components/header_breadcrumbs.html" with navigation=header.navigation %}
+    </div>
+    
+    <div class="page-header-right">
+        <!-- acciones -->
+        {% if header.actions %}
+        {% include "components/header_actions.html" with actions=header.actions %}
+        {% endif %}
+    </div>
+
+</div>
+

@@ -1,0 +1,27 @@
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="auth-card">
+    <div class="brand-auth">
+        <img src="{% static 'img/logo_gris.png' %}" alt="Logo" class="brand-logo">
+        <p class="brand-quote">“Lo que se mide, se controla”</p>
+    </div>
+
+    <h1>{% block auth_title %}{% endblock %}</h1>
+
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        {% block auth_form %}{% endblock %}
+        <button type="submit">
+            {% block auth_button %}{% endblock %}
+        </button>
+    </form>
+
+    <p class="auth-footer">
+        {% block auth_footer %}{% endblock %}
+    </p>
+</div>
+
+{% endblock %}

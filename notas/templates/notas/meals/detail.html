@@ -1,128 +1,21 @@
 {% extends "notas/base.html" %}
-
 {% block title %}
 Meal – {{ meal.name }}
 {% endblock %}
-
 {% block content %}
 
-<h2>{{ meal.name }}</h2>
+<!-- ======== PAGE HEADER ===================================== -->           
+<div class="page-nav-action">
+  {% include "components/header.html" with header=ui.header %}
+</div>
 
-{% if meal.is_draft %}
-  <p><em>This meal is a draft. Add foods to continue.</em></p>
-{% endif %}
+<!-- ======== PAGE BODY ===================================== -->           
+<div class="page page--detail" data-page="meal-detail">
 
-<hr>
-
-<!-- ========================= -->
-<!-- NUTRITION SUMMARY -->
-<!-- ========================= -->
-
-{% if meal.mealfood_set.exists %}
-<h3>Nutrition summary</h3>
-
-<p>
-  <strong>Total energy:</strong>
-  {{ meal.total_kcal|floatformat:0 }} kcal
-</p>
-
-{% include "components/kpi_table.html" with obj=meal %}
-
-<hr>
-{% endif %}
-
-<!-- ========================= -->
-<!-- FOODS IN MEAL -->
-<!-- ========================= -->
-
-<h3>Foods in this meal</h3>
-
-{% if meal.mealfood_set.exists %}
-  {% include "components/foods_table.html" with foods=meal.mealfood_set.all %}
-{% else %}
-  <p>No foods added yet.</p>
-{% endif %}
-
-<hr>
-
-<!-- ========================= -->
-<!-- ADD FOOD (DRAFT ONLY) -->
-<!-- ========================= -->
-
-{% if meal.is_draft %}
-<h3>Add food</h3>
-
-<form method="post" action="{% url 'add_food_to_meal' meal.id %}">
-  {% csrf_token %}
-
-  <select name="food_id">
-    {% for food in foods %}
-      <option value="{{ food.id }}">{{ food.name }}</option>
-    {% endfor %}
-  </select>
-
-  <input type="number" name="quantity" placeholder="grams" min="1">
-
-  <button type="submit">Add</button>
-</form>
-
-<hr>
-{% endif %}
-
-<!-- ========================= -->
-<!-- METADATA -->
-<!-- ========================= -->
-
-{% if not meal.is_draft %}
-<ul>
-  <li><strong>Created by:</strong> {{ meal.created_by.username }}</li>
-  <li><strong>Created at:</strong> {{ meal.created_at|date:"Y-m-d H:i" }}</li>
-  <li>
-    <strong>Visibility:</strong>
-    {% if meal.is_public %}Public{% else %}Private{% endif %}
-  </li>
-  <li><strong>Forkable:</strong> {{ meal.is_forkable|yesno:"Yes,No" }}</li>
-  <li><strong>Copiable:</strong> {{ meal.is_copiable|yesno:"Yes,No" }}</li>
-
-  {% if meal.forked_from %}
-    <li>
-      <strong>Forked from:</strong>
-      {{ meal.forked_from.name }}
-      (by {{ meal.forked_from.created_by.username }})
-    </li>
-  {% endif %}
-</ul>
-
-<a href="{% url 'configure_meal' meal.id %}">
-  Meal settings
-</a>
-{% endif %}
-
-<!-- ========================= -->
-<!-- ACTIONS -->
-<!-- ========================= -->
-
-{% if meal.is_draft %}
-  <a href="{% url 'configure_meal' meal.id %}">
-    Next: configure this meal →
-  </a>
-{% else %}
-<hr>
-
-<form method="post" action="{% url 'fork_meal' meal.id %}">
-  {% csrf_token %}
-  <button type="submit">Fork</button>
-</form>
-
-<form method="post" action="{% url 'copy_meal' meal.id %}">
-  {% csrf_token %}
-  <button type="submit">Copy</button>
-</form>
-
-<p>
-  <strong>Fork:</strong> create a variant linked to the original author.<br>
-  <strong>Copy:</strong> create an independent copy.
-</p>
-{% endif %}
+  <!-- MAIN-CARD ======================================-->
+  {% include "components/card_main_meal.html" with main_card=ui.main_card %}
+    
+  
+</div>
 
 {% endblock %}

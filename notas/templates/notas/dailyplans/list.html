@@ -1,18 +1,38 @@
 {% extends "notas/base.html" %}
-
 {% block title %}Daily Plans{% endblock %}
-
 {% block content %}
-<h2>My Daily Plans</h2>
 
-<p>
-  <a href="{% url 'dailyplan_create' %}">+ Create Daily Plan</a>
-</p>
+<div class="page">
 
-{% for item in items %}
-  {% include "components/dailyplan_card.html" with obj=item %}
-{% empty %}
-  <p>No daily plans yet.</p>
-{% endfor %}
+  <!-- HEADER PAGE =============================================-->
+  
+  {% include "components/list_header_dailyplan.html" with header=ui.header %}
+
+  <!-- LIST =============================================-->
+
+    <div class="sub-page">
+      {% for child in ui.child_cards %}
+        {% include "components/card_child_dailyplan.html" with child_card=child %}
+      {% empty %}
+      <div>
+        <p>No tienes planes diarios aun, puedes explorar Planes de otros usuarios, o crear un nuevo Plan Diario </p>
+      </div>
+      {% endfor %}
+    </div>
+
+
+  <!-- FIN ============================================== -->
+
+</div>
+
+
+<!-- STATIC ============================================== -->
+{% load static %}
+
+<script src="{% static 'notas/js/collapse_cards.js' %}"></script>
+
+
 
 {% endblock %}
+
+

@@ -1,0 +1,43 @@
+
+
+
+<div class="back-header-page">
+
+    <div class="list-header">
+  
+      <div class="block-left-list-header">
+  
+        <div class="title-list-header">
+          <h2>{{ header.title }}</h2>
+        </div>
+  
+        <div class="navbar-list-header">
+          <nav>
+        
+            <a href="{% url 'elemental_context' %}"
+               class="nav-tab nav-tab--elemental-context tab-list {% if request.resolver_match.url_name == 'elemental_context' %}is-active{% endif %}">
+                <span class="nav-text">Contexto</span>
+                <div class="nav-indicator"></div>
+            </a>
+        
+            <a href="{% url 'elemental_nutrition' %}"
+               class="nav-tab nav-tab--elemental-nutrition tab-list {% if request.resolver_match.url_name == 'elemental_nutrition' %}is-active{% endif %}">
+                <span class="nav-text">Nutrición</span>
+                <div class="nav-indicator"></div>
+            </a>
+        
+            <a href="{% url 'elemental_platform' %}"
+               class="nav-tab nav-tab--elemental-platform tab-list {% if request.resolver_match.url_name == 'elemental_platform' %}is-active{% endif %}">
+                <span class="nav-text">Plataforma</span>
+                <div class="nav-indicator"></div>
+            </a>
+          </nav>
+        </div>
+        
+  
+      </div>
+
+      
+    </div>
+  
+  </div>

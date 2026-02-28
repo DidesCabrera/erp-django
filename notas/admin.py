@@ -10,6 +10,7 @@ from .models import (
     DailyPlanMeal,
     Program,
     ProgramDay,
+    WeightLog,
 )
 
 admin.site.register(Profile)
@@ -20,6 +21,9 @@ admin.site.register(MealFood)
 admin.site.register(DailyPlanMeal)
 admin.site.register(Program)
 admin.site.register(ProgramDay)
+admin.site.register(WeightLog)
+
+
 
 
 class DailyPlanMealInline(admin.TabularInline):

@@ -1,0 +1,23 @@
+<div class="card-title-comp">
+
+    <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+      {{ titulo.label }}
+    </div>
+
+    <div class="label-fork">#variante</div>
+
+    <div class="block-title-card-edit">
+        <h1>{{ titulo.name }}</h1>
+        <a href="{% url 'dailyplan_rename' main_id %}">
+            Edit title {{main_id}}
+        </a>
+    </div>
+
+    <div class="label-class">
+      {% for class in titulo.classes %}
+        <span class="class-tag">{{ class }}</span>
+      {% endfor %}
+    </div>
+  
+  </div>
+  

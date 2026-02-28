@@ -1,0 +1,36 @@
+{% extends "notas/base.html" %}
+{% block title %}Create Meal{% endblock %}
+{% block content %}
+
+<div class="page page--detail page-modal">
+
+  <div class="wrap-page-modal">
+
+    <div class="label-entity label-entity--meal }}">
+      Meal
+    </div>
+
+    <div class="label-fork">#variante</div>
+
+ 
+  <!-- INIT =============================================-->
+
+  <h2 class="title-create">Renombra tu Comida</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label>Nombre</label><br>
+            <input type="text" name="name" value="{{ meal.name }}" class="input-create">
+        </p>
+
+        <button type="submit"  class="btn-continue">Guardar</button>
+    </form>  
+
+  </div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,28 @@
+<h2>Replace meal</h2>
+
+<section class="replace-layout">
+
+  <!-- A: Original -->
+  <div>
+    <h3>Current meal</h3>
+    {% include "components/meal_summary.html" with meal=original_meal %}
+  </div>
+
+  <!-- B: Replacement -->
+  <div>
+    <h3>New meal</h3>
+    {% include "components/meal_editor.html" with meal=replacement_meal %}
+  </div>
+
+  <!-- C: Comparison -->
+  <div>
+    <h3>Comparison</h3>
+    {% include "components/meal_comparison.html" %}
+  </div>
+
+</section>
+
+<form method="post" action="{% url 'confirm_replace_meal' dailyplan_meal.id replacement_meal.id %}">
+  {% csrf_token %}
+  <button type="submit">Replace meal</button>
+</form>

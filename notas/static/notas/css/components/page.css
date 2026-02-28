@@ -1,0 +1,54 @@
+
+/* ============= PAGE ============= */
+
+.page {
+    max-width: 882px;
+    margin: 0 auto;
+    background: var(--color-bg);
+    padding: 0px;
+    border-radius: 8px;
+}
+
+.page--detail{
+    max-width: 800px;
+    margin-top: -36px;
+    padding: 20px 40px;
+    border: 1px solid var(--color-border-1);
+}
+
+.page--detail.edit{
+    margin-top: -22px;
+}
+
+
+.sub-page {
+    padding: 30px 40px;
+    border: 1px solid var(--color-border-1);
+    border-top: none;
+    border-radius: 0px 0px 8px 8px;
+}
+
+.page.project-page {
+    margin-top: -65px;
+}
+
+
+
+.page-metadata{
+    padding-top: 20px;
+    margin-bottom: 25px;
+}
+
+
+.page-metadata p{
+    font-size: 14px;
+}
+
+.page-kpi {
+    padding-bottom: 10px;
+}
+
+
+.configure-form p {
+    margin-bottom: 20px;
+}

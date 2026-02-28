@@ -1,0 +1,29 @@
+<div class="card-title-comp">
+
+  <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+    {{ titulo.label }}
+  </div>
+
+  <div class="label-fork"></div>
+
+  <h3>{{ titulo.name }}</h3>
+
+  <div class="label-class">
+    {% for class in titulo.classes %}
+      <span class="class-tag">{{ class }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="structural-indicators">
+    <p>
+      {% if titulo.structural_indicators.meals_count %}
+        {{ titulo.structural_indicators.meals_count }} Comidas | 
+      {% endif %}
+      {{ titulo.structural_indicators.foods_count }} Alimentos
+    </p>
+  </div>
+
+  <p class="btn-desplegar-tabla">Ver tabla</p>
+
+</div>
+  

@@ -1,79 +1,82 @@
 {% extends "notas/base.html" %}
-
 {% block title %}
 Configure Daily Plan – {{ dailyplan.name }}
 {% endblock %}
-
 {% block content %}
 
-<h2>Configure daily plan</h2>
-<br>
 
-<form method="post">
-  {% csrf_token %}
+<div class="page page--detail page-modal">
+  <div class="wrap-page-modal">
+    <div class="label-entity label-entity--dailyplan page-modal }}">
+      Dailyplan
+    </div>
 
-  <!-- ========================= -->
-  <!-- PUBLIC -->
-  <!-- ========================= -->
-  <p>
-    <label>
-      <input type="checkbox" name="is_public"
-        {% if not can_publish %}disabled{% endif %}
-        {% if dailyplan.is_public %}checked{% endif %}
-      >
-      Make this daily plan public
-    </label>
+    <h2>Configura tu Plan Diario</h2>
+    <br>
 
-    {% if not can_publish %}
-      <br>
-      <small>🔒 Public daily plans are available for nutritionists only</small>
-    {% endif %}
-  </p>
+    <form class="configure-form" method="post">
+      {% csrf_token %}
 
-  <hr>
+      <!-- PUBLIC ---------------------------------------->
+      <p>
+        <label>
+          <input
+            type="checkbox"
+            name="is_public"
+            {% if not caps.can_publish %}disabled{% endif %}
+            {% if dailyplan.is_public %}checked{% endif %}
+          >
+          Make this daily plan public
+        </label>
 
-  <!-- ========================= -->
-  <!-- FORKABLE -->
-  <!-- ========================= -->
-  <p>
-    <label>
-      <input type="checkbox" name="is_forkable"
-        {% if dailyplan.is_forkable %}checked{% endif %}
-      >
-      Allow forks
-    </label>
-  </p>
+        {% if not caps.can_publish %}
+          <br>
+          <small>🔒 Public daily plans are available for nutritionists only</small>
+        {% endif %}
+      </p>
 
-  <hr>
+      <!-- FORKABLE -------------------------------------->
+      <p>
+        <label>
+          <input
+            type="checkbox"
+            name="is_forkable"
+            {% if dailyplan.is_forkable %}checked{% endif %}
+          >
+          Allow forks
+        </label>
+      </p>
 
-  <!-- ========================= -->
-  <!-- COPIABLE -->
-  <!-- ========================= -->
-  <p>
-    <label>
-      <input type="checkbox" name="is_copiable"
-        {% if not can_copy %}disabled{% endif %}
-        {% if dailyplan.is_copiable %}checked{% endif %}
-      >
-      Allow copies
-    </label>
+      <!-- COPIABLE 
+      <p>
+        <label>
+          <input
+            type="checkbox"
+            name="is_copiable"
+            {% if not caps.can_copy %}disabled{% endif %}
+            {% if dailyplan.is_copiable %}checked{% endif %}
+          >
+          Allow copies
+        </label>
 
-    {% if not can_copy %}
-      <br>
-      <small>🔒 Copiable daily plans are available on higher plans</small>
-    {% endif %}
-  </p>
+        {% if not caps.can_copy %}
+          <br>
+          <small>🔒 Copiable daily plans are available on higher plans</small>
+        {% endif %}
+      </p>
+      -------------------------------------->
 
-  <hr>
 
-  <button type="submit">
-    {% if dailyplan.is_draft %}
-      Finalize daily plan
-    {% else %}
-      Save settings
-    {% endif %}
-  </button>
-
-</form>
-
+      <hr>
+        <!-- ACTION NAVEGATION ======================================-->
+        <div class="btn-block">
+          <!-- 👈 Volver al paso 1 (seguro) -->
+          <a>
+              <button  type="submit" class="btn-cancel-create">Volver</button>
+          </a>
+          <button type="submit" class="btn-continue">Finalizar</button>
+        </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

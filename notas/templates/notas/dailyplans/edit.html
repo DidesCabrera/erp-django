@@ -1,0 +1,25 @@
+{% extends "notas/base.html" %}
+{% block title %}
+Edit Dailyplan – {{ dailyplan.name }}
+{% endblock %}
+{% block content %}
+
+<div class="page-nav-action">
+  {% include "components/header.html" with header=ui.header %}
+</div>
+
+<div class="header-mini-edit">
+  <p>Editando...</p>
+</div>
+
+<div class="page page--detail edit" data-page="dailyplan-edit">
+
+  <!-- MAIN-CARD ======================================-->
+  {% include "components/card_main_dailyplan_edit.html" with main_card=ui.main_card %}
+
+
+</div> <!-- cierre div page -->
+
+{% endblock %}
+
+ 

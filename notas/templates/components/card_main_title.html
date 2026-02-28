@@ -1,0 +1,18 @@
+<div class="card-title-comp">
+
+    <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+      {{ titulo.label }}
+    </div>
+  
+    <div class="label-fork">#variante</div>
+  
+    <h1>{{ titulo.name }}</h1>
+  
+    <div class="label-class">
+      {% for class in titulo.classes %}
+        <span class="class-tag">{{ class }}</span>
+      {% endfor %}
+    </div>
+  
+  </div>
+  

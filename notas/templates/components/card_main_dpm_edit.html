@@ -1,0 +1,52 @@
+
+
+<div data-page="dpm-detail">
+ 
+    <div class="card-title main">
+        {% include "components/card_main_title_edit_meal.html" with titulo=main_card.titulo main_id=main_card.main_id %}
+    </div>  
+    
+    <!-- KPI ========================================= -->
+    {% if main_card.items %}
+        <div class="page-kpi">
+
+            <h3>Información Nutricional</h3>
+            
+            <div class="card-kpi main">
+                {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
+            </div>
+
+        </div>
+
+        <hr>
+
+    {% endif %}
+
+    <!-- ********** ADD MEALS ************** -->
+    {% include "components/picker_block_dpm_food.html" with main_id=main_card.main_id %}
+
+    <hr>
+
+    <!-- MEALS TABLE ========================================= -->
+    {% if main_card.items %}
+    <div class="page-detail">
+        <h3>Alimentos en esta Comida</h3>
+        <div class="card-table-meals">
+        {% include "components/table_dpm_foods_edit.html" with items=main_card.table.items %}
+        </div>
+    </div>
+    {% endif %}
+
+
+
+
+    <!-- METADATA ========================================= -->
+    <div class="card-bottom"> 
+        <div class="card-metadata">
+            {% include "components/metadata.html" with metadata=main_card.metadata %}
+        </div>
+    </div>
+
+
+</div>
+  

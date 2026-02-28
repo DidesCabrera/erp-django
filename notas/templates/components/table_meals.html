@@ -1,0 +1,45 @@
+<div class="table-items">
+
+  <table class="table-meals">
+
+    <!-- HEAD -->
+    <thead>
+      <tr>
+        <th class="time-col">Hora</th>
+        <th class="name-col">Comidas</th>
+        <th class="kcal-col">Kcal</th>
+        <th class="grams-col">P g</th>
+        <th class="grams-col">C g</th>
+        <th class="grams-col">F g</th>
+        <th class="alloc-col">P %kcal</th>
+        <th class="alloc-col">C %kcal</th>
+        <th class="alloc-col">F %kcal</th>
+      </tr>
+    </thead>
+
+    <!-- BODY -->
+    <tbody>
+      {% for row in items %}
+        <tr>
+          <td>{{ row.rel.hour|time:"H:i" }}</td>
+          <td class="col-name"><a href="{{ row.rel.url }}">{{ row.rel.name }}</a></td>
+          <td><div class="cell-kcal">{{ row.rel.total_kcal|floatformat:0 }}</div></td>
+          <td>{{ row.rel.g_protein|floatformat:1 }}</td>
+          <td>{{ row.rel.g_carbs|floatformat:1 }}</td>
+          <td>{{ row.rel.g_fat|floatformat:1 }}</td>
+          {% include "components/alloc_cell_protein.html" with value=row.rel.alloc_protein bar_class="alloc-bar--protein" %}
+          {% include "components/alloc_cell_carbs.html"   with value=row.rel.alloc_carbs   bar_class="alloc-bar--carbs" %}
+          {% include "components/alloc_cell_fat.html"     with value=row.rel.alloc_fat     bar_class="alloc-bar--fat" %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="10">No meals added yet.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+  <p class="note">*Alloc: kcal Meal / kcal Dailyplan</p>
+
+</div>

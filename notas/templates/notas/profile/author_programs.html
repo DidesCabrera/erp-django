@@ -1,0 +1,13 @@
+{% extends "notas/base.html" %}
+
+{% block content %}
+  <h1>{{ author.username }} · Nutrition Programs</h1>
+
+  {% if programs %}
+    {% for program in programs %}
+      {% include "notas/programs/program_card.html" with obj=program %}
+    {% endfor %}
+  {% else %}
+    <p>No public program yet.</p>
+  {% endif %}
+{% endblock %}

@@ -1,137 +1,45 @@
 {% extends "notas/base.html" %}
-
 {% block title %}
-Daily Plan – {{ dailyplan.name }}
+Daily Plan – {{ vm.dailyplan.name }}
 {% endblock %}
-
 {% block content %}
 
-<h2>{{ dailyplan.name }}</h2>
+<!--  PAGE HEADER ==== -->
+<div class="page-nav-action">
+  {% include "components/header.html" with header=ui.header %}
+</div>
 
-{% if dailyplan.is_draft %}
-  <p><em>This daily plan is a draft. Add meals to continue.</em></p>
-{% endif %}
 
-<hr>
+<div class="page page--detail" data-page="dailyplan-detail">
+  
+  <!-- MAIN-CARD ======================================-->
+  {% include "components/card_main_dailyplan.html" with main_card=ui.main_card %}
+  
+  <hr><!-- HR #####################-->
 
-<!-- ========================= -->
-<!-- ADD MEAL (DRAFT ONLY) -->
-<!-- ========================= -->
+  <!-- MEALS LIST =========================== -->
+  <div class="page-list">
+    {% if ui.child_cards  %}
+      <h3>Información de Comidas</h3>
+      <p class="structural_indicators"> {{ ui.structural_indicators.meals_count }} Comidas | {{ ui.structural_indicators.foods_count }} Alimentos</p>
+      <div>
+        {% include "components/card_foods_aggregation.html" with foods=ui.foods_aggregation %}
+      </div> 
+      
 
-{% if dailyplan.is_draft %}
-  <h3>Add meal</h3>
-
-  <form method="post" action="{% url 'add_meal_to_dailyplan' dailyplan.id %}">
-    {% csrf_token %}
-
-    <select name="meal_id">
-      {% for meal in meals %}
-        <option value="{{ meal.id }}">{{ meal.name }}</option>
+      {% for child in ui.child_cards %}
+        {% include "components/card_mini_dpm.html" with child=child %}
+        {% include "components/card_child_meal.html" with child_card=child %}
+      {% empty %}
+        <p>No meals added yet.</p>
       {% endfor %}
-    </select>
-
-    <input type="time" name="hour">
-    <input type="text" name="note" placeholder="Note (optional)">
-
-    <button type="submit">Add</button>
-  </form>
-
-  <hr>
-{% endif %}
-
-<!-- ========================= -->
-<!-- NUTRITION SUMMARY (DAY) -->
-<!-- ========================= -->
-
-{% if items %}
-  <h3>Nutrition summary</h3>
-  <p>
-    <strong>Total energy:</strong>
-    {{ dailyplan.total_kcal|floatformat:0 }} kcal
-  </p>
-{% endif %}
-
-
-<!-- KPI -->
-{% include "components/kpi_table.html" with entity=dailyplan %}
-
-<!-- MEALS TABLE (análoga a foods_table) -->
-{% include "components/meals_table.html" with meals=dailyplan_meals %}
-
-
-
-<!-- ========================= -->
-<!-- MEALS DETAILS (CARDS) -->
-<!-- ========================= -->
-
-{% if items %}
-  <hr>
-  <h3>Meals</h3>
-
-  {% for item in items %}
-    {% include "components/meal_card.html" with obj=item %}
-  {% empty %}
-    <p>No meals added yet.</p>
-  {% endfor %}
-{% endif %}
-
-<!-- ========================= -->
-<!-- METADATA (PUBLISHED ONLY) -->
-<!-- ========================= -->
-
-{% if not dailyplan.is_draft %}
-  <hr>
-
-  <ul>
-    <li><strong>Created by:</strong> {{ dailyplan.created_by.username }}</li>
-    <li><strong>Created at:</strong> {{ dailyplan.created_at|date:"Y-m-d H:i" }}</li>
-    <li>
-      <strong>Visibility:</strong>
-      {% if dailyplan.is_public %}Public{% else %}Private{% endif %}
-    </li>
-    <li><strong>Forkable:</strong> {{ dailyplan.is_forkable|yesno:"Yes,No" }}</li>
-    <li><strong>Copiable:</strong> {{ dailyplan.is_copiable|yesno:"Yes,No" }}</li>
-
-    {% if dailyplan.forked_from %}
-      <li>
-        <strong>Forked from:</strong>
-        {{ dailyplan.forked_from.name }}
-        (by {{ dailyplan.forked_from.created_by.username }})
-      </li>
     {% endif %}
-  </ul>
+  </div>
 
-  <a href="{% url 'configure_dailyplan' dailyplan.id %}">
-    Daily plan settings
-  </a>
-{% endif %}
 
-<!-- ========================= -->
-<!-- ACTIONS -->
-<!-- ========================= -->
 
-{% if items %}
-  <hr>
-  <a href="{% url 'configure_dailyplan' dailyplan.id %}">
-    Next: configure this daily plan →
-  </a>
-{% endif %}
+</div> <!-- cierre div page -->
 
-{% if not dailyplan.is_draft %}
-  <form method="post" action="{% url 'fork_dailyplan' dailyplan.id %}">
-    {% csrf_token %}
-    <button type="submit">Fork</button>
-  </form>
 
-  <form method="post" action="{% url 'copy_dailyplan' dailyplan.id %}">
-    {% csrf_token %}
-    <button type="submit">Copy</button>
-  </form>
-
-  <p>
-    <strong>Fork:</strong> create a variant linked to the original author.<br>
-    <strong>Copy:</strong> create an independent copy.
-  </p>
-{% endif %}
-
+<!-- FIN ============================================== -->
 {% endblock %}

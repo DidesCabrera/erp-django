@@ -31,9 +31,9 @@ Program – {{ program.name }}
 
 <h3>Días del programa</h3>
 <ul>
-    {% for day in program.program_days.all %}
+    {% for day in program.program_dailyplan.all %}
         <li>
-            {{ day.date }} – {{ day.daily_plan.name }}
+            {{ day.date }} – {{ day.dailyplan.name }}
         </li>
     {% empty %}
         <li>No hay días asignados.</li>
@@ -43,7 +43,7 @@ Program – {{ program.name }}
 
 
 <hr>
-<h3>Program nutrition summary</h3>
+<h3>Program Información Nutricional</h3>
 
 {% with program.alloc as alloc %}
 <table>

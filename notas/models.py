@@ -1,12 +1,15 @@
 from django.db import models
 from django.db.models import Prefetch
 from django.contrib.auth.models import User
-from django.urls import reverse
 from notas.services.nutrition import (
     PROTEIN_KCAL_PER_GRAM,
     CARBS_KCAL_PER_GRAM,
     FAT_KCAL_PER_GRAM,
 )
+import uuid
+from notas.services.meal_nutrition import compute_meal_nutrition
+
+
 
 # ==================================================
 # PLANS / PROFILES / SUBSCRIPTIONS
@@ -20,6 +23,16 @@ class Plan(models.Model):
 
     name = models.CharField(max_length=50)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+
+    can_create_meal = models.BooleanField(default=False)
+    can_create_dailyplan = models.BooleanField(default=False)
+    can_create_program = models.BooleanField(default=False)
+    can_publish = models.BooleanField(default=False)
+
+    can_fork = models.BooleanField(default=True)
+    can_copy = models.BooleanField(default=False)
+
+
 
     max_program_duration_days = models.PositiveIntegerField(null=True, blank=True)
     max_active_subscriptions = models.PositiveIntegerField(null=True, blank=True)
@@ -38,8 +51,11 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    plan = models.ForeignKey(Plan, on_delete=models.PROTECT)
-
+    plan = models.ForeignKey(Plan,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="profiles")
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -125,6 +141,14 @@ class Meal(models.Model):
     is_forkable = models.BooleanField(default=True)
     is_copiable = models.BooleanField(default=False)
     is_draft = models.BooleanField(default=True)
+    
+    pending_dailyplan = models.ForeignKey(
+        "DailyPlan",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -138,34 +162,45 @@ class Meal(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def kind(self):
+        return "Meal"
+
     def __str__(self):
         return self.name
 
     # ---- gramos ----
+
     @property
     def protein(self):
-        return sum(mf.protein for mf in self.mealfood_set.all())
+        if self.protein_cached is not None:
+            return self.protein_cached
+        return compute_meal_nutrition(self)["protein"]
 
     @property
     def carbs(self):
-        return sum(mf.carbs for mf in self.mealfood_set.all())
+        if self.carbs_cached is not None:
+            return self.carbs_cached
+        return compute_meal_nutrition(self)["carbs"]
 
     @property
     def fat(self):
-        return sum(mf.fat for mf in self.mealfood_set.all())
+        if self.fat_cached is not None:
+            return self.fat_cached
+        return compute_meal_nutrition(self)["fat"]
+
 
     # ---- kcal ----
     @property
     def kcal_protein(self):
-        return sum(mf.kcal_protein for mf in self.mealfood_set.all())
+        return sum(mf.kcal_protein for mf in self.meal_food_set.all())
 
     @property
     def kcal_carbs(self):
-        return sum(mf.kcal_carbs for mf in self.mealfood_set.all())
+        return sum(mf.kcal_carbs for mf in self.meal_food_set.all())
 
     @property
     def kcal_fat(self):
-        return sum(mf.kcal_fat for mf in self.mealfood_set.all())
+        return sum(mf.kcal_fat for mf in self.meal_food_set.all())
 
     @property
     def total_kcal(self):
@@ -182,35 +217,55 @@ class Meal(models.Model):
             "fat": self.kcal_fat / self.total_kcal * 100,
         }
 
-    def available_action_keys(self):
-        return [
-            "detail",
-            "fork",
-            "copy",
-            "add_to_dailyplan",
-            "replace",
-            "edit",
-            "delete",
-        ]
+    # ==================================================
+    # CACHED
+    # ==================================================
 
-    def get_absolute_url(self):
-        return reverse("meal_detail", args=[self.pk])
+    protein_cached = models.FloatField(null=True, blank=True)
+    carbs_cached = models.FloatField(null=True, blank=True)
+    fat_cached = models.FloatField(null=True, blank=True)
 
-    def get_canonical_url(self):
-        """
-        Canonical (context-free) URL for this Meal.
-        Do NOT use for contextual navigation.
-        """
-        return reverse("meal_detail", args=[self.pk])
+    kcal_protein_cached = models.FloatField(null=True, blank=True)
+    kcal_carbs_cached = models.FloatField(null=True, blank=True)
+    kcal_fat_cached = models.FloatField(null=True, blank=True)
+    total_kcal_cached = models.FloatField(null=True, blank=True)
+
+    alloc_protein_cached = models.FloatField(null=True, blank=True)
+    alloc_carbs_cached = models.FloatField(null=True, blank=True)
+    alloc_fat_cached = models.FloatField(null=True, blank=True)
+
+    foods_aggregation_cached = models.JSONField(null=True, blank=True)
 
 
-    def get_configure_url(self):
-        return reverse("configure_meal", args=[self.pk])
+
+    # ==================================================
+    # DOMAIN API (delegates to services)
+    # ==================================================
+
+    def fork_for_user(self, user):
+        from notas.services.meal import fork_meal
+        return fork_meal(self, user)
+
+    def copy_for_user(self, user):
+        from notas.services.meal import copy_meal
+        return copy_meal(self, user)
+
+    def save_for_user(self, user):
+        from notas.services.meal import save_meal
+        return save_meal(self, user)
+
+    
+
+
 
 
 
 class MealFood(models.Model):
-    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    meal = models.ForeignKey(
+        Meal,
+        on_delete=models.CASCADE,
+        related_name="meal_food_set")
+    
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
 
     quantity = models.FloatField(help_text="grams")
@@ -255,21 +310,21 @@ class MealFood(models.Model):
 
     @property
     def alloc_protein(self):
-        total = self.meal.total_kcal
+        total = self.meal.kcal_protein
         if total == 0:
             return 0
         return self.kcal_protein / total * 100
 
     @property
     def alloc_carbs(self):
-        total = self.meal.total_kcal
+        total = self.meal.kcal_carbs
         if total == 0:
             return 0
         return self.kcal_carbs / total * 100
 
     @property
     def alloc_fat(self):
-        total = self.meal.total_kcal
+        total = self.meal.kcal_fat
         if total == 0:
             return 0
         return self.kcal_fat / total * 100
@@ -290,6 +345,12 @@ class MealFood(models.Model):
 class DailyPlan(models.Model):
     name = models.CharField(max_length=100)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    original_author = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    forked_from = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="variants"
+    )
 
     is_public = models.BooleanField(default=False)
     is_forkable = models.BooleanField(default=True)
@@ -298,32 +359,35 @@ class DailyPlan(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def kind(self):
+        return "Daily Plan"
+
     def __str__(self):
         return self.name
 
     @property
     def protein(self):
-        return sum(dpm.meal.protein for dpm in self.daily_plan_meals.all())
+        return sum(dpm.meal.protein for dpm in self.dailyplan_meals.all())
 
     @property
     def carbs(self):
-        return sum(dpm.meal.carbs for dpm in self.daily_plan_meals.all())
+        return sum(dpm.meal.carbs for dpm in self.dailyplan_meals.all())
 
     @property
     def fat(self):
-        return sum(dpm.meal.fat for dpm in self.daily_plan_meals.all())
+        return sum(dpm.meal.fat for dpm in self.dailyplan_meals.all())
 
     @property
     def kcal_protein(self):
-        return sum(dpm.meal.kcal_protein for dpm in self.daily_plan_meals.all())
+        return sum(dpm.meal.kcal_protein for dpm in self.dailyplan_meals.all())
 
     @property
     def kcal_carbs(self):
-        return sum(dpm.meal.kcal_carbs for dpm in self.daily_plan_meals.all())
+        return sum(dpm.meal.kcal_carbs for dpm in self.dailyplan_meals.all())
 
     @property
     def kcal_fat(self):
-        return sum(dpm.meal.kcal_fat for dpm in self.daily_plan_meals.all())
+        return sum(dpm.meal.kcal_fat for dpm in self.dailyplan_meals.all())
 
     @property
     def total_kcal(self):
@@ -342,26 +406,44 @@ class DailyPlan(models.Model):
     
     def meals_with_foods(self):
         return (
-            self.daily_plan_meals
+            self.dailyplan_meals
             .select_related("meal")
             .prefetch_related(
                 Prefetch(
-                    "meal__mealfood_set",
+                    "meal__meal_food_set",
                     queryset=MealFood.objects.select_related("food")
                 )
             )
         )
     
-    def get_absolute_url(self):
-        return reverse("dailyplan_detail", args=[self.pk])
+    # ==================================================
+    # DOMAIN API (delegates to services)
+    # ==================================================
 
-    def get_configure_url(self):
-        return reverse("configure_dailyplan", args=[self.pk])
+    def fork_for_user(self, user):
+        from notas.services.dailyplan import fork_dailyplan
+        return fork_dailyplan(self, user)
+
+    def copy_for_user(self, user):
+        from notas.services.dailyplan import copy_dailyplan
+        return copy_dailyplan(self, user)
+
+    def save_for_user(self, user):
+        """
+        Explore UX: Guardar = Fork
+        """
+        from notas.services.dailyplan import save_dailyplan
+        return save_dailyplan(self, user)
+
+
+
 
 
 class DailyPlanMeal(models.Model):
-    daily_plan = models.ForeignKey(
-        DailyPlan, on_delete=models.CASCADE, related_name="daily_plan_meals"
+    dailyplan = models.ForeignKey(
+        DailyPlan,
+        on_delete=models.CASCADE,
+        related_name="dailyplan_meals"
     )
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
 
@@ -372,14 +454,60 @@ class DailyPlanMeal(models.Model):
     class Meta:
         ordering = ["hour", "order"]
 
-    def available_action_keys(self):
-        return [
-            "replace_meal",
-            "remove_meal",
-        ]
-
     def __str__(self):
-        return f"{self.daily_plan.name} ({self.meal.name})"
+        return f"{self.dailyplan.name} ({self.meal.name})"
+
+    # ------------------
+    # Totales
+    # ------------------
+
+    @property
+    def total_kcal(self):
+        return (
+            self.meal.kcal_protein +
+            self.meal.kcal_carbs +
+            self.meal.kcal_fat
+        )
+
+    # ------------------
+    # Alloc relativo (%)
+    # ------------------
+
+    def _safe_alloc(self, part, total):
+        if not total or total <= 0:
+            return 0.0
+        return (part / total) * 100
+
+    @property
+    def alloc_protein(self):
+        return self._safe_alloc(
+            self.meal.kcal_protein,
+            self.dailyplan.kcal_protein
+        )
+
+    @property
+    def alloc_carbs(self):
+        return self._safe_alloc(
+            self.meal.kcal_carbs,
+            self.dailyplan.kcal_carbs
+        )
+
+    @property
+    def alloc_fat(self):
+        return self._safe_alloc(
+            self.meal.kcal_fat,
+            self.dailyplan.kcal_fat
+        )
+
+    @property
+    def alloc(self):
+        return {
+            "protein": self.alloc_protein,
+            "carbs": self.alloc_carbs,
+            "fat": self.alloc_fat,
+        }
+
+
 
 
 class Program(models.Model):
@@ -387,6 +515,13 @@ class Program(models.Model):
 
     created_by = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="programs"
+    )
+    original_author = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
+
+    forked_from = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="variants"
     )
 
     start_date = models.DateField()
@@ -399,32 +534,35 @@ class Program(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def kind(self):
+        return "Program"
+
     def __str__(self):
         return self.name
 
     @property
     def protein(self):
-        return sum(day.daily_plan.protein for day in self.program_days.all())
+        return sum(day.dailyplan.protein for day in self.program_dailyplan.all())
 
     @property
     def carbs(self):
-        return sum(day.daily_plan.carbs for day in self.program_days.all())
+        return sum(day.dailyplan.carbs for day in self.program_dailyplan.all())
 
     @property
     def fat(self):
-        return sum(day.daily_plan.fat for day in self.program_days.all())
+        return sum(day.dailyplan.fat for day in self.program_dailyplan.all())
 
     @property
     def kcal_protein(self):
-        return sum(day.daily_plan.kcal_protein for day in self.program_days.all())
+        return sum(day.dailyplan.kcal_protein for day in self.program_dailyplan.all())
 
     @property
     def kcal_carbs(self):
-        return sum(day.daily_plan.kcal_carbs for day in self.program_days.all())
+        return sum(day.dailyplan.kcal_carbs for day in self.program_dailyplan.all())
 
     @property
     def kcal_fat(self):
-        return sum(day.daily_plan.kcal_fat for day in self.program_days.all())
+        return sum(day.dailyplan.kcal_fat for day in self.program_dailyplan.all())
 
     @property
     def total_kcal(self):
@@ -441,19 +579,15 @@ class Program(models.Model):
             "fat": self.kcal_fat / self.total_kcal * 100,
         }
 
-    def get_absolute_url(self):
-        return reverse("program_detail", args=[self.pk])
-
-    def get_configure_url(self):
-        return reverse("configure_program", args=[self.pk])
-
 
 
 class ProgramDay(models.Model):
     program = models.ForeignKey(
-        Program, on_delete=models.CASCADE, related_name="program_days"
+        Program,
+        on_delete=models.CASCADE,
+        related_name="program_dailyplan"
     )
-    daily_plan = models.ForeignKey(DailyPlan, on_delete=models.CASCADE)
+    dailyplan = models.ForeignKey(DailyPlan, on_delete=models.CASCADE)
     date = models.DateField()
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -476,3 +610,104 @@ class MealAccess(models.Model):
         User, on_delete=models.SET_NULL, null=True, related_name="+"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+# ==================================================
+# WEIGHT TRACKING (PROGRESS)
+# ==================================================
+
+
+class WeightLog(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="weight_logs"
+    )
+
+    date = models.DateField()
+    weight_kg = models.FloatField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date", "-created_at"]
+        unique_together = ("user", "date")   # opcional: un registro por día
+
+    def __str__(self):
+        return f"{self.user.username} - {self.weight_kg} kg ({self.date})"
+
+
+
+
+class DailyPlanShare(models.Model):
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="dailyplan_shares_sent"
+    )
+
+    recipient_email = models.EmailField()
+
+    dailyplan = models.ForeignKey(
+        DailyPlan,
+        on_delete=models.CASCADE,
+        related_name="shares"
+    )
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+
+    accepted_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="dailyplan_shares_received"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    dismissed = models.BooleanField(default=False)      # inbox
+    removed = models.BooleanField(default=False)        # librería
+
+    class Meta:
+        unique_together = ("recipient_email", "dailyplan")
+
+    def __str__(self):
+        return f"{self.sender} shared {self.dailyplan} → {self.recipient_email}"
+
+
+class MealShare(models.Model):
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="meal_shares_sent"
+    )
+
+    recipient_email = models.EmailField()
+
+    meal = models.ForeignKey(
+        Meal,
+        on_delete=models.CASCADE,
+        related_name="shares"
+    )
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+
+    accepted_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="meal_shares_received"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    dismissed = models.BooleanField(default=False)      # inbox
+    removed = models.BooleanField(default=False)        # librería
+
+    class Meta:
+        unique_together = ("recipient_email", "meal")
+
+    def __str__(self):
+        return f"{self.sender} shared {self.meal} → {self.recipient_email}"

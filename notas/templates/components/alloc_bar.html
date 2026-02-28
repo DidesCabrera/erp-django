@@ -1,0 +1,21 @@
+
+<div class="alloc-pct alloc-bar-fill--{{ kind }}">
+    <p>{{ value|floatformat:0 }}%</p>
+</div>
+
+<div class="alloc-bar-comp {% if pct_outside %}pct-out{% endif %}"
+     style="--alloc: {{ value }};">
+
+    <div class="alloc-bar-bg"></div>
+
+    <!-- Fill -->
+    <div class="alloc-bar-fill alloc-bar-fill--{{ kind }}">
+    </div>
+
+  <!-- kcal fija derecha -->
+  
+    <span class="alloc-sub">
+        {{ kcal|floatformat:0 }} kcal
+    </span>
+  
+</div>

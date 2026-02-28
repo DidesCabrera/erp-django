@@ -3,193 +3,444 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from notas.actions.meal_resolvers import resolve_meal_actions
-from notas.models import Meal, MealFood, DailyPlan, DailyPlanMeal, Food
-from notas.services.permissions import can_fork, can_copy, can_publish
+from notas.services.capabilities import get_capabilities
+from notas.models import Meal, MealFood, Food, MealShare
+from notas.actions.constants import (
+    MEAL_VIEWMODE_LIST, 
+    MEAL_VIEWMODE_DETAIL,
+    MEAL_VIEWMODE_EDIT,
+    MEAL_VIEWMODE_EXPLORE_LIST,
+    MEAL_VIEWMODE_EXPLORE_DETAIL,
+    MEAL_VIEWMODE_DRAFT_LIST,
+    MEAL_VIEWMODE_SHARED_LIST,
+    MEAL_VIEWMODE_SHARED_DETAIL,
+)
+
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from notas.services.kpis import build_nutrition_kpis_from_meal
+from notas.viewmodels.builder.meal_detail_builder import build_meal_detail_vm
+from notas.viewmodels.builder.meal_list_builder import build_meal_list_vm
+from notas.jscontext.builder.food_picker_builder import build_food_picker_foods_payload, build_food_picker_context_payload
+from notas.services.meal_queries import meals_with_kcal
+
+from notas.forms import MealShareForm
+from django.core.mail import send_mail
+from django.conf import settings
 from django.urls import reverse
-from notas.actions.constants import MEAL_CONTEXT_LIST
 
 
-# ==================================================
-# FORK MEAL
-# ==================================================
+#************ VIEW DE INBOX *********************
+
+@login_required
+def meal_share(request, pk):
+
+    meal = get_object_or_404(
+        Meal,
+        pk=pk,
+        created_by=request.user
+    )
+
+    # Solo el dueño puede compartir
+    if meal.created_by != request.user:
+        return HttpResponseForbidden()
+
+    form = MealShareForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        email = form.cleaned_data["recipient_email"]
+
+        share, created = MealShare.objects.get_or_create(
+            sender=request.user,
+            recipient_email=email,
+            meal=meal,
+        )
+
+        link = request.build_absolute_uri(
+            reverse("meal_share_accept", args=[share.token])
+        )
+
+        send_mail(
+            subject=f"{request.user.username} compartió una Meal contigo",
+            message=f"Te compartieron este plan:\n\n{link}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+        )
+
+        return redirect("meal_detail", pk=meal.pk)
+
+    return render(
+        request,
+        "notas/meals/share.html",
+        {"meal": meal, "form": form},
+    )
+
+
+@login_required
+def meal_share_accept(request, token):
+    share = get_object_or_404(MealShare, token=token)
+
+    # Marcar como aceptado
+    share.accepted_by = request.user
+    share.save()
+
+    return redirect("inbox")
+
+
+@login_required
+def meal_share_dismiss(request, share_id):
+    share = get_object_or_404(
+        MealShare,
+        id=share_id,
+        accepted_by=request.user
+    )
+
+    if request.method == "POST":
+        share.dismissed = True
+        share.save()
+
+    return redirect("meals_shared_with_me")
+
 
 @login_required
 @require_POST
-def fork_meal(request, meal_id):
-    original_meal = get_object_or_404(Meal, id=meal_id)
-    profile = request.user.profile
+def meal_unshare(request, share_id):
 
-    if not can_fork(profile) or not original_meal.is_forkable:
-        return HttpResponseForbidden("No puedes forkear esta meal")
-
-    original_author = (
-        original_meal.original_author
-        if original_meal.original_author
-        else original_meal.created_by
+    share = get_object_or_404(
+        MealShare,
+        id=share_id,
+        accepted_by=request.user,
     )
 
-    forked_meal = Meal.objects.create(
-        name=f"{original_meal.name} (fork)",
-        created_by=request.user,
-        original_author=original_author,
-        forked_from=original_meal,
-        is_public=False,
-        is_forkable=True,
-        is_copiable=False,
-        is_draft=False,
-    )
+    share.removed = True
+    share.save()
 
-    MealFood.objects.bulk_create([
-        MealFood(
-            meal=forked_meal,
-            food=mf.food,
-            quantity=mf.quantity
-        )
-        for mf in original_meal.mealfood_set.all()
-    ])
-
-    messages.success(request, "Meal forked successfully")
-    return redirect("meal_detail", pk=forked_meal.pk)
+    messages.success(request, "Meal removida de Shared with me.")
+    return redirect("meal_shared_list")
 
 
-# ==================================================
-# REPLACE MEAL IN DAILY PLAN
-# ==================================================
 
-@login_required
-def replace_meal(request, daily_plan_meal_id, new_meal_id):
-    daily_plan_meal = get_object_or_404(DailyPlanMeal, id=daily_plan_meal_id)
-    new_meal = get_object_or_404(Meal, id=new_meal_id)
+#************ RENDER COMPLEJOS *********************
 
-    if daily_plan_meal.daily_plan.created_by != request.user:
-        return redirect("dailyplan_detail", daily_plan_meal.daily_plan.id)
-
-    daily_plan_meal.meal = new_meal
-    daily_plan_meal.save()
-
-    return redirect("dailyplan_detail", daily_plan_meal.daily_plan.id)
-
-
-# ==================================================
-# COPY MEAL
-# ==================================================
-
-@login_required
-@require_POST
-def copy_meal(request, pk):
-    meal = get_object_or_404(Meal, pk=pk)
-    profile = request.user.profile
-
-    if not can_copy(profile) or not meal.is_copiable:
-        return HttpResponseForbidden("No tienes permiso para copiar esta meal")
-
-    copy = Meal.objects.create(
-        name=f"{meal.name} (copy)",
-        created_by=request.user,
-        is_public=False,
-        is_forkable=True,
-        is_copiable=False,
-        is_draft=False,
-    )
-
-    for mf in meal.mealfood_set.all():
-        MealFood.objects.create(
-            meal=copy,
-            food=mf.food,
-            quantity=mf.quantity
-        )
-
-    messages.success(request, "Meal copiada correctamente")
-    return redirect("meal_detail", pk=copy.pk)
-
-
-# ==================================================
-# LIST / DETAIL
-# ==================================================
+# LIST VIEWS ···················
 
 @login_required
 def meal_list(request):
-    meals = Meal.objects.filter(
-        created_by=request.user,
-        is_draft=False
-    ).order_by("-created_at")
 
-    items = []
+    meals = (
+        meals_with_kcal()
+        .filter(created_by=request.user, is_draft=False)
+        .order_by("-created_at")
+    )
 
-    for meal in meals:
-        items.append({
-            "meal": meal,
-            "actions": resolve_meal_actions(
-                meal,
-                request.user,
-                context={
-                    "context": MEAL_CONTEXT_LIST,
-                },
-            ),
-        })
+    vm = build_meal_list_vm(
+        meals,
+        request.user,
+        MEAL_VIEWMODE_LIST,
+    )
 
     return render(
-        request, 
-        "notas/meals/list.html", 
-        {
-        "items": items,
-    })
+        request,
+        "notas/meals/list.html",
+        vm.as_context(),
+    )
 
 
+@login_required
+def meal_explore_list(request):
 
-def meal_detail(request, pk, dailyplan_id=None):
-    meal = get_object_or_404(Meal, pk=pk, created_by=request.user)
-    foods = Food.objects.all()
+    meals = (
+        meals_with_kcal()
+        .filter(is_public=True, is_draft=False)
+        .order_by("-created_at")
+    )
 
-    actions = resolve_meal_actions(meal, user=request.user)
-    
-    navigation = []
+    vm = build_meal_list_vm(
+        meals,
+        request.user,
+        MEAL_VIEWMODE_EXPLORE_LIST,
+    )
 
-    # 👉 CASO 1: entro desde un DailyPlan
-    if dailyplan_id:
-        dailyplan = get_object_or_404(
-            DailyPlan,
-            pk=dailyplan_id,
-            created_by=request.user,
+    return render(
+        request,
+        "notas/meals/list.html",
+        vm.as_context(),
+    )
+
+
+@login_required
+def meal_shared_list(request):
+
+    meals = (
+        meals_with_kcal()
+        .filter(
+            shares__accepted_by=request.user,
+            shares__removed=False,
+            is_draft=False,
         )
+        .prefetch_related("shares")
+        .distinct()
+    )
 
-        navigation = [
-            {"label": "Daily Plans", "url": reverse("dailyplan_list")},
-            {
-                "label": dailyplan.name,
-                "url": dailyplan.get_absolute_url(),
-            },
-            {"label": meal.name, "url": None},
-        ]
+    vm = build_meal_list_vm(
+        meals,
+        request.user,
+        MEAL_VIEWMODE_SHARED_LIST,
+    )
 
-    # 👉 CASO 2: entro directo a la Meal
-    else:
-        navigation = [
-            {"label": "Meals", "url": reverse("meal_list")},
-            {"label": meal.name, "url": None},
-        ]
+    return render(
+        request,
+        "notas/meals/list.html",
+        vm.as_context(),
+    )
+
+
+@login_required
+def meal_draft_list(request):
+
+    meals = (
+        meals_with_kcal()
+        .filter(
+            created_by=request.user,
+            is_draft=True
+        )
+        .order_by("-created_at")
+    )
+
+    vm = build_meal_list_vm(
+        meals,
+        request.user,
+        MEAL_VIEWMODE_DRAFT_LIST,
+    )
+
+    return render(
+        request,
+        "notas/meals/list.html",
+        vm.as_context(),
+    )
+
+
+
+# DETAIL VIEWS ···················
+
+@login_required
+def meal_detail(request, pk, dailyplan_id=None):
+
+    meal = (
+        Meal.objects
+        .prefetch_related("meal_food_set", "meal_food_set__food")
+        .get(pk=pk, created_by=request.user)
+    )
+
+    vm = build_meal_detail_vm(
+        meal,
+        request.user,
+        MEAL_VIEWMODE_DETAIL,
+    )
 
     return render(
         request,
         "notas/meals/detail.html",
-        {
-            "meal": meal,
-            "foods": foods,
-            "actions": actions,
-            "navigation": navigation,
-        },
+        vm.as_context(),
+    )
+
+
+@login_required
+def meal_explore_detail(request, pk, dailyplan_id=None):
+
+    meal = (
+        Meal.objects
+        .prefetch_related("meal_food_set", "meal_food_set__food")
+        .get(pk=pk, created_by=request.user)
+    )
+
+    vm = build_meal_detail_vm(
+        meal,
+        request.user,
+        MEAL_VIEWMODE_EXPLORE_DETAIL,
+    )
+
+    return render(
+        request,
+        "notas/meals/detail.html",
+        vm.as_context(),
+    )
+
+
+@login_required
+def meal_share_detail(request, pk, dailyplan_id=None):
+
+    meal = (
+        Meal.objects
+        .prefetch_related("meal_food_set", "meal_food_set__food")
+        .get(pk=pk)
+    )
+
+    vm = build_meal_detail_vm(
+        meal,
+        request.user,
+        MEAL_VIEWMODE_SHARED_DETAIL,
+    )
+
+    return render(
+        request,
+        "notas/meals/detail.html",
+        vm.as_context(),
     )
 
 
 
+#************ RENDER DE EDICION *********************
 
-# ==================================================
-# CREATE / ADD FOOD
-# ==================================================
+# ---------- EDIT - BUILDER ----------
+
+@login_required
+def meal_edit(request, pk):
+
+    meal = (
+        Meal.objects
+        .prefetch_related("meal_food_set", "meal_food_set__food")
+        .get(pk=pk)
+    )
+
+    user = request.user
+
+    caps = get_capabilities(user)
+
+    if not caps or not caps.can_edit_own_content():
+        return HttpResponseForbidden("You cannot edit this meal")
+
+    #===== MODIFICICACION DATA ====================================================
+
+    edit_mf_id = request.GET.get("edit_food")
+    mealfood = None
+
+    if edit_mf_id:
+        mealfood = get_object_or_404(
+            MealFood, 
+            pk=edit_mf_id, 
+            meal=meal
+        )
+
+    if request.method == "POST":
+        if "save_food" in request.POST:
+            mf_id = request.POST.get("mealfood_id")
+
+            if mf_id:
+                mf = get_object_or_404(MealFood, pk=mf_id, meal=meal)
+                mf.quantity = request.POST.get("quantity")
+                mf.save()
+            else:
+                MealFood.objects.create(
+                    meal=meal,
+                    food_id=request.POST.get("food_id"),
+                    quantity=request.POST.get("quantity")
+                )
+
+    # ===== FOOD PICKER ====================================================
+   
+    foods_payload = build_food_picker_foods_payload(Food.objects.all())
+    
+    nutrition_kpis = build_nutrition_kpis_from_meal(meal, user)
+    food_picker_ctx = build_food_picker_context_payload(
+        meal=meal,
+        nutrition_kpis=nutrition_kpis,
+        mealfood=mealfood,
+    )
+
+    # ======= VIEW MODEL ======================================
+
+    vm = build_meal_detail_vm(
+        meal,
+        user,
+        MEAL_VIEWMODE_EDIT,
+    )
+
+    context = vm.as_context()
+    context["foods_json"] = json.dumps(foods_payload.as_list(), cls=DjangoJSONEncoder)
+    context["food_picker_context"] = json.dumps(food_picker_ctx.as_dict(), cls=DjangoJSONEncoder)
+
+
+    return render(
+        request,
+        "notas/meals/edit.html",
+        context,
+    )
+
+
+@login_required
+def meal_builder(request, pk):
+
+    meal = (
+        Meal.objects
+        .prefetch_related("meal_food_set", "meal_food_set__food")
+        .get(pk=pk, created_by=request.user)
+    )
+
+    user = request.user
+
+    if not meal.is_draft:
+        return redirect("meal_edit", pk=meal.pk)
+
+    caps = get_capabilities(request.user)
+
+    if not caps or not caps.can_edit_own_content():
+        return HttpResponseForbidden("You cannot edit this meal")
+
+    #===== MODIFICICACION DATA =================---------------------------
+
+    edit_mf_id = request.GET.get("edit_food")
+    mealfood = None
+
+    if edit_mf_id:
+        mealfood = get_object_or_404(
+            MealFood,
+            pk=edit_mf_id,
+            meal=meal,
+        )
+    
+    # ===== FOOD PICKER ====================================================
+   
+    foods_payload = build_food_picker_foods_payload(Food.objects.all())
+
+    nutrition_kpis = build_nutrition_kpis_from_meal(meal, user)
+    food_picker_ctx = build_food_picker_context_payload(
+        meal=meal,
+        nutrition_kpis=nutrition_kpis,
+        mealfood=mealfood,
+    )
+
+    vm = build_meal_detail_vm(
+        meal,
+        user,
+        MEAL_VIEWMODE_EDIT,
+    )
+
+    if meal.pending_dailyplan:
+        continue_url = f"/dailyplans/{meal.pending_dailyplan.id}/attach-meal/{meal.id}/"
+    else:
+        continue_url = f"/meals/{meal.id}/configure/"
+
+
+    context = vm.as_context()
+    context["foods_json"] = json.dumps(foods_payload.as_list(), cls=DjangoJSONEncoder)
+    context["food_picker_context"] = json.dumps(food_picker_ctx.as_dict(), cls=DjangoJSONEncoder)
+    context["continue_url"] = continue_url
+
+    return render(
+        request,
+        "notas/meals/builder.html",
+        context
+    )
+
+
+
+#************ RENDER BÁSICOS *********************
+# ---------- CREATE - RENAME - CONFIGURE ----------
 
 @login_required
 def meal_create(request):
+
     from_dailyplan = request.GET.get("from_dailyplan")
 
     if request.method == "POST":
@@ -199,95 +450,196 @@ def meal_create(request):
             messages.error(request, "El nombre es obligatorio")
             return redirect("meal_create")
 
+        # 1. Crear meal draft
         meal = Meal.objects.create(
             name=name,
             created_by=request.user,
             is_draft=True
         )
 
+        # 2. Guardar contexto en el modelo (solo si aplica)
         if from_dailyplan:
-            return redirect(
-                "attach_meal_to_dailyplan",
-                dailyplan_id=from_dailyplan,
-                meal_id=meal.id
-            )
+            meal.pending_dailyplan_id = from_dailyplan
+            meal.save()
 
-        return redirect("meal_detail", pk=meal.pk)
+        # 3. Ir siempre al builder normal
+        return redirect("meal_builder", pk=meal.id)
 
+    # GET → solo renderiza form
     return render(request, "notas/meals/create.html")
 
 
-@require_POST
-def add_food_to_meal(request, pk):
+@login_required
+def meal_rename(request, pk):
     meal = get_object_or_404(Meal, pk=pk)
 
-    food_id = request.POST.get("food_id")
-    quantity = request.POST.get("quantity")
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
 
-    if not food_id or not quantity:
-        messages.error(request, "Food y cantidad son obligatorios")
-        return redirect("meal_detail", pk=meal.pk)
+        if not name:
+            messages.error(request, "El nombre no puede estar vacío.")
+            return redirect("meal_rename", pk=meal.pk)
 
-    food = get_object_or_404(Food, pk=food_id)
+        meal.name = name
+        meal.save()
 
-    MealFood.objects.create(
-        meal=meal,
-        food=food,
-        quantity=quantity
-    )
+        messages.success(request, "Nombre actualizado correctamente.")
+        return redirect("meal_builder", pk=pk)
 
-    messages.success(request, "Food agregado a la meal")
-    return redirect("meal_detail", pk=meal.pk)
+    header = {"title": "Edit meal name"}
 
+    return render(request, "notas/meals/rename.html", {
+        "meal": meal,
+        "header": header,
+    })
 
-# ==================================================
-# CONFIGURE MEAL
-# ==================================================
 
 @login_required
-def configure_meal(request, pk):
-    meal = get_object_or_404(Meal, pk=pk)
-    profile = request.user.profile
+def meal_configure(request, pk):
 
-    if meal.created_by != request.user:
-        messages.error(request, "You cannot configure this meal.")
-        return redirect("meal_detail", pk=meal.pk)
+    meal = get_object_or_404(
+        Meal,
+        pk=pk,
+        created_by=request.user,
+    )
 
-    if not meal.is_draft:
-        messages.info(request, "This meal is already finalized.")
-        return redirect("meal_detail", pk=meal.pk)
+    caps = get_capabilities(request.user)
 
     if request.method == "POST":
         is_public = bool(request.POST.get("is_public"))
         is_forkable = bool(request.POST.get("is_forkable"))
         is_copiable = bool(request.POST.get("is_copiable"))
 
-        if not can_publish(profile):
-            is_public = False
+        # ---- reglas de negocio ----
+        if is_public and not caps.can_publish():
+            messages.error(request, "You cannot publish this meal.")
+            return redirect("meal_configure", pk=pk)
 
-        if not can_fork(profile):
-            is_forkable = False
+        if is_copiable and not caps.can_copy():
+            messages.error(request, "Your plan does not allow copies.")
+            return redirect("meal_configure", pk=pk)
 
-        if not can_copy(profile):
-            is_copiable = False
-
+        # ---- aplicar flags ----
         meal.is_public = is_public
         meal.is_forkable = is_forkable
         meal.is_copiable = is_copiable
-        meal.is_draft = False
+
+        # ---- finalizar draft ----
+        if meal.is_draft:
+            if not meal.meal_food_set.exists():
+                messages.error(
+                    request,
+                    "Add at least one food before finalizing."
+                )
+                return redirect("meal_detail", pk=pk)
+
+            meal.is_draft = False
+
+        # ==========================================
+        # ✅ CONTEXTO: volver al DailyPlan si existe
+        # ==========================================
+
+        origin_dailyplan = meal.pending_dailyplan
+
+        # guardar meal primero
         meal.save()
 
-        messages.success(request, "Meal creada successfully.")
-        return redirect("meal_detail", pk=meal.pk)
+        # si venía desde un dailyplan → cerrar flujo
+        if origin_dailyplan:
+            meal.pending_dailyplan = None
+            meal.save()
+
+            messages.success(
+                request,
+                "Meal saved and added to your DailyPlan."
+            )
+            return redirect(
+                "dailyplan_edit",
+                pk=origin_dailyplan.id
+            )
+
+        # ---- flujo normal ----
+        messages.success(request, "Meal saved.")
+        return redirect("meal_detail", pk=pk)
 
     return render(
         request,
         "notas/meals/configure.html",
         {
             "meal": meal,
-            "profile": profile,
-            "can_publish": can_publish(profile),
-            "can_fork": can_fork(profile),
-            "can_copy": can_copy(profile),
+            "caps": caps,
         }
     )
+
+
+#************ ACCIONES (NO RENDERIZAN) **************
+# ---------- FORK - COPY ----------
+
+
+@login_required
+@require_POST
+def meal_fork(request, meal_id):
+
+    original = get_object_or_404(Meal, id=meal_id)
+
+    if not original.is_forkable:
+        return HttpResponseForbidden("No puedes forkear esta meal")
+
+    forked = original.fork_for_user(request.user)
+
+    messages.success(request, "Meal guardada en tu biblioteca")
+    return redirect("meal_detail", pk=forked.pk)
+
+
+@login_required
+@require_POST
+def meal_copy(request, pk):
+
+    original = get_object_or_404(Meal, pk=pk)
+
+    if not original.is_copiable:
+        return HttpResponseForbidden("No tienes permiso para copiar esta meal")
+
+    copy = original.copy_for_user(request.user)
+
+    messages.success(request, "Meal copiada correctamente")
+    return redirect("meal_detail", pk=copy.pk)
+
+
+@login_required
+@require_POST
+def meal_remove(request, pk):
+
+    meal = get_object_or_404(
+        Meal,
+        pk=pk,
+        created_by=request.user
+    )
+
+    # Solo permitir remove si fue guardado (fork)
+    if meal.forked_from is None:
+        return HttpResponseForbidden(
+            "No puedes remover una meal original, solo una guardada."
+        )
+
+    meal.delete()
+
+    messages.success(request, "Meal removida de tu lista.")
+    return redirect("meal_list")
+
+
+@login_required
+@require_POST
+def meal_draft_delete(request, pk):
+
+    meal = get_object_or_404(
+        Meal,
+        pk=pk,
+        created_by=request.user,
+        is_draft=True
+    )
+
+    meal.delete()
+
+    messages.success(request, "Draft eliminado definitivamente.")
+    return redirect("meal_draft_list")

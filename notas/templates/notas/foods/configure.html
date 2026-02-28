@@ -1,0 +1,48 @@
+{% extends "notas/base.html" %}
+{% block title %}
+Configure food – {{ food.name }}
+{% endblock %}
+{% block content %}
+<!-- ======== PAGE HEADER ===================================== -->           
+<div class="page-nav-action">
+  {% include "components/header.html" with header=header %}
+</div>
+
+
+
+<div class="page page--detail">
+  <h2>Configure food</h2>
+  <br>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- PUBLIC -------------------------------------->
+    <p>
+      <label>
+        <input
+          type="checkbox"
+          name="is_public"
+          {% if not caps.can_publish %}disabled{% endif %}
+          {% if food.is_public %}checked{% endif %}
+        >
+        Make this food public
+      </label>
+
+      {% if not caps.can_publish %}
+        <br>
+        <small>🔒 Public foods are available for nutritionists only</small>
+      {% endif %}
+    </p>
+
+
+
+    <button type="submit">
+        Save
+    </button>
+  </form>
+
+</div>
+
+
+{% endblock %}

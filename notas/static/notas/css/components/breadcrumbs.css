@@ -1,15 +1,19 @@
-.breadcrumbs {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 12px;
+  .breadcrumbs {
+    color: rgb(0, 0, 0);
   }
   
-  .breadcrumbs a {
-    color: #555;
+  .breadcrumbs a,
+  .breadcrumbs span {
+    color: rgb(0, 0, 0);
     text-decoration: none;
+    font-size: 14px;
+    font-weight: 450;
+    font-style: italic;
+    line-height: 1;
+    margin-top: 2px;
+    padding: 6px 6px;
   }
   
   .breadcrumbs a:hover {
     text-decoration: underline;
   }
-  

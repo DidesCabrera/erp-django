@@ -1,78 +1,83 @@
 {% extends "notas/base.html" %}
-
 {% block title %}Foods{% endblock %}
-
 {% block content %}
-<h2>Foods</h2>
 
-<p>
-    <a href="{% url 'import_foods' %}">Import foods</a>
-</p>
+<div class="page">
 
-<table class="foods-table">
-    <!-- Control de anchos -->
-    <colgroup>
-        <col class="col-name">
-        <col span="7" class="col-macro">
-    </colgroup>
+<!-- HEADER PAGE =============================================-->
 
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th align="right">Calories</th>
-            <th align="right">Protein (g)</th>
-            <th align="right">Carbs (g)</th>
-            <th align="right">Fat (g)</th>
-            <th align="right">P %</th>
-            <th align="right">C %</th>
-            <th align="right">F %</th>
-        </tr>
-    </thead>
+{% include "components/list_header_food.html" with header=vm.header %}
 
-    <tbody>
-        {% for food in foods %}
-        {% with food.alloc as alloc %}
-        <tr>
-            <td class="col-name">
-                {{ food.name }}
-            </td>
+<!-- INIT =============================================-->
+  <div class="sub-page">
+    <p>
+        <a href="{% url 'import_foods' %}">+Import foods</a>
+    </p>
 
-            <td align="right">{{ food.total_kcal|floatformat:0 }}</td>
-            <td align="right">{{ food.protein|floatformat:1 }}</td>
-            <td align="right">{{ food.carbs|floatformat:1 }}</td>
-            <td align="right">{{ food.fat|floatformat:1 }}</td>
+    <div class="table-items">
+    
+      <table class="table-foods">
+    
+        <!-- WIDTH -->
+        <colgroup>
+          <col style="width: 200px"><!-- Food -->
+          <col style="width: 50px"><!-- Qty -->
+          <col style="width: 52px"><!-- Kcal -->
+          <col style="width: 63px"><!-- Protein g -->
+          <col style="width: 60px"><!-- Carbs g -->
+          <col style="width: 57px"><!-- Fat g -->
+          <col style="width: 67px"><!-- Protein Alloc -->
+          <col style="width: 67px"><!-- Carbs Alloc -->
+          <col style="width: 67px"><!-- Fat Alloc -->
+        </colgroup>
+    
+    
+        <!-- HEAD -->
+        <thead>
+          <tr>
+            <th>Food</th>
+            <th>Qty<br>(g)</th>
+            <th>Kcal</th>
+            <th>Protein<br>g</th>
+            <th>Carbs<br>g</th>
+            <th>Fat<br>g</th>
+            <th class="alloc-col">Protein<br>%cal</th>
+            <th class="alloc-col">Carbs<br>%cal</th>
+            <th class="alloc-col">Fat<br>%cal</th>
+          </tr>
+        </thead>
+    
+    
+        <!-- BODY -->
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td><a href="{{ item.url }}">{{ item.obj.name }}</a></td>
+            <td>100</td>
+            <td>{{ item.obj.total_kcal|floatformat:0 }}</td>
+            <td>{{ item.obj.protein|floatformat:1 }}</td>
+            <td>{{ item.obj.carbs|floatformat:1 }}</td>
+            <td>{{ item.obj.fat|floatformat:1 }}</td>
+            {% include "components/alloc_cell_protein.html" with value=item.obj.alloc.protein bar_class="alloc-bar--protein" %}
+            {% include "components/alloc_cell_carbs.html" with value=item.obj.alloc.carbs   bar_class="alloc-bar--carbs" %}
+            {% include "components/alloc_cell_fat.html" with value=item.obj.alloc.fat     bar_class="alloc-bar--fat" %}
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="8">No foods yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    
+      </table>
+      
+    </div>
 
-            <!-- Protein alloc -->
-            <td class="alloc-cell">
-                <div class="alloc-bar" style="width: {{ alloc.protein }}%;"></div>
-                <span class="alloc-text">
-                    {{ alloc.protein|floatformat:1 }}%
-                </span>
-            </td>
 
-            <!-- Carbs alloc -->
-            <td class="alloc-cell">
-                <div class="alloc-bar" style="width: {{ alloc.carbs }}%;"></div>
-                <span class="alloc-text">
-                    {{ alloc.carbs|floatformat:1 }}%
-                </span>
-            </td>
+  </div>
 
-            <!-- Fat alloc -->
-            <td class="alloc-cell">
-                <div class="alloc-bar" style="width: {{ alloc.fat }}%;"></div>
-                <span class="alloc-text">
-                    {{ alloc.fat|floatformat:1 }}%
-                </span>
-            </td>
-        </tr>
-        {% endwith %}
-        {% empty %}
-        <tr>
-            <td colspan="8">No foods yet.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<!-- FIN ============================================== -->  
+
+</div>
 
 {% endblock %}

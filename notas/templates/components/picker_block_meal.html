@@ -1,0 +1,248 @@
+<!-- FORM -->
+<form method="post"
+      action="{% url 'dailyplan_add_meal' main_id %}"
+      id="dp-form">
+
+  {% csrf_token %}
+
+  <div class="page-add">
+
+    <!-- SEARCH - PICKER-->
+    <div class="add-row">
+      <h4 id="meal-form-title">Add meal</h4>
+
+
+      <div id="meal-picker" class="picker">
+        <input
+          type="text"
+          id="meal-search"
+          placeholder="Add meal…"
+          autocomplete="off"
+        />
+        <ul id="meal-list" class="picker-list"></ul>
+      </div>
+      
+      <input type="hidden" id="dp-selected-meal-id" name="meal_id">
+      
+      <a href="{% url 'dailyplan_meal_create' main_id %}"
+      class="btn btn-sm btn-outline-primary">
+        + Create Meal
+      </a>
+
+    </div>
+
+    <!-- PREVIEW :::::::::::::::::::::::::::::::::::::::::::::::-->
+    <div id="dp-preview" style="display:none;">
+      
+      <div class="table-items picker">
+
+        <div data-scope="meal-preview">
+          <table class="table-foods">
+
+            <thead>
+              <tr>
+                <th class="name-col">
+                  <p class="h3-table2">INFORMACIÓN COMIDA</p>
+                </th>
+                <th class="kcal-col">Kcal</th>
+                <th class="grams-col">P g</th>
+                <th class="grams-col">C g</th>
+                <th class="grams-col">F g</th>
+                <th class="alloc-col">P %kcal</th>
+                <th class="alloc-col">C %kcal</th>
+                <th class="alloc-col">F %kcal</th>
+              </tr>
+            </thead>
+          
+            <tbody>
+              <tr>
+                <td>
+                  <p id="dp-preview-name" data-role="preview-name" class="h3-table"></p>
+                </td>
+                <td><span data-role="meal-kcal"></span></td>
+                <td><span data-role="meal-protein"></span></td>
+                <td><span data-role="meal-carbs"></span></td>
+                <td><span data-role="meal-fat"></span></td>
+                
+                <td class="alloc-cell" data-role="alloc-protein">
+                  <div class="alloc-bar alloc-bar--protein"></div>
+                  <span class="alloc-text" data-role="alloc-protein-text"></span>
+                </td>
+                
+                <td class="alloc-cell" data-role="alloc-carbs">
+                  <div class="alloc-bar alloc-bar--carbs"></div>
+                  <span class="alloc-text" data-role="alloc-carbs-text"></span>
+                </td>
+          
+                <td class="alloc-cell" data-role="alloc-fat">
+                  <div class="alloc-bar alloc-bar--fat"></div>
+                  <span class="alloc-text" data-role="alloc-fat-text"></span>
+                </td>
+          
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-food-aggregation picker">
+          <span>Alimentos: </span>
+          <div class="card_food_preview_list" data-role="foods-aggregation">
+            <span></span>
+          </div>
+        </div>
+
+        <div data-scope="day-preview">
+          <table class="table-foods">
+
+            <thead>
+              <tr>
+                <th class="name-col">
+                  <p class="h3-table2">PREVIEW PLAN DIARIO</p>
+                </th>
+                <th class="kcal-col">Kcal</th>
+                <th class="grams-col">P g</th>
+                <th class="grams-col">C g</th>
+                <th class="grams-col">F g</th>
+                <th class="alloc-col">P %kcal</th>
+                <th class="alloc-col">C %kcal</th>
+                <th class="alloc-col">F %kcal</th>
+              </tr>
+            </thead>
+          
+            <tbody>
+          
+              <!-- CURRENT -->
+              <tr>
+                <td>Plan Diario sin Comida</td>
+          
+                <td><span id="dp-cur-kcal" data-role="cur-kcal"></span></td>
+                <td><span id="dp-cur-protein" data-role="cur-protein"></span></td>
+                <td><span id="dp-cur-carbs" data-role="cur-carbs"></span></td>
+                <td><span id="dp-cur-fat" data-role="cur-fat"></span></td>
+          
+                <td class="alloc-cell" id="dp-cur-alloc-protein-cell" data-role="cur-alloc-protein">
+                  <div class="alloc-bar alloc-bar--protein"></div>
+                  <span class="alloc-text" id="dp-cur-alloc-protein-text" data-role="cur-alloc-protein-text"></span>
+                </td>
+          
+                <td class="alloc-cell" id="dp-cur-alloc-carbs-cell" data-role="cur-alloc-carbs">
+                  <div class="alloc-bar alloc-bar--carbs"></div>
+                  <span class="alloc-text" id="dp-cur-alloc-carbs-text" data-role="cur-alloc-carbs-text"></span>
+                </td>
+          
+                <td class="alloc-cell" id="dp-cur-alloc-fat-cell" data-role="cur-alloc-fat">
+                  <div class="alloc-bar alloc-bar--fat"></div>
+                  <span class="alloc-text" id="dp-cur-alloc-fat-text" data-role="cur-alloc-fat-text"></span>
+                </td>
+              </tr>
+          
+              <!-- MEAL IMPACT -->
+              <tr>
+                <td>Aporte Comida</td>
+          
+                <!-- 🔴 ROLES RENOMBRADOS -->
+                <td><span id="dp-meal-kcal" data-role="impact-meal-kcal"></span></td>
+                <td><span id="dp-meal-protein" data-role="impact-meal-protein"></span></td>
+                <td><span id="dp-meal-carbs" data-role="impact-meal-carbs"></span></td>
+                <td><span id="dp-meal-fat" data-role="impact-meal-fat"></span></td>
+          
+                <!-- 🔴 ROLES RENOMBRADOS -->
+                <td class="alloc-cell" id="meal-alloc-protein-cell" data-role="impact-alloc-protein">
+                  <div class="alloc-bar alloc-bar--protein"></div>
+                  <span class="alloc-text" id="meal-alloc-protein-text" data-role="impact-alloc-protein-text"></span>
+                </td>
+          
+                <td class="alloc-cell" id="meal-alloc-carbs-cell" data-role="impact-alloc-carbs">
+                  <div class="alloc-bar alloc-bar--carbs"></div>
+                  <span class="alloc-text" id="meal-alloc-carbs-text" data-role="impact-alloc-carbs-text"></span>
+                </td>
+          
+                <td class="alloc-cell" id="meal-alloc-fat-cell" data-role="impact-alloc-fat">
+                  <div class="alloc-bar alloc-bar--fat"></div>
+                  <span class="alloc-text" id="meal-alloc-fat-text" data-role="impact-alloc-fat-text"></span>
+                </td>
+              </tr>
+          
+              <!-- PREVIEW -->
+              <tr>
+                <td>Plan Diario con Comida</td>
+          
+                <td><span id="dp-prev-kcal" data-role="prev-kcal"></span></td>
+                <td><span id="dp-prev-protein" data-role="prev-protein"></span></td>
+                <td><span id="dp-prev-carbs" data-role="prev-carbs"></span></td>
+                <td><span id="dp-prev-fat" data-role="prev-fat"></span></td>
+          
+                <td class="alloc-cell" id="dp-prev-alloc-protein-cell" data-role="prev-alloc-protein">
+                  <div class="alloc-bar alloc-bar--protein"></div>
+                  <span class="alloc-text" id="dp-prev-alloc-protein-text" data-role="prev-alloc-protein-text"></span>
+                </td>
+          
+                <td class="alloc-cell" id="dp-prev-alloc-carbs-cell" data-role="prev-alloc-carbs">
+                  <div class="alloc-bar alloc-bar--carbs"></div>
+                  <span class="alloc-text" id="dp-prev-alloc-carbs-text" data-role="prev-alloc-carbs-text"></span>
+                </td>
+          
+                <td class="alloc-cell" id="dp-prev-alloc-fat-cell" data-role="prev-alloc-fat">
+                  <div class="alloc-bar alloc-bar--fat"></div>
+                  <span class="alloc-text" id="dp-prev-alloc-fat-text" data-role="prev-alloc-fat-text"></span>
+                </td>
+              </tr>
+          
+              <tr>
+                <td></td>
+                <td></td>
+                <td><span data-role="prev-ppk"></span></td>
+              </tr>
+          
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+
+      <!-- extra fields -->
+
+      <div class="extra-fields">
+        <h4 id="meal-form-title">Hora</h4>
+        <input type="time" name="hour" class="hour-picker">
+        <h4 id="meal-form-title">Nota</h4>
+        <input type="text" name="note" class="note-picker" placeholder="Note (optional)">
+      </div>
+
+      <div class="actions-row">
+
+        <!-- 🔵 ADD MODE -->
+        <button type="submit" id="btn-add-meal" class="btn-add-picker">
+          Agregar Comida al Plan
+        </button>
+      
+        <!-- 🟠 EDIT MODE -->
+        <button type="submit" id="btn-update-meal" style="display:none;" class="btn-update-picker">
+          Reemplazar Comida en Plan
+        </button>
+      
+        <!-- ⚪ CANCEL -->
+        <button type="button" id="btn-cancel-meal-edit" class="btn-cancel-picker">
+          Cancelar
+        </button>
+      
+      </div>
+
+    </div>
+
+  </div>
+
+</form>
+
+{% load static %}
+
+<script>
+  window.MEAL_PICKER_MEALS = {{ meals_json|safe }};
+  window.MEAL_PICKER_CONTEXT = {{ meal_picker_context|safe }};
+</script>
+
+<script type="module" src="{% static 'notas/js/meal_picker.js' %}"></script>
+<script type="module" src="{% static 'notas/js/meal_math.js' %}"></script>
+<script type="module" src="{% static 'notas/js/meal_preview.js' %}"></script>
+  

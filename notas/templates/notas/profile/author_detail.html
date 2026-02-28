@@ -1,0 +1,70 @@
+{% extends "notas/base.html" %}
+
+{% block content %}
+
+
+  <h1>{{ profile.user.username }}</h1>
+
+  <p>
+    <strong>Role:</strong> {{ profile.get_role_display }}
+  </p>
+<br>
+<br>
+  <nav class="author-nav">
+    <a href="{% url 'author_programs' profile.user.username %}">
+      Programs
+    </a>
+    |
+    <a href="{% url 'author_dailyplans' profile.user.username %}">
+      Daily Plans
+    </a>
+    |
+    <a href="{% url 'author_meals' profile.user.username %}">
+      Meals
+    </a>
+  </nav>
+  
+  <br>
+
+  <hr>
+  <br>
+  <br>
+
+
+  <h2>Daily Plans</h2>
+  <br>
+  {% if dailyplans %}
+    <div class="card-list">
+      {% for dailyplan in dailyplans %}
+        {% include "components/card_dailyplan.html" with dailyplan=dailyplan %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No public daily plans yet.</p>
+  {% endif %}
+
+    <br>
+    <br><br>
+  <hr>
+
+  <br>
+  <br>
+
+
+  <h2>Meals</h2>
+  <br>
+  <br>
+  {% if meals %}
+    <div class="card-list">
+      {% for meal in meals %}
+        {% include "components//card_meal.html" with meal=meal %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No public meals yet.</p>
+  {% endif %}
+
+  <hr>
+
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "notas/base.html" %}
+{% block title %}
+Meal – {{ vm.meal.name }}
+{% endblock %}
+{% block content %}
+
+<!--  PAGE HEADER ==== -->
+<div class="page-nav-action">
+  {% include "components/header.html" with header=ui.header %}
+</div>
+
+<!-- FATHER CARD ==== -->
+<div class="page-father card-father">
+    {% include "components/card_father.html" with father_card=ui.father_card %}
+</div>
+
+
+<div class="page page--detail" data-page="meal-detail">
+  
+    <!-- MAIN CARD ====-->  
+    {% include "components/card_main_dpm.html" with main_card=ui.main_card %}
+  
+</div>
+
+
+<!-- DEBO INCLUIR FOODS LIST -->
+
+<!-- FIN ============================================== -->
+{% endblock %}

@@ -1,0 +1,143 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views.decorators.http import require_POST
+from notas.models import MealFood, Meal, Food
+
+
+
+
+
+#************ RENDER COMPLEJOS *********************
+# ---------- DETAIL (NO HAY LIST)  ----------
+
+@login_required
+@require_POST
+def mealfood_update(request, meal_id, mealfood_id):
+
+    meal = get_object_or_404(
+        Meal,
+        id=meal_id,
+        created_by=request.user,
+    )
+
+    mealfood = get_object_or_404(
+        MealFood.objects.select_related("meal"),
+        id=mealfood_id,
+        meal=meal,
+    )
+
+    return_to = (
+        request.POST.get("return_to")
+        or request.GET.get("return_to")
+    )
+
+    try:
+        quantity = float(request.POST.get("quantity", 0))
+    except ValueError:
+        quantity = 0
+
+    if quantity <= 0:
+        messages.error(request, "La cantidad debe ser mayor a 0.")
+        if return_to:
+            return redirect(return_to)
+        return redirect("meal_edit", meal.id)
+
+    mealfood.quantity = quantity
+    
+    food_id = request.POST.get("food_id")
+
+    if food_id:
+        mealfood.food_id = int(food_id)
+
+
+    mealfood.save()
+
+    messages.success(request, "Alimento actualizado correctamente.")
+
+    if return_to:
+        return redirect(return_to)
+
+    if meal.is_draft:
+        return redirect("meal_builder", pk=meal.pk)
+
+    return redirect("meal_edit", pk=meal.pk)
+
+
+@login_required
+@require_POST
+def mealfood_remove(request, pk):
+
+    mf = get_object_or_404(
+        MealFood.objects.select_related("meal", "meal__created_by"),
+        pk=pk,
+        meal__created_by=request.user,
+    )
+
+    meal = mf.meal
+
+    # 🔑 NUEVO: destino explícito
+    return_to = (
+        request.POST.get("return_to")
+        or request.GET.get("return_to")
+    )
+
+    mf.delete()
+
+    # 👉 prioridad absoluta: return_to
+    if return_to:
+        return redirect(return_to)
+
+    # 👇 comportamiento actual (NO se rompe)
+    if meal.is_draft:
+        return redirect("meal_builder", pk=meal.pk)
+
+    return redirect("meal_edit", pk=meal.pk)
+
+
+@require_POST
+def add_food_to_meal(request, pk):
+    meal = get_object_or_404(Meal, pk=pk)
+
+    food_id = request.POST.get("food_id")
+    quantity = request.POST.get("quantity")
+
+    # 🔑 NUEVO: destino explícito (POST o GET)
+    return_to = (
+        request.POST.get("return_to")
+        or request.GET.get("return_to")
+    )
+
+    if not food_id or not quantity:
+        messages.error(request, "Food y cantidad son obligatorios")
+
+        # 👉 prioridad absoluta: return_to
+        if return_to:
+            return redirect(return_to)
+
+        # 👇 comportamiento actual (NO se rompe)
+        if meal.is_draft:
+            return redirect("meal_builder", pk=meal.pk)
+        return redirect("meal_edit", pk=meal.pk)
+
+    food = get_object_or_404(Food, pk=food_id)
+
+    MealFood.objects.create(
+        meal=meal,
+        food=food,
+        quantity=quantity,
+    )
+
+    messages.success(request, "Food agregado a la meal")
+
+    # 👉 prioridad absoluta: return_to
+    if return_to:
+        return redirect(return_to)
+
+    # 👇 comportamiento actual (NO se rompe)
+    if meal.is_draft:
+        return redirect("meal_builder", pk=meal.pk)
+
+    return redirect("meal_edit", pk=meal.pk)
+
+

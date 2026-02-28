@@ -1,0 +1,18 @@
+{% extends "auth/auth_form_base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block auth_title %}Login{% endblock %}
+
+{% block auth_form %}
+    {{ form.as_p }}
+{% endblock %}
+
+{% block auth_button %}
+    Entrar
+{% endblock %}
+
+{% block auth_footer %}
+    ¿No tienes cuenta?
+    <a href="{% url 'signup' %}">Regístrate aquí</a>
+{% endblock %}

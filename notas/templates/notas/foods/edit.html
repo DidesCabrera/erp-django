@@ -1,0 +1,118 @@
+{% extends "notas/base.html" %}
+{% block title %}
+Edit Food – {{ food.name }}
+{% endblock %}
+{% block content %}
+<!-- ======== PAGE HEADER ===================================== -->           
+<div class="page-nav-action">
+  {% include "components/header.html" with header=header %}
+</div>
+
+
+<div class="page page--detail" data-page="food-edit">
+
+  <!-- TITLE =============================================-->
+  <div class="page-title">
+    <h1>{{ food.name }}<small>(draft)</small></h1>
+    <p>Editar Nombre</p>
+  </div>
+
+
+  <!-- KPI SECTION ======================================-->
+  <div class="page-kpi">
+    <h3>Información Nutricional</h3>
+    {% include "components/dash_kpi.html" with entity=food %}
+  </div>
+  <hr>
+
+
+  <!-- ADD SECTION =======================================-->
+  
+  <div class="page-add">
+
+    <div class="add-row">
+      <!-- 🔹 TÍTULO DINÁMICO -->
+      <h3 id="food-form-title">Add food</h3>
+  
+      <!-- FOOD PICKER ======================================= -->
+      <div id="food-picker" class="picker">
+        <input
+          type="text"
+          id="food-search"
+          placeholder="Add food…"
+          autocomplete="off"
+        />
+        <ul id="food-list" class="picker-list"></ul>
+      </div>
+    </div>
+  
+    <!-- FOOD PREVIEW ===================================== -->
+    <form
+      method="post"
+      action="{% url 'add_food_to_meal' food.id %}"
+      id="form-preview"
+      data-meal-id="{{ meal.id }}"
+    >
+      {% csrf_token %}
+  
+      <!-- Food Preview -->
+      <div id="food-preview" style="display:none;">
+  
+        <div class="table-items edit">
+          <table class="table-foods preview" id="table-foods-preview">
+  
+            <colgroup>
+              <col style="width: 200px">
+              <col style="width: 50px">
+            </colgroup>
+  
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>100 g</th>
+              </tr>
+            </thead>
+  
+            <tbody>
+              <tr>
+                <td><p>Total Kcal</p></td>
+                <td><input></td>
+              </tr>
+              <tr>
+                <td><p>Proteins</p></td>
+                <td><input></td>
+              </tr>
+              <tr>
+                <td><p>Proteins</p></td>
+                <td><input></td>
+              </tr>
+              <tr>
+                <td><p>Proteins</p></td>
+                <td><input></td>
+              </tr>
+              <tr>
+                <td><p>Proteins</p></td>
+                <td><input></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <!-- BOTONES =================================== -->
+        <div class="actions-row">
+          <!-- 🔵 BOTÓN PARA AGREGAR (ADD MODE) -->
+          <button type="submit" id="btn-add-food">
+            Add food
+          </button>
+
+        </div>
+  
+      </div>
+    </form>
+  </div>
+
+
+  <a href="{% url 'food_configure' food.id %}">Continue</a>  
+
+</div>
+{% endblock %}

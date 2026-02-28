@@ -1,0 +1,13 @@
+{% extends "notas/base.html" %}
+
+{% block content %}
+  <h1>{{ author.username }} · Daily Plans</h1>
+
+  {% if dailyplans %}
+    {% for dailyplan in dailyplans %}
+      {% include "components/card_dailyplan.html" with obj=dailyplan %}
+    {% endfor %}
+  {% else %}
+    <p>No public daily plans yet.</p>
+  {% endif %}
+{% endblock %}

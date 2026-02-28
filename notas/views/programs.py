@@ -4,16 +4,26 @@ from notas.models import Program, ProgramDay, DailyPlan
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db import transaction
-from notas.services.permissions import can_copy
 from django.contrib import messages
 from datetime import date
+from notas.services.capabilities import get_capabilities
+from django.db.models import Sum, F, ExpressionWrapper, FloatField
+from notas.services.nutrition import (
+    PROTEIN_KCAL_PER_GRAM,
+    CARBS_KCAL_PER_GRAM,
+    FAT_KCAL_PER_GRAM,
+)
+
 
 
 
 @login_required
 @require_POST
 def fork_program(request, program_id):
-    original = get_object_or_404(Program, id=program_id)
+    original = get_object_or_404(
+        Program.objects.prefetch_related("program_dailyplan__dailyplan"),
+        id=program_id,
+    )
 
     with transaction.atomic():
         forked = Program.objects.create(
@@ -23,26 +33,26 @@ def fork_program(request, program_id):
             forked_from=original,
             start_date=original.start_date,
             end_date=original.end_date,
-            is_public=False
+            is_public=False,
         )
 
-        for day in original.program_days.all():
+        for day in original.program_dailyplan.all():
             ProgramDay.objects.create(
                 program=forked,
-                daily_plan=day.daily_plan,
-                date=day.date
+                dailyplan=day.dailyplan,
+                date=day.date,
             )
 
-    return redirect('program_detail', forked.id)
+    return redirect("program_detail", forked.id)
 
 
 @login_required
 @require_POST
 def copy_program(request, pk):
-    program = get_object_or_404(Program, pk=pk)
-
-    if not can_copy(request.user, program):
-        return HttpResponseForbidden("No puedes copiar este programa")
+    program = get_object_or_404(
+        Program.objects.prefetch_related("program_dailyplan__dailyplan"),
+        pk=pk,
+    )
 
     copy = Program.objects.create(
         name=f"{program.name} (copy)",
@@ -54,11 +64,10 @@ def copy_program(request, pk):
         is_copiable=False,
     )
 
-    # copiar los días del programa
-    for day in program.program_days.all():
+    for day in program.program_dailyplan.all():
         ProgramDay.objects.create(
             program=copy,
-            daily_plan=day.daily_plan,
+            dailyplan=day.dailyplan,
             date=day.date,
         )
 
@@ -67,13 +76,35 @@ def copy_program(request, pk):
 
 @login_required
 def program_list(request):
-    programs = Program.objects.filter(created_by=request.user).order_by("-created_at")
+
+    programs = (
+        Program.objects
+        .filter(created_by=request.user)
+        .order_by("-created_at")
+        .prefetch_related(
+            "program_dailyplan__dailyplan__dailyplan_meals__meal__meal_food_set__food"
+        )
+        .annotate(
+            total_kcal_sql=Sum(
+                ExpressionWrapper(
+                    (F("program_dailyplan__dailyplan__dailyplan_meals__meal__meal_food_set__quantity") / 100.0) * (
+                        F("program_dailyplan__dailyplan__dailyplan_meals__meal__meal_food_set__food__protein") * PROTEIN_KCAL_PER_GRAM +
+                        F("program_dailyplan__dailyplan__dailyplan_meals__meal__meal_food_set__food__carbs")   * CARBS_KCAL_PER_GRAM +
+                        F("program_dailyplan__dailyplan__dailyplan_meals__meal__meal_food_set__food__fat")     * FAT_KCAL_PER_GRAM
+                    ),
+                    output_field=FloatField(),
+                )
+            )
+        )
+    )
+
 
     return render(
         request,
         "notas/programs/list.html",
-        {"programs": programs}
+        {"programs": programs},
     )
+
 
 
 @login_required
@@ -104,17 +135,6 @@ def program_create(request):
 
         profile = request.user.profile
 
-        # Regla de negocio por plan
-        if profile.role == "member":
-            max_days = profile.plan.max_program_duration_days
-
-            if max_days and duration_days > max_days:
-                messages.error(
-                    request,
-                    f"Tu plan permite programas de hasta {max_days} días."
-                )
-                return redirect("program_create")
-
         # Crear el programa
         program = Program.objects.create(
             name=name,
@@ -129,8 +149,15 @@ def program_create(request):
 
 
 
+@login_required
 def program_detail(request, pk):
-    program = get_object_or_404(Program, pk=pk)
+
+    program = get_object_or_404(
+        Program.objects.prefetch_related(
+            "program_dailyplan__dailyplan__dailyplan_meals__meal__meal_food_set__food"
+        ),
+        pk=pk,
+    )
 
     dailyplans = DailyPlan.objects.filter(created_by=request.user)
 
@@ -142,6 +169,7 @@ def program_detail(request, pk):
             "dailyplans": dailyplans,
         }
     )
+
 
 
 @require_POST
@@ -159,7 +187,7 @@ def add_dailyplan_to_program(request, pk):
 
     ProgramDay.objects.create(
         program=program,
-        daily_plan=dailyplan,
+        dailyplan=dailyplan,
         date=date
     )
 
@@ -169,31 +197,38 @@ def add_dailyplan_to_program(request, pk):
 
 @login_required
 def configure_program(request, pk):
-    program = get_object_or_404(Program, pk=pk)
 
-    if program.created_by != request.user:
-        messages.error(request, "You cannot configure this program.")
-        return redirect("program_detail", pk=pk)
-    
-    profile = request.user.profile
+    program = get_object_or_404(
+        Program.objects.prefetch_related("program_dailyplan"),
+        pk=pk,
+        created_by=request.user,
+    )
+
+    caps = get_capabilities(request.user)
 
     if request.method == "POST":
         is_public = bool(request.POST.get("is_public"))
         is_forkable = bool(request.POST.get("is_forkable"))
         is_copiable = bool(request.POST.get("is_copiable"))
 
-        if profile.role == "member":
-            is_public = False
-            is_forkable = True
-            is_copiable = False
+        if is_public and not caps.can_publish():
+            messages.error(request, "You cannot publish this program.")
+            return redirect("configure_program", pk=pk)
+
+        if is_copiable and not caps.can_copy():
+            messages.error(request, "Your plan does not allow copies.")
+            return redirect("configure_program", pk=pk)
 
         program.is_public = is_public
         program.is_forkable = is_forkable
         program.is_copiable = is_copiable
 
         if program.is_draft:
-            if not program.program_days.exists():
-                messages.error(request, "Add at least one day before finalizing.")
+            if not program.program_dailyplan.exists():
+                messages.error(
+                    request,
+                    "Add at least one day before finalizing."
+                )
                 return redirect("program_detail", pk=pk)
 
             program.is_draft = False
@@ -207,7 +242,7 @@ def configure_program(request, pk):
         "notas/programs/configure.html",
         {
             "program": program,
-            "profile": request.user.profile
+            "caps": caps,
         }
     )
 

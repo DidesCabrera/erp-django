@@ -1,34 +1,85 @@
-/* Celda base */
-.alloc-cell {
-    position: relative;
-    padding: 6px 8px;
-    overflow: hidden;
-    background-color: #f3f3f100;   /* fondo base */
-    font-variant-numeric: tabular-nums;
-  }
-  
-  /* Barra de fondo */
-  .alloc-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: calc(var(--alloc) * 1%);
-    background-color: #ffa01a;  /* color fijo */
-    z-index: 0;
-    transition: width 0.25s ease;
-  }
-  
-  /* Texto por encima */
-  .alloc-text {
-    position: relative;
-    z-index: 1;
-    font-weight: 500;
-    color: #333;
-  }
-  
-  
-/* components/alloc-bar.css */
-.alloc-bar--protein { background: var(--accent-protein); }
-.alloc-bar--carbs   { background: var(--accent-carbs); }
-.alloc-bar--fat     { background: var(--accent-fat); }
+/*  ALLOC BAR */
+
+
+.alloc-bar-comp {
+  position: relative;
+  width: 100%;
+  height: inherit;
+  border-radius: 0px 4px 4px 0px;
+  overflow: hidden;
+}
+
+/* alloc para card-mini */
+.alloc-bar-comp.mini {
+  height: 18px;
+}
+
+/* Fondo */
+.alloc-bar-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-3);
+  z-index: 0;
+}
+
+/* Fill */
+.alloc-bar-fill {
+  position: absolute;
+  inset: 0;
+  width: calc(var(--alloc) * 1%);
+  z-index: 1;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  border-radius: inherit;
+  transition: width 0.35s ease;
+}
+
+/* colores */
+.alloc-bar-fill--protein { background: var(--color-protein); }
+.alloc-bar-fill--carbs   { background: var(--color-carbs); }
+.alloc-bar-fill--fat     { background: var(--color-fat); }
+
+
+.alloc-pct {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  white-space: nowrap;
+  width: 60px;
+  height: inherit;
+  border-radius: 4px 0px 0px 4px;
+  border-right: 1px solid rgba(0, 0, 0, 0.18);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* alloc para card-mini */
+.alloc-pct.mini {
+  font-size: 12.5px;
+  height: 18px;
+}
+
+/* kcal fija derecha */
+.alloc-sub {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  font-weight: 300;
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.75;
+
+  z-index: 3;
+}
+
+/* ======================================= */
+/* ======================================= */
+/* ======================================= */

@@ -1,66 +1,86 @@
 {% extends "notas/base.html" %}
-
 {% block title %}
 Configure Meal – {{ meal.name }}
 {% endblock %}
-
 {% block content %}
 
-<h2>Configure meal</h2>
-<br>
-<form method="post">
-  {% csrf_token %}
 
-  <!-- PUBLIC -->
-  <p>
-    <label>
-      <input type="checkbox" name="is_public"
-        {% if not can_publish %}disabled{% endif %}
-        {% if meal.is_public %}checked{% endif %}
-      >
-      Make this meal public
-    </label>
+<div class="page page--detail page-modal">
 
-    {% if not can_publish %}
-      <br>
-      <small>🔒 Available for nutritionist plans only</small>
-    {% endif %}
-  </p>
-<hr>
-  <!-- FORKABLE -->
-  <p>
-    <label>
-      <input type="checkbox" name="is_forkable"
-        {% if meal.is_forkable %}checked{% endif %}
-      >
-      Allow forks
-    </label>
-  </p>
-<hr>
-  <!-- COPIABLE -->
-  <p>
-    <label>
-      <input type="checkbox" name="is_copiable"
-        {% if not can_copy %}disabled{% endif %}
-        {% if meal.is_copiable %}checked{% endif %}
-      >
-      Allow copies
-    </label>
+    <div class="wrap-page-modal">
+        <div class="label-entity label-entity--meal page-modal}}">
+          Meal
+        </div>
+        <h2>Configura tu Comida</h2>
+        <br>
 
-    {% if not can_copy %}
-      <br>
-      <small>🔒 Copiable meals are available on higher plans</small>
-    {% endif %}
-  </p>
-<hr>
-  <button type="submit">
-    {% if meal.is_draft %}
-      Finalize meal
-    {% else %}
-      Save settings
-    {% endif %}
-  </button>
-</form>
+        <form class="configure-form" method="post">
+            {% csrf_token %}
+
+            <!-- PUBLIC -------------------------------------->
+            <p>
+              <label>
+                  <input
+                  type="checkbox"
+                  name="is_public"
+                  {% if not caps.can_publish %}disabled{% endif %}
+                  {% if meal.is_public %}checked{% endif %}
+                  >
+                  Compartir esta Comida en la lista de exploración
+              </label>
+
+              {% if not caps.can_publish %}
+                  <br>
+                  <small>🔒 Public meals are available for nutritionists only</small>
+              {% endif %}
+            </p>
+
+            <!-- FORKABLE ------------------------------------>
+            <p>
+              <label>
+                  <input
+                  type="checkbox"
+                  name="is_forkable"
+                  {% if meal.is_forkable %}checked{% endif %}
+                  >
+                  Permitir que otros usuarios dupliquen tu Comida
+              </label>
+            </p>
+
+            <!-- COPIABLE 
+            <p>
+              <label>
+                  <input
+                  type="checkbox"
+                  name="is_copiable"
+                  {% if not caps.can_copy %}disabled{% endif %}
+                  {% if meal.is_copiable %}checked{% endif %}
+                  >
+                  Allow copies
+              </label>
+
+              {% if not caps.can_copy %}
+                  <br>
+                  <small>🔒 Copiable meals are available on higher plans</small>
+              {% endif %}
+            </p>
+            ------------------------------------>
+
+
+
+
+            <hr>
+            <!-- ACTION NAVEGATION ======================================-->
+            <div class="btn-block">
+              <!-- 👈 Volver al paso 1 (seguro) -->
+              <a>
+                  <button  type="submit" class="btn-cancel-create">Volver</button>
+              </a>
+              <button type="submit" class="btn-continue">Finalizar</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 
 {% endblock %}

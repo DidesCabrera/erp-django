@@ -1,0 +1,39 @@
+{% extends "notas/base.html" %}
+{% block title %}
+Food – {{ food.name }}
+{% endblock %}
+{% block content %}
+<!-- ======== PAGE HEADER ===================================== -->           
+<div class="page-nav-action">
+  {% include "components/header.html" with header=header %}
+</div>
+
+
+
+<div class="page page--detail" data-page="food-detail">
+  <!-- TITLE =============================================-->
+  <div class="page-title">
+    <h1>{{ header.title }}</h1>
+  </div>
+
+  
+
+  <!-- KPI SECTION ======================================-->
+  <div class="page-kpi">
+    <h3>Información Nutricional</h3>
+    {% include "components/dash_kpi.html" with entity=food %}
+  </div>
+  <hr>
+
+
+
+  <!-- METADATA ============================================= -->
+  <div class="page-metadata">
+    {% include "components/metadata.html" with item=item %}
+  </div>
+
+  
+
+</div> <!-- cierre div page -->
+<!-- FIN ============================================== -->
+{% endblock %}

@@ -1,19 +1,41 @@
 {% extends "notas/base.html" %}
-
 {% block title %}Create Meal{% endblock %}
-
 {% block content %}
-<h2>Create Meal</h2>
+<!-- ======== PAGE HEADER ===================================== -->           
 
-<form method="post">
-  {% csrf_token %}
 
-  <p>
-    <label>Name</label><br>
-    <input type="text" name="name">
-  </p>
+<div class="page page--detail page-modal">
 
-  <button type="submit">Next: add foods</button>
-</form>
+
+  <div class="wrap-page-modal">
+
+    <div class="label-entity label-entity--meal page-modal }}">
+      Meal
+    </div>
+
+    <div class="label-fork">#variante</div>
+
+
+    <!-- INIT =============================================-->
+
+    <h2 class="title-create">Crea una nueva Comida</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      <p>
+        <label class="name-create">Nombre</label><br>
+        <input type="text" name="name" placeholder="Según ingredientes, propósito, otro..." class="input-create">
+      </p>
+      <hr>
+      <div class="btn-block">
+        <button  type="submit" class="btn-cancel-create">Cancelar</button>
+        <button type="submit"  class="btn-continue">Continuar</button>
+      </div>
+    </form>
+
+  </div>
   
+</div>
+<!-- FIN ============================================== -->
+
 {% endblock %}

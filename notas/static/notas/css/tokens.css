@@ -1,0 +1,40 @@
+:root {
+    --color-primary: #4f46e5;
+    --color-primary-light: #818cf8;
+    --color-secondary: #14b8a6;
+  
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+  
+    --color-bg: #ffffff; /* mas claro */
+    --color-bg-3: #f8f8f8; /* claro - se usa solo en bg de alloc-bar */
+    --color-bg-2: #f0f0f0; /* oscuro */
+    --color-bg-4: #e9e9e9; /* mas oscuro */
+
+    --color-bg-picker: rgb(255, 241, 224);
+    --color-bg-picker2: rgba(0, 0, 0, 0.010);
+
+    --color-bg-98:  rgb(32, 32, 32);/* gris ultra oscuro */
+
+    --color-border-1: #dfdfdf;
+    --color-border-2: #ebebeb;
+    
+    --color-protein: #00d0f5;
+    --color-carbs: #01e888;
+    --color-fat: #bbff00; 
+    --color-qty: rgb(255, 251, 130);
+    --color-kcal:  rgb(255, 227, 210);
+    --color-ppk:  rgb(255, 209, 110);
+    --color-ppk0:  rgb(255, 182, 159);
+
+    --color-food: rgb(44, 209, 110);
+    --color-meal: #cf34b0;
+    --color-dailyplan: #ff8800;
+    --color-dailyplan-light: #ffffff;
+    --color-program: #512fff;
+    --color-inbox: #ff4343;
+
+
+    --color-actions: #0054e5;
+
+}

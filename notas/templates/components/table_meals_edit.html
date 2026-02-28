@@ -1,0 +1,69 @@
+<div class="table-items edit">
+
+    <table class="table-meals table-meals--edit">
+  
+      <!-- HEAD -->
+      <thead>
+        <tr>
+          <th class="time-col edit">Hora</th>
+          <th class="name-col edit">Comidas</th>
+          <th class="kcal-col edit">Kcal</th>
+          <th class="grams-col edit">P g</th>
+          <th class="grams-col edit">C g</th>
+          <th class="grams-col edit">F g</th>
+          <th class="alloc-col edit">P %kcal</th>
+          <th class="alloc-col edit">C %kcal</th>
+          <th class="alloc-col edit">F %kcal</th>
+          <th class="table-action"></th>
+          <th class="table-action"></th>
+          <th class="table-action"></th>
+        </tr>
+      </thead>
+  
+  
+      <!-- BODY -->
+      <tbody>
+        {% for row in items %}
+          <tr>
+            <td>{{ row.rel.hour|time:"H:i" }}</td>
+            <td class="col-name">{{ row.rel.name }}</td>
+            <td><div class="cell-kcal">{{ row.rel.total_kcal|floatformat:0 }}</div></td>
+            <td>{{ row.rel.g_protein|floatformat:1 }}</td>
+            <td>{{ row.rel.g_carbs|floatformat:1 }}</td>
+            <td>{{ row.rel.g_fat|floatformat:1 }}</td>
+            {% include "components/alloc_cell_protein.html" with value=row.rel.alloc_protein bar_class="alloc-bar--protein" %}
+            {% include "components/alloc_cell_carbs.html" with value=row.rel.alloc_carbs   bar_class="alloc-bar--carbs" %}
+            {% include "components/alloc_cell_fat.html" with value=row.rel.alloc_fat     bar_class="alloc-bar--fat" %}
+            <td class="table-action"><button>E</button></td>
+            <td class="table-action">
+              <button
+                  type="button"
+                  class="edit-meal-btn"
+                  data-dpm-id="{{ row.rel.id }}"
+                  data-meal-id="{{ row.child_id }}"
+                  data-meal-name="{{ row.rel.name }}"
+                  data-protein="{{ row.rel.g_protein }}"
+                  data-carbs="{{ row.rel.g_carbs }}"
+                  data-fat="{{ row.rel.meal.g_fat }}"
+                  data-kcal="{{ row.rel.total_kcal }}"
+                  data-hour="{{ row.rel.hour}}"
+                  data-note="{{ row.rel.note}}"
+                >
+                R
+              </button>
+            </td>
+            <td class="table-action">
+              <form method="post" action="{% url 'dailyplanmeal_remove' row.child_id row.rel.id %}">
+                {% csrf_token %}
+                <button type="submit">✕</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  
+    </table>
+  
+    <p class="note">*Alloc: kcal Meal / kcal Dailyplan</p>
+  
+  </div>

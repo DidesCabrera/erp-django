@@ -1,0 +1,13 @@
+{% extends "notas/base.html" %}
+
+{% block content %}
+  <h1>{{ author.username }} · Meals</h1>
+
+  {% if meals %}
+    {% for meal in meals %}
+      {% include "components/card_meal.html" with obj=meal %}
+    {% endfor %}
+  {% else %}
+    <p>No public meals yet.</p>
+  {% endif %}
+{% endblock %}

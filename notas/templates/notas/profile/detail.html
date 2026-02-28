@@ -1,0 +1,39 @@
+{% extends "notas/base.html" %}
+
+{% block content %}
+
+<div class="page">
+
+  <!-- HEADER PAGE =============================================-->
+  
+  {% include "components/list_header_profile.html" with header=ui.header %}
+
+  <div class="sub-page">
+    <p>
+      <strong>Username:</strong> {{ profile.user.username }}
+    </p>
+
+    <p>
+      <strong>Role:</strong> {{ profile.get_role_display }}
+    </p>
+
+    <p>
+      <strong>Plan:</strong> {{ profile.plan.name }}
+    </p>
+
+    <p>
+      <strong>Member since:</strong>
+      {{ profile.created_at|date:"Y-m-d" }}
+    </p>
+
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit">Cerrar sesión</button>
+    </form>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "notas/base.html" %}
+{% block title %}Create Meal{% endblock %}
+{% block content %}
+
+
+<!-- ======== PAGE HEADER ===================================== -->           
+
+
+<div class="page page--detail page-modal">
+
+  <div class="wrap-page-modal">
+
+    <div class="label-entity label-entity--dailyplan page-modal }}">
+      Dailyplan
+    </div>
+
+    <div class="label-fork">#variante</div>
+
+    <h2>Comparte: {{ dailyplan.name }}</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <hr>
+      <div class="btn-block">
+        <button  type="submit" class="btn-cancel-create">Cancelar</button>
+        <button type="submit"  class="btn-continue">Compartir</button>
+      </div>
+    </form>
+
+  </div>
+  
+</div>
+<!-- FIN ============================================== -->
+
+{% endblock %}

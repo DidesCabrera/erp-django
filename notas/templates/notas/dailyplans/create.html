@@ -1,18 +1,41 @@
 {% extends "notas/base.html" %}
-
-{% block title %}Create Daily Plan{% endblock %}
-
+{% block title %}Create DailyPlan{% endblock %}
 {% block content %}
-<h2>Create Daily Plan</h2>
 
-<form method="post">
-  {% csrf_token %}
+<div class="page page--detail page-modal">
 
-  <p>
-    <label>Name</label><br>
-    <input type="text" name="name">
-  </p>
+  <div class="wrap-page-modal">
 
-  <button type="submit">Next: add Meals</button>
-</form>
+    <div class="label-entity label-entity--dailyplan page-modal }}">
+      Dailyplan
+    </div>
+
+    <div class="label-fork">#variante</div>
+
+
+    <!-- INIT =============================================-->
+
+    <h2 class="title-create">Crea un nuevo Plan Diario</h2>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <p>
+        <label class="name-create">Nombre</label><br>
+        <input type="text" name="name" placeholder="Día de la semana, propósito, otro..." class="input-create">
+      </p>
+
+      <hr>
+      <div class="btn-block">
+        <button  type="submit" class="btn-cancel-create">Cancelar</button>
+        <button  type="submit" class="btn-continue">Continuar</button>
+      </div>
+    </form>
+    
+  </div>
+
+  <!-- FIN ============================================== -->
+
+</div>
+
 {% endblock %}

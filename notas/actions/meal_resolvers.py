@@ -1,117 +1,249 @@
 from django.urls import reverse, NoReverseMatch
-from notas.services.permissions import (
-    can_fork,
-    can_copy,
-)
-from notas.routing.meal import meal_url
-from notas.actions.constants import (
-    MEAL_CONTEXT_LIST,
-    MEAL_CONTEXT_DAILYPLAN,
-)
 
-MEAL_ACTIONS_BY_CONTEXT = {
-    MEAL_CONTEXT_LIST: [
-        "detail",
-        "fork",
-        "copy",
-    ],
-    MEAL_CONTEXT_DAILYPLAN: [
-        "detail",
-        "replace",
-        "remove",
-    ],
-}
+from notas.services.capabilities import get_capabilities
+from notas.routing.meal import meal_url, meal_configure_url, meal_list_url
+from notas.actions.constants import *
 
-
-# --------------------------------------------------
-# Declaración de acciones posibles (no ejecuta lógica)
-# --------------------------------------------------
+# ==================================================
+# 1. DEFINICIÓN DECLARATIVA DE ACCIONES
+# (qué es cada acción, NO cuándo aparece)
+# ==================================================
 
 MEAL_ACTION_DEFINITIONS = {
     "detail": {
-        "label": "View",
+        "label": "Ver",
         "method": "get",
-        "get_url": lambda meal, context=None: meal_url(
-            meal,
-            dailyplan=context.get("dailyplan") if context else None,
+        "get_url": lambda meal, context=None: meal_url(meal),
+    },
+
+    "explore_detail": {
+        "label": "Ver",
+        "method": "get",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_explore_detail", args=[meal.id]
         ),
     },
 
+    "cancel": {
+        "label": "Cancelar",
+        "method": "get",
+        "get_url": lambda meal, context=None: meal_list_url(),
+    },
+
+    "configure": {
+        "label": "Configurar",
+        "method": "get",
+        "get_url": lambda meal, context=None: meal_configure_url(meal),
+        "capability": "can_edit_own_content",
+    },
+
     "fork": {
-        "label": "Fork",
+        "label": "Duplicar",
         "method": "post",
-        "get_url": lambda meal: reverse("fork_meal", args=[meal.id]),
-        "permission": lambda meal, user: can_fork(user.profile),
+        "get_url": lambda meal, context=None: reverse(
+            "meal_fork", args=[meal.id]
+        ),
+        "capability": "can_fork",
     },
 
     "copy": {
         "label": "Copy",
         "method": "post",
-        "get_url": lambda meal: reverse("copy_meal", args=[meal.id]),
-        "permission": lambda meal, user: can_copy(user.profile),
+        "get_url": lambda meal, context=None: reverse(
+            "meal_copy", args=[meal.id]
+        ),
+        "capability": "can_copy",
     },
 
-    # -------- FUTURAS (safe: no rompen) --------
-
     "add_to_dailyplan": {
-        "label": "Add to plan",
-        "method": "post",
-        "get_url": lambda meal: reverse(
-            "add_meal_to_dailyplan_from_meal",
-            args=[meal.id],
+        "label": "Agregar a Plan",
+        "method": "get",
+        "get_url": lambda meal, context=None: reverse(
+            "add_meal_from_list", args=[meal.id]
         ),
     },
 
-    "replace": {
-        "label": "Replace",
+    # ---- FUTURAS (safe no-op si no se usan) ----
+
+    "delete": {
+        "label": "Eliminar",
         "method": "post",
-        "get_url": lambda meal: reverse("replace_meal", args=[meal.id]),
+        "get_url": lambda meal, context=None: reverse(
+            "meal_delete", args=[meal.id]
+        ),
     },
 
     "edit": {
-        "label": "Edit",
-        "method": "get",
-        "get_url": lambda meal: reverse("meal_edit", args=[meal.id]),
+        "label": "Editar",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_edit", args=[meal.id]
+        ),
     },
 
-    "delete": {
-        "label": "Delete",
+    "deep_edit": {
+        "label": "Editar",
         "method": "post",
-        "get_url": lambda meal: reverse("meal_delete", args=[meal.id]),
+        "get_url": lambda meal, context=None: reverse(
+            "meal_edit", args=[meal.id]
+        ),
     },
+
+    #se refiere a volver desde una edicion. reemplaza a save/cancel
+    "back_detail": {
+        "label": "Finalizar",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_detail", args=[meal.id]
+        ),
+    },
+
+    "back_to_list": {
+        "label": "Volver",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_list"
+        ),
+    },
+
+    "back_to_explore_list": {
+        "label": "Volver",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_explore_list"
+        ),
+    },
+
+    "remove": {
+        "label": "Remover",
+        "method": "post",
+        "get_url": lambda meal, ctx=None: reverse(
+            "meal_remove", args=[meal.id]
+        ),
+    },
+
+    "delete_draft": {
+        "label": "Eliminar",
+        "method": "post",
+        "get_url": lambda meal, ctx=None: reverse(
+            "meal_draft_delete", args=[meal.id]
+        ),
+    },
+
+    "share": {
+        "label": "Compartir",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_share", args=[meal.id]
+        ),
+    }
+
 }
 
+# ==================================================
+# 2. ACCIONES PERMITIDAS POR CONTEXTO
+# ==================================================
+
+MEAL_ACTIONS_BY_VIEWMODE = {
+    MEAL_VIEWMODE_LIST: [
+        "detail",
+        "add_to_dailyplan",
+        "share",
+    ],
+
+    MEAL_VIEWMODE_EXPLORE_LIST: [
+        "explore_detail",
+        "fork",
+    ],
+
+    MEAL_VIEWMODE_SHARED_LIST: [
+        "detail",
+        "save_my_list",
+    ],
+
+    MEAL_VIEWMODE_DRAFT_LIST: [
+        "detail",
+        "edit",
+        "delete_draft",
+    ],
+
+    MEAL_VIEWMODE_SHARED_DETAIL: [
+        "detail",
+        "save_my_list",
+        "unshare",
+    ],
+
+
+    MEAL_VIEWMODE_DETAIL: [
+        "fork",
+        "share",
+        "add_to_dailyplan",
+        "edit",
+        "remove",
+        "back_to_list",
+    ],
+    
+    MEAL_VIEWMODE_EXPLORE_DETAIL: [
+        "fork",
+        "add_to_dailyplan",
+         "back_to_explore_list",
+    ],
+
+    MEAL_VIEWMODE_CONFIGURE:[
+        "back_detail",
+    ],
+
+    MEAL_VIEWMODE_EDIT: [
+        "configure",
+        "back_detail",
+    ],
+
+    MEAL_VIEWMODE_CREATE: [
+        "continue",
+        "cancel",
+    ],
+
+    MEAL_VIEWMODE_DAILYPLAN: [
+        # dentro de un dailyplan
+        "detail",
+    ],
+}
+
+# ==================================================
+# 3. RESOLVER PRINCIPAL
+# ==================================================
 
 def resolve_meal_actions(meal, user, context=None):
     """
-    Returns a list of resolved actions for a Meal instance.
-    - Respects meal.available_action_keys()
-    - Checks permissions if defined
-    - Skips actions whose URLs are not implemented yet
+    Devuelve una lista de acciones disponibles para una Meal,
+    según contexto + capabilities del usuario.
     """
+
     context = context or {}
+    context_name = context.get("name")
+
+    caps = get_capabilities(user)
     actions = []
 
-    context_name = context.get("context")
-
-    allowed_keys = MEAL_ACTIONS_BY_CONTEXT.get(
-        context_name,
-        meal.available_action_keys(),  # fallback seguro
-    )
+    # --- acciones permitidas según contexto ---
+    allowed_keys = MEAL_ACTIONS_BY_VIEWMODE.get(context_name, [])
 
     for key in allowed_keys:
         definition = MEAL_ACTION_DEFINITIONS.get(key)
         if not definition:
             continue
 
-        # Permiso (si existe)
-        permission = definition.get("permission")
-        if permission and not permission(meal, user):
-            continue
+        # --- capability check ---
+        capability_name = definition.get("capability")
+        if capability_name:
+            if not caps or not hasattr(caps, capability_name):
+                continue
+            if not getattr(caps, capability_name)():
+                continue
 
-        # URL segura (puede no existir aún)
+        # --- resolver URL (safe) ---
         try:
-            url = definition["get_url"](meal)
+            url = definition["get_url"](meal, context)
         except NoReverseMatch:
             continue
 
@@ -119,7 +251,7 @@ def resolve_meal_actions(meal, user, context=None):
             "key": key,
             "label": definition["label"],
             "url": url,
-            "method": definition.get("method", "get"),
+            "method": definition["method"],
         })
 
     return actions

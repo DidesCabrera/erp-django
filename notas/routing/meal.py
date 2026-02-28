@@ -1,14 +1,11 @@
 from django.urls import reverse
 
 
-def meal_url(meal, *, dailyplan=None):
+def meal_url(meal):
+    return reverse("meal_detail", args=[meal.id])
 
-    if dailyplan:
-        return reverse(
-            "dailyplan_meal_detail",
-            args=[dailyplan.id, meal.id],
-        )
+def meal_configure_url(meal):
+    return reverse("meal_configure", args=[meal.id])
 
-    # canonical / neutral URL
-    return meal.get_canonical_url()
-
+def meal_list_url():
+    return reverse("meal_list")

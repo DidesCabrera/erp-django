@@ -1,0 +1,47 @@
+
+
+
+<div data-page="dailyplan-detail">
+ 
+    <!-- HEADER CARD ========================================= -->
+    <!-- ===================================================== -->
+        <div class="card-title main">
+            {% include "components/card_main_title.html" with titulo=main_card.titulo %}
+        </div>    
+        
+
+        <!-- KPI ========================================= -->
+        <div class="page-kpi">
+
+            <h3>Información Nutricional</h3>
+
+            <div class="card-kpi main">
+                {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
+            </div>
+        </div>
+        <hr><!-- HR #####################-->
+    
+
+    <!-- TABLE ========================================= -->
+    <!-- ===================================================== -->
+        <div class="page-detail">
+            <h3>Comidas en este Plan Diario</h3>
+            <div class="card-table-meals">
+            {% include "components/table_meals.html" with items=main_card.table.items %}
+            </div>
+        </div>
+
+
+
+    <!-- BOTTOM SECTION ====================================== -->
+    <!-- ===================================================== -->
+        <!-- METADATA ========================================= -->
+        <div class="card-bottom"> 
+            <div class="card-metadata">
+                {% include "components/metadata.html" with metadata=main_card.metadata %}
+            </div>
+        </div>
+
+
+</div>
+      

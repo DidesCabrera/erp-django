@@ -1,0 +1,19 @@
+{% if header.navigation %}
+
+<nav>
+  <div class="breadcrumbs">
+
+    {% for item in header.navigation %}
+      {% if item.url %}
+        <a href="{{ item.url }}">{{ item.label }}</a>
+        {% if not forloop.last %} → {% endif %}
+
+      {% else %}
+        <span>{{ item.label }}</span>
+      {% endif %}
+    {% endfor %}
+
+  </div>
+</nav>
+
+{% endif %}
