@@ -1,0 +1,169 @@
+
+:root {
+  --header-height: 64px;   /* ajusta a tu altura real */
+}
+
+
+.header {
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg);
+  z-index: 500;
+}
+
+.main-header{
+  position: fixed;
+  top: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: var(--header-height);
+  background: rgb(0, 0, 0);
+  padding: 10px 30px 13px 30px;
+  border-bottom: 1px solid rgb(218, 218, 218);
+  color: rgb(255, 255, 255) ;
+}
+
+/* first row */
+
+.header-first-row {
+  display: flex;
+  align-items: flex-end;
+  padding: 0 8px;
+  margin: 0;
+  margin-bottom: 6px;
+  justify-content: space-between;
+}
+
+.header-first-row h1 {
+  font-size: 22px;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.brand-logo{
+  max-width: 110px;
+  padding-top: 4px;
+}
+
+.brad-logo.project{
+  align-items: center;
+}
+
+
+.header-first-row h2,
+.header-first-row a {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.header-first-row h2 {
+  font-weight: 400;
+}
+
+.user{
+  display: flex;
+  align-items:center;
+  gap: 4px;
+}
+
+.user h2{
+  margin: 0;              /* ← ESTO SUELE SER EL CULPABLE */
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.user p{
+  font-size: 13px;
+  font-weight: 300;
+  margin-bottom: 6px;
+  padding-right: 10px;
+  color: rgb(182, 182, 182);
+}
+
+.user p{
+  font-size: 13px;
+  font-weight: 300;
+  margin: 0;              /* ← CLAVE */
+  padding-right: 10px;
+  color: rgb(182, 182, 182);
+}
+
+
+.user input{
+  padding: 3px 4px;
+  width: 30px;
+  text-align: center;
+  background-color: var(--color-qty);
+  border-radius: 5px;
+  color: #000;
+  font-weight: 1000;
+  border: 0;
+  margin: 0 20x;
+}
+
+
+.label-rol{
+  font-size: 12px;
+  padding: 1px 6px;
+
+  margin-right: 2px;
+  margin-bottom: 9px;
+
+  border-radius: 3px;
+  color: rgb(255, 255, 255);
+  font-weight: 400;
+  background-color: rgb(57, 57, 57);
+}
+
+.label-rol{
+  font-size: 12px;
+  padding: 1px 6px;
+
+  margin: 0; /* ← CLAVE */
+
+  border-radius: 3px;
+  color: rgb(255, 255, 255);
+  font-weight: 400;
+  background-color: rgb(57, 57, 57);
+}
+
+
+/* secons row */
+
+
+.header-second-row {
+  font-size: 14px;
+  display: flex;
+  padding: 0 10px;
+  margin-left: auto;
+  text-align: right;
+  align-items: flex-end;
+  justify-content: space-between;
+  background-color: var(--color-bg-98);
+  border-radius: 8px;
+}
+
+.header-second-row a {
+  font-size: 14px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.my-navbar nav,
+.mn-navbar nav {
+    display: flex;
+    gap: 20px;
+}
+
+
+.btn-weight{
+  background-color: var(--color-qty);
+  border-radius: 5px;
+  border-width: 0px;
+  height: 22px;
+  font-weight: 600;
+}
+

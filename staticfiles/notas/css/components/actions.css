@@ -1,0 +1,54 @@
+/* =========================
+   ACTIONS
+   ========================= */
+
+   .actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  /* =========================
+     ACTION LINKS / BUTTONS
+     ========================= */
+  
+  .actions a,
+  .actions button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #555;
+  }
+
+
+  p.action-button {
+    font-size: 13px;
+    font-weight: 450;
+    color: var(--color-actions);
+    display: inline-block;
+    line-height: 1;
+    padding: 6px 6px;
+  }
+
+
+  
+  .actions a:hover,
+  .actions button:hover {
+    text-decoration: underline;
+  }
+  
+  .link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #555;
+    cursor: pointer;
+  }
+  
+  .link-button:hover {
+    text-decoration: underline;
+  }
+
+
