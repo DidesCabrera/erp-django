@@ -12,3 +12,6 @@ db.sqlite3
 
 # Mac
 .DS_Store
+
+# Archivos estaticos
+staticfiles/
