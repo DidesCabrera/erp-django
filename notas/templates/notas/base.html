@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="{% static 'notas/css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/utilities.css' %}">
 
-    
     <link rel="stylesheet" href="{% static 'notas/css/components/page.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/page_detail.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/modal_create.css' %}">
@@ -27,171 +26,335 @@
     <link rel="stylesheet" href="{% static 'notas/css/components/card_foods_aggregation.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/alloc-bar.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/alloc-cell.css' %}">
-    
     <link rel="stylesheet" href="{% static 'notas/css/components/actions.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/breadcrumbs.css' %}">
-    
     <link rel="stylesheet" href="{% static 'notas/css/components/food_picker.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/picker_list.css' %}">
-
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
-<div class="app">
+    <div class="app">
 
-    <!-- ======== HEADER ===================================== -->
-    <header>
-        <div class="header">
-            <div class="main-header">
+        <!-- ===== GLOBAL HEADER (simplificado) ===== -->
+        <header>
+            <div class="header">
+                <div class="main-header">
 
-                <!-- ===== FIRST ROW ===== -->
-                <div class="header-first-row">
-                    <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
+                    <div class="header-first-row">
+                        <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
 
-                    <div class="user">
-                        <div>
-                            <p>
-                                Mi peso corporal:
-                                <button class="btn-weight" onclick="openWeightModal()">
-                                    {{ current_weight }}
-                                </button> kg
-                            </p>
+                        <div class="user">
+                            <div>
+                                <p>
+                                    Mi peso corporal:
+                                    <button class="btn-weight" onclick="openWeightModal()">
+                                        {{ current_weight }}
+                                    </button> kg
+                                </p>
+                            </div>
+
+                            {% if request.user.is_authenticated %}
+                            <div class="label-rol">
+                                {% if request.user.profile.role == "member" %}Member{% endif %}
+                                {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
+                            </div>
+
+                            <h2>
+                                <a href="{% url 'profile_detail' %}">
+                                    {{ request.user.username }}
+                                </a>
+                            </h2>
+                            <i data-lucide="circle-user-round" class="profile-icon"></i>
+                            {% endif %}
                         </div>
-
-                        {% if request.user.is_authenticated %}
-                        <div class="label-rol">
-                            {% if request.user.profile.role == "member" %}Member{% endif %}
-                            {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
-                        </div>
-
-                        <h2>
-                            <a href="{% url 'profile_detail' %}">
-                                {{ request.user.username }}
-                            </a>
-                        </h2>
-                        {% endif %}
                     </div>
+
                 </div>
+            </div>
+        </header>
 
-                <!-- ===== SECOND ROW ===== -->
-                <div class="header-second-row">
-
-                    <div class="mn-navbar">
-                        <nav>
-
-                            <a href="{% url 'project_view' %}"
-                                class="nav-tab nav-tab--project {% if header.nav_context == 'project' %}is-active{% endif %}">
-                                <span class="nav-text">Proyecto</span>
-                                <div class="nav-indicator"></div>
-                            </a>
-
-                            <a href="{% url 'elemental_context' %}"
-                                class="nav-tab nav-tab--elemental {% if ui.header.nav_context == 'nutrition' %}is-active{% endif %}">
-                                <span class="nav-text">Elementales Nutricion</span>
-                                <div class="nav-indicator"></div>
-                            </a>
-
-                        </nav>
+        <!-- ========= MODAL PESO ====================== -->
+        <div id="weightModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Registrar un nuevo peso corporal</h3>
+                <form method="post" action="{% url 'weight_register' %}">
+                    {% csrf_token %}
+                    <label>Peso (kg)</label>
+                    <input id="weightInput" type="number" step="0.1" name="weight" required>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-primary">Confirmar</button>
+                        <button type="button" onclick="closeWeightModal()">Cancelar</button>
                     </div>
-                
-                    <div class="my-navbar">
-                        <nav>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========= MENSAJES DJANGO ================= -->
+        {% if messages %}
+        <div class="toast-container">
+            {% for message in messages %}
+                <div class="toast">
+                    <span>{{ message }}</span>
+                    <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- ======== APP BODY ========================== -->
+        <div class="app-body">
+
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+
+                    <!-- DAILYPLAN ==========================-->
+                    <div class="sidebar-group {% if ui.header.nav_context == 'dailyplan' %}is-open{% endif %}">    
+                        
+                        <button type="button" class="sidebar-main">
+                            <span class="sidebar-left">
+                              <i data-lucide="clipboard-list" class="sidebar-main-icon"></i>
+                              <span class="sidebar-label">Planes Diarios</span>
+                            </span>                  
+                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
+                        </button>
+
+                        <div class="sidebar-sub">
 
                             <a href="{% url 'dailyplan_list' %}"
-                                class="nav-tab nav-tab--dailyplan {% if ui.header.nav_context == 'dailyplan' %}is-active{% endif %}">
-                                <span class="nav-text">Planes Diarios</span>
-                                <div class="nav-indicator"></div>
+                                class="nav-tab nav-tab--personal tab-list {% if request.resolver_match.url_name == 'dailyplan_list' %}is-active{% endif %}">
+                                <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Mi Libreria
+                                    <span class="nav-indicator"></span>
+                                </span>    
                             </a>
-                            
-                            <a href="{% url 'meal_list' %}"
-                                class="nav-tab nav-tab--meal {% if ui.header.nav_context == 'meal' %}is-active{% endif %}">
-                                <span class="nav-text">Comidas</span>
-                                <div class="nav-indicator"></div>
+                    
+                            <a href="{% url 'dailyplan_explore_list' %}"
+                                class="nav-tab nav-tab--explore tab-list {% if request.resolver_match.url_name == 'dailyplan_explore_list' %}is-active{% endif %}">
+                                <i data-lucide="search" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Explorar
+                                    <span class="nav-indicator"></span>
+                                </span>
                             </a>
-                            
-                            <a href="{% url 'food_list' %}"
-                                class="nav-tab nav-tab--food {% if vm.header.nav_context == 'food' %}is-active{% endif %}">
-                                <span class="nav-text">Alimentos</span>
-                                <div class="nav-indicator"></div>
+                    
+                            <a href="{% url 'dailyplan_shared_list' %}"
+                                class="nav-tab nav-tab--shared tab-list {% if request.resolver_match.url_name == 'dailyplan_shared_list' %}is-active{% endif %}">
+                                <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">                                
+                                    Compartidos conmigo
+                                    <span class="nav-indicator"></span>
+                                </span>
+                                
                             </a>
-
-                            <a href="{% url 'inbox_list' %}"
-                                class="nav-tab nav-tab--inbox {% if vm.header.nav_context == 'inbox' %}is-active{% endif %}">
-                                <span class="nav-text">Notificaciones</span>
-                                <div class="nav-indicator"></div>
+                    
+                            <a href="{% url 'dailyplan_draft_list' %}"
+                                class="nav-tab nav-tab--draft tab-list {% if request.resolver_match.url_name == 'dailyplan_draft_list' %}is-active{% endif %}">
+                                <i data-lucide="pencil" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Borradores
+                                    <span class="nav-indicator"></span>
+                                </span>
+                                
                             </a>
-                        
-                         
-                        </nav>
+                    
+                            <a href="{% url 'dailyplan_create' %}"
+                                class="nav-tab nav-tab--create tab-list {% if request.resolver_match.url_name == 'dailyplan_create' %}is-active{% endif %}">
+                                <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Crear
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+                        </div>
                     </div>
-                
-                </div>
-                
 
-            </div>
+                    <!-- MEAL ==========================-->
+                    <div class="sidebar-group {% if ui.header.nav_context == 'meal' %}is-open{% endif %}">
+
+                        <button type="button" class="sidebar-main">
+                            <span class="sidebar-left">
+                              <i data-lucide="salad" class="sidebar-main-icon"></i>
+                              <span class="sidebar-label">Comidas</span>
+                            </span>                  
+                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
+                        </button>
+                        
+                        <div class="sidebar-sub">
+                            <a href="{% url 'meal_list' %}"
+                                class="nav-tab nav-tab--meal-personal tab-list {% if request.resolver_match.url_name == 'meal_list' %}is-active{% endif %}">
+                                <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Mi Libreria
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+
+                            <a href="{% url 'meal_explore_list' %}"
+                                class="nav-tab nav-tab--meal-explore tab-list {% if request.resolver_match.url_name == 'meal_explore_list' %}is-active{% endif %}">
+                                <i data-lucide="search" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Explorar
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+
+                            <a href="{% url 'meal_shared_list' %}"
+                                class="nav-tab nav-tab--meal-shared tab-list {% if request.resolver_match.url_name == 'meal_shared_list' %}is-active{% endif %}">
+                                <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Compartidos conmigo
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+
+                            <a href="{% url 'meal_draft_list' %}"
+                                class="nav-tab nav-tab--meal-draft tab-list {% if request.resolver_match.url_name == 'meal_draft_list' %}is-active{% endif %}">
+                                <i data-lucide="pencil" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Borradores
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+
+                            <a href="{% url 'meal_create' %}"
+                                class="nav-tab nav-tab--meal-create tab-list {% if request.resolver_match.url_name == 'meal_create' %}is-active{% endif %}">
+                                <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Crear
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- FOOD ==========================-->
+                    <div class="sidebar-group {% if ui.header.nav_context == 'food' %}is-open{% endif %}">
+
+                        <button type="button" class="sidebar-main">
+                            <span class="sidebar-left">
+                              <i data-lucide="carrot" class="sidebar-main-icon"></i>
+                              <span class="sidebar-label">Alimentos</span>
+                            </span>                  
+                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
+                        </button>
+
+                        <div class="sidebar-sub">
+                            <a href="{% url 'food_list' %}"
+                                class="nav-tab nav-tab--food-personal tab-list {% if request.resolver_match.url_name == 'food_list' %}is-active{% endif %}">
+                                <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    Personal
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <hr class="sidebar-divider">
+
+
+                    <!-- INBOX ==========================-->
+                    <a href="{% url 'inbox_list' %}"
+                        class="nav-tab nav-tab--inbox {% if vm.header.nav_context == 'inbox' %}is-active{% endif %}">
+                        <i data-lucide="bell" class="sidebar-main-icon"></i>
+                        <span class="nav-text nab-tab2">
+                            Notificaciones
+                            <span class="nav-indicator"></span>
+                        </span>                    
+                    </a>
+                    
+                    <!-- ELEMENTALES ==========================-->
+                    <a href="{% url 'elemental_context' %}"
+                    class="nav-tab nav-tab--elemental {% if ui.header.nav_context == 'nutrition' %}is-active{% endif %}">
+                        <i data-lucide="graduation-cap" class="sidebar-main-icon"></i>
+                        <span class="nav-text nab-tab2">
+                            Elementales
+                            <span class="nav-indicator"></span>
+                        </span>
+                    </a>
+                    
+                    <!-- PROYECTO ==========================-->
+                    <a href="{% url 'project_view' %}"
+                    class="nav-tab nav-tab--project {% if header.nav_context == 'project' %}is-active{% endif %}">
+                        <i data-lucide="house" class="sidebar-main-icon"></i>
+                        <span class="nav-text nab-tab2">
+                            Proyecto
+                            <span class="nav-indicator"></span>
+                        </span>
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="app-content">
+                {% block content %}{% endblock %}
+            </main>
+
         </div>
-    </header>
 
-
-    <!-- ========= MODAL PESO ====================== -->
-    <div id="weightModal" class="modal hidden">
-        <div class="modal-content">
-
-            <h3>Registrar un nuevo peso corporal</h3>
-
-            <form method="post" action="{% url 'weight_register' %}">
-                {% csrf_token %}
-
-                <label>Peso (kg)</label>
-                <input id="weightInput" type="number" step="0.1" name="weight" required>
-
-                <div class="modal-actions">
-                    <button type="submit" class="btn-primary">Confirmar</button>
-                    <button type="button" onclick="closeWeightModal()">Cancelar</button>
-                </div>
-            </form>
-
-        </div>
     </div>
 
-    <script>
-        function openWeightModal(){
-            const modal = document.getElementById('weightModal');
-            modal.classList.remove('hidden');
-
-            // focus automático
-            const input = document.getElementById('weightInput');
-            if (input) input.focus();
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    
+      const groups = document.querySelectorAll(".sidebar-group");
+    
+      groups.forEach((group, index) => {
+    
+        const toggle = group.querySelector(".sidebar-main");
+        const groupKey = "sidebar-group-" + index;
+    
+        // 🔥 Restaurar estado guardado
+        const savedState = localStorage.getItem(groupKey);
+        if (savedState === "open") {
+          group.classList.add("is-open");
         }
+    
+        // 🔥 Click handler
+        toggle.addEventListener("click", function () {
+    
+          group.classList.toggle("is-open");
+    
+          // Guardar nuevo estado
+          if (group.classList.contains("is-open")) {
+            localStorage.setItem(groupKey, "open");
+          } else {
+            localStorage.setItem(groupKey, "closed");
+          }
+    
+        });
+    
+      });
+    
+    });
+</script>
+<script>
+    lucide.createIcons();
+</script>
 
-        function closeWeightModal(){
-            document.getElementById('weightModal').classList.add('hidden');
-        }
-    </script>
-
-
-    <!-- ========= MENSAJES DJANGO ================= -->
-    {% if messages %}
-    <div class="toast-container">
-        {% for message in messages %}
-            <div class="toast">
-                <span>{{ message }}</span>
-                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
-            </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-
-
-
-    <!-- ======== CONTENT ========================== -->
-    <div class="app-body">
-        <main class="app-content">
-        {% block content %}{% endblock %}
-        </main>
-    </div>
-
-</div>
 </body>
 </html>
+
+
+
+
+
+ellipsis-vertical
+funnel
+rows-2
+
+square-arrow-right-enter
+send
+copy
+user-plus
+carrot
+circle-user-round
+
+
+
+
+
+
+
+

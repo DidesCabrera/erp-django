@@ -2,25 +2,14 @@
 {% block title %}Meals{% endblock %}
 {% block content %}
 
-<div class="page">
-
-<!-- HEADER PAGE =============================================-->
-
 {% include "components/list_header_meal.html" with header=ui.header %}
 
-<!-- LIST =============================================-->
-
-  <div class="sub-page">
+<div class="page">
     {% for child in ui.child_cards %}
       {% include "components/card_child_meal.html" with child_card=child %}
     {% empty %}
       <p>No meals yet.</p>
     {% endfor %}
-  </div>
-
-
-  <!-- FIN ============================================== -->
-
 </div>
 
 {% load static %}

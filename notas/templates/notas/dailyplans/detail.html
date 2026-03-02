@@ -1,14 +1,10 @@
 {% extends "notas/base.html" %}
 {% block title %}
-Daily Plan – {{ vm.dailyplan.name }}
+  {{ ui.header.title }}
 {% endblock %}
 {% block content %}
 
-<!--  PAGE HEADER ==== -->
-<div class="page-nav-action">
-  {% include "components/header.html" with header=ui.header %}
-</div>
-
+{% include "components/header.html" with header=ui.header %}
 
 <div class="page page--detail" data-page="dailyplan-detail">
   

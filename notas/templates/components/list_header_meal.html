@@ -1,61 +1,21 @@
+<div class="list-header">
 
-
-
-<div class="back-header-page">
-
-    <div class="list-header">
-  
-      <div class="block-left-list-header">
-  
-        <div class="title-list-header">
-          <h2>{{ header.title }}</h2>
-        </div>
-  
-        <div class="navbar-list-header">
-          <nav>
-        
-            <a href="{% url 'meal_list' %}"
-               class="nav-tab nav-tab--meal-personal tab-list {% if request.resolver_match.url_name == 'meal_list' %}is-active{% endif %}">
-                <span class="nav-text">Personal</span>
-                <div class="nav-indicator"></div>
-            </a>
-        
-            <a href="{% url 'meal_explore_list' %}"
-               class="nav-tab nav-tab--meal-explore tab-list {% if request.resolver_match.url_name == 'meal_explore_list' %}is-active{% endif %}">
-                <span class="nav-text">Explore</span>
-                <div class="nav-indicator"></div>
-            </a>
-        
-            <a href="{% url 'meal_shared_list' %}"
-               class="nav-tab nav-tab--meal-shared tab-list {% if request.resolver_match.url_name == 'meal_shared_list' %}is-active{% endif %}">
-                <span class="nav-text">Shared</span>
-                <div class="nav-indicator"></div>
-            </a>
-        
-            <a href="{% url 'meal_draft_list' %}"
-               class="nav-tab nav-tab--meal-draft tab-list {% if request.resolver_match.url_name == 'meal_draft_list' %}is-active{% endif %}">
-                <span class="nav-text">Drafts</span>
-                <div class="nav-indicator"></div>
-            </a>
-        
-            <a href="{% url 'meal_create' %}"
-               class="nav-tab nav-tab--meal-create tab-list {% if request.resolver_match.url_name == 'meal_create' %}is-active{% endif %}">
-                <span class="nav-text">+ Create</span>
-                <div class="nav-indicator"></div>
-            </a>
-        
-          </nav>
-        </div>
-        
-  
-      </div>
-  
-      <div class="block-right-list-header">
-        <button id="collapse-list-btn" class="collapse-btn" type="button">
-          Collapse List
-        </button>
-      </div>
-      
+  <div class="block-left-list-header">
+    <div class="label-entity header label-entity--meal">
+      <i data-lucide="salad" class="label-icon"></i>
+      Meal
     </div>
-  
+    <div class="title-list-header">
+      <h2>{{ header.title }}</h2>
+    </div>
   </div>
+
+  <div class="block-right-list-header">
+    <button id="collapse-list-btn" class="collapse-btn" type="button">
+      Collapse List
+    </button>
+  </div>
+  
+</div>
+  
+  

@@ -12,29 +12,26 @@
   z-index: 500;
 }
 
-.main-header{
+.main-header {
   position: fixed;
-  top: 0;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 200;
-  height: var(--header-height);
-  background: rgb(0, 0, 0);
-  padding: 10px 30px 13px 30px;
-  border-bottom: 1px solid rgb(218, 218, 218);
-  color: rgb(255, 255, 255) ;
+  height: 50px;          /* AJUSTA SI QUIERES */
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  background: #000;
+  z-index: 1000;
 }
 
 /* first row */
 
 .header-first-row {
   display: flex;
-  align-items: flex-end;
-  padding: 0 8px;
-  margin: 0;
-  margin-bottom: 6px;
+  align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 .header-first-row h1 {

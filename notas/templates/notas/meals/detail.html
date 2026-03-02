@@ -1,13 +1,10 @@
 {% extends "notas/base.html" %}
 {% block title %}
-Meal – {{ meal.name }}
+{{ ui.header.title }}
 {% endblock %}
 {% block content %}
 
-<!-- ======== PAGE HEADER ===================================== -->           
-<div class="page-nav-action">
-  {% include "components/header.html" with header=ui.header %}
-</div>
+{% include "components/header.html" with header=ui.header %}
 
 <!-- ======== PAGE BODY ===================================== -->           
 <div class="page page--detail" data-page="meal-detail">

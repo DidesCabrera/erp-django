@@ -2,15 +2,10 @@
 {% block title %}Daily Plans{% endblock %}
 {% block content %}
 
+
+{% include "components/list_header_dailyplan.html" with header=ui.header %}
+
 <div class="page">
-
-  <!-- HEADER PAGE =============================================-->
-  
-  {% include "components/list_header_dailyplan.html" with header=ui.header %}
-
-  <!-- LIST =============================================-->
-
-    <div class="sub-page">
       {% for child in ui.child_cards %}
         {% include "components/card_child_dailyplan.html" with child_card=child %}
       {% empty %}
@@ -18,11 +13,6 @@
         <p>No tienes planes diarios aun, puedes explorar Planes de otros usuarios, o crear un nuevo Plan Diario </p>
       </div>
       {% endfor %}
-    </div>
-
-
-  <!-- FIN ============================================== -->
-
 </div>
 
 

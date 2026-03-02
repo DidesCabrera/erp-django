@@ -2,13 +2,9 @@
 {% block title %}Foods{% endblock %}
 {% block content %}
 
-<div class="page">
-
-<!-- HEADER PAGE =============================================-->
 
 {% include "components/list_header_food.html" with header=vm.header %}
-
-<!-- INIT =============================================-->
+<div class="page">
   <div class="sub-page">
     <p>
         <a href="{% url 'import_foods' %}">+Import foods</a>
@@ -73,10 +69,7 @@
       
     </div>
 
-
   </div>
-
-<!-- FIN ============================================== -->  
 
 </div>
 

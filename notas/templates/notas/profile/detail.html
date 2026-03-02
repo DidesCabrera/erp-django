@@ -2,11 +2,9 @@
 
 {% block content %}
 
-<div class="page">
+{% include "components/list_header_profile.html" with header=ui.header %}
 
-  <!-- HEADER PAGE =============================================-->
-  
-  {% include "components/list_header_profile.html" with header=ui.header %}
+<div class="page page--detail">
 
   <div class="sub-page">
     <p>

@@ -2,13 +2,9 @@
 {% block title %}Inbox{% endblock %}
 {% block content %}
 
+
+{% include "components/list_header_nutrition.html" with header=ui.header %}
 <div class="page">
-
-  <!-- HEADER PAGE =============================================-->
-
-    {% include "components/list_header_nutrition.html" with header=ui.header %}
-
-  <!-- LIST =============================================-->
     <div class="sub-page">
 
       <h2>Conocimientos Básicos de Nutrición</h2>
@@ -18,14 +14,7 @@
            aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
            ullamco laboris nisi ut aliquip ex ea commodo consequat.
             Duis aute irure dolor in reprehender</p>
-
     </div>
-
-
-    <!-- FIN ============================================== -->
-    
-    </div>
-    
-    {% endblock %}
-    
-s
+</div>
+  
+{% endblock %}

@@ -1,25 +1,304 @@
-html, body {
-    height: 100%;
-  }
-  
-  .app {
+/* ===== RESET BASE ===== */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ===== APP WRAPPER ===== */
+
+.app {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
   }
-  
-  header {
-    flex-shrink: 0;
-  }
-  
-  .app-body {
+
+/* ===== HEADER ===== */
+
+header {
+  flex-shrink: 0;
+}
+
+/* ===== BODY (SIDEBAR + CONTENT) ===== */
+
+.app-body {
     display: flex;
     flex: 1;
+    margin-top: 50px;
     min-height: 0;
   }
-  
-  .app-content {
+
+/* ===== SIDEBAR ===== */
+
+.sidebar {
+    width: 240px;
+    background-color: rgb(28, 28, 28);
+    color: white;
+    padding-left: 4px;
+    padding-right: 10px;
+    padding-top: 25px;
+    padding-bottom: 120px;
+    overflow-y: auto;  /* si algún día tiene muchos items */
+    position: fixed;
+    top: 50px;
+    left: 0;
+    bottom: 0;
+    z-index: 30;
+  }
+/* ===== SIDEBAR NAV ===== */
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+/* reutilizamos nav-tab existente */
+
+.sidebar .nav-tab {
+  display: flex;
+  align-items: flex-start;
+  padding: 4px 12px;
+  border-radius: 6px;
+  color: white;
+}
+
+.sidebar .nav-tab:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== CONTENT ===== */
+
+.app-content {
     flex: 1;
     overflow-y: auto;
-    padding: 40px 24px;
+    background-color: var(--color-bg-2);
+    margin-left: 240px; /* sidebar */
+    padding: 0px;
+    padding-bottom: 40px;
+    overscroll-behavior: contain;
+}
+
+
+
+
+
+
+
+.sidebar-group {
+    margin-bottom: 4px;
   }
+
+  .sidebar-main {
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .sidebar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-sub {
+    display: none;
+    flex-direction: column;
+    padding-left: 10px;
+    margin-bottom: 14px;
+  }
+
+  .sidebar-group.is-open .sidebar-sub {
+    display: flex;
+  }
+  
+  .sidebar-sub a {
+    font-size: 13px;
+    color: #bbb;
+    text-decoration: none;
+  }
+  
+  .sidebar-sub a.is-active {
+    color: white;
+    font-weight: 500;
+  }
+
+  .sidebar-icon {
+    width: 16px;
+    height: 16px;
+    display: block;             /* 🔥 elimina baseline inline */
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    stroke-width: 2;
+  }
+    
+.nab-tab2 {
+    font-size: 14px;    
+}
+
+  .profile-icon {
+    color: white;
+    stroke-width: 1.5;  
+  }
+  
+
+  .sidebar-group.is-open .sidebar-icon {
+    transform: rotate(90deg);
+  }
+
+  .sidebar-divider {
+    border-top: 1px solid rgb(255, 255, 255, 0.12);
+    margin: 10px 0;
+  }
+
+
+  .sidebar-leading-icon {
+    width: 18px;
+    height: 18px;
+    padding-bottom: 2px;
+    margin-right: 4px;
+    stroke-width: 1.5;
+  }
+
+  .sidebar-main-icon {
+    width: 20px;
+    height: 20px;
+    padding-bottom: 2px;
+    margin-right: 0px;
+    stroke-width: 2;
+  }
+
+  .label-icon{
+    width: 14px;
+    height: 14px;
+    margin-right: 0px;
+    stroke-width: 2;
+  }
+
+  
+  .sidebar-leading-icon,
+  .sidebar-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+
+
+
+
+
+/* traido desde base.css*/
+
+.nav-tab {
+  justify-content: flex-start; 
+  gap: 6px;                 /* espacio entre icono y texto */
+  text-decoration: none;
+  padding: 3px 8px;
+  margin-top: 5px;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nav-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nav-tab.tab-list .nav-text {
+  font-weight: 300;
+}
+
+.nav-tab:hover {
+  text-decoration: none;
+}
+
+
+/* Colores por tipo */
+.nav-tab--dailyplan   { --tab-color: var(--color-dailyplan); }
+.nav-tab--meal        { --tab-color: var(--color-meal); }
+.nav-tab--food        { --tab-color: var(--color-food); }
+.nav-tab--inbox       { --tab-color: var(--color-inbox); }
+
+.nav-tab--project     { --tab-color: var(--color-fat); }
+.nav-tab--elemental   { --tab-color: var(--color-protein); }
+
+
+
+.nav-indicator {
+  display: block;   /* 🔥 clave */
+  margin-top: 1px;
+  height: 3px;
+  padding: 0 1px;
+  width: 100%;
+  border-radius: 999px;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+
+/* Estado activo */
+.nav-tab.is-active .nav-indicator {
+  background-color: var(--tab-color);
+}
+
+
+/* Hover solo si NO está activo */
+.nav-tab:not(.is-active):hover .nav-indicator {
+  background-color: #a9a9a975;
+}
+
+
+.nav-tab--personal,
+.nav-tab--explore,
+.nav-tab--shared,
+.nav-tab--draft,
+.nav-tab--create   {
+  --tab-color: var(--color-dailyplan);
+}
+
+.nav-tab--meal-personal,
+.nav-tab--meal-explore,
+.nav-tab--meal-shared,
+.nav-tab--meal-draft,
+.nav-tab--meal-create   {
+  --tab-color: var(--color-meal); 
+}
+
+.nav-tab--food-personal,
+.nav-tab--food-explore,
+.nav-tab--food-shared,
+.nav-tab--food-draft,
+.nav-tab--food-create   {
+  --tab-color: var(--color-food); 
+}
+
+.nav-tab--inbox-unread,
+.nav-tab--inbox-all{
+  --tab-color: var(--color-inbox);
+}
+
+.nav-tab--elemental-context,
+.nav-tab--elemental-nutrition,
+.nav-tab--elemental-platform   {
+  --tab-color: var(--color-protein); 
+}
+

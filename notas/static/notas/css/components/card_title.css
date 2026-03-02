@@ -45,12 +45,20 @@
   color: white;
   font-weight: 500;
   display: inline-block;
+  align-items: center;
+}
+
+.label-entity.header{
+  margin: 0;
+  font-size: 13px;
+  margin-right: 10px;
 }
 
 .label-entity.page-modal{
   margin-bottom: 10px;
 }
 
+.label-entity--food {background-color: var(--color-food);}
 .label-entity--meal {background-color: var(--color-meal);}
 .label-entity--dailyplan {background-color: var(--color-dailyplan);}
 .label-entity--program {background-color: var(--color-program);}

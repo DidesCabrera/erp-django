@@ -1,63 +1,22 @@
+<div class="list-header">
 
-
-
-<div class="back-header-page">
-
-  <div class="list-header">
-
-    <div class="block-left-list-header">
-
-      <div class="title-list-header">
-        <h2>{{ header.title }}</h2>
-      </div>
-
-      <div class="navbar-list-header">
-        <nav>
-      
-          <a href="{% url 'dailyplan_list' %}"
-             class="nav-tab nav-tab--personal tab-list {% if request.resolver_match.url_name == 'dailyplan_list' %}is-active{% endif %}">
-              <span class="nav-text">Personal</span>
-              <div class="nav-indicator"></div>
-          </a>
-      
-          <a href="{% url 'dailyplan_explore_list' %}"
-             class="nav-tab nav-tab--explore tab-list {% if request.resolver_match.url_name == 'dailyplan_explore_list' %}is-active{% endif %}">
-              <span class="nav-text">Explore</span>
-              <div class="nav-indicator"></div>
-          </a>
-      
-          <a href="{% url 'dailyplan_shared_list' %}"
-             class="nav-tab nav-tab--shared tab-list {% if request.resolver_match.url_name == 'dailyplan_shared_list' %}is-active{% endif %}">
-              <span class="nav-text">Shared</span>
-              <div class="nav-indicator"></div>
-          </a>
-      
-          <a href="{% url 'dailyplan_draft_list' %}"
-             class="nav-tab nav-tab--draft tab-list {% if request.resolver_match.url_name == 'dailyplan_draft_list' %}is-active{% endif %}">
-              <span class="nav-text">Drafts</span>
-              <div class="nav-indicator"></div>
-          </a>
-      
-          <a href="{% url 'dailyplan_create' %}"
-             class="nav-tab nav-tab--create tab-list {% if request.resolver_match.url_name == 'dailyplan_create' %}is-active{% endif %}">
-              <span class="nav-text">+ Create</span>
-              <div class="nav-indicator"></div>
-          </a>
-      
-        </nav>
-      </div>
-      
-
+  <div class="block-left-list-header">
+    <div class="label-entity header label-entity--dailyplan">
+      <i data-lucide="clipboard-list" class="label-icon"></i>
+      Dailyplan
     </div>
-
-    <div class="block-right-list-header">
-      <div class="btn-list-header">
-        <button id="collapse-list-btn" class="collapse-btn" type="button">
-          Collapse List
-        </button>
-      </div>
+    <div class="title-list-header">
+      <h2>{{ header.title }}</h2>
     </div>
-    
   </div>
 
+  <div class="block-right-list-header">
+    <div class="btn-list-header">
+      <button id="collapse-list-btn" class="collapse-btn" type="button">
+        <i data-lucide="rows-2" class="sidebar-leading-icon"></i>
+      </button>
+    </div>
+  </div>
+  
 </div>
+

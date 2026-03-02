@@ -1,43 +1,11 @@
+<div class="list-header">
 
+    <div class="block-left-list-header">
 
-
-<div class="back-header-page">
-
-    <div class="list-header">
-  
-        <div class="block-left-list-header">
-    
-            <div class="title-list-header">
-            <h2>{{ header.title }}</h2>
-            </div>
-
-            <div class="navbar-list-header">
-                <nav>
-                    <a href="{% url 'inbox_list' %}"
-                        class="nav-tab nav-tab--inbox-unread tab-list {% if request.resolver_match.url_name == 'inbox_list' %}is-active{% endif %}">
-                        <span class="nav-text">No leidas</span>
-                        <div class="nav-indicator"></div>
-                    </a>
-                <!--
-                    <a href="{% url 'meal_explore_list' %}"
-                        class="nav-tab nav-tab--inbox-all tab-list {% if request.resolver_match.url_name == 'meal_explore_list' %}is-active{% endif %}">
-                        <span class="nav-text">Todas</span>
-                        <div class="nav-indicator"></div>
-                    </a>
-                -->
-                </nav>
-            </div>
-        
+        <div class="title-list-header">
+        <h2>{{ header.title }}</h2>
         </div>
-        <!--
-        <div class="block-right-list-header">
-            <div class="btn-list-header">
-                <button id="collapse-list-btn" class="collapse-btn" type="button">
-                    Collapse List
-                </button>
-            </div>
-        </div>  
-        -->
+    
     </div>
-  
-  </div>
+</div>
+

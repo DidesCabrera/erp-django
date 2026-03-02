@@ -1,5 +1,6 @@
 hr {
   border: none;
+  width: 100%;
   border-top: 1px solid var(--color-border-1);
   margin-top: 0px;
   margin-bottom: 20px
