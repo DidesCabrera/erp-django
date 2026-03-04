@@ -9,19 +9,29 @@
     margin: 0 auto;
     margin-top: 16px;
     padding: 0px;
-    border-radius: 8px;
+    border-radius: 14px;
 }
 
 .page--detail{
     max-width: 900px;
-    margin-top: 16px;
+    margin-top: 14px;
     padding: 20px 40px;
     border: 1px solid var(--color-border-1);
     background-color: white;
 }
 
+.page--detail.dpm{
+    margin-top: 8px;
+}
+
+
+.page--minicard{
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .page--detail.edit{
-    margin-top: -22px;
+    margin-top: 14px;
 }
 
 .page.project-page {

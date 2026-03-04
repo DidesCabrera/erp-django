@@ -15,7 +15,7 @@ from notas.actions.constants import (
     FOOD_VIEWMODE_EDIT,
 )
 from notas.routing.food import food_url
-from notas.viewmodels.builder.foods_list_builder import build_food_list_vm
+from notas.viewmodels.content.builder.list_foods_builder import build_food_list_vm
 
 
 

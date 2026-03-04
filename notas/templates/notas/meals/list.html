@@ -2,10 +2,10 @@
 {% block title %}Meals{% endblock %}
 {% block content %}
 
-{% include "components/list_header_meal.html" with header=ui.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
 
 <div class="page">
-    {% for child in ui.child_cards %}
+    {% for child in vm.content.child_cards %}
       {% include "components/card_child_meal.html" with child_card=child %}
     {% empty %}
       <p>No meals yet.</p>

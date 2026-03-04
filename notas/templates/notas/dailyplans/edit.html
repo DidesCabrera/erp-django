@@ -4,7 +4,7 @@ Edit Dailyplan – {{ dailyplan.name }}
 {% endblock %}
 {% block content %}
 
-{% include "components/header.html" with header=ui.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
 
 <div class="header-mini-edit">
   <p>Editando...</p>
@@ -13,7 +13,7 @@ Edit Dailyplan – {{ dailyplan.name }}
 <div class="page page--detail edit" data-page="dailyplan-edit">
 
   <!-- MAIN-CARD ======================================-->
-  {% include "components/card_main_dailyplan_edit.html" with main_card=ui.main_card %}
+  {% include "components/card_main_dailyplan_edit.html" with main_card=vm.content.main_card %}
 
 
 </div> <!-- cierre div page -->

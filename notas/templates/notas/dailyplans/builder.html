@@ -4,24 +4,24 @@ Build Dailyplan – {{ dailyplan.name }}
 {% endblock %}
 {% block content %}
 
-{% include "components/header.html" with header=ui.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
 
 <div class="page page--detail" data-page="dailyplan-edit">
 
   <!-- MAIN-CARD ======================================-->
-  {% include "components/card_main_dailyplan_edit.html" with main_card=ui.main_card %}
+  {% include "components/card_main_dailyplan_edit.html" with main_card=vm.content.main_card %}
 
   <hr>
   <!-- ACTIONS ======================================-->
     <div class="btn-block">
       
       <!-- back to rename draft (same idea as meal) -->
-      <a href="{% url 'dailyplan_rename' ui.main_card.main_id %}" data-safe-exit="true">
+      <a href="{% url 'dailyplan_rename' vm.content.main_card.main_id %}" data-safe-exit="true">
         <button  type="submit" class="btn-cancel-create">Volver</button>
       </a>
 
       <!-- continue to configuration -->
-      <a href="{% url 'dailyplan_configure' ui.main_card.main_id %}" data-safe-exit="true">
+      <a href="{% url 'dailyplan_configure' vm.content.main_card.main_id %}" data-safe-exit="true">
         <button type="submit"  class="btn-continue">Continuar</button>
       </a>
     

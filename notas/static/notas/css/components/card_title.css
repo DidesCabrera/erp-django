@@ -37,31 +37,47 @@
   color: white;
 }
 
+
+
+
+
   /*--- LABEL ------ */
 .label-entity{
-  padding: 1px 6px;
-  margin-bottom: 5px;
-  border-radius: 3px;
-  color: white;
   font-weight: 500;
-  display: inline-block;
+  display: inline-flex;
   align-items: center;
+  margin-bottom: 2px;
 }
 
+
 .label-entity.header{
+  padding: 3px 4px 1px 4px;
   margin: 0;
+  border-radius: 3px;
   font-size: 13px;
-  margin-right: 10px;
+  margin-right: 8px;
+  color: white;
+  display: inline-block;
+  align-items: center;
 }
 
 .label-entity.page-modal{
   margin-bottom: 10px;
 }
 
-.label-entity--food {background-color: var(--color-food);}
-.label-entity--meal {background-color: var(--color-meal);}
-.label-entity--dailyplan {background-color: var(--color-dailyplan);}
-.label-entity--program {background-color: var(--color-program);}
+.label-entity--food {color: var(--color-food);}
+.label-entity--meal {color: var(--color-meal);}
+.label-entity--dailyplan {color: var(--color-dailyplan);}
+.label-entity--program {color: var(--color-program);}
+
+.label-entity.header.label-entity--food {background-color: var(--color-food);}
+.label-entity.header.label-entity--meal {background-color: var(--color-meal);}
+.label-entity.header.label-entity--dailyplan {background-color: var(--color-dailyplan);}
+.label-entity.header.label-entity--program {background-color: var(--color-program);}
+
+
+
+
 
 
 /* label-fork arriba derecha */
@@ -121,10 +137,10 @@
 }
 
 .structural-indicators{
-  background-color: rgb(125, 125, 125);
+  background-color: rgb(170, 170, 170);
   color: white;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0px 6px;
   border-radius: 5px;
 
@@ -134,3 +150,14 @@
   margin-top: auto;
   align-self: flex-end;
 }
+
+.card-icon{
+    width: 12px;
+    height: 12px;
+    margin-right: 2px;
+    display: block;             /* 🔥 elimina baseline inline */
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    stroke-width: 2;
+}
+

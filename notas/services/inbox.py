@@ -42,7 +42,7 @@ def build_inbox_items(user):
                 sender=share.sender.username,
                 title=share.dailyplan.name,
                 open_url=reverse(
-                    "dailyplan_share_detail",
+                    "dailyplan_shared_detail",
                     args=[share.dailyplan.id]
                 ),
                 dismiss_url=reverse(

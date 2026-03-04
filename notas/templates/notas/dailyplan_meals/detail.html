@@ -4,26 +4,19 @@ Meal – {{ vm.meal.name }}
 {% endblock %}
 {% block content %}
 
-<!--  PAGE HEADER ==== -->
-<div class="page-nav-action">
-  {% include "components/header.html" with header=ui.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
+
+<div class="page--minicard">
+  {% include "components/card_mini_dpm.html" with child=vm.content.father_card %}
 </div>
 
-<!-- FATHER CARD ==== -->
-<div class="page-father card-father">
-    {% include "components/card_father.html" with father_card=ui.father_card %}
-</div>
-
-
-<div class="page page--detail" data-page="meal-detail">
+<div class="page page--detail dpm" data-page="meal-detail">
   
     <!-- MAIN CARD ====-->  
-    {% include "components/card_main_dpm.html" with main_card=ui.main_card %}
+    {% include "components/card_main_dpm.html" with main_card=vm.content.main_card %}
   
 </div>
-
 
 <!-- DEBO INCLUIR FOODS LIST -->
 
-<!-- FIN ============================================== -->
 {% endblock %}

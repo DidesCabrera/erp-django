@@ -86,11 +86,15 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
         "remove",
     ],
 
-    DAILYPLAN_MEAL_VIEWMODE_DEEP_EDIT:[
+    DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT:[
         "back_dpm_detail",
     ],
 
-    DAILYPLAN_VIEWMODE_DETAIL: [
+    DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT:[
+        "back_dpm_detail",
+    ],
+
+    DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
         "detail",
         "deep_edit",
         "remove",
@@ -102,7 +106,7 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
         "deep_edit",
         "remove",
     ],
-    DAILYPLAN_VIEWMODE_EDIT: [
+    DAILYPLAN_VIEWMODE_PERSONAL_EDIT: [
         "deep_edit",
         "remove",
     ],

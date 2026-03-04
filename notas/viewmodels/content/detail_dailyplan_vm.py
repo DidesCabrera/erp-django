@@ -14,12 +14,11 @@ class StructuralIndicatorsUI:
     meals_count: Optional[int] = None
     foods_count: Optional[int] = None
 
-
 @dataclass
 class TitleUI:
     name: str
     label: Optional[str] = None
-    nav_context: Optional[str] = None
+    icon: Optional[str] = None
     structural_indicators: Optional[StructuralIndicatorsUI] = None
 
 @dataclass

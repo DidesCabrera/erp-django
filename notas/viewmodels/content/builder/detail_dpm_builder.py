@@ -5,12 +5,18 @@ from notas.services.kpis import (
 
 from notas.actions.meal_food_resolvers import resolve_food_actions
 
-from notas.viewmodels.dpm_detail_vm import *
-from notas.viewmodels.builder.builder_table_items import build_mealfood_table_item
-from notas.viewmodels.builder.builder_headers import build_dailyplan_meal_header
+from notas.viewmodels.content.detail_dpm_vm import *
+from notas.viewmodels.content.builder.builder_table_items import build_mealfood_table_item
+from notas.viewmodels.content.builder.builder_headers import build_dailyplan_meal_header
+
+from notas.viewmodels.content.registry import CONTENT_ICON_REGISTRY
+
 
 
 def build_dpm_detail_vm(dailyplan, dpm, user, action_context):
+
+    main_entity_icon = CONTENT_ICON_REGISTRY.get("meal")
+    main_entity_label = "Meal"
 
     # ==================================================
     # HEADER
@@ -71,7 +77,7 @@ def build_dpm_detail_vm(dailyplan, dpm, user, action_context):
 
         titulo=TitleUI(
             name=dailyplan.name,
-            label="Daily Plan"
+            label= "Daily Plan",
         ),
 
         rel_id=dpm.id,
@@ -119,7 +125,8 @@ def build_dpm_detail_vm(dailyplan, dpm, user, action_context):
 
         titulo=TitleUI(
             name=meal.name,
-            label="Meal"
+            label= main_entity_label,
+            icon= main_entity_icon,
         ),
 
         kpis=KPIUI(

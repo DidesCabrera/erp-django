@@ -7,10 +7,11 @@ from notas.services.capabilities import get_capabilities
 from notas.models import Meal, MealFood, DailyPlan, DailyPlanMeal, Food
 from django.urls import reverse
 from notas.actions.constants import (
-    DAILYPLAN_MEAL_VIEWMODE_DEEP_EDIT,
+    DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
+    DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
     DAILYPLAN_MEAL_VIEWMODE_DETAIL,
 )
-from notas.viewmodels.builder.dpm_detail_builder import build_dpm_detail_vm
+from notas.viewmodels.content.builder.detail_dpm_builder import build_dpm_detail_vm
 from notas.jscontext.builder.dpm_food_picker_builder import build_dpm_food_picker_context_payload
 from notas.jscontext.builder.food_picker_builder import build_food_picker_foods_payload
 from notas.services.kpis import build_nutrition_kpis_from_meal, build_nutrition_kpis_from_dailyplan
@@ -18,14 +19,20 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from notas.services.dpm import ensure_dpm_meal_isolated
 
+from notas.viewmodels.base_vm import BaseVM
+from notas.viewmodels.ui.builder_ui import build_ui_vm
+
 
 
 #************ RENDER COMPLEJOS *********************
 # ---------- DETAIL (NO HAY LIST)  ----------
 
-#corregir
 @login_required
 def dailyplan_meal_detail(request, dailyplan_id, pk):
+
+    # ==================================================
+    # Aggregate load
+    # ==================================================
 
     dailyplan = get_object_or_404(
         DailyPlan,
@@ -41,18 +48,36 @@ def dailyplan_meal_detail(request, dailyplan_id, pk):
         dailyplan=dailyplan,
     )
 
-    vm = build_dpm_detail_vm(
+    # ==================================================
+    # ViewModel
+    # ==================================================
+
+    viewmode = DAILYPLAN_MEAL_VIEWMODE_DETAIL
+
+    content_vm = build_dpm_detail_vm(
         dailyplan,
         dpm,
         request.user,
-        DAILYPLAN_MEAL_VIEWMODE_DETAIL,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(
+        viewmode,
+        parents=[dailyplan],     # 🔹 parent jerárquico real
+        instance=dpm.meal,       # 🔹 entidad final visible
+    )
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/dailyplan_meals/detail.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
+
 
 # ---------- EDIT - DEEP EDIT ----------
 
@@ -79,22 +104,36 @@ def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
         dpm.save()
         return redirect("dailyplan_edit", pk=dailyplan.id)
 
-    vm = build_dpm_detail_vm(
+
+    viewmode = DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT
+
+    content_vm = build_dpm_detail_vm(
         dailyplan,
         dpm,
         request.user,
-        DAILYPLAN_MEAL_VIEWMODE_DEEP_EDIT,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode, instance=dpm)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/dailyplan_meals/edit.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
 
 
 @login_required
 def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
+
+    # ==================================================
+    # Aggregate load
+    # ==================================================
 
     dpm = get_object_or_404(
         DailyPlanMeal.objects
@@ -108,24 +147,33 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
         dailyplan__created_by=request.user,
     )
 
-    user=request.user
-
-    meal = ensure_dpm_meal_isolated(dpm, user)
+    user = request.user
     dailyplan = dpm.dailyplan
+
+    # Aísla meal si corresponde
+    meal = ensure_dpm_meal_isolated(dpm, user)
 
     caps = get_capabilities(user)
     if not caps or not caps.can_edit_own_content():
         return HttpResponseForbidden("You cannot edit this meal")
 
-    edit_mf_id = request.GET.get("edit_food")
+    # ==================================================
+    # Edit state
+    # ==================================================
 
+    edit_mf_id = request.GET.get("edit_food")
     mealfood = None
+
     if edit_mf_id:
         mealfood = get_object_or_404(
             MealFood,
             pk=edit_mf_id,
             meal=meal,
         )
+
+    # ==================================================
+    # POST handling
+    # ==================================================
 
     if request.method == "POST" and "save_food" in request.POST:
         mf_id = request.POST.get("mealfood_id")
@@ -140,15 +188,16 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
                 food_id=request.POST.get("food_id"),
                 quantity=request.POST.get("quantity"),
             )
-    
-    # ====== DPM FOOD PICKER ===========
-    
+
+    # ==================================================
+    # Food picker payload
+    # ==================================================
+
     foods_payload = build_food_picker_foods_payload(Food.objects.all())
 
     meal_kpis = build_nutrition_kpis_from_meal(meal, user)
-    
     dailyplan_kpis = build_nutrition_kpis_from_dailyplan(dailyplan, user)
-    
+
     dpm_food_picker_ctx = build_dpm_food_picker_context_payload(
         meal=meal,
         meal_kpis=meal_kpis,
@@ -157,18 +206,41 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
         mealfood=mealfood,
     )
 
-    # ----- VIEW MODEL  ----
+    # ==================================================
+    # ViewModel
+    # ==================================================
 
-    vm = build_dpm_detail_vm(
+    viewmode = DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT
+
+    content_vm = build_dpm_detail_vm(
         dailyplan,
         dpm,
         request.user,
-        DAILYPLAN_MEAL_VIEWMODE_DEEP_EDIT,
+        viewmode,
     )
 
-    context = vm.as_context()
-    context["foods_json"] = json.dumps(foods_payload.as_list(), cls=DjangoJSONEncoder)
-    context["food_picker_json"] = json.dumps(dpm_food_picker_ctx, cls=DjangoJSONEncoder)
+    ui_vm = build_ui_vm(
+        viewmode,
+        parents=[dailyplan],   # 🔹 jerarquía real
+        instance=meal,         # 🔹 entidad visible final
+    )
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
+    )
+
+    context = base_vm.as_context()
+
+    context["foods_json"] = json.dumps(
+        foods_payload.as_list(),
+        cls=DjangoJSONEncoder,
+    )
+
+    context["food_picker_json"] = json.dumps(
+        dpm_food_picker_ctx,
+        cls=DjangoJSONEncoder,
+    )
 
     return render(
         request,
@@ -176,7 +248,125 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
         context,
     )
 
+@login_required
+def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
+    # ==================================================
+    # Aggregate load
+    # ==================================================
+
+    dpm = get_object_or_404(
+        DailyPlanMeal.objects
+            .select_related("meal", "dailyplan")
+            .prefetch_related(
+                "meal__meal_food_set",
+                "meal__meal_food_set__food"
+            ),
+        id=dailyplanmeal_id,
+        dailyplan_id=dailyplan_id,
+        dailyplan__created_by=request.user,
+    )
+
+    user = request.user
+    dailyplan = dpm.dailyplan
+
+    # Aísla meal si corresponde
+    meal = ensure_dpm_meal_isolated(dpm, user)
+
+    caps = get_capabilities(user)
+    if not caps or not caps.can_edit_own_content():
+        return HttpResponseForbidden("You cannot edit this meal")
+
+    # ==================================================
+    # Edit state
+    # ==================================================
+
+    edit_mf_id = request.GET.get("edit_food")
+    mealfood = None
+
+    if edit_mf_id:
+        mealfood = get_object_or_404(
+            MealFood,
+            pk=edit_mf_id,
+            meal=meal,
+        )
+
+    # ==================================================
+    # POST handling
+    # ==================================================
+
+    if request.method == "POST" and "save_food" in request.POST:
+        mf_id = request.POST.get("mealfood_id")
+
+        if mf_id:
+            mf = get_object_or_404(MealFood, pk=mf_id, meal=meal)
+            mf.quantity = request.POST.get("quantity")
+            mf.save()
+        else:
+            MealFood.objects.create(
+                meal=meal,
+                food_id=request.POST.get("food_id"),
+                quantity=request.POST.get("quantity"),
+            )
+
+    # ==================================================
+    # Food picker payload
+    # ==================================================
+
+    foods_payload = build_food_picker_foods_payload(Food.objects.all())
+
+    meal_kpis = build_nutrition_kpis_from_meal(meal, user)
+    dailyplan_kpis = build_nutrition_kpis_from_dailyplan(dailyplan, user)
+
+    dpm_food_picker_ctx = build_dpm_food_picker_context_payload(
+        meal=meal,
+        meal_kpis=meal_kpis,
+        dailyplan=dailyplan,
+        dailyplan_kpis=dailyplan_kpis,
+        mealfood=mealfood,
+    )
+
+    # ==================================================
+    # ViewModel
+    # ==================================================
+
+    viewmode = DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT
+
+    content_vm = build_dpm_detail_vm(
+        dailyplan,
+        dpm,
+        request.user,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(
+        viewmode,
+        parents=[dailyplan],   # 🔹 jerarquía real
+        instance=meal,         # 🔹 entidad visible final
+    )
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
+    )
+
+    context = base_vm.as_context()
+
+    context["foods_json"] = json.dumps(
+        foods_payload.as_list(),
+        cls=DjangoJSONEncoder,
+    )
+
+    context["food_picker_json"] = json.dumps(
+        dpm_food_picker_ctx,
+        cls=DjangoJSONEncoder,
+    )
+
+    return render(
+        request,
+        "notas/dailyplan_meals/deep_edit.html",
+        context,
+    )
 
 #************ AUXILIARES *********************
 

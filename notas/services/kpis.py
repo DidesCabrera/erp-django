@@ -1,5 +1,5 @@
 from notas.services.weight import get_current_weight
-from notas.viewmodels.kpi_contract import KPIContract
+from notas.viewmodels.content.kpi_contract import KPIContract
 
 
 #=====CALCULO PPK=========

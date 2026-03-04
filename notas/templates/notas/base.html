@@ -15,8 +15,7 @@
     <link rel="stylesheet" href="{% static 'notas/css/components/modal_create.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/toast.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/main_header.css' %}">
-    <link rel="stylesheet" href="{% static 'notas/css/components/header_list.css' %}">
-    <link rel="stylesheet" href="{% static 'notas/css/components/header_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/header_page.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/card_mini_dpm.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/card_child.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/card_father.css' %}">
@@ -109,7 +108,7 @@
                 <nav class="sidebar-nav">
 
                     <!-- DAILYPLAN ==========================-->
-                    <div class="sidebar-group {% if ui.header.nav_context == 'dailyplan' %}is-open{% endif %}">    
+                    <div class="sidebar-group">    
                         
                         <button type="button" class="sidebar-main">
                             <span class="sidebar-left">
@@ -122,7 +121,7 @@
                         <div class="sidebar-sub">
 
                             <a href="{% url 'dailyplan_list' %}"
-                                class="nav-tab nav-tab--personal tab-list {% if request.resolver_match.url_name == 'dailyplan_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--personal tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "personal" %}is-active{% endif %}">
                                 <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Mi Libreria
@@ -131,7 +130,7 @@
                             </a>
                     
                             <a href="{% url 'dailyplan_explore_list' %}"
-                                class="nav-tab nav-tab--explore tab-list {% if request.resolver_match.url_name == 'dailyplan_explore_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--explore tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "explore" %}is-active{% endif %}">
                                 <i data-lucide="search" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Explorar
@@ -140,7 +139,7 @@
                             </a>
                     
                             <a href="{% url 'dailyplan_shared_list' %}"
-                                class="nav-tab nav-tab--shared tab-list {% if request.resolver_match.url_name == 'dailyplan_shared_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--shared tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "shared" %}is-active{% endif %}">
                                 <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">                                
                                     Compartidos conmigo
@@ -150,7 +149,7 @@
                             </a>
                     
                             <a href="{% url 'dailyplan_draft_list' %}"
-                                class="nav-tab nav-tab--draft tab-list {% if request.resolver_match.url_name == 'dailyplan_draft_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--draft tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "draft" %}is-active{% endif %}">
                                 <i data-lucide="pencil" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Borradores
@@ -160,7 +159,7 @@
                             </a>
                     
                             <a href="{% url 'dailyplan_create' %}"
-                                class="nav-tab nav-tab--create tab-list {% if request.resolver_match.url_name == 'dailyplan_create' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--create tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "create" %}is-active{% endif %}">
                                 <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Crear
@@ -171,7 +170,7 @@
                     </div>
 
                     <!-- MEAL ==========================-->
-                    <div class="sidebar-group {% if ui.header.nav_context == 'meal' %}is-open{% endif %}">
+                    <div class="sidebar-group">
 
                         <button type="button" class="sidebar-main">
                             <span class="sidebar-left">
@@ -183,7 +182,7 @@
                         
                         <div class="sidebar-sub">
                             <a href="{% url 'meal_list' %}"
-                                class="nav-tab nav-tab--meal-personal tab-list {% if request.resolver_match.url_name == 'meal_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--meal-personal tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "personal" %}is-active{% endif %}">
                                 <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Mi Libreria
@@ -192,7 +191,7 @@
                             </a>
 
                             <a href="{% url 'meal_explore_list' %}"
-                                class="nav-tab nav-tab--meal-explore tab-list {% if request.resolver_match.url_name == 'meal_explore_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--meal-explore tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "explore" %}is-active{% endif %}">
                                 <i data-lucide="search" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Explorar
@@ -201,7 +200,7 @@
                             </a>
 
                             <a href="{% url 'meal_shared_list' %}"
-                                class="nav-tab nav-tab--meal-shared tab-list {% if request.resolver_match.url_name == 'meal_shared_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--meal-shared tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "shared" %}is-active{% endif %}">
                                 <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Compartidos conmigo
@@ -210,7 +209,7 @@
                             </a>
 
                             <a href="{% url 'meal_draft_list' %}"
-                                class="nav-tab nav-tab--meal-draft tab-list {% if request.resolver_match.url_name == 'meal_draft_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--meal-draft tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "draft" %}is-active{% endif %}">
                                 <i data-lucide="pencil" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Borradores
@@ -219,7 +218,7 @@
                             </a>
 
                             <a href="{% url 'meal_create' %}"
-                                class="nav-tab nav-tab--meal-create tab-list {% if request.resolver_match.url_name == 'meal_create' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--meal-create tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "create" %}is-active{% endif %}">
                                 <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Crear
@@ -230,7 +229,7 @@
                     </div>
                     
                     <!-- FOOD ==========================-->
-                    <div class="sidebar-group {% if ui.header.nav_context == 'food' %}is-open{% endif %}">
+                    <div class="sidebar-group">
 
                         <button type="button" class="sidebar-main">
                             <span class="sidebar-left">
@@ -257,7 +256,7 @@
 
                     <!-- INBOX ==========================-->
                     <a href="{% url 'inbox_list' %}"
-                        class="nav-tab nav-tab--inbox {% if vm.header.nav_context == 'inbox' %}is-active{% endif %}">
+                        class="nav-tab nav-tab--inbox">
                         <i data-lucide="bell" class="sidebar-main-icon"></i>
                         <span class="nav-text nab-tab2">
                             Notificaciones
@@ -267,7 +266,7 @@
                     
                     <!-- ELEMENTALES ==========================-->
                     <a href="{% url 'elemental_context' %}"
-                    class="nav-tab nav-tab--elemental {% if ui.header.nav_context == 'nutrition' %}is-active{% endif %}">
+                    class="nav-tab nav-tab--elemental">
                         <i data-lucide="graduation-cap" class="sidebar-main-icon"></i>
                         <span class="nav-text nab-tab2">
                             Elementales
@@ -277,7 +276,7 @@
                     
                     <!-- PROYECTO ==========================-->
                     <a href="{% url 'project_view' %}"
-                    class="nav-tab nav-tab--project {% if header.nav_context == 'project' %}is-active{% endif %}">
+                    class="nav-tab nav-tab--project">
                         <i data-lucide="house" class="sidebar-main-icon"></i>
                         <span class="nav-text nab-tab2">
                             Proyecto
@@ -329,6 +328,7 @@
     
     });
 </script>
+
 <script>
     lucide.createIcons();
 </script>
@@ -338,18 +338,6 @@
 
 
 
-
-
-ellipsis-vertical
-funnel
-rows-2
-
-square-arrow-right-enter
-send
-copy
-user-plus
-carrot
-circle-user-round
 
 
 

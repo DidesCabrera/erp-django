@@ -145,7 +145,7 @@ MEAL_ACTION_DEFINITIONS = {
 # ==================================================
 
 MEAL_ACTIONS_BY_VIEWMODE = {
-    MEAL_VIEWMODE_LIST: [
+    MEAL_VIEWMODE_PERSONAL_LIST: [
         "detail",
         "add_to_dailyplan",
         "share",
@@ -193,7 +193,7 @@ MEAL_ACTIONS_BY_VIEWMODE = {
         "back_detail",
     ],
 
-    MEAL_VIEWMODE_EDIT: [
+    MEAL_VIEWMODE_PERSONAL_EDIT: [
         "configure",
         "back_detail",
     ],

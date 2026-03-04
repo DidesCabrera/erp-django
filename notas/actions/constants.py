@@ -1,58 +1,59 @@
+from notas.viewmodels.ui.viewmode import vm
+
 
 # Food VIEWMODEs  ---------------------------------------------
-FOOD_VIEWMODE_LIST = "food:list"
-FOOD_VIEWMODE_DETAIL = "food:detail"
-FOOD_VIEWMODE_MEAL = "food:meal"
-FOOD_VIEWMODE_EDIT = "food:edit"
-
+FOOD_VIEWMODE_LIST = vm("food", "list")
+FOOD_VIEWMODE_DETAIL = vm("food", "detail")
+FOOD_VIEWMODE_MEAL = vm("food", "meal")
+FOOD_VIEWMODE_EDIT = vm("food", "edit")
 
 
 # Meal VIEWMODE ---------------------------------------------
-MEAL_VIEWMODE_LIST = "meal:personal:list"
-MEAL_VIEWMODE_EXPLORE_LIST = "meal:explore:list"
-MEAL_VIEWMODE_SHARED_LIST = "meal:shared:list"
-MEAL_VIEWMODE_DRAFT_LIST = "meal:draft:list"
+MEAL_VIEWMODE_PERSONAL_LIST = vm("meal", "list", "personal")
+MEAL_VIEWMODE_EXPLORE_LIST = vm("meal", "list", "explore")
+MEAL_VIEWMODE_SHARED_LIST = vm("meal", "list", "shared")
+MEAL_VIEWMODE_DRAFT_LIST = vm("meal", "list", "draft")
 
-MEAL_VIEWMODE_DETAIL = "meal:personal:detail"
-MEAL_VIEWMODE_EXPLORE_DETAIL = "meal:explore:detail"
-MEAL_VIEWMODE_SHARED_DETAIL = "meal:shared:detail"
-MEAL_VIEWMODE_DRAFT_DETAIL = "meal:draft:detail"
+MEAL_VIEWMODE_DETAIL = vm("meal", "detail", "personal")
+MEAL_VIEWMODE_EXPLORE_DETAIL = vm("meal", "detail", "explore")
+MEAL_VIEWMODE_SHARED_DETAIL = vm("meal", "detail", "shared")
+MEAL_VIEWMODE_DRAFT_DETAIL = vm("meal", "detail", "draft")
 
-MEAL_VIEWMODE_CREATE = "meal:create"
-MEAL_VIEWMODE_CONFIGURE = "meal:configure"
+MEAL_VIEWMODE_PERSONAL_EDIT = vm("meal", "edit", "personal")
+MEAL_VIEWMODE_DRAFT_EDIT = vm("meal", "edit", "draft")
 
-MEAL_VIEWMODE_EDIT = "meal:edit"
-MEAL_VIEWMODE_BUILD = "meal:build"
+MEAL_VIEWMODE_CREATE = vm("meal", "create", "create")
+MEAL_VIEWMODE_BUILD = vm("meal", "build", "create")
+MEAL_VIEWMODE_CONFIGURE = vm("meal", "configure", "create")
 
-MEAL_VIEWMODE_DAILYPLAN = "meal:dailyplan"
-
+MEAL_VIEWMODE_DAILYPLAN = vm("meal", "dailyplan")
 
 
 # DailyPlan VIEWMODE ---------------------------------------------
-DAILYPLAN_VIEWMODE_LIST = "dailyplan:personal:list"
-DAILYPLAN_VIEWMODE_EXPLORE_LIST = "dailyplan:explore:list"
-DAILYPLAN_VIEWMODE_SHARED_LIST = "dailyplan:shared:list"
-DAILYPLAN_VIEWMODE_DRAFT_LIST = "dailyplan:draft:list"
+DAILYPLAN_VIEWMODE_PERSONAL_LIST = vm("dailyplan", "list", "personal")
+DAILYPLAN_VIEWMODE_EXPLORE_LIST = vm("dailyplan", "list", "explore")
+DAILYPLAN_VIEWMODE_SHARED_LIST = vm("dailyplan", "list", "shared")
+DAILYPLAN_VIEWMODE_DRAFT_LIST = vm("dailyplan", "list", "draft")
 
-DAILYPLAN_VIEWMODE_DETAIL = "dailyplan:personal:detail"
-DAILYPLAN_VIEWMODE_SHARED_DETAIL= "dailyplan:shared:detail"
-DAILYPLAN_VIEWMODE_EXPLORE_DETAIL = "dailyplan:explore:detail"
-DAILYPLAN_VIEWMODE_DRAFT_DETAIL = "dailyplan:draft:detail"
+DAILYPLAN_VIEWMODE_PERSONAL_DETAIL = vm("dailyplan", "detail", "personal")
+DAILYPLAN_VIEWMODE_SHARED_DETAIL = vm("dailyplan", "detail", "shared")
+DAILYPLAN_VIEWMODE_EXPLORE_DETAIL = vm("dailyplan", "detail", "explore")
+DAILYPLAN_VIEWMODE_DRAFT_DETAIL = vm("dailyplan", "detail", "draft")
 
-DAILYPLAN_VIEWMODE_CREATE = "dailyplan:create"
-DAILYPLANL_VIEWMODE_CONFIGURE = "dailyplan:configure"
+DAILYPLAN_VIEWMODE_PERSONAL_EDIT = vm("dailyplan", "edit", "personal")
+DAILYPLAN_VIEWMODE_DRAFT_EDIT = vm("dailyplan", "edit", "draft")
 
-DAILYPLAN_VIEWMODE_EDIT = "dailyplan:edit"
-DAILYPLAN_VIEWMODE_BUILD = "dailyplan:build"
+DAILYPLAN_VIEWMODE_CREATE = vm("dailyplan", "create", "create")
+DAILYPLAN_VIEWMODE_BUILD = vm("dailyplan", "build", "create")
+DAILYPLAN_VIEWMODE_CONFIGURE = vm("dailyplan", "configure", "create")
 
 
 
 # DPM VIEWMODE ---------------------------------------------
-DAILYPLAN_MEAL_VIEWMODE_LIST = "dailyplan_meal:list"
-DAILYPLAN_MEAL_VIEWMODE_DETAIL = "dailyplan_meal:detail"
-DAILYPLAN_MEAL_VIEWMODE_DEEP_EDIT = "dailyplan_meal:deep_edit"
-
-
+DAILYPLAN_MEAL_VIEWMODE_LIST = vm("dailyplan_meal", "list", "personal")
+DAILYPLAN_MEAL_VIEWMODE_DETAIL = vm("dailyplan_meal", "detail", "personal")
+DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT = vm("dailyplan_meal", "deep_edit", "personal")
+DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT = vm("dailyplan_meal", "deep_edit", "draft")
 
 # DPM OTRO (PARA DEJAR PORCENTAJE DE ALLOC FUERA O DENTRO---------------------------------------------
 ALLOC_PCT_OUTSIDE_THRESHOLD = 10

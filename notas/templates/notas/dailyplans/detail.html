@@ -1,30 +1,32 @@
 {% extends "notas/base.html" %}
 {% block title %}
-  {{ ui.header.title }}
+  My Scoope
 {% endblock %}
 {% block content %}
 
-{% include "components/header.html" with header=ui.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
 
 <div class="page page--detail" data-page="dailyplan-detail">
   
   <!-- MAIN-CARD ======================================-->
-  {% include "components/card_main_dailyplan.html" with main_card=ui.main_card %}
+  {% include "components/card_main_dailyplan.html" with main_card=vm.content.main_card %}
   
-  <hr><!-- HR #####################-->
+  <hr>
 
   <!-- MEALS LIST =========================== -->
   <div class="page-list">
-    {% if ui.child_cards  %}
+    {% if vm.content.child_cards  %}
       <h3>Información de Comidas</h3>
-      <p class="structural_indicators"> {{ ui.structural_indicators.meals_count }} Comidas | {{ ui.structural_indicators.foods_count }} Alimentos</p>
+      <p class="structural_indicators"> {{ vm.content.structural_indicators.meals_count }} Comidas | {{ vm.content.structural_indicators.foods_count }} Alimentos</p>
       <div>
-        {% include "components/card_foods_aggregation.html" with foods=ui.foods_aggregation %}
+        {% include "components/card_foods_aggregation.html" with foods=vm.content.foods_aggregation %}
       </div> 
       
 
-      {% for child in ui.child_cards %}
+      {% for child in vm.content.child_cards %}
+      <div class="dpm-mini-card-list">
         {% include "components/card_mini_dpm.html" with child=child %}
+      </div>
         {% include "components/card_child_meal.html" with child_card=child %}
       {% empty %}
         <p>No meals added yet.</p>

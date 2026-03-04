@@ -1,26 +1,20 @@
 from notas.services.kpis import get_ppk_meal
 from notas.actions.meal_resolvers import resolve_meal_actions
 from notas.actions.share_resolvers import resolve_share_actions
-from notas.viewmodels.list_vm import *
-from notas.viewmodels.builder.builder_table_items import build_mealfood_table_item
-from notas.viewmodels.builder.builder_headers import build_list_header
-from notas.viewmodels.builder.builder_foods_aggregation import build_meal_foods_aggregation
+from notas.viewmodels.content.list_vm import *
+from notas.viewmodels.content.builder.builder_table_items import build_mealfood_table_item
+from notas.viewmodels.content.builder.builder_foods_aggregation import build_meal_foods_aggregation
+from notas.viewmodels.content.registry import CONTENT_ICON_REGISTRY
 
 
 def build_meal_list_vm(meals, user, action_context):
-
-    # =========================
-    # HEADER
-    # =========================
-
-    header = build_list_header(
-        entity="meal",
-        context_name=action_context
-    )
     
     children = []
 
     for meal in meals:
+
+        child_entity_icon = CONTENT_ICON_REGISTRY.get("meal")
+        child_entity_label = "Meal"
 
         # ==================================================
         # Freeze MEAL aggregates (cached if available)
@@ -104,7 +98,8 @@ def build_meal_list_vm(meals, user, action_context):
 
             titulo=TitleUI(
                 name=meal.name,
-                label="Meal",
+                label= child_entity_label,
+                icon= child_entity_icon,
                 structural_indicators=StructuralIndicatorsUI(
                     foods_count=len(foods_aggregation),
                 )
@@ -148,6 +143,5 @@ def build_meal_list_vm(meals, user, action_context):
         children.append(child)
 
     return ListVM(
-        header=header,
         child_cards=children,
     )

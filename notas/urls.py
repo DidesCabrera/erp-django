@@ -62,7 +62,9 @@ from .views.dailyplans import (
     dailyplan_save,
     dailyplan_unshare,
     dailyplan_draft_list,
-    dailyplan_share_detail,
+    dailyplan_draft_detail,
+    dailyplan_draft_edit,
+    dailyplan_shared_detail,
 )
 
 
@@ -122,11 +124,10 @@ urlpatterns = [
 
     path("dailyplans/<int:pk>/remove/", dailyplan_remove ,name="dailyplan_remove"),
     path("dailyplans/shared/<int:share_id>/unshare/", dailyplan_unshare ,name="dailyplan_unshare"),
-    path("dailyplans/shared/<int:pk>/", dailyplan_share_detail, name="dailyplan_share_detail"),
+    path("dailyplans/shared/<int:pk>/", dailyplan_shared_detail, name="dailyplan_shared_detail"),
     path("dailyplans/shared/<int:share_id>/dismiss/", dailyplan_share_dismiss, name="dailyplan_share_dismiss"),
     path("dailyplans/shared/", dailyplan_shared_list, name="dailyplan_shared_list"),
     path('dailyplans/<int:dailyplan_id>/save/', dailyplan_save, name='dailyplan_save'),
-    path("dailyplans/draft/", dailyplan_draft_list, name="dailyplan_draft_list"),
 
     path("dailyplans/<int:pk>/share/", dailyplan_share, name="dailyplan_share"),
     path("dailyplans/shared/<uuid:token>/", dailyplan_share_accept, name="dailyplan_share_accept"),
@@ -185,9 +186,11 @@ urlpatterns = [
 
     #DAILY PLANS
     path("dailyplans/", dailyplan_list, name="dailyplan_list"),
-    path("dailyplans/explore/", dailyplan_explore_list, name="dailyplan_explore_list"),
     path("dailyplans/<int:pk>/", dailyplan_detail, name="dailyplan_detail"),
+    path("dailyplans/explore/", dailyplan_explore_list, name="dailyplan_explore_list"),
     path("dailyplans/explore/<int:pk>/", dailyplan_explore_detail, name="dailyplan_explore_detail"),
+    path("dailyplans/draft/", dailyplan_draft_list, name="dailyplan_draft_list"),
+    path("dailyplans/draft/<int:pk>/", dailyplan_draft_detail, name="dailyplan_draft_detail"),
     path("dailyplans/create/", dailyplan_create, name="dailyplan_create"),
     path("dailyplans/<int:pk>/builder/", dailyplan_builder, name="dailyplan_builder"),
     path("dailyplans/<int:pk>/rename/", dailyplan_rename, name="dailyplan_rename"),
@@ -197,6 +200,7 @@ urlpatterns = [
     path('dailyplans/<int:dailyplan_id>/fork/', dailyplan_fork, name='dailyplan_fork'),
     path("dailyplans/<int:pk>/copy/", dailyplan_copy, name="dailyplan_copy"),
     path("dailyplans/<int:pk>/edit/", dailyplan_edit, name="dailyplan_edit"),
+    path("dailyplans/draft/<int:pk>/edit/", dailyplan_draft_edit, name="dailyplan_draft_edit"),
 
     
 

@@ -15,6 +15,22 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
+    "shared_detail": {
+        "label": "Ver",
+        "method": "get",
+        "get_url": lambda dp, context=None: reverse(
+            "dailyplan_shared_detail", args=[dp.id]
+        ),
+    },
+    
+    "draft_detail": {
+        "label": "Ver Draft",
+        "method": "get",
+        "get_url": lambda dp, context=None: reverse(
+            "dailyplan_draft_detail", args=[dp.id]
+        ),
+    },
+
     "explore_detail": {
         "label": "Ver",
         "method": "get",
@@ -121,6 +137,14 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         ),
     },
 
+    "draft_edit": {
+        "label": "Editar",
+        "method": "post",
+        "get_url": lambda dp, context=None: reverse(
+            "dailyplan_draft_edit", args=[dp.id]
+        ),
+    },
+
     "back_detail": {
         "label": "Finalizar",
         "method": "get",
@@ -143,6 +167,22 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         ),
     },
 
+    "back_to_shared_list": {
+        "label": "Salir",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "dailyplan_shared_list"
+        ),
+    },
+
+    "back_to_draft_list": {
+        "label": "Salir",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "dailyplan_draft_list"
+        ),
+    },
+
 }
 
 # ==================================================
@@ -152,17 +192,22 @@ DAILYPLAN_ACTION_DEFINITIONS = {
 DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     
     # PERSONAL
-    DAILYPLAN_VIEWMODE_LIST: [
+    DAILYPLAN_VIEWMODE_PERSONAL_LIST: [
         "detail",
         "share",
     ],
 
-    DAILYPLAN_VIEWMODE_DETAIL: [
+    DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
         "share",
         "fork",
         "edit",
         "remove",
         "back_to_list",
+    ],
+
+    DAILYPLAN_VIEWMODE_PERSONAL_EDIT: [
+        "configure",
+        "back_detail",
     ],
 
     # EXPLORE
@@ -179,24 +224,29 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 
     # SHARE
     DAILYPLAN_VIEWMODE_SHARED_LIST: [
-        "detail",
+        "shared_detail",
         "save_my_list",
     ],
 
     DAILYPLAN_VIEWMODE_SHARED_DETAIL: [
         "save_my_list",
-        "back_to_list",
+        "back_to_shared_list",
     ],
 
     # DRAFT
     DAILYPLAN_VIEWMODE_DRAFT_LIST: [
-        "detail",
-        "edit",
+        "draft_detail",
+        "draft_edit",
         "remove",
-    ],   
+    ],
 
-    # EDIT
-    DAILYPLAN_VIEWMODE_EDIT: [
+    DAILYPLAN_VIEWMODE_DRAFT_DETAIL: [
+        "draft_edit",
+        "remove",
+        "back_to_draft_list",
+    ],  
+
+    DAILYPLAN_VIEWMODE_DRAFT_EDIT: [
         "configure",
         "back_detail",
     ],

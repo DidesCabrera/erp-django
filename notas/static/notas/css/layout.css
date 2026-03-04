@@ -145,7 +145,7 @@ header {
     display: block;             /* 🔥 elimina baseline inline */
     flex-shrink: 0;
     transition: transform 0.2s ease;
-    stroke-width: 2;
+    stroke-width: 3;
   }
     
 .nab-tab2 {

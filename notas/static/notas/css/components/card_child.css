@@ -4,7 +4,7 @@
 .card {
   background: var(--color-bg);
   border: 1px solid var(--color-border-1);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 17px 22px 0px 22px;
   margin-bottom: 24px;
 }

@@ -4,7 +4,7 @@ Configure Daily Plan – {{ dailyplan.name }}
 {% endblock %}
 {% block content %}
 
-{% include "components/header.html" with header=ui.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
 
 <div class="page page--detail page-modal">
   <div class="wrap-page-modal">

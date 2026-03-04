@@ -1,4 +1,4 @@
-from notas.viewmodels.builder.builder_foods_aggregation import build_meal_foods_aggregation
+from notas.viewmodels.content.builder.builder_foods_aggregation import build_meal_foods_aggregation
 
 
 def build_meal_foods_projection(meal):

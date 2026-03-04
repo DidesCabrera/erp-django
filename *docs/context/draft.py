@@ -1,174 +1,29 @@
-import os
-from pathlib import Path
-import dj_database_url
+<div class="card-title-comp">
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+  <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+    <i data-lucide="{{ titulo.icon }}" class="sidebar-main-icon"></i>
+    {{ titulo.label }}
+  </div>
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+  <div class="label-fork"></div>
 
-DEBUG = False
+  <h3>{{ titulo.name }}</h3>
 
-ALLOWED_HOSTS = []
+  <div class="label-class">
+    {% for class in titulo.classes %}
+      <span class="class-tag">{{ class }}</span>
+    {% endfor %}
+  </div>
 
+  <div class="structural-indicators">
+    <p>
+      {% if titulo.structural_indicators.meals_count %}
+        {{ titulo.structural_indicators.meals_count }} Comidas |
+      {% endif %}
+      {{ titulo.structural_indicators.foods_count }} Alimentos
+    </p>
+  </div>
 
+  <p class="btn-desplegar-tabla">Ver tabla</p>
 
-#==============================
-#==============================
-#==============================
-
-
-
-
-
-# Application definition
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    'notas.apps.NotasConfig',
-    'accounts',
-    'core',
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-
-ROOT_URLCONF = 'miapp.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'notas.context_processors.user_weight',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = 'miapp.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
-    )
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
-
-
-AUTH_PASSWORD_VALIDATORS = []
-
-"""
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-"""
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/app/dailyplans/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@notas.com"
-
-
-
-
-------
-dev
-
-
-
-from .base import *
-
-SECRET_KEY = "dev-secret-key-local-only"
-
-DEBUG = True
-
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
-
-print("🚀 RUNNING IN DEV MODE")
-
------
-
-
-
-from .base import *
-
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-DEBUG = False
-
-ALLOWED_HOSTS = os.environ.get(
-    "ALLOWED_HOSTS",
-    "www.myscoope.com,myscoope.com,my-scoope.onrender.com"
-).split(",")
+</div>

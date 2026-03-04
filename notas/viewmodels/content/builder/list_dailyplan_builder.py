@@ -1,28 +1,24 @@
 from notas.services.kpis import get_ppk_dailyplan
 from notas.actions.dailyplan_resolvers import resolve_dailyplan_actions
 from notas.actions.share_resolvers import resolve_share_actions
-from notas.viewmodels.list_vm import *
-from notas.viewmodels.builder.builder_table_items import build_dailyplanmeal_table_item
-from notas.viewmodels.builder.builder_headers import build_list_header
+from notas.viewmodels.content.list_vm import *
+from notas.viewmodels.content.builder.builder_table_items import build_dailyplanmeal_table_item
 from notas.actions.constants import ALLOC_PCT_OUTSIDE_THRESHOLD
 
-from notas.viewmodels.builder.builder_foods_aggregation import  build_dailyplan_foods_aggregation
+from notas.viewmodels.content.builder.builder_foods_aggregation import  build_dailyplan_foods_aggregation
+
+from notas.viewmodels.content.registry import CONTENT_ICON_REGISTRY
+
 
 
 def build_dailyplan_list_vm(dailyplans, user, viewmode):
 
-    # =========================
-    # HEADER
-    # =========================
-
-    header = build_list_header(
-        entity="dailyplan",
-        context_name=viewmode
-    )
-
     children = []
 
     for dailyplan in dailyplans:
+
+        child_entity_icon = CONTENT_ICON_REGISTRY.get("dailyplan")
+        child_entity_label = "DailyPlan"
 
         # ==================================================
         # Freeze dailyplan aggregates (single access)
@@ -59,7 +55,7 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
         foods_aggregation = build_dailyplan_foods_aggregation(dailyplan_meals)
 
         # ==================================================
-        # Share (if exists)
+        # Actions & Share (if exists)
         # ==================================================
 
         share = next(
@@ -69,10 +65,6 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
             ),
             None
         )
-
-        # ==================================================
-        # Actions
-        # ==================================================
 
         actions = []
 
@@ -94,7 +86,7 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
             )
 
         # ==================================================
-        # Child card
+        # Completar Child card con la información respectiva
         # ==================================================
 
         child = ChildCardUI(
@@ -102,7 +94,8 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
 
             titulo=TitleUI(
                 name=dailyplan.name,
-                label="Daily Plan",
+                label= child_entity_label,
+                icon= child_entity_icon,
                 structural_indicators=StructuralIndicatorsUI(
                     meals_count=len(dailyplan_meals),
                     foods_count=len(foods_aggregation),
@@ -151,6 +144,5 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
         children.append(child)
 
     return ListVM(
-        header=header,
         child_cards=children,
     )

@@ -1,6 +1,7 @@
 <div class="card-title-comp">
 
   <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+    <i data-lucide="{{ titulo.icon }}" class="card-icon"></i>
     {{ titulo.label }}
   </div>
 
@@ -17,7 +18,7 @@
   <div class="structural-indicators">
     <p>
       {% if titulo.structural_indicators.meals_count %}
-        {{ titulo.structural_indicators.meals_count }} Comidas | 
+        {{ titulo.structural_indicators.meals_count }} Comidas |
       {% endif %}
       {{ titulo.structural_indicators.foods_count }} Alimentos
     </p>
@@ -26,4 +27,3 @@
   <p class="btn-desplegar-tabla">Ver tabla</p>
 
 </div>
-  

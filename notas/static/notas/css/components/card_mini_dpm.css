@@ -1,11 +1,17 @@
+.dpm-mini-card-list{
+    margin-top: 36px;
+    margin-bottom: 10px;
+}
+
+
 .hour-note {
     display: flex;
     flex-direction: row;
     gap: 0px;
     justify-content: space-between;
     padding: 1px 12px 1px 10px;
-    margin-top: 48px;
-    margin-bottom: 14px;
+    margin-top: 10px; /*48*/
+    margin-bottom: 4px;
     background-color: rgb(56, 120, 134);
     color: rgb(255, 255, 255);
     font-weight: 600;
@@ -17,6 +23,8 @@
     font-size: 13px;
     font-weight: 500;
 }
+
+
 
 .alloc-block-card-mini {
     display: grid;

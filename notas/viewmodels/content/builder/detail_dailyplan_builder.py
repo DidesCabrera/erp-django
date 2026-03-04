@@ -6,11 +6,15 @@ from notas.services.kpis import (
 from notas.actions.dailyplan_resolvers import resolve_dailyplan_actions
 from notas.actions.dailyplan_meal_resolvers import resolve_dailyplan_meal_actions
 
-from notas.viewmodels.dailyplan_detail_vm import *
-from notas.viewmodels.builder.builder_table_items import build_dailyplanmeal_table_item, build_mealfood_table_item
-from notas.viewmodels.builder.builder_headers import build_dailyplan_header
+from notas.viewmodels.content.detail_dailyplan_vm import *
+from notas.viewmodels.content.builder.builder_table_items import build_dailyplanmeal_table_item, build_mealfood_table_item
+from notas.viewmodels.content.builder.builder_headers import build_dailyplan_header
 
-from notas.viewmodels.builder.builder_foods_aggregation import  build_dailyplan_foods_aggregation, build_meal_foods_aggregation
+from notas.viewmodels.content.builder.builder_foods_aggregation import  build_dailyplan_foods_aggregation, build_meal_foods_aggregation
+
+from notas.viewmodels.content.registry import CONTENT_ICON_REGISTRY
+
+
 
 def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
 
@@ -23,6 +27,9 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
         user=user,
         context_name=action_context
     )
+    
+    main_entity_icon = CONTENT_ICON_REGISTRY.get("dailyplan")
+    main_entity_label = "DailyPlan"
 
     # ==================================================
     # DAILYPLAN AGGREGATES (freeze values)
@@ -60,7 +67,8 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
 
         titulo=TitleUI(
             name=dailyplan.name,
-            label="Daily Plan",
+            label= main_entity_label,
+            icon= main_entity_icon,
         ),
 
         kpis=KPIUI(
@@ -126,6 +134,9 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
             for mf in meal_foods
         ]
 
+        child_entity_icon = CONTENT_ICON_REGISTRY.get("meal")
+        child_entity_label = "Meal"
+
         child = ChildCardUI(
 
             main_id=dailyplan.id,
@@ -144,7 +155,8 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
 
             titulo=TitleUI(
                 name=meal.name,
-                label="Meal",
+                label= child_entity_label,
+                icon= child_entity_icon,
                 structural_indicators=StructuralIndicatorsUI(
                     foods_count=len(meal_foods_aggregation),
                 )

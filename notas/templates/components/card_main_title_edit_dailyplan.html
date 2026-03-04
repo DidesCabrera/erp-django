@@ -1,6 +1,7 @@
 <div class="card-title-comp">
 
     <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+      <i data-lucide="clipboard-list" class="card-icon main"></i>
       {{ titulo.label }}
     </div>
 
@@ -8,7 +9,7 @@
 
     <div class="block-title-card-edit">
         <h1>{{ titulo.name }}</h1>
-        <a href="{% url 'dailyplan_rename' main_id %}">
+        <a href="{% url 'dailyplan_rename' main_id %}?return_to={{ request.get_full_path }}">
             Edit title {{main_id}}
         </a>
     </div>

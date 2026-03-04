@@ -5,22 +5,13 @@ from django.http import HttpResponseForbidden
 from django.contrib import messages
 from notas.services.capabilities import get_capabilities
 from notas.models import Meal, MealFood, Food, MealShare
-from notas.actions.constants import (
-    MEAL_VIEWMODE_LIST, 
-    MEAL_VIEWMODE_DETAIL,
-    MEAL_VIEWMODE_EDIT,
-    MEAL_VIEWMODE_EXPLORE_LIST,
-    MEAL_VIEWMODE_EXPLORE_DETAIL,
-    MEAL_VIEWMODE_DRAFT_LIST,
-    MEAL_VIEWMODE_SHARED_LIST,
-    MEAL_VIEWMODE_SHARED_DETAIL,
-)
+from notas.actions.constants import *
 
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from notas.services.kpis import build_nutrition_kpis_from_meal
-from notas.viewmodels.builder.meal_detail_builder import build_meal_detail_vm
-from notas.viewmodels.builder.meal_list_builder import build_meal_list_vm
+from notas.viewmodels.content.builder.detail_meal_builder import build_meal_detail_vm
+from notas.viewmodels.content.builder.list_meal_builder import build_meal_list_vm
 from notas.jscontext.builder.food_picker_builder import build_food_picker_foods_payload, build_food_picker_context_payload
 from notas.services.meal_queries import meals_with_kcal
 
@@ -29,6 +20,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 
+from notas.viewmodels.base_vm import BaseVM
+from notas.viewmodels.ui.builder_ui import build_ui_vm
 
 #************ VIEW DE INBOX *********************
 
@@ -133,16 +126,25 @@ def meal_list(request):
         .order_by("-created_at")
     )
 
-    vm = build_meal_list_vm(
+    viewmode = MEAL_VIEWMODE_PERSONAL_LIST
+    
+    content_vm = build_meal_list_vm(
         meals,
         request.user,
-        MEAL_VIEWMODE_LIST,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/meals/list.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
 
 
@@ -155,16 +157,25 @@ def meal_explore_list(request):
         .order_by("-created_at")
     )
 
-    vm = build_meal_list_vm(
+    viewmode = MEAL_VIEWMODE_EXPLORE_LIST
+    
+    content_vm = build_meal_list_vm(
         meals,
         request.user,
-        MEAL_VIEWMODE_EXPLORE_LIST,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/meals/list.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
 
 
@@ -182,16 +193,25 @@ def meal_shared_list(request):
         .distinct()
     )
 
-    vm = build_meal_list_vm(
+    viewmode = MEAL_VIEWMODE_SHARED_LIST
+    
+    content_vm = build_meal_list_vm(
         meals,
         request.user,
-        MEAL_VIEWMODE_SHARED_LIST,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/meals/list.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
 
 
@@ -207,16 +227,25 @@ def meal_draft_list(request):
         .order_by("-created_at")
     )
 
-    vm = build_meal_list_vm(
+    viewmode = MEAL_VIEWMODE_DRAFT_LIST
+    
+    content_vm = build_meal_list_vm(
         meals,
         request.user,
-        MEAL_VIEWMODE_DRAFT_LIST,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/meals/list.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
 
 
@@ -232,16 +261,27 @@ def meal_detail(request, pk, dailyplan_id=None):
         .get(pk=pk, created_by=request.user)
     )
 
-    vm = build_meal_detail_vm(
+    meal_foods = list(meal.meal_food_set.all())
+
+    viewmode = MEAL_VIEWMODE_DETAIL
+
+    content_vm = build_meal_detail_vm(
         meal,
         request.user,
-        MEAL_VIEWMODE_DETAIL,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode, instance=meal)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/meals/detail.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
 
 
@@ -254,17 +294,29 @@ def meal_explore_detail(request, pk, dailyplan_id=None):
         .get(pk=pk, created_by=request.user)
     )
 
-    vm = build_meal_detail_vm(
+    meal_foods = list(meal.meal_food_set.all())
+
+    viewmode = MEAL_VIEWMODE_EXPLORE_DETAIL
+
+    content_vm = build_meal_detail_vm(
         meal,
         request.user,
-        MEAL_VIEWMODE_EXPLORE_DETAIL,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode, instance=meal)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/meals/detail.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
+
 
 
 @login_required
@@ -276,16 +328,27 @@ def meal_share_detail(request, pk, dailyplan_id=None):
         .get(pk=pk)
     )
 
-    vm = build_meal_detail_vm(
+    meal_foods = list(meal.meal_food_set.all())
+
+    viewmode = MEAL_VIEWMODE_SHARED_DETAIL
+
+    content_vm = build_meal_detail_vm(
         meal,
         request.user,
-        MEAL_VIEWMODE_SHARED_DETAIL,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(viewmode, instance=meal)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
     )
 
     return render(
         request,
         "notas/meals/detail.html",
-        vm.as_context(),
+        base_vm.as_context(),
     )
 
 
@@ -297,6 +360,10 @@ def meal_share_detail(request, pk, dailyplan_id=None):
 @login_required
 def meal_edit(request, pk):
 
+    # ==================================================
+    # Aggregate load
+    # ==================================================
+
     meal = (
         Meal.objects
         .prefetch_related("meal_food_set", "meal_food_set__food")
@@ -306,21 +373,26 @@ def meal_edit(request, pk):
     user = request.user
 
     caps = get_capabilities(user)
-
     if not caps or not caps.can_edit_own_content():
         return HttpResponseForbidden("You cannot edit this meal")
 
-    #===== MODIFICICACION DATA ====================================================
+    # ==================================================
+    # Edit state
+    # ==================================================
 
     edit_mf_id = request.GET.get("edit_food")
     mealfood = None
 
     if edit_mf_id:
         mealfood = get_object_or_404(
-            MealFood, 
-            pk=edit_mf_id, 
+            MealFood,
+            pk=edit_mf_id,
             meal=meal
         )
+
+    # ==================================================
+    # POST handling
+    # ==================================================
 
     if request.method == "POST":
         if "save_food" in request.POST:
@@ -337,29 +409,50 @@ def meal_edit(request, pk):
                     quantity=request.POST.get("quantity")
                 )
 
-    # ===== FOOD PICKER ====================================================
-   
+    # ==================================================
+    # Food picker payload
+    # ==================================================
+
     foods_payload = build_food_picker_foods_payload(Food.objects.all())
-    
+
     nutrition_kpis = build_nutrition_kpis_from_meal(meal, user)
+
     food_picker_ctx = build_food_picker_context_payload(
         meal=meal,
         nutrition_kpis=nutrition_kpis,
         mealfood=mealfood,
     )
 
-    # ======= VIEW MODEL ======================================
+    # ==================================================
+    # ViewModel
+    # ==================================================
 
-    vm = build_meal_detail_vm(
+    viewmode = MEAL_VIEWMODE_PERSONAL_EDIT
+
+    content_vm = build_meal_detail_vm(
         meal,
         user,
-        MEAL_VIEWMODE_EDIT,
+        viewmode,
     )
 
-    context = vm.as_context()
-    context["foods_json"] = json.dumps(foods_payload.as_list(), cls=DjangoJSONEncoder)
-    context["food_picker_context"] = json.dumps(food_picker_ctx.as_dict(), cls=DjangoJSONEncoder)
+    ui_vm = build_ui_vm(viewmode, instance=meal)
 
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
+    )
+
+    context = base_vm.as_context()
+
+    context["foods_json"] = json.dumps(
+        foods_payload.as_list(),
+        cls=DjangoJSONEncoder,
+    )
+
+    context["food_picker_context"] = json.dumps(
+        food_picker_ctx.as_dict(),
+        cls=DjangoJSONEncoder,
+    )
 
     return render(
         request,
@@ -413,7 +506,7 @@ def meal_builder(request, pk):
     vm = build_meal_detail_vm(
         meal,
         user,
-        MEAL_VIEWMODE_EDIT,
+        MEAL_VIEWMODE_PERSONAL_EDIT,
     )
 
     if meal.pending_dailyplan:

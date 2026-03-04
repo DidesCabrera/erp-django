@@ -1,14 +1,22 @@
 <div class="page-header">
 
     <div class="page-header-left">
-        <!-- Breadcrumb / navegación -->
-        {% include "components/header_breadcrumbs.html" with navigation=header.navigation %}
+        <div class="label-entity header label-entity--{{ ui.nav_root }}">
+            <i data-lucide="{{ ui.icon }}" class="label-icon"></i>
+        </div>
+        {% include "components/header_breadcrumbs.html" with breadcrumb=ui.breadcrumb %}
     </div>
     
     <div class="page-header-right">
         <!-- acciones -->
         {% if header.actions %}
-        {% include "components/header_actions.html" with actions=header.actions %}
+            {% include "components/header_actions.html" with actions=header.actions %}
+        {% else %}
+        <div class="btn-list-header">
+            <button id="collapse-list-btn" class="collapse-btn" type="button">
+            <i data-lucide="rows-2" class="sidebar-leading-icon"></i>
+            </button>
+        </div>
         {% endif %}
     </div>
 

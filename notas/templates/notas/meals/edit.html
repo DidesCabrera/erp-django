@@ -1,10 +1,10 @@
 {% extends "notas/base.html" %}
 {% block title %}
-Edit - {{ ui.header.title }}
+Editing...
 {% endblock %}
 {% block content %}
 
-{% include "components/header.html" with header=ui.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
 
 <div class="header-mini-edit">
   <p>Editando...</p>
@@ -14,7 +14,7 @@ Edit - {{ ui.header.title }}
 <div class="page page--detail edit" data-page="meal-edit">
   
   <!-- MAIN-CARD ======================================-->
-  {% include "components/card_main_meal_edit.html" with main_card=ui.main_card %}
+  {% include "components/card_main_meal_edit.html" with main_card=vm.content.main_card %}
 
 
 </div>

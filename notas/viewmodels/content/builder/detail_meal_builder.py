@@ -1,11 +1,16 @@
 from notas.services.kpis import get_ppk_meal
 from notas.actions.meal_food_resolvers import resolve_food_actions
-from notas.viewmodels.meal_detail_vm import *
-from notas.viewmodels.builder.builder_table_items import build_mealfood_table_item
-from notas.viewmodels.builder.builder_headers import build_meal_header
+from notas.viewmodels.content.detail_meal_vm import *
+from notas.viewmodels.content.builder.builder_table_items import build_mealfood_table_item
+from notas.viewmodels.content.builder.builder_headers import build_meal_header
+
+from notas.viewmodels.content.registry import CONTENT_ICON_REGISTRY
 
 
 def build_meal_detail_vm(meal, user, action_context):
+
+    main_entity_icon = CONTENT_ICON_REGISTRY.get("meal")
+    main_entity_label = "Meal"
 
     # ==================================================
     # HEADER
@@ -56,7 +61,8 @@ def build_meal_detail_vm(meal, user, action_context):
 
         titulo=TitleUI(
             name=meal.name,
-            label="Meal"
+            label= main_entity_label,
+            icon= main_entity_icon,
         ),
 
         kpis=KPIUI(
