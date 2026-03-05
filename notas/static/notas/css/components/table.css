@@ -13,7 +13,7 @@ thead th {
 
 tbody td {
   padding: 6px 8px;
-  color: #333;
+  color: rgb(20, 20, 20);
   text-align: center;
   vertical-align: middle;
   
@@ -24,12 +24,13 @@ tbody td {
 
 .table-items {
   display: block;
-  background: var(--color-bg-2);
+  background: rgb(250, 250, 250);
   border-radius: 5px;
   padding: 3px 8px;
   table-layout: fixed;
   font-size: 14px;
   margin-bottom: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .table-items.picker {
@@ -98,6 +99,7 @@ tbody td {
 .table-foods th:nth-child(7),
 .table-foods th:nth-child(8),
 .table-foods th:nth-child(9) {
+  padding-left: 8px;
   text-align: left;
 }
 
@@ -161,12 +163,13 @@ table tr:last-child {
 }
 
 .table-action{
-  padding: 0px;
-  padding-left: 8px;
+  width: 30px;
+  padding: 0px 0px;
+  background-color: transparent;
 }
 
 .table-action button{
-  width: 22px;
+  background-color: transparent;
   border: none;
 }
 
@@ -193,12 +196,21 @@ table tr:last-child {
 
 .table-action.edit{
   width: 35px;
-  padding: 0px;
-  padding-left: 8px;
+  padding: 0 8px;
 }
 
 .table-action.edit button{
   border: none;
+}
+
+.table-icon{
+  color: rgb(24, 24, 24);
+  stroke-width: 1.5;
+  height: 13px;
+  width: 13px;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 
@@ -237,3 +249,5 @@ table tr:last-child {
 .grams-col-food-table.edit {
   width: 45px;
 }
+
+

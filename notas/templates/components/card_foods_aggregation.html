@@ -1,10 +1,10 @@
 <div class="card-food-aggregation">
     
-      <div class="card_food_preview_list">
-        <span>Alimentos: </span>
-        {% for food in foods %}
-          <span>{{ food.food.name }} ({{ food.total_grams }}g) -</span>
-        {% endfor %}
-      </div>
+  <div class="card_food_preview_list">
+    <p class="label-food-aggregation">Alimentos:</p>
+    {% for food in foods %}
+      <span>{{ food.food.name }} ({{ food.total_grams }}g)</span>
+    {% endfor %}
+  </div>
   
 </div>

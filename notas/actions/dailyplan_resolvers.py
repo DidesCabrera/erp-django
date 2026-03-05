@@ -138,7 +138,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     },
 
     "draft_edit": {
-        "label": "Editar",
+        "label": "Retomar",
         "method": "post",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_draft_edit", args=[dp.id]
@@ -194,7 +194,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     # PERSONAL
     DAILYPLAN_VIEWMODE_PERSONAL_LIST: [
         "detail",
-        "share",
+        #"share",
     ],
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
@@ -235,7 +235,6 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 
     # DRAFT
     DAILYPLAN_VIEWMODE_DRAFT_LIST: [
-        "draft_detail",
         "draft_edit",
         "remove",
     ],
@@ -248,7 +247,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 
     DAILYPLAN_VIEWMODE_DRAFT_EDIT: [
         "configure",
-        "back_detail",
+        "back_to_draft_list",
     ],
 
 }

@@ -10,7 +10,7 @@
     <div class="block-title-card-edit">
         <h1>{{ titulo.name }}</h1>
         <a href="{% url 'dailyplan_rename' main_id %}?return_to={{ request.get_full_path }}">
-            Edit title {{main_id}}
+          <i data-lucide="pencil" class="edit-title-icon"></i>
         </a>
     </div>
 

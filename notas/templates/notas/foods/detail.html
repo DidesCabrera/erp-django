@@ -3,31 +3,14 @@
 Food – {{ food.name }}
 {% endblock %}
 {% block content %}
-<!-- ======== PAGE HEADER ===================================== -->           
-<div class="page-nav-action">
-  {% include "components/header.html" with header=header %}
+
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
+
+<!-- ======== PAGE BODY ===================================== -->           
+<div class="page page--detail" data-page="meal-detail">
+
+  {% include "components/card_main_food.html" with main_card=vm.content.main_card %}
+
 </div>
 
-
-
-<div class="page page--detail" data-page="food-detail">  
-
-  <!-- KPI SECTION ======================================-->
-  <div class="page-kpi">
-    <h3>Información Nutricional</h3>
-    {% include "components/dash_kpi.html" with entity=food %}
-  </div>
-  <hr>
-
-
-
-  <!-- METADATA ============================================= -->
-  <div class="page-metadata">
-    {% include "components/metadata.html" with item=item %}
-  </div>
-
-  
-
-</div> <!-- cierre div page -->
-<!-- FIN ============================================== -->
 {% endblock %}

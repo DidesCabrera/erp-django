@@ -4,8 +4,7 @@
 
 .card-title {
     font-size: 12px;
-    width: 250px;
-    padding: 4px 8px 4px 4px;
+    padding: 4px 8px 0px 4px;
     margin-right: 5px;
 }
 
@@ -61,6 +60,14 @@
   align-items: center;
 }
 
+.edit-title-icon{
+  color: #1d1d1d;
+  height: 22px;
+  width: 22px;
+  stroke-width: 2;
+  margin-left: 10px;
+}
+
 .label-entity.page-modal{
   margin-bottom: 10px;
 }
@@ -111,16 +118,26 @@
   background: rgba(0,0,0,0.06);
 }
 
-/* Botón azul pegado a la derecha */
-.btn-desplegar-tabla {
-  /*margin-top: auto;    🔥 lo empuja hacia abajo */
-  
+.block-desplegar-tabla {
+  display: flex;
+  gap: 12px;           /* espacio entre botones */
   width: fit-content;
   color: #1e6bff;
-  height: 12px;
   font-size: 12px;
   font-weight: 400;
   cursor: pointer;
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.btn-desplegar-tabla {
+  display: flex;
+  align-items: center;
+  gap: 4px;            /* espacio entre texto e icono */
+}
+
+.btn-desplegar-tabla p{
+  margin: 0;
 }
 
 
@@ -144,11 +161,6 @@
   padding: 0px 6px;
   border-radius: 5px;
 
-}
-
-.btn-desplegar-tabla {
-  margin-top: auto;
-  align-self: flex-end;
 }
 
 .card-icon{

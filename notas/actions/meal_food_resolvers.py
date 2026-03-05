@@ -2,10 +2,10 @@ from django.urls import reverse, NoReverseMatch
 from notas.services.capabilities import get_capabilities
 from notas.routing.food import food_url, food_configure_url, food_list_url
 from notas.actions.constants import (
-    FOOD_VIEWMODE_LIST,
-    FOOD_VIEWMODE_DETAIL,
+    FOOD_VIEWMODE_PERSONAL_LIST,
+    FOOD_VIEWMODE_PERSONAL_DETAIL,
     FOOD_VIEWMODE_MEAL,
-    FOOD_VIEWMODE_EDIT,
+    FOOD_VIEWMODE_PERSONAL_EDIT,
 )
 
 # ==================================================
@@ -65,14 +65,14 @@ FOOD_ACTION_DEFINITIONS = {
 # ==================================================
 
 FOOD_ACTIONS_BY_VIEWMODE = {
-    FOOD_VIEWMODE_LIST: [
+    FOOD_VIEWMODE_PERSONAL_LIST: [
         "detail",
         "fork",
         "copy",
         "add_to_dailyplan",
     ],
 
-    FOOD_VIEWMODE_DETAIL: [
+    FOOD_VIEWMODE_PERSONAL_DETAIL: [
         "fork",
         "copy",
         "add_to_dailyplan",
@@ -81,7 +81,7 @@ FOOD_ACTIONS_BY_VIEWMODE = {
         "delete",
     ],
 
-    FOOD_VIEWMODE_EDIT: [
+    FOOD_VIEWMODE_PERSONAL_EDIT: [
         "save",
         "configure",
         "cancel",

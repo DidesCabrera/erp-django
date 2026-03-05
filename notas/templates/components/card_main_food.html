@@ -1,0 +1,20 @@
+<div data-page="food-detail">
+ 
+    <div class="card-title main">
+        {% include "components/card_main_title.html" with titulo=main_card.titulo %}
+    </div>  
+    
+    <!-- KPI ========================================= -->
+    <div class="page-kpi">
+        
+        <h3>Información Nutricional (100g)</h3>
+    
+        <!-- KPI ======================== -->
+        <div class="card-kpi main">
+            {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
+        </div>
+    
+    </div>
+
+</div>
+  

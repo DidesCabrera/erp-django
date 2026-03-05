@@ -1,197 +1,139 @@
 import pandas as pd
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.contrib import messages
 from notas.services.capabilities import get_capabilities
-from notas.actions.food_resolvers import resolve_food_actions
-from notas.models import Meal, Food
-from django.urls import reverse
+from notas.models import Food
 from notas.actions.constants import (
-    FOOD_VIEWMODE_LIST, 
-    FOOD_VIEWMODE_DETAIL,
-    FOOD_VIEWMODE_EDIT,
+    FOOD_VIEWMODE_PERSONAL_LIST, 
+    FOOD_VIEWMODE_PERSONAL_DETAIL,
+    FOOD_VIEWMODE_PERSONAL_EDIT,
 )
 from notas.routing.food import food_url
 from notas.viewmodels.content.builder.list_foods_builder import build_food_list_vm
+from notas.viewmodels.content.builder.detail_food_builder import build_food_detail_vm
+from notas.viewmodels.content.builder.edit_food_builder import build_food_edit_vm
 
+from notas.services.food import create_food
 
-
-
-
+from notas.viewmodels.base_vm import BaseVM
+from notas.viewmodels.ui.builder_ui import build_ui_vm
 
 #************ RENDER COMPLEJOS *********************
 # ---------- LIST - DETAIL ----------
 @login_required
 def food_list(request):
+
     foods = Food.objects.filter(created_by=request.user).order_by("name")
 
-    vm = build_food_list_vm(
+    viewmode = FOOD_VIEWMODE_PERSONAL_LIST
+
+    ui_vm = build_ui_vm(viewmode)
+
+    content_vm = build_food_list_vm(
         foods,
         request.user,
-        FOOD_VIEWMODE_LIST,
+        viewmode,
     )
 
-    items = []
-    for food in foods:
-        items.append({
-            "obj": food,
-            "url": food_url(food),
-            "actions": resolve_food_actions(
-                food,
-                request.user,
-                context={
-                    "name": FOOD_VIEWMODE_LIST,
-                },
-            ),
-        })
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
+    )
 
     return render(
         request,
         "notas/foods/list.html",
-        {
-            "foods": foods,
-            "items": items, 
-            "vm": vm,
-        }
+        base_vm.as_context(),
     )
 
-@login_required
-def food_detail(request, pk, food_id=None):
-    food = get_object_or_404(
-        Food,
-        pk=pk,
-        created_by=request.user,
+
+
+def food_detail(request, pk):
+
+    food = get_object_or_404(Food, pk=pk)
+
+    viewmode = FOOD_VIEWMODE_PERSONAL_DETAIL
+
+
+    content_vm = build_food_detail_vm(
+        food,
+        request.user,
+        viewmode,
     )
 
-    caps = get_capabilities(request.user)
-    if not caps:
-        return HttpResponseForbidden("Unauthorized")
+    ui_vm = build_ui_vm(viewmode, instance=food)
 
-    foods = Food.objects.all()
-
-    # --------------------------------------------------
-    # ACTIONS – food (header / card principal)
-    # --------------------------------------------------
-
-    item = {
-        "food": food,
-        "actions": resolve_food_actions(
-                food,
-                request.user,
-                context={
-                    "name": FOOD_VIEWMODE_DETAIL
-                },
-            ),
-    }
-
-
-    # --------------------------------------------------
-    # NAVIGATION / HEADER
-    # --------------------------------------------------
-
-    navigation = [
-        {"label": "My Foods","url": reverse("food_list")},
-        {"label": food.name,"url": None},
-    ]
-
-    header = {
-        "title": food.name,
-        "subtitle": f"{food.total_kcal:.0f} kcal",
-        "navigation": navigation,
-        "actions": resolve_food_actions(
-                food,
-                request.user,
-                context={
-                    "name": FOOD_VIEWMODE_DETAIL
-                },
-            ),
-    }
-
-    # --------------------------------------------------
-    # RENDER
-    # --------------------------------------------------
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
+    )
 
     return render(
         request,
         "notas/foods/detail.html",
-        {
-            "food": food,               
-            "item": item,          
-            "navigation": navigation,
-            "header": header,
-        },
-        
+        base_vm.as_context(),
     )
 
 
-# ---------- EDIT - BUILDER ----------
-@login_required
 def food_edit(request, pk):
+
     food = get_object_or_404(Food, pk=pk)
+    print("POST DATA:", request.POST)
+    if request.method == "POST":
 
-    foods = Food.objects.all()
+        food.name = request.POST.get("name")
+        food.protein = float(request.POST.get("protein"))
+        food.carbs = float(request.POST.get("carbs"))
+        food.fat = float(request.POST.get("fat"))
 
-    caps = get_capabilities(request.user)
+        food.save()
 
-    if not caps or not caps.can_edit_own_content():
-        return HttpResponseForbidden("You cannot edit this food")
+        return redirect("food_detail", pk=food.pk)
 
-    # --------------------------------------------------
-    # NAVIGATION / HEADER
-    # --------------------------------------------------
+    viewmode = FOOD_VIEWMODE_PERSONAL_EDIT
 
-    navigation = [
-        {"label": "Foods","url": reverse("food_list")},
-        {"label": food.name,"url": None},
-    ]
+    content_vm = build_food_edit_vm(food)
 
-    header = {
-        "title": food.name,
-        "subtitle": f"{food.total_kcal:.0f} kcal",
-        "navigation": navigation,
-        "actions": resolve_food_actions(
-                food,
-                request.user,
-                context={
-                    "name": FOOD_VIEWMODE_EDIT
-                },
-            ),
-    }
+    ui_vm = build_ui_vm(viewmode, instance=food)
 
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
+    )
 
     return render(
         request,
         "notas/foods/edit.html",
-        {
-            "food": food,
-            "header": header,
-        }
+        base_vm.as_context(),
     )
+
+
 
 
 #************ RENDER BÁSICOS *********************
 # ---------- CREATE - *FALTA_RENAME - CONFIGURE ----------
 
-@login_required
 def food_create(request):
 
     if request.method == "POST":
+
         name = request.POST.get("name")
+        protein = float(request.POST.get("protein"))
+        carbs = float(request.POST.get("carbs"))
+        fat = float(request.POST.get("fat"))
 
-        if not name:
-            messages.error(request, "El nombre es obligatorio")
-            return redirect("food_create")
-
-        food = Food.objects.create(
+        create_food(
+            user=request.user,
             name=name,
-            created_by=request.user,
-            is_draft=True
+            protein=protein,
+            carbs=carbs,
+            fat=fat
         )
 
-        return redirect("food_edit", pk=food.pk)
+        return redirect("food_list")
 
     return render(request, "notas/foods/create.html")
 

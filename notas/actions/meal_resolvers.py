@@ -148,7 +148,7 @@ MEAL_ACTIONS_BY_VIEWMODE = {
     MEAL_VIEWMODE_PERSONAL_LIST: [
         "detail",
         "add_to_dailyplan",
-        "share",
+        #"share",
     ],
 
     MEAL_VIEWMODE_EXPLORE_LIST: [

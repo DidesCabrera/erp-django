@@ -9,14 +9,16 @@
 
     <!-- SEARCH - PICKER-->
     <div class="add-row">
-      <h4 id="meal-form-title">Add meal</h4>
+      <i data-lucide="plus" class="add-row-icon"></i>
+      <i data-lucide="salad" class="add-row-icon"></i>
+      <h4 id="meal-form-title">Agrega una Comida</h4>
 
 
       <div id="meal-picker" class="picker">
         <input
           type="text"
           id="meal-search"
-          placeholder="Add meal…"
+          placeholder="Escribe la comida…"
           autocomplete="off"
         />
         <ul id="meal-list" class="picker-list"></ul>
@@ -26,7 +28,7 @@
       
       <a href="{% url 'dailyplan_meal_create' main_id %}"
       class="btn btn-sm btn-outline-primary">
-        + Create Meal
+      o Crear nueva Comida
       </a>
 
     </div>

@@ -31,6 +31,7 @@ NAVIGATION_STRUCTURE = {
         }
     },
 
+
     "meal": {
         "icon": "salad",
         "section": {
@@ -64,6 +65,25 @@ NAVIGATION_STRUCTURE = {
     # 🔹 Entidad secundaria (NO tiene section propia)
     "dailyplan_meal": {
         "navigation_root": "dailyplan"
+    },
+
+
+    "food": {
+        "icon": "carrot",
+        "section": {
+            "label": "Alimentos",
+            "url_name": "food_list",
+        },
+        "subgroups": {
+            "personal": {
+                "label": "General",
+                "url_name": "food_list",
+            },
+            "create": {
+                "label": "Crear",
+                "url_name": "food_create",
+            }
+        }
     },
 }
 

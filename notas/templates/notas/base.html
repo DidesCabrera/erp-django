@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{% static 'notas/css/components/card_title.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/dash_kpi.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/table.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/metadata.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/card_foods_aggregation.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/alloc-bar.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/alloc-cell.css' %}">
@@ -137,7 +138,7 @@
                                     <span class="nav-indicator"></span>
                                 </span>
                             </a>
-                    
+                            <!--
                             <a href="{% url 'dailyplan_shared_list' %}"
                                 class="nav-tab nav-tab--shared tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "shared" %}is-active{% endif %}">
                                 <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
@@ -145,7 +146,7 @@
                                     Compartidos conmigo
                                     <span class="nav-indicator"></span>
                                 </span>
-                                
+                            -->
                             </a>
                     
                             <a href="{% url 'dailyplan_draft_list' %}"
@@ -198,7 +199,7 @@
                                     <span class="nav-indicator"></span>
                                 </span>
                             </a>
-
+                            <!--
                             <a href="{% url 'meal_shared_list' %}"
                                 class="nav-tab nav-tab--meal-shared tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "shared" %}is-active{% endif %}">
                                 <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
@@ -207,6 +208,7 @@
                                     <span class="nav-indicator"></span>
                                 </span>
                             </a>
+                            -->
 
                             <a href="{% url 'meal_draft_list' %}"
                                 class="nav-tab nav-tab--meal-draft tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "draft" %}is-active{% endif %}">
@@ -244,10 +246,19 @@
                                 class="nav-tab nav-tab--food-personal tab-list {% if request.resolver_match.url_name == 'food_list' %}is-active{% endif %}">
                                 <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
-                                    Personal
+                                    Todos
                                     <span class="nav-indicator"></span>
                                 </span>
                             </a>
+
+                            <a href="{% url 'food_create' %}"
+                            class="nav-tab nav-tab--meal-create tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "create" %}is-active{% endif %}">
+                            <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
+                            <span class="nav-text">
+                                Crear
+                                <span class="nav-indicator"></span>
+                            </span>
+                        </a>
                         </div>
                     </div>
 

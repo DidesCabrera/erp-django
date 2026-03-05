@@ -2,17 +2,19 @@
 
     <!-- SEARCH + PICKER -->
     <div class="add-row">
-      <h4 id="food-form-title">Add food</h4>
+        <i data-lucide="plus" class="add-row-icon"></i>
+        <i data-lucide="carrot" class="add-row-icon"></i>
+        <h4 id="food-form-title">Agrega un Alimento</h4>
   
-      <div id="food-picker" class="picker">
-        <input
-          type="text"
-          id="food-search"
-          placeholder="Add food…"
-          autocomplete="off"
-        />
-        <ul id="food-list" class="picker-list"></ul>
-      </div>
+        <div id="food-picker" class="picker">
+            <input
+            type="text"
+            id="food-search"
+            placeholder="Escribe el alimento…"
+            autocomplete="off"
+            />
+            <ul id="food-list" class="picker-list"></ul>
+        </div>
     </div>
   
     <!-- PREVIEW + FORM -->
@@ -148,7 +150,7 @@
                         <td><span id="qty-protein"></span></td>
                         <td><span id="qty-carbs"></span></td>
                         <td><span id="qty-fat"></span></td>
-            
+                        
                         <td class="alloc-cell" id="qty-alloc-protein-cell">
                             <div class="alloc-bar alloc-bar--protein"></div>
                             <span class="alloc-text" id="qty-alloc-protein-text"></span>

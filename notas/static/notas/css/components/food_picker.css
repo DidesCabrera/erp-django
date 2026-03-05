@@ -3,13 +3,21 @@
   display: flex;
   height: 25px;
   align-items: center;
-  gap:10px;
+  gap:4px;
   padding: 10px 0px;
   margin-bottom: 20px;
 }
 
-.add-row h3 {
-  padding-left: 15px;
+.add-row h4 {
+  margin-right: 6px;
+}
+
+.add-row-icon {
+  height: 18px;
+  width: 18px;
+  stroke-width: 1.5;
+  color: rgb(27, 27, 27);
+  flex-shrink: 0;
 }
 
 /* merge code */
@@ -133,8 +141,7 @@ p.h3-table2{
 .extra-fields{
   display: flex;
   align-items: center;
-  justify-content: left;
-  padding-left: 20px;
+  justify-content: right;
   gap: 10px;
   margin-bottom: 20px;
 }

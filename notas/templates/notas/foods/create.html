@@ -1,0 +1,39 @@
+{% extends "notas/base.html" %}
+{% block title %}Create Meal{% endblock %}
+{% block content %}
+       
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
+
+<div class="page page--detail page-modal">
+
+  <div class="wrap-page-modal">
+
+    <h2>Create Food</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+    
+      <label>Name</label>
+      <input type="text" name="name" required>
+    
+      <label>Protein (per 100g)</label>
+      <input type="number" step="0.01" name="protein" required>
+    
+      <label>Carbs (per 100g)</label>
+      <input type="number" step="0.01" name="carbs" required>
+    
+      <label>Fat (per 100g)</label>
+      <input type="number" step="0.01" name="fat" required>
+    
+      <button type="submit">Create Food</button>
+    
+    </form>
+
+  </div>
+  
+</div>
+
+{% endblock %}
+
+
+

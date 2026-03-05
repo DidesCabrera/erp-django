@@ -40,7 +40,8 @@ body {
   }
   
   h4 { 
-    font-size: 18px; 
+    font-size: 16px;
+    font-weight: 400; 
     margin-top: 0px; 
     margin-bottom: 0px; 
   }
@@ -52,7 +53,7 @@ body {
   
   /* --- Links --- */
   a {
-    color: #37352f;
+    color: #151515;
     text-decoration: none;
   }
   

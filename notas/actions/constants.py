@@ -2,11 +2,15 @@ from notas.viewmodels.ui.viewmode import vm
 
 
 # Food VIEWMODEs  ---------------------------------------------
-FOOD_VIEWMODE_LIST = vm("food", "list")
-FOOD_VIEWMODE_DETAIL = vm("food", "detail")
-FOOD_VIEWMODE_MEAL = vm("food", "meal")
-FOOD_VIEWMODE_EDIT = vm("food", "edit")
+FOOD_VIEWMODE_PERSONAL_LIST = vm("food", "list", "personal")
+FOOD_VIEWMODE_PERSONAL_DETAIL = vm("food", "detail", "personal")
+FOOD_VIEWMODE_PERSONAL_EDIT = vm("food", "edit", "personal")
 
+FOOD_VIEWMODE_CREATE = vm("food", "create", "create")
+FOOD_VIEWMODE_BUILD = vm("food", "build", "create")
+FOOD_VIEWMODE_CONFIGURE = vm("food", "configure", "create")
+
+FOOD_VIEWMODE_MEAL = vm("food", "meal")
 
 # Meal VIEWMODE ---------------------------------------------
 MEAL_VIEWMODE_PERSONAL_LIST = vm("meal", "list", "personal")

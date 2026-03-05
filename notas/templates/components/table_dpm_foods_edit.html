@@ -6,7 +6,7 @@
       <thead>
         <tr>
           <th class="name-col-food-table edit">Alimentos</th>
-          <th class="qty-col-food-table edit">Qty g|ml</th>
+          <th class="qty-col-food-table edit">g|ml</th>
           <th class="kcal-col-food-table edit">Kcal</th>
           <th class="grams-col-food-table edit">P g</th>
           <th class="grams-col-food-table edit">C g</th>
@@ -14,8 +14,8 @@
           <th class="alloc-col-food-table edit">P %kcal</th>
           <th class="alloc-col-food-table edit">C %kcal</th>
           <th class="alloc-col-food-table edit">F %kcal</th>
-          <th>E</th>
-          <th>R</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
   
@@ -41,13 +41,17 @@
                 data-food-id="{{ row.child_id }}"
                 data-name="{{ row.rel.name }}"
                 data-qty="{{ row.rel.quantity|floatformat:0 }}"
-            >E</button>
+            >
+              <i data-lucide="pencil" class="table-icon"></i>
+            </button>
           </td>
           <td class="table-action">
             <form method="post" action="{% url 'mealfood_remove' row.rel.id %}">
               {% csrf_token %}
               <input type="hidden" name="return_to" value="{{ request.path }}">
-              <button type="submit">✕</button>
+              <button type="submit">
+                <i data-lucide="trash" class="table-icon"></i>
+              </button>
             </form>            
           </td>
         </tr>

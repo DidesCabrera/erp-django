@@ -1,0 +1,30 @@
+.metadata{
+    display: flex;
+    align-items: center;
+}
+
+.metadata-icon{
+    padding: 0;
+    height: 18px;
+    width: 18px;
+    stroke-width: 1;
+    flex-shrink: 0;
+    color: rgb(23, 23, 23);
+}
+
+.metadata p{
+    font-size: 12px;
+    margin-left: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.page-metadata{
+    padding-top: 20px;
+    margin-bottom: 25px;
+}
+
+.page-metadata p{
+    font-size: 14px;
+}
+

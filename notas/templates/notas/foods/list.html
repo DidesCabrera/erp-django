@@ -3,7 +3,9 @@
 {% block content %}
 
 
-{% include "components/list_header_food.html" with header=vm.header %}
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
+
+
 <div class="page page--detail">
   <p>
       <a href="{% url 'import_foods' %}">+Import foods</a>
@@ -45,17 +47,17 @@
   
       <!-- BODY -->
       <tbody>
-        {% for item in items %}
+        {% for item in vm.content.items %}
         <tr>
-          <td><a href="{{ item.url }}">{{ item.obj.name }}</a></td>
+          <td><a href="{{ item.url }}">{{ item.name }}</a></td>
           <td>100</td>
-          <td>{{ item.obj.total_kcal|floatformat:0 }}</td>
-          <td>{{ item.obj.protein|floatformat:1 }}</td>
-          <td>{{ item.obj.carbs|floatformat:1 }}</td>
-          <td>{{ item.obj.fat|floatformat:1 }}</td>
-          {% include "components/alloc_cell_protein.html" with value=item.obj.alloc.protein bar_class="alloc-bar--protein" %}
-          {% include "components/alloc_cell_carbs.html" with value=item.obj.alloc.carbs   bar_class="alloc-bar--carbs" %}
-          {% include "components/alloc_cell_fat.html" with value=item.obj.alloc.fat     bar_class="alloc-bar--fat" %}
+          <td>{{ item.total_kcal|floatformat:0 }}</td>
+          <td>{{ item.protein|floatformat:1 }}</td>
+          <td>{{ item.carbs|floatformat:1 }}</td>
+          <td>{{ item.fat|floatformat:1 }}</td>
+          {% include "components/alloc_cell_protein.html" with value=item.alloc.protein bar_class="alloc-bar--protein" %}
+          {% include "components/alloc_cell_carbs.html" with value=item.alloc.carbs   bar_class="alloc-bar--carbs" %}
+          {% include "components/alloc_cell_fat.html" with value=item.alloc.fat     bar_class="alloc-bar--fat" %}
         </tr>
         {% empty %}
         <tr>

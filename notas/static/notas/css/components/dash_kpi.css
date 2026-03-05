@@ -29,6 +29,7 @@
 
     margin:4px;
     background-color: var(--color-kcal);
+    border: 3px solid  var(--color-kcal-border);;
     border-radius: 7px;
 }
 
