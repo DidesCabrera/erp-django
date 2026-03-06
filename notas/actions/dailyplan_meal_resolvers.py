@@ -10,7 +10,7 @@ from notas.actions.constants import *
 
 DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "detail": {
-        "label": "View",
+        "label": "Ver",
         "method": "get",
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",
@@ -19,7 +19,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     },
 
     "replace": {
-        "label": "Replace",
+        "label": "Cambiar",
         "method": "get",
         "get_url": lambda dpm, context=None: reverse(
             "replace_dailyplan_meal",
@@ -30,7 +30,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     },
 
     "remove": {
-        "label": "Remove",
+        "label": "Quitar",
         "method": "post",
         "get_url": lambda dpm, context=None: reverse(
             "remove_meal",
@@ -40,7 +40,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     },
 
     "back_dp_detail": {
-        "label": "Regresar a DailyPlan",
+        "label": "Volver",
         "method": "get",
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_detail",
@@ -58,7 +58,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     },
 
     "deep_edit": {
-        "label": "Edit Foods",
+        "label": "Editar Alimentos",
         "method": "get",
         "get_url": lambda dpm, context=None: reverse(
             "dailyplanmeal_deepedit",
@@ -81,9 +81,9 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     # Vista detail del DailyPlanMeal
     DAILYPLAN_MEAL_VIEWMODE_DETAIL: [
         "replace",
-        "back_dp_detail",
         "deep_edit",
         "remove",
+        "back_dp_detail",
     ],
 
     DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT:[

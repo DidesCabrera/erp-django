@@ -250,4 +250,17 @@ table tr:last-child {
   width: 45px;
 }
 
+.table-info-icon{
+  height: 10px;
+  width: 10px;
+  stroke-width: 1.5x;
+  flex-shrink: 0;
+}
 
+th.alloc-col-food-table{
+  color: rgb(47, 47, 47);
+}
+
+.card-table-meals{
+  margin-bottom: 30px;
+}

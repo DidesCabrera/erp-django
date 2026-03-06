@@ -198,7 +198,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     ],
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
-        "share",
+        #"share",
         "fork",
         "edit",
         "remove",
@@ -218,7 +218,6 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 
     DAILYPLAN_VIEWMODE_EXPLORE_DETAIL: [
         "fork_explore",
-        "share",
         "back_to_explore_list"
     ],
 

@@ -176,7 +176,7 @@ MEAL_ACTIONS_BY_VIEWMODE = {
 
     MEAL_VIEWMODE_DETAIL: [
         "fork",
-        "share",
+        #"share",
         "add_to_dailyplan",
         "edit",
         "remove",
