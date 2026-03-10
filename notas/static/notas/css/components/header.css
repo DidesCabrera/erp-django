@@ -64,3 +64,31 @@
   font-weight: 500;
   color: black;
 }
+
+.mobile-menu-btn {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+.menu-icon{
+  height: 20px;
+  width: 20px;
+  flex-shrink: 0;
+  stroke-width: 1.5;
+}
+
+@media (max-width: 768px) {
+
+  .page-header {
+    padding: 0 10px 0 10px;
+  }
+
+  .mobile-menu-btn {
+      display: flex;
+      align-items: center;
+      padding-right: 10px;
+  }
+}

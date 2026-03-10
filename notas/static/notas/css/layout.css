@@ -43,7 +43,7 @@ header {
     color: white;
     padding-left: 4px;
     padding-right: 10px;
-    padding-top: 8px;
+    padding-top: 10px;
     padding-bottom: 120px;
     overflow-y: auto;  /* si algún día tiene muchos items */
     position: fixed;
@@ -321,22 +321,6 @@ header {
   font-weight: 600;
 }
 
-.mobile-menu-btn {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 50;
-
-  background: white;
-  border: none;
-  border-radius: 6px;
-
-  padding: 6px;
-  cursor: pointer;
-
-  display: none;
-}
-
 
 /* =========================
    MOBILE NAV EXPERIMENT
@@ -356,11 +340,6 @@ header {
     .app-content {
       margin-left: 0;
     }
-
-    .mobile-menu-btn {
-        display: block;
-    }
-    
     
   
   }

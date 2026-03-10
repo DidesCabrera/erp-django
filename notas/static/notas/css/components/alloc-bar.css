@@ -4,6 +4,7 @@
 .alloc-bar-comp {
   position: relative;
   width: 100%;
+  min-width: 0;
   height: inherit;
   border-radius: 0px 4px 4px 0px;
   overflow: hidden;

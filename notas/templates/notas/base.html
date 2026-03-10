@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="{% static 'notas/css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/utilities.css' %}">
 
+    <link rel="stylesheet" href="{% static 'notas/css/components/sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/page.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/page_detail.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/modal_create.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/toast.css' %}">
-    <link rel="stylesheet" href="{% static 'notas/css/components/main_header.css' %}">
-    <link rel="stylesheet" href="{% static 'notas/css/components/header_page.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components/header.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/card_mini_dpm.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/card_child.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/card_father.css' %}">
@@ -42,6 +42,8 @@
 
 <body>
     <div class="app">
+
+
         <!-- ========= MODAL PESO ====================== -->
         <div id="weightModal" class="modal hidden">
             <div class="modal-content">
@@ -58,6 +60,7 @@
             </div>
         </div>
 
+
         <!-- ========= MENSAJES DJANGO ================= -->
         {% if messages %}
         <div class="toast-container">
@@ -70,13 +73,17 @@
         </div>
         {% endif %}
 
+
         <!-- ======== APP BODY ========================== -->
         <div class="app-body">
 
             <aside class="sidebar">
 
-                <div class="header-first-row">
+                <div class="block-logo-sidebar">
                     <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
+                    <button class="collapse-sidebar-btn" onclick="toggleSidebar()">
+                        <i data-lucide="panel-right-open" class="collapse-sidebar-icon"></i>
+                    </button>
                 </div>
 
                 <div class="user-block">                    
@@ -306,10 +313,6 @@
                 </nav>
             </aside>
             <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
-
-            <button class="mobile-menu-btn" onclick="toggleSidebar()">
-                <i data-lucide="menu"></i>
-            </button>
             
             <main class="app-content">
                 {% block content %}{% endblock %}
@@ -360,17 +363,23 @@
         document.body.classList.toggle("sidebar-open");
     }
 
+    /* cerrar al hacer click en links del sidebar en mobile */
     document.querySelectorAll(".sidebar-nav a").forEach(link => {
+        link.addEventListener("click", () => {
+            if (window.innerWidth <= 768) {
+                document.body.classList.remove("sidebar-open");
+            }
+        });
+    });
 
-    link.addEventListener("click", () => {
+    /* cerrar al presionar el icono collapse */
+    const collapseIcon = document.querySelector(".collapse-sidebar-icon");
 
-    if (window.innerWidth <= 768) {
-        document.body.classList.remove("sidebar-open");
+    if (collapseIcon) {
+        collapseIcon.addEventListener("click", () => {
+            document.body.classList.remove("sidebar-open");
+        });
     }
-
-    });
-
-    });
 
 </script>
 

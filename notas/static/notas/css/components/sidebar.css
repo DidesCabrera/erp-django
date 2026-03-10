@@ -1,0 +1,136 @@
+
+.block-logo-sidebar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.brand-logo{
+    width: 100px;
+    padding-top: 1px;
+    margin-left: 14px;
+}
+
+
+.collapse-sidebar-btn {
+    display: none;
+}
+
+.collapse-sidebar-icon{
+    height: 20px;
+    width: 20px;
+    flex-shrink: 0;
+    color: rgb(134, 134, 134);
+    stroke-width: 1.5;
+}
+
+@media (max-width: 768px) {
+
+    .collapse-sidebar-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+    }
+  
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        padding-right: 10px;
+    }
+  }
+
+.brad-logo.project{
+    align-items: center;
+}
+  
+.user-block{
+    margin-left: 6px;
+    padding: 8px 10px;
+    padding-bottom: 30px;
+    border: 1px solid rgb(63, 63, 63);
+    border-radius: 10px;
+}
+  
+.user{
+    display: flex;
+    align-items:center;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+  
+.user h2{
+    margin: 0;              /* ← ESTO SUELE SER EL CULPABLE */
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+}
+
+.user p{
+    font-size: 13px;
+    font-weight: 300;
+    margin-bottom: 6px;
+    padding-right: 10px;
+    color: rgb(182, 182, 182);
+}
+
+.user p{
+    font-size: 13px;
+    font-weight: 300;
+    margin: 0;              /* ← CLAVE */
+    padding-right: 10px;
+    color: rgb(182, 182, 182);
+}
+
+
+.user input{
+    padding: 3px 4px;
+    width: 30px;
+    text-align: center;
+    background-color: var(--color-qty);
+    border-radius: 5px;
+    color: #000;
+    font-weight: 1000;
+    border: 0;
+    margin: 0 20x;
+}
+
+
+.label-rol{
+    font-size: 12px;
+    padding: 1px 6px;
+
+    margin-right: 2px;
+    margin-bottom: 9px;
+
+    border-radius: 3px;
+    color: rgb(255, 255, 255);
+    font-weight: 400;
+    background-color: rgb(57, 57, 57);
+}
+
+.label-rol{
+    font-size: 12px;
+    padding: 1px 6px;
+
+    margin: 0; /* ← CLAVE */
+
+    border-radius: 3px;
+    color: rgb(255, 255, 255);
+    font-weight: 400;
+    background-color: rgb(57, 57, 57);
+}
+
+
+.btn-weight{
+    background-color: var(--color-qty);
+    border-radius: 5px;
+    border-width: 0px;
+    height: 22px;
+    font-weight: 600;
+  }
+  

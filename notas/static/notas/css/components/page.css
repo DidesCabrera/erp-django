@@ -20,6 +20,20 @@
     background-color: white;
 }
 
+@media (max-width: 768px) {
+
+    .page--detail {
+      padding: 15px 15px;
+    }
+  
+    .card-title {
+      width: 100%;
+      margin-bottom: 6px;
+    }
+  
+  }
+
+
 .page--detail.dpm{
     margin-top: 8px;
 }
