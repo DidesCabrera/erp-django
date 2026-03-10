@@ -47,7 +47,7 @@ def fork_dailyplan(original: DailyPlan, user) -> DailyPlan:
     origin = get_dailyplan_origin(original)
 
     forked = DailyPlan.objects.create(
-        name=f"{original.name} (fork)",
+        name=f"{original.name}",
         created_by=user,
 
         forked_from=origin,

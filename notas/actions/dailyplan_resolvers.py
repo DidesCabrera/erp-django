@@ -151,6 +151,14 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
+    "back_to_edit": {
+        "label": "Volver",
+        "method": "post",
+        "get_url": lambda dp, context=None: reverse(
+            "dailyplan_edit", args=[dp.id]
+        ),
+    },
+
     "back_to_list": {
         "label": "Salir",
         "method": "post",
@@ -201,12 +209,12 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
         #"share",
         "fork",
         "edit",
-        "remove",
         "back_to_list",
     ],
 
     DAILYPLAN_VIEWMODE_PERSONAL_EDIT: [
         "configure",
+        "remove",
         "back_detail",
     ],
 
@@ -248,6 +256,10 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
         "configure",
         "back_to_draft_list",
     ],
+
+    DAILYPLAN_VIEWMODE_CONFIGURE: [
+        "back_to_edit",
+    ]
 
 }
 

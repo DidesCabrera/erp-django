@@ -78,6 +78,7 @@ def build_dpm_detail_vm(dailyplan, dpm, user, action_context):
         titulo=TitleUI(
             name=dailyplan.name,
             label= "Daily Plan",
+            category=dailyplan.category,
         ),
 
         rel_id=dpm.id,
@@ -127,6 +128,7 @@ def build_dpm_detail_vm(dailyplan, dpm, user, action_context):
             name=meal.name,
             label= main_entity_label,
             icon= main_entity_icon,
+            category=meal.category,
         ),
 
         kpis=KPIUI(

@@ -7,10 +7,11 @@ FOOD_VIEWMODE_PERSONAL_DETAIL = vm("food", "detail", "personal")
 FOOD_VIEWMODE_PERSONAL_EDIT = vm("food", "edit", "personal")
 
 FOOD_VIEWMODE_CREATE = vm("food", "create", "create")
-FOOD_VIEWMODE_BUILD = vm("food", "build", "create")
 FOOD_VIEWMODE_CONFIGURE = vm("food", "configure", "create")
+FOOD_VIEWMODE_IMPORT = vm("food", "create", "import")
 
 FOOD_VIEWMODE_MEAL = vm("food", "meal")
+
 
 # Meal VIEWMODE ---------------------------------------------
 MEAL_VIEWMODE_PERSONAL_LIST = vm("meal", "list", "personal")
@@ -18,7 +19,7 @@ MEAL_VIEWMODE_EXPLORE_LIST = vm("meal", "list", "explore")
 MEAL_VIEWMODE_SHARED_LIST = vm("meal", "list", "shared")
 MEAL_VIEWMODE_DRAFT_LIST = vm("meal", "list", "draft")
 
-MEAL_VIEWMODE_DETAIL = vm("meal", "detail", "personal")
+MEAL_VIEWMODE_PERSONAL_DETAIL = vm("meal", "detail", "personal")
 MEAL_VIEWMODE_EXPLORE_DETAIL = vm("meal", "detail", "explore")
 MEAL_VIEWMODE_SHARED_DETAIL = vm("meal", "detail", "shared")
 MEAL_VIEWMODE_DRAFT_DETAIL = vm("meal", "detail", "draft")
@@ -27,10 +28,11 @@ MEAL_VIEWMODE_PERSONAL_EDIT = vm("meal", "edit", "personal")
 MEAL_VIEWMODE_DRAFT_EDIT = vm("meal", "edit", "draft")
 
 MEAL_VIEWMODE_CREATE = vm("meal", "create", "create")
-MEAL_VIEWMODE_BUILD = vm("meal", "build", "create")
-MEAL_VIEWMODE_CONFIGURE = vm("meal", "configure", "create")
+MEAL_VIEWMODE_CONFIGURE = vm("meal", "configure", "personal")
 
 MEAL_VIEWMODE_DAILYPLAN = vm("meal", "dailyplan")
+
+MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN = vm("meal", "edit_from_dailyplan", "personal")
 
 
 # DailyPlan VIEWMODE ---------------------------------------------

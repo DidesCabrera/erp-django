@@ -273,4 +273,32 @@ document.addEventListener("DOMContentLoaded", () => {
     enterAddMode();
   });
 
+  // ---------------------------
+  // INITIAL MEAL FROM URL
+  // ---------------------------
+
+  const initialMealId = window.dailyplanInitialMeal;
+
+  if (initialMealId) {
+
+    const meal = meals.find(m => m.id === Number(initialMealId));
+
+    if (meal) {
+
+      selectedMeal = meal;
+
+      hidden.value = meal.id;
+      input.value  = meal.name;
+
+      showPreview();
+
+      form.classList.add("has-selection");
+
+      // limpiar la URL para evitar repetir la acción al refrescar
+      const url = new URL(window.location);
+      url.searchParams.delete("select_meal");
+      window.history.replaceState({}, "", url);
+    }
+  }
+
 });

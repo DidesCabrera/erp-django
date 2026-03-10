@@ -1,12 +1,8 @@
-from notas.viewmodels.content.edit_food_vm import *
+from notas.forms.builder.form_food_builder import build_form_fields
+from notas.viewmodels.content.edit_food_vm import EditFoodVM
 
+def build_edit_food_vm(food):
 
-def build_food_edit_vm(food):
-    
-    return FoodEditVM(
-        id=food.id,
-        name=food.name,
-        protein=food.protein,
-        carbs=food.carbs,
-        fat=food.fat,
+    return EditFoodVM(
+        food=food
     )

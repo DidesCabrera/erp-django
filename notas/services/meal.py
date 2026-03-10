@@ -45,7 +45,7 @@ def fork_meal(original: Meal, user) -> Meal:
     origin = get_meal_origin(original)
 
     forked = Meal.objects.create(
-        name=f"{original.name} (fork)",
+        name=f"{original.name}",
         created_by=user,
 
         forked_from=origin,
@@ -61,6 +61,42 @@ def fork_meal(original: Meal, user) -> Meal:
 
     return forked
 
+
+def _clone_meal(original: Meal, user) -> Meal:
+
+    origin = get_meal_origin(original)
+
+    forked = Meal.objects.create(
+        name=original.name,
+        created_by=user,
+        forked_from=origin,
+        original_author=origin.created_by,
+        is_public=False,
+        is_forkable=True,
+        is_copiable=False,
+        is_draft=False,
+    )
+
+    clone_meal_foods(original, forked)
+
+    return forked
+
+def fork_meal_for_library(original: Meal, user) -> Meal:
+
+    forked = _clone_meal(original, user)
+
+    forked.name = f"{original.name} (Copia)"
+    forked.save(update_fields=["name"])
+
+    return forked
+
+
+def fork_meal_for_dailyplan(original: Meal, user) -> Meal:
+
+    forked = _clone_meal(original, user)
+
+    # mismo nombre
+    return forked
 
 @transaction.atomic
 def copy_meal(original: Meal, user) -> Meal:

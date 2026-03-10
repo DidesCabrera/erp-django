@@ -18,7 +18,6 @@ from .views.meals import (
     meal_create,
     meal_configure,
     meal_edit,
-    meal_builder,
     meal_rename,
     meal_explore_list,
     meal_explore_detail,
@@ -48,7 +47,6 @@ from .views.dailyplans import (
     add_meal_from_list,
     dailyplan_configure,
     dailyplan_edit,
-    dailyplan_builder,
     dailyplan_rename,
     dailyplan_explore_list,
     dailyplan_explore_detail, 
@@ -165,7 +163,6 @@ urlpatterns = [
     path("meals/<int:pk>/", meal_detail, name="meal_detail"),
     path("meals/explore/<int:pk>/", meal_explore_detail, name="meal_explore_detail"),
     path("meals/<int:pk>/edit/", meal_edit, name="meal_edit"),
-    path("meals/<int:pk>/builder/", meal_builder,name="meal_builder"),
     path("meals/create/", meal_create, name="meal_create"),
     path("meals/<int:pk>/rename/", meal_rename, name="meal_rename"),
     path("meals/<int:pk>/configure/", meal_configure, name="meal_configure"),
@@ -192,7 +189,6 @@ urlpatterns = [
     path("dailyplans/draft/", dailyplan_draft_list, name="dailyplan_draft_list"),
     path("dailyplans/draft/<int:pk>/", dailyplan_draft_detail, name="dailyplan_draft_detail"),
     path("dailyplans/create/", dailyplan_create, name="dailyplan_create"),
-    path("dailyplans/<int:pk>/builder/", dailyplan_builder, name="dailyplan_builder"),
     path("dailyplans/<int:pk>/rename/", dailyplan_rename, name="dailyplan_rename"),
     path("dailyplans/<int:pk>/configure/", dailyplan_configure, name="dailyplan_configure"),
     path("dailyplans/<int:pk>/add-meal/", dailyplan_add_meal, name="dailyplan_add_meal"),
@@ -208,7 +204,7 @@ urlpatterns = [
     path(
         "dailyplans/<int:dailyplan_id>/meals/create/",
         create_meal_for_dailyplan,
-        name="dailyplan_meal_create",
+        name="create_meal_for_dailyplan",
     ),
 
 

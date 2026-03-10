@@ -96,6 +96,7 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
                 name=dailyplan.name,
                 label= child_entity_label,
                 icon= child_entity_icon,
+                category=dailyplan.category,
                 structural_indicators=StructuralIndicatorsUI(
                     meals_count=len(dailyplan_meals),
                     foods_count=len(foods_aggregation),

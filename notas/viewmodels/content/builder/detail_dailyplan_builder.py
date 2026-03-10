@@ -68,6 +68,7 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
         titulo=TitleUI(
             name=dailyplan.name,
             label= main_entity_label,
+            category=dailyplan.category,
             icon= main_entity_icon,
         ),
 
@@ -157,6 +158,7 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
                 name=meal.name,
                 label= child_entity_label,
                 icon= child_entity_icon,
+                category=meal.category,
                 structural_indicators=StructuralIndicatorsUI(
                     foods_count=len(meal_foods_aggregation),
                 )

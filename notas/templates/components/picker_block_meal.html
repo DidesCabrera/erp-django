@@ -26,7 +26,7 @@
       
       <input type="hidden" id="dp-selected-meal-id" name="meal_id">
       
-      <a href="{% url 'dailyplan_meal_create' main_id %}"
+      <a href="{% url 'create_meal_for_dailyplan' main_id %}"
       class="btn btn-sm btn-outline-primary">
       o Crear nueva Comida
       </a>
@@ -242,6 +242,7 @@
 <script>
   window.MEAL_PICKER_MEALS = {{ meals_json|safe }};
   window.MEAL_PICKER_CONTEXT = {{ meal_picker_context|safe }};
+  window.dailyplanInitialMeal = {{ selected_meal_id|default:"null" }};
 </script>
 
 <script type="module" src="{% static 'notas/js/meal_picker.js' %}"></script>

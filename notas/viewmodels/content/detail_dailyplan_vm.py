@@ -19,6 +19,7 @@ class TitleUI:
     name: str
     label: Optional[str] = None
     icon: Optional[str] = None
+    category: Optional[str] = None
     structural_indicators: Optional[StructuralIndicatorsUI] = None
 
 @dataclass

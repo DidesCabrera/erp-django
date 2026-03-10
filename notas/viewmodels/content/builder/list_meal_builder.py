@@ -100,6 +100,7 @@ def build_meal_list_vm(meals, user, action_context):
                 name=meal.name,
                 label= child_entity_label,
                 icon= child_entity_icon,
+                category=meal.category,
                 structural_indicators=StructuralIndicatorsUI(
                     foods_count=len(foods_aggregation),
                 )

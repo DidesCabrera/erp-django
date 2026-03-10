@@ -98,6 +98,22 @@ MEAL_ACTION_DEFINITIONS = {
         ),
     },
 
+    "back_edit": {
+        "label": "Cancelar",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_edit", args=[meal.id]
+        ),
+    },
+
+    "finish_for_dailyplan": {
+        "label": "Guardar y volver",
+        "method": "post",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_edit", args=[meal.id]
+        ),
+    },
+
     "back_to_list": {
         "label": "Volver",
         "method": "post",
@@ -115,7 +131,7 @@ MEAL_ACTION_DEFINITIONS = {
     },
 
     "remove": {
-        "label": "Remover",
+        "label": "Eliminar",
         "method": "post",
         "get_url": lambda meal, ctx=None: reverse(
             "meal_remove", args=[meal.id]
@@ -174,12 +190,12 @@ MEAL_ACTIONS_BY_VIEWMODE = {
     ],
 
 
-    MEAL_VIEWMODE_DETAIL: [
+    MEAL_VIEWMODE_PERSONAL_DETAIL: [
         "fork",
         #"share",
         "add_to_dailyplan",
         "edit",
-        "remove",
+        #"remove",
         "back_to_list",
     ],
     
@@ -190,12 +206,19 @@ MEAL_ACTIONS_BY_VIEWMODE = {
     ],
 
     MEAL_VIEWMODE_CONFIGURE:[
-        "back_detail",
+        "back_edit",
     ],
 
     MEAL_VIEWMODE_PERSONAL_EDIT: [
         "configure",
+        "remove",
         "back_detail",
+    ],
+
+    MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN: [
+        "configure",
+        "remove",
+        "finish_for_dailyplan",
     ],
 
     MEAL_VIEWMODE_CREATE: [
@@ -215,8 +238,8 @@ MEAL_ACTIONS_BY_VIEWMODE = {
 
 def resolve_meal_actions(meal, user, context=None):
     """
-    Devuelve una lista de acciones disponibles para una Meal,
-    según contexto + capabilities del usuario.
+    Devuelve una lista de acciones disponibles para una Meal
+    según viewmode + capabilities.
     """
 
     context = context or {}
@@ -225,33 +248,51 @@ def resolve_meal_actions(meal, user, context=None):
     caps = get_capabilities(user)
     actions = []
 
-    # --- acciones permitidas según contexto ---
     allowed_keys = MEAL_ACTIONS_BY_VIEWMODE.get(context_name, [])
 
     for key in allowed_keys:
+
         definition = MEAL_ACTION_DEFINITIONS.get(key)
         if not definition:
             continue
 
-        # --- capability check ---
+        # ------------------------------
+        # capability check
+        # ------------------------------
+
         capability_name = definition.get("capability")
+
         if capability_name:
             if not caps or not hasattr(caps, capability_name):
                 continue
+
             if not getattr(caps, capability_name)():
                 continue
 
-        # --- resolver URL (safe) ---
-        try:
-            url = definition["get_url"](meal, context)
-        except NoReverseMatch:
-            continue
+        method = definition.get("method", "get")
+
+        # ------------------------------
+        # resolve URL (optional)
+        # ------------------------------
+
+        url = None
+        get_url = definition.get("get_url")
+
+        if get_url:
+            try:
+                url = get_url(meal, context)
+            except NoReverseMatch:
+                continue
+
+        # ------------------------------
+        # build action object
+        # ------------------------------
 
         actions.append({
             "key": key,
             "label": definition["label"],
+            "method": method,
             "url": url,
-            "method": definition["method"],
         })
 
     return actions

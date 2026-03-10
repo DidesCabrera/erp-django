@@ -63,6 +63,7 @@ def build_meal_detail_vm(meal, user, action_context):
             name=meal.name,
             label= main_entity_label,
             icon= main_entity_icon,
+            category=meal.category,
         ),
 
         kpis=KPIUI(

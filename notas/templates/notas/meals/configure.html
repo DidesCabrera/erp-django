@@ -1,86 +1,68 @@
 {% extends "notas/base.html" %}
-{% block title %}
-Configure Meal – {{ meal.name }}
-{% endblock %}
+
 {% block content %}
 
+{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
+
+<div class="header-mini-edit">
+  <p>Editando...</p>
+</div>
 
 <div class="page page--detail page-modal">
 
-    <div class="wrap-page-modal">
-        <div class="label-entity label-entity--meal page-modal}}">
-          Meal
-        </div>
-        <h2>Configura tu Comida</h2>
-        <br>
+  <div class="wrap-page-modal">
 
-        <form class="configure-form" method="post">
-            {% csrf_token %}
+    <h2>Configure</h2>
 
-            <!-- PUBLIC -------------------------------------->
-            <p>
-              <label>
-                  <input
-                  type="checkbox"
-                  name="is_public"
-                  {% if not caps.can_publish %}disabled{% endif %}
-                  {% if meal.is_public %}checked{% endif %}
-                  >
-                  Compartir esta Comida en la lista de exploración
-              </label>
+    <form method="post" class="configure-form">
+      {% csrf_token %}
 
-              {% if not caps.can_publish %}
-                  <br>
-                  <small>🔒 Public meals are available for nutritionists only</small>
-              {% endif %}
-            </p>
+      {% for section in vm.content.sections %}
 
-            <!-- FORKABLE ------------------------------------>
-            <p>
-              <label>
-                  <input
-                  type="checkbox"
-                  name="is_forkable"
-                  {% if meal.is_forkable %}checked{% endif %}
-                  >
-                  Permitir que otros usuarios dupliquen tu Comida
-              </label>
-            </p>
+        <h3>{{ section.title }}</h3>
 
-            <!-- COPIABLE 
-            <p>
-              <label>
-                  <input
-                  type="checkbox"
-                  name="is_copiable"
-                  {% if not caps.can_copy %}disabled{% endif %}
-                  {% if meal.is_copiable %}checked{% endif %}
-                  >
-                  Allow copies
-              </label>
+        {% for field in section.fields %}
 
-              {% if not caps.can_copy %}
-                  <br>
-                  <small>🔒 Copiable meals are available on higher plans</small>
-              {% endif %}
-            </p>
-            ------------------------------------>
+          <p>
 
+            <label>
 
+              <input
+                type="checkbox"
+                name="{{ field.name }}"
+                {% if field.value %}checked{% endif %}
+                {% if not field.enabled %}disabled{% endif %}
+              >
 
+              {{ field.label }}
 
-            <hr>
-            <!-- ACTION NAVEGATION ======================================-->
-            <div class="btn-block">
-              <!-- 👈 Volver al paso 1 (seguro) -->
-              <a>
-                  <button  type="submit" class="btn-cancel-create">Volver</button>
-              </a>
-              <button type="submit" class="btn-continue">Finalizar</button>
-            </div>
-        </form>
-    </div>
+            </label>
+
+            {% if field.hint and not field.enabled %}
+              <br>
+              <small>{{ field.hint }}</small>
+            {% endif %}
+
+          </p>
+
+        {% endfor %}
+
+      {% endfor %}
+
+      <hr>
+
+      <div class="btn-block">
+
+        <button type="submit" name="save" class="btn-continue">
+          Guardar
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
 </div>
-
 
 {% endblock %}

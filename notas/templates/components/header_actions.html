@@ -4,22 +4,44 @@
 
   {% if actions %}
     <div class="actions">
+
       {% for action in actions %}
 
+        {# ----------------------------- #}
+        {# GET ACTION                   #}
+        {# ----------------------------- #}
+
         {% if action.method == "get" %}
-          <a href="{{ action.url }}">
+
+          <a href="{{ action.url }}" class="action-link">
             <p class="action-button">{{ action.label }}</p>
           </a>
 
+        {# ----------------------------- #}
+        {# POST ACTION                  #}
+        {# ----------------------------- #}
+
         {% elif action.method == "post" %}
-          <form action="{{ action.url }}" method="post" style="display:inline;">
+
+          <form action="{{ action.url }}" method="post" class="action-form">
             {% csrf_token %}
-            <button type="submit" class="link-button">
+
+            <button
+              type="submit"
+              name="{{ action.key }}"
+              value="1"
+              class="link-button"
+            >
               <p class="action-button">{{ action.label }}</p>
             </button>
+
           </form>
+
         {% endif %}
+
       {% endfor %}
+
     </div>
   {% endif %}
+
 </div>

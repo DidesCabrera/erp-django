@@ -1,83 +1,72 @@
 {% extends "notas/base.html" %}
+
 {% block title %}
-Configure Daily Plan – {{ dailyplan.name }}
+Configure Daily Plan – {{ vm.content.header.title }}
 {% endblock %}
+
 {% block content %}
 
 {% include "components/header.html" with header=vm.content.header ui=vm.ui %}
 
+<div class="header-mini-edit">
+  <p>Editando...</p>
+</div>
+
 <div class="page page--detail page-modal">
   <div class="wrap-page-modal">
-    <div class="label-entity label-entity--dailyplan page-modal }}">
-      Dailyplan
+
+    <div class="label-entity label-entity--dailyplan">
+      DailyPlan
     </div>
 
-    <h2>Configura tu Plan Diario</h2>
+    <h2>Configure your Daily Plan</h2>
     <br>
 
     <form class="configure-form" method="post">
       {% csrf_token %}
 
-      <!-- PUBLIC ---------------------------------------->
-      <p>
-        <label>
-          <input
-            type="checkbox"
-            name="is_public"
-            {% if not caps.can_publish %}disabled{% endif %}
-            {% if dailyplan.is_public %}checked{% endif %}
-          >
-          Make this daily plan public
-        </label>
+      {% for section in vm.content.sections %}
 
-        {% if not caps.can_publish %}
-          <br>
-          <small>🔒 Public daily plans are available for nutritionists only</small>
-        {% endif %}
-      </p>
+        <h3>{{ section.title }}</h3>
 
-      <!-- FORKABLE -------------------------------------->
-      <p>
-        <label>
-          <input
-            type="checkbox"
-            name="is_forkable"
-            {% if dailyplan.is_forkable %}checked{% endif %}
-          >
-          Allow forks
-        </label>
-      </p>
+        {% for field in section.fields %}
 
-      <!-- COPIABLE 
-      <p>
-        <label>
-          <input
-            type="checkbox"
-            name="is_copiable"
-            {% if not caps.can_copy %}disabled{% endif %}
-            {% if dailyplan.is_copiable %}checked{% endif %}
-          >
-          Allow copies
-        </label>
+          <p>
+            <label>
 
-        {% if not caps.can_copy %}
-          <br>
-          <small>🔒 Copiable daily plans are available on higher plans</small>
-        {% endif %}
-      </p>
-      -------------------------------------->
+              <input
+                type="checkbox"
+                name="{{ field.name }}"
+                {% if field.value %}checked{% endif %}
+                {% if not field.enabled %}disabled{% endif %}
+              >
 
+              {{ field.label }}
+
+            </label>
+
+            {% if field.hint and not field.enabled %}
+              <br>
+              <small>{{ field.hint }}</small>
+            {% endif %}
+
+          </p>
+
+        {% endfor %}
+
+      {% endfor %}
 
       <hr>
-        <!-- ACTION NAVEGATION ======================================-->
-        <div class="btn-block">
-          <!-- 👈 Volver al paso 1 (seguro) -->
-          <a>
-              <button  type="submit" class="btn-cancel-create">Volver</button>
-          </a>
-          <button type="submit" class="btn-continue">Finalizar</button>
-        </div>
+
+      <div class="btn-block">
+        <button type="submit" class="btn-continue">
+          Guardar
+        </button>
+      </div>
+
     </form>
+
   </div>
 </div>
+
 {% endblock %}

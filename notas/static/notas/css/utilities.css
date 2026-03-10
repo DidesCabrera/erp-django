@@ -10,7 +10,8 @@ ul { padding-left: 20px; }
 li { margin-bottom: 6px; }
 
 p.message {
-  background: var(--color-bg);
+  background: rgb(238, 255, 155);
+  color: black;
   border-left: 4px solid #c1c1bd;
   padding: 10px 14px;
   border-radius: 4px;

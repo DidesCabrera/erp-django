@@ -168,6 +168,45 @@ class Meal(models.Model):
     def __str__(self):
         return self.name
 
+    # ==================================================
+    # DOMAIN STATE HELPERS
+    # ==================================================
+
+    @property
+    def is_dpm_instance(self):
+        """Meal que vive dentro de un DailyPlanMeal."""
+        return self.dailyplanmeal_set.exists()
+
+
+    @property
+    def is_original(self):
+        """Meal creada desde cero por el usuario."""
+        return (
+            self.forked_from is None
+            and not self.is_dpm_instance
+        )
+
+    @property
+    def is_duplicate(self):
+        """Meal copiada desde otra meal pero guardada en la biblioteca."""
+        return (
+            self.forked_from is not None
+            and not self.is_dpm_instance
+        )
+
+    @property
+    def category(self):
+        """
+        Categoría lógica de la meal.
+        """
+        if self.is_dpm_instance:
+            return "#instance"
+
+        if self.forked_from:
+            return "#duplicado"
+
+        return "#original"
+
     # ---- gramos ----
 
     @property
@@ -242,9 +281,10 @@ class Meal(models.Model):
     # DOMAIN API (delegates to services)
     # ==================================================
 
+
     def fork_for_user(self, user):
-        from notas.services.meal import fork_meal
-        return fork_meal(self, user)
+        from notas.services.meal import fork_meal_for_library
+        return fork_meal_for_library(self, user)
 
     def copy_for_user(self, user):
         from notas.services.meal import copy_meal
@@ -254,7 +294,11 @@ class Meal(models.Model):
         from notas.services.meal import save_meal
         return save_meal(self, user)
 
-    
+    def update_draft_status(self):
+        if self.meal_food_set.exists():
+            if self.is_draft:
+                self.is_draft = False
+                self.save(update_fields=["is_draft"])
 
 
 
@@ -365,6 +409,39 @@ class DailyPlan(models.Model):
     def __str__(self):
         return self.name
 
+    # ==================================================
+    # DOMAIN STATE HELPERS
+    # ==================================================
+
+    @property
+    def is_original(self):
+        """
+        DailyPlan creado desde cero por el usuario.
+        """
+        return self.forked_from is None
+
+
+    @property
+    def is_duplicate(self):
+        """
+        DailyPlan fork/copied desde otro plan.
+        """
+        return self.forked_from is not None
+
+
+    @property
+    def category(self):
+        """Categoría lógica del DailyPlan."""
+        # FUTURO: instancia dentro de programa
+        if hasattr(self, "programdailyplan_set") and self.programdailyplan_set.exists():
+            return "#instance"
+
+        if self.forked_from:
+            return "#duplicado"
+
+        return "#original"
+
+
     @property
     def protein(self):
         return sum(dpm.meal.protein for dpm in self.dailyplan_meals.all())
@@ -435,8 +512,14 @@ class DailyPlan(models.Model):
         from notas.services.dailyplan import save_dailyplan
         return save_dailyplan(self, user)
 
+    def update_draft_status(self):
 
+        if not self.is_draft:
+            return
 
+        if self.dailyplan_meals.exists():
+            self.is_draft = False
+            self.save(update_fields=["is_draft"])
 
 
 class DailyPlanMeal(models.Model):

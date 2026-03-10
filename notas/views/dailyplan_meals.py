@@ -21,6 +21,7 @@ from notas.services.dpm import ensure_dpm_meal_isolated
 
 from notas.viewmodels.base_vm import BaseVM
 from notas.viewmodels.ui.builder_ui import build_ui_vm
+from notas.services.meal import fork_meal_for_dailyplan
 
 
 
@@ -370,22 +371,13 @@ def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
 #************ AUXILIARES *********************
 
-#Helper navegación
-def _redirect_after_dpm_update(dailyplan):
-    """
-    Redirección consistente según estado del DailyPlan
-    """
-    if dailyplan.is_draft:
-        return redirect("dailyplan_builder", dailyplan.pk)
-    return redirect("dailyplan_edit", dailyplan.pk)
-
-
 # ========== ACTIONS ====================
 
-#ADD MEAL IN PICKER DAILYPLAN
+# ADD MEAL IN PICKER DAILYPLAN
 @require_POST
 @login_required
 def dailyplan_add_meal(request, pk=None):
+
     dailyplan_id = request.POST.get("dailyplan_id") or pk
 
     dailyplan = get_object_or_404(
@@ -395,14 +387,18 @@ def dailyplan_add_meal(request, pk=None):
     )
 
     meal_id = request.POST.get("meal_id")
+
     if not meal_id:
         messages.error(request, "Debes seleccionar una meal.")
-
-        if dailyplan.is_draft:
-            return redirect("dailyplan_builder", dailyplan.pk)
         return redirect("dailyplan_edit", dailyplan.pk)
 
-    meal = get_object_or_404(Meal, pk=meal_id)
+    meal_original = get_object_or_404(
+        Meal,
+        pk=meal_id,
+        created_by=request.user
+    )
+
+    meal = fork_meal_for_dailyplan(meal_original, request.user)
 
     hour = request.POST.get("hour") or None
     note = (request.POST.get("note") or "").strip() or None
@@ -414,9 +410,11 @@ def dailyplan_add_meal(request, pk=None):
         note=note,
     )
 
+    dailyplan.update_draft_status()
+
     messages.success(request, "Meal added to daily plan")
 
-    return _redirect_after_dpm_update(dailyplan)
+    return redirect("dailyplan_edit", dailyplan.pk)
 
 
 @login_required
@@ -424,19 +422,23 @@ def dailyplan_add_meal(request, pk=None):
 def dailyplanmeal_remove(request, dailyplan_id, dailyplanmeal_id):
 
     dpm = get_object_or_404(
-        DailyPlanMeal.objects.select_related("dailyplan"),
+        DailyPlanMeal.objects.select_related("dailyplan", "meal"),
         pk=dailyplanmeal_id,
         dailyplan__created_by=request.user,
     )
 
-    dailyplan_id=dailyplan_id
-
     dailyplan = dpm.dailyplan
+    meal = dpm.meal   # 👈 guardar referencia
+
+    # eliminar relación
     dpm.delete()
+
+    # eliminar meal instance
+    meal.delete()
 
     messages.success(request, "Meal eliminada del daily plan")
 
-    return _redirect_after_dpm_update(dailyplan)
+    return redirect("dailyplan_edit", dailyplan.pk)
 
 
 @login_required
@@ -461,7 +463,7 @@ def dailyplanmeal_update(request, dailyplan_id, dailyplanmeal_id):
     meal_id = request.POST.get("meal_id")
     if not meal_id:
         messages.error(request, "Debes seleccionar una meal.")
-        return _redirect_after_dpm_update(dailyplan)
+        return redirect("dailyplan_edit", dailyplan.pk)
 
     new_meal = get_object_or_404(Meal, id=meal_id)
     dpm.meal = new_meal
@@ -479,7 +481,7 @@ def dailyplanmeal_update(request, dailyplan_id, dailyplanmeal_id):
 
     messages.success(request, "Meal actualizada correctamente.")
 
-    return _redirect_after_dpm_update(dailyplan)
+    return redirect("dailyplan_edit", dailyplan.pk)
 
 
 @login_required

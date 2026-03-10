@@ -4,7 +4,8 @@
 
 .card-title {
     font-size: 12px;
-    padding: 4px 8px 0px 4px;
+    width: 300px;
+    padding: 2px 2px 0px 4px;
     margin-right: 5px;
 }
 

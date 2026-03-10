@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Notas{% endblock %}</title>
 
     {% load static %}
@@ -33,47 +34,14 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
+
+
+
+
+
+
 <body>
     <div class="app">
-
-        <!-- ===== GLOBAL HEADER (simplificado) ===== -->
-        <header>
-            <div class="header">
-                <div class="main-header">
-
-                    <div class="header-first-row">
-                        <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
-
-                        <div class="user">
-                            <div>
-                                <p>
-                                    Mi peso corporal:
-                                    <button class="btn-weight" onclick="openWeightModal()">
-                                        {{ current_weight }}
-                                    </button> kg
-                                </p>
-                            </div>
-
-                            {% if request.user.is_authenticated %}
-                            <div class="label-rol">
-                                {% if request.user.profile.role == "member" %}Member{% endif %}
-                                {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
-                            </div>
-
-                            <h2>
-                                <a href="{% url 'profile_detail' %}">
-                                    {{ request.user.username }}
-                                </a>
-                            </h2>
-                            <i data-lucide="circle-user-round" class="profile-icon"></i>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </header>
-
         <!-- ========= MODAL PESO ====================== -->
         <div id="weightModal" class="modal hidden">
             <div class="modal-content">
@@ -106,10 +74,40 @@
         <div class="app-body">
 
             <aside class="sidebar">
+
+                <div class="header-first-row">
+                    <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
+                </div>
+
+                <div class="user-block">                    
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'profile_detail' %}" class="user">
+                            <i data-lucide="circle-user-round" class="profile-icon"></i>
+                            <h2>{{ request.user.username }}</h2>
+                        
+
+                            <div class="label-rol">
+                                {% if request.user.profile.role == "member" %}Member{% endif %}
+                                {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
+                            </div>
+                        </a>
+                        {% endif %}
+
+                    <div>
+                        <p class="personal-metrics">
+                            Mi peso corporal:
+                            <button class="btn-weight" onclick="openWeightModal()">
+                                {{ current_weight }}
+                            </button> kg
+                        </p>
+                    </div>
+                </div>
+
                 <nav class="sidebar-nav">
 
                     <!-- DAILYPLAN ==========================-->
-                    <div class="sidebar-group">    
+                    <div class="sidebar-group">
+                        <p class="group-name-sidebar">Workspace</p>    
                         
                         <button type="button" class="sidebar-main">
                             <span class="sidebar-left">
@@ -243,7 +241,7 @@
 
                         <div class="sidebar-sub">
                             <a href="{% url 'food_list' %}"
-                                class="nav-tab nav-tab--food-personal tab-list {% if request.resolver_match.url_name == 'food_list' %}is-active{% endif %}">
+                                class="nav-tab nav-tab--food-personal tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "personal" %}is-active{% endif %}">
                                 <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
                                 <span class="nav-text">
                                     Todos
@@ -252,20 +250,31 @@
                             </a>
 
                             <a href="{% url 'food_create' %}"
-                            class="nav-tab nav-tab--meal-create tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "create" %}is-active{% endif %}">
+                            class="nav-tab nav-tab--food-create tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "create" %}is-active{% endif %}">
                             <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
                             <span class="nav-text">
                                 Crear
                                 <span class="nav-indicator"></span>
                             </span>
-                        </a>
+                            </a>
+
+                            <a href="{% url 'import_foods' %}"
+                            class="nav-tab nav-tab--food-import tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "import" %}is-active{% endif %}">
+                            <i data-lucide="file-down" class="sidebar-leading-icon"></i>
+                            <span class="nav-text">
+                                Importar
+                                <span class="nav-indicator"></span>
+                            </span>
+                            </a>
+
                         </div>
                     </div>
 
-                    <hr class="sidebar-divider">
+                    <!-- <hr class="sidebar-divider"> -->
 
+                    <p class="group-name-sidebar">Informative</p>   
 
-                    <!-- INBOX ==========================-->
+                    <!-- INBOX ==========================
                     <a href="{% url 'inbox_list' %}"
                         class="nav-tab nav-tab--inbox">
                         <i data-lucide="bell" class="sidebar-main-icon"></i>
@@ -274,7 +283,7 @@
                             <span class="nav-indicator"></span>
                         </span>                    
                     </a>
-                    
+                    -->
                     <!-- ELEMENTALES ==========================-->
                     <a href="{% url 'elemental_context' %}"
                     class="nav-tab nav-tab--elemental">
@@ -296,7 +305,12 @@
                     </a>
                 </nav>
             </aside>
+            <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                <i data-lucide="menu"></i>
+            </button>
+            
             <main class="app-content">
                 {% block content %}{% endblock %}
             </main>
@@ -338,6 +352,26 @@
       });
     
     });
+</script>
+
+<script>
+
+    function toggleSidebar() {
+        document.body.classList.toggle("sidebar-open");
+    }
+
+    document.querySelectorAll(".sidebar-nav a").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+    if (window.innerWidth <= 768) {
+        document.body.classList.remove("sidebar-open");
+    }
+
+    });
+
+    });
+
 </script>
 
 <script>

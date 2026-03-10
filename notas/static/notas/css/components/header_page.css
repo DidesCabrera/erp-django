@@ -49,7 +49,7 @@
   position: sticky;
   top: 40px;
   width: 100%;
-  background: #1c9e5b;
+  background: #ffe683;
   z-index: 190;
   text-align: center;
   align-items: center;
@@ -61,6 +61,6 @@
   line-height: 1.2;
   font-size: 10px;
   font-style: italic;
-  font-weight: 400;
-  color: white;
+  font-weight: 500;
+  color: black;
 }

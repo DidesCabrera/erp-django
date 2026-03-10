@@ -2,31 +2,16 @@
 {% block title %}Edit Food{% endblock %}
 {% block content %}
 
-
-
 <div class="page page--detail page-modal">
 
   <div class="wrap-page-modal">
 
     <h2>Edit Food</h2>
-
+  
     <form method="POST">
       {% csrf_token %}
-
-      <label>Name</label>
-      <input type="text" name="name" value="{{ vm.content.name }}" required>
-
-      <label>Protein (per 100g)</label>
-      <input type="number" step="0.01" name="protein" value="{{ vm.content.protein }}" required>
-
-      <label>Carbs (per 100g)</label>
-      <input type="number" step="0.01" name="carbs" value="{{ vm.content.carbs }}" required>
-
-      <label>Fat (per 100g)</label>
-      <input type="number" step="0.01" name="fat" value="{{ vm.content.fat }}" required>
-
-      <button type="submit">Save Changes</button>
-
+      {{ form }}
+      <button type="submit">Save</button>
     </form>
 
   </div>

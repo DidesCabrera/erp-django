@@ -58,9 +58,6 @@ def mealfood_update(request, meal_id, mealfood_id):
     if return_to:
         return redirect(return_to)
 
-    if meal.is_draft:
-        return redirect("meal_builder", pk=meal.pk)
-
     return redirect("meal_edit", pk=meal.pk)
 
 
@@ -88,10 +85,6 @@ def mealfood_remove(request, pk):
     if return_to:
         return redirect(return_to)
 
-    # 👇 comportamiento actual (NO se rompe)
-    if meal.is_draft:
-        return redirect("meal_builder", pk=meal.pk)
-
     return redirect("meal_edit", pk=meal.pk)
 
 
@@ -115,9 +108,6 @@ def add_food_to_meal(request, pk):
         if return_to:
             return redirect(return_to)
 
-        # 👇 comportamiento actual (NO se rompe)
-        if meal.is_draft:
-            return redirect("meal_builder", pk=meal.pk)
         return redirect("meal_edit", pk=meal.pk)
 
     food = get_object_or_404(Food, pk=food_id)
@@ -127,16 +117,13 @@ def add_food_to_meal(request, pk):
         food=food,
         quantity=quantity,
     )
+    meal.update_draft_status()
 
     messages.success(request, "Food agregado a la meal")
 
     # 👉 prioridad absoluta: return_to
     if return_to:
         return redirect(return_to)
-
-    # 👇 comportamiento actual (NO se rompe)
-    if meal.is_draft:
-        return redirect("meal_builder", pk=meal.pk)
 
     return redirect("meal_edit", pk=meal.pk)
 

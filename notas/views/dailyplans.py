@@ -13,11 +13,12 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from notas.viewmodels.content.builder.detail_dailyplan_builder import build_dailyplan_detail_vm
 from notas.viewmodels.content.builder.list_dailyplan_builder import build_dailyplan_list_vm
+from notas.viewmodels.content.builder.configure_dailyplan_builder import build_dailyplan_configure_vm
 from notas.jscontext.builder.meal_picker_builder import build_meal_picker_meals_payload ,build_meal_picker_context_payload
 from notas.services.dailyplan_queries import dailyplans_with_kcal, get_dailyplan_for_edit
 from notas.services.access import get_dailyplan_for_user
 
-from notas.forms import DailyPlanShareForm
+from notas.forms.forms import DailyPlanShareForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
@@ -458,6 +459,10 @@ def dailyplan_edit(request, pk):
         cls=DjangoJSONEncoder,
     )
 
+    selected_meal_id = request.GET.get("select_meal")
+
+    context["selected_meal_id"] = selected_meal_id
+
     return render(
         request,
         "notas/dailyplans/edit.html",
@@ -554,106 +559,6 @@ def dailyplan_draft_edit(request, pk):
     )
 
 
-@login_required
-def dailyplan_builder(request, pk):
-
-    dailyplan = get_object_or_404(
-        DailyPlan,
-        pk=pk,
-        created_by=request.user,
-    )
-
-    user = request.user
-
-    if not dailyplan.is_draft:
-        return redirect("dailyplan_detail", pk=pk)
-
-    # ==================================================
-    # Edit state
-    # ==================================================
-
-    edit_dpm_id = request.GET.get("edit_meal")
-    dpm = None
-
-    if edit_dpm_id:
-        dpm = get_object_or_404(
-            DailyPlanMeal.objects.select_related("meal"),
-            pk=edit_dpm_id,
-            dailyplan=dailyplan,
-        )
-
-    dailyplan_meals = dailyplan.meals_with_foods()
-
-    # ==================================================
-    # Picker list
-    # ==================================================
-
-    meals = Meal.objects.filter(is_draft=False).order_by("name")
-    meals_payload = build_meal_picker_meals_payload(meals)
-
-    dailyplan_kpis = build_nutrition_kpis_from_dailyplan(dailyplan, user)
-
-    meal_picker_ctx = build_meal_picker_context_payload(
-        dailyplan=dailyplan,
-        dailyplan_kpis=dailyplan_kpis,
-        dpm=dpm,
-    )
-
-    # ==================================================
-    # ViewMode
-    # ==================================================
-
-    viewmode = DAILYPLAN_VIEWMODE_BUILD
-
-    # ==================================================
-    # Content VM
-    # ==================================================
-
-    content_vm = build_dailyplan_detail_vm(
-        dailyplan,
-        dailyplan_meals,
-        user,
-        viewmode,
-    )
-
-    # ==================================================
-    # UI VM
-    # ==================================================
-
-    ui_vm = build_ui_vm(viewmode)
-
-    # ==================================================
-    # Base VM
-    # ==================================================
-
-    base_vm = BaseVM(
-        ui=ui_vm,
-        content=content_vm,
-    )
-
-    context = base_vm.as_context()
-
-    # ==================================================
-    # JS Hydration
-    # ==================================================
-
-    context["meals_json"] = json.dumps(
-        meals_payload.as_list(),
-        cls=DjangoJSONEncoder,
-    )
-
-    context["meal_picker_context"] = json.dumps(
-        meal_picker_ctx.as_dict(),
-        cls=DjangoJSONEncoder,
-    )
-
-    return render(
-        request,
-        "notas/dailyplans/builder.html",
-        context,
-    )
-
-
 #************ RENDER BÁSICOS *********************
 # ---------- CREATE - RENAME - CONFIGURE ----------
 
@@ -680,7 +585,7 @@ def dailyplan_create(request):
             name=name,
             created_by=request.user
         )
-        return redirect("dailyplan_builder", pk=dailyplan.pk)
+        return redirect("dailyplan_edit", pk=dailyplan.pk)
 
     return render(
         request,
@@ -688,7 +593,6 @@ def dailyplan_create(request):
          base_vm.as_context(),
 
     )
-
 
 @login_required
 def dailyplan_rename(request, pk):
@@ -709,7 +613,7 @@ def dailyplan_rename(request, pk):
         dailyplan.save()
 
         messages.success(request, "Nombre actualizado.")
-        return redirect("dailyplan_builder", pk=pk)
+        return redirect("dailyplan_edit", pk=pk)
 
     return render(
         request,
@@ -720,29 +624,26 @@ def dailyplan_rename(request, pk):
 
 @login_required
 def dailyplan_configure(request, pk):
+
     dailyplan = get_object_or_404(
         DailyPlan,
         pk=pk,
         created_by=request.user,
     )
 
-    viewmode = DAILYPLAN_VIEWMODE_CREATE
+    user = request.user
+    caps = get_capabilities(user)
 
-    ui_vm = build_ui_vm(viewmode)
-
-    base_vm = BaseVM(
-        ui=ui_vm,
-        content=None,
-    )
-
-    caps = get_capabilities(request.user)
+    # =====================
+    # POST
+    # =====================
 
     if request.method == "POST":
-        is_public = bool(request.POST.get("is_public"))
+
+        is_public   = bool(request.POST.get("is_public"))
         is_forkable = bool(request.POST.get("is_forkable"))
         is_copiable = bool(request.POST.get("is_copiable"))
 
-        # ---- reglas de negocio ----
         if is_public and not caps.can_publish():
             messages.error(request, "You cannot publish this daily plan.")
             return redirect("dailyplan_configure", pk=pk)
@@ -755,28 +656,40 @@ def dailyplan_configure(request, pk):
         dailyplan.is_forkable = is_forkable
         dailyplan.is_copiable = is_copiable
 
-        if dailyplan.is_draft:
-            if not dailyplan.dailyplan_meals.exists():
-                messages.error(
-                    request,
-                    "Add at least one meal before finalizing."
-                )
-                return redirect("dailyplan_detail", pk=pk)
-
-            dailyplan.is_draft = False
-
         dailyplan.save()
-        messages.success(request, "Daily plan saved.")
-        return redirect("dailyplan_detail", pk=pk)
+
+        messages.success(request, "Configuración guardada")
+
+        return redirect("dailyplan_edit", pk=pk)
+
+    # =====================
+    # VIEWMODEL
+    # =====================
+
+    viewmode = DAILYPLAN_VIEWMODE_CONFIGURE
+
+    content_vm = build_dailyplan_configure_vm(
+        dailyplan,
+        user,
+        viewmode,
+    )
+
+    ui_vm = build_ui_vm(
+        viewmode,
+        instance=dailyplan,
+    )
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+        content=content_vm,
+    )
 
     return render(
         request,
         "notas/dailyplans/configure.html",
-        {
-            "dailyplan": dailyplan,
-            "caps": caps,
-        }
+        base_vm.as_context(),
     )
+
 
 #************ ACCIONES (NO RENDERIZAN) **************
 # ---------- FORK - COPY ----------
@@ -841,7 +754,7 @@ def create_meal_for_dailyplan(request, dailyplan_id):
 
         if not name:
             messages.error(request, "Name is required")
-            return redirect("dailyplan_meal_create", dailyplan_id=dailyplan.id)
+            return redirect("create_meal_for_dailyplan", dailyplan_id=dailyplan.id)
 
         meal = Meal.objects.create(
             name=name,
@@ -850,7 +763,7 @@ def create_meal_for_dailyplan(request, dailyplan_id):
             pending_dailyplan=dailyplan,
         )
 
-        return redirect("meal_builder", pk=meal.id)
+        return redirect("meal_edit", pk=meal.id)
 
     return render(
         request,
@@ -881,6 +794,7 @@ def attach_meal_to_dailyplan(request, dailyplan_id, meal_id):
             hour=hour,
             note=note,
         )
+        dailyplan.update_draft_status()
 
         return redirect("meal_configure", pk=meal.id)
 
@@ -935,11 +849,11 @@ def dailyplan_remove(request, pk):
     # 🔒 reglas de seguridad
     if dailyplan.is_public:
         return HttpResponseForbidden(
-            "No puedes eliminar un dailyplan público."
+            "No puedes eliminar un plan público."
         )
 
     dailyplan.delete()
-    messages.success(request, "Daily plan eliminado definitivamente.")
+    messages.success(request, "Plan eliminado definitivamente.")
 
     return redirect("dailyplan_list")
 

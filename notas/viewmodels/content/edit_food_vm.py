@@ -1,10 +1,6 @@
 from dataclasses import dataclass
-
+from typing import Any
 
 @dataclass
-class FoodEditVM:
-    id: int
-    name: str
-    protein: float
-    carbs: float
-    fat: float
+class EditFoodVM:
+    food: Any

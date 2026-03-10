@@ -3,73 +3,37 @@
   --header-height: 64px;   /* ajusta a tu altura real */
 }
 
-
-.header {
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: var(--color-bg);
-  z-index: 500;
-}
-
-.main-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50px;          /* AJUSTA SI QUIERES */
-  display: flex;
-  align-items: center;
-  padding: 0 32px;
-  background: #000;
-  z-index: 1000;
-}
-
-/* first row */
-
-.header-first-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.header-first-row h1 {
-  font-size: 22px;
-  margin: 0 0 4px 0;
-  font-weight: 600;
-}
-
 .brand-logo{
-  max-width: 110px;
+  max-width: 100px;
   padding-top: 4px;
+  margin-bottom: 12px;
+  margin-left: 14px;
 }
 
 .brad-logo.project{
   align-items: center;
 }
 
-
-.header-first-row h2,
-.header-first-row a {
-  font-size: 16px;
-  color: #ffffff;
-}
-
-.header-first-row h2 {
-  font-weight: 400;
+.user-block{
+  margin-left: 6px;
+  padding: 8px 10px;
+  padding-bottom: 30px;
+  border: 1px solid rgb(63, 63, 63);
+  border-radius: 10px;
 }
 
 .user{
   display: flex;
   align-items:center;
   gap: 4px;
+  margin-bottom: 10px;
 }
 
 .user h2{
   margin: 0;              /* ← ESTO SUELE SER EL CULPABLE */
   font-size: 16px;
   font-weight: 400;
+  color: white;
 }
 
 .user p{

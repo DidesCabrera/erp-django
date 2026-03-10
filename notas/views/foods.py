@@ -10,13 +10,17 @@ from notas.actions.constants import (
     FOOD_VIEWMODE_PERSONAL_LIST, 
     FOOD_VIEWMODE_PERSONAL_DETAIL,
     FOOD_VIEWMODE_PERSONAL_EDIT,
+    FOOD_VIEWMODE_CREATE,
+    FOOD_VIEWMODE_IMPORT
 )
 from notas.routing.food import food_url
 from notas.viewmodels.content.builder.list_foods_builder import build_food_list_vm
 from notas.viewmodels.content.builder.detail_food_builder import build_food_detail_vm
-from notas.viewmodels.content.builder.edit_food_builder import build_food_edit_vm
+from notas.viewmodels.content.builder.edit_food_builder import build_edit_food_vm
+from notas.forms.forms import FoodEditForm
 
 from notas.services.food import create_food
+
 
 from notas.viewmodels.base_vm import BaseVM
 from notas.viewmodels.ui.builder_ui import build_ui_vm
@@ -78,45 +82,53 @@ def food_detail(request, pk):
     )
 
 
+@login_required
 def food_edit(request, pk):
 
-    food = get_object_or_404(Food, pk=pk)
-    print("POST DATA:", request.POST)
-    if request.method == "POST":
-
-        food.name = request.POST.get("name")
-        food.protein = float(request.POST.get("protein"))
-        food.carbs = float(request.POST.get("carbs"))
-        food.fat = float(request.POST.get("fat"))
-
-        food.save()
-
-        return redirect("food_detail", pk=food.pk)
-
-    viewmode = FOOD_VIEWMODE_PERSONAL_EDIT
-
-    content_vm = build_food_edit_vm(food)
-
-    ui_vm = build_ui_vm(viewmode, instance=food)
-
-    base_vm = BaseVM(
-        ui=ui_vm,
-        content=content_vm,
+    food = get_object_or_404(
+        Food,
+        pk=pk,
+        created_by=request.user,
     )
+
+    if request.method == "POST":
+        form = FoodEditForm(request.POST, instance=food)
+
+        if form.is_valid():
+            form.save()
+            return redirect("food_detail", pk=food.pk)
+
+    else:
+        form = FoodEditForm(instance=food)
+
+    ui_vm = build_ui_vm(FOOD_VIEWMODE_PERSONAL_DETAIL, instance=food)
+
+    content_vm = build_edit_food_vm(food=food)
+
+    base_vm = BaseVM(ui=ui_vm, content=content_vm)
 
     return render(
         request,
         "notas/foods/edit.html",
-        base_vm.as_context(),
+        {
+            **base_vm.as_context(),
+            "form": form,
+        }
     )
-
-
-
+    
 
 #************ RENDER BÁSICOS *********************
 # ---------- CREATE - *FALTA_RENAME - CONFIGURE ----------
 
 def food_create(request):
+
+    viewmode = FOOD_VIEWMODE_CREATE
+    
+    ui_vm = build_ui_vm(viewmode)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+    )
 
     if request.method == "POST":
 
@@ -135,7 +147,11 @@ def food_create(request):
 
         return redirect("food_list")
 
-    return render(request, "notas/foods/create.html")
+    return render(
+        request,
+        "notas/foods/create.html",
+        base_vm.as_context(),
+    )
 
 
 @login_required
@@ -181,6 +197,15 @@ def food_configure(request, pk):
 
 @login_required
 def import_foods(request):
+
+    viewmode = FOOD_VIEWMODE_IMPORT
+    
+    ui_vm = build_ui_vm(viewmode)
+
+    base_vm = BaseVM(
+        ui=ui_vm,
+    )
+
     if request.method == "POST":
         file = request.FILES.get("file")
 
@@ -218,7 +243,11 @@ def import_foods(request):
 
         return redirect("food_list")
 
-    return render(request, "notas/foods/import.html")
+    return render(
+        request,
+        "notas/foods/import.html",
+        base_vm.as_context(),
+    )
 
 
 @login_required
