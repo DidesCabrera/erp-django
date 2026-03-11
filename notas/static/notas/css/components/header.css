@@ -4,7 +4,7 @@
 .page-header {
   position: fixed;
   top: 0;
-  left: 0;        /* ancho actual del sidebar */
+  left: 240px;        /* ancho actual del sidebar */
   right: 0;
 
   height: 40px;
@@ -90,6 +90,7 @@
 
   .page-header {
     padding: 0 10px 0 10px;
+    left: 0px;
   }
 
   .mobile-menu-btn {
