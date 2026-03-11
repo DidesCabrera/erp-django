@@ -2,9 +2,6 @@
 {% block title %}Daily Plans{% endblock %}
 {% block content %}
 
-
-{% include "components/header.html" with header=vm.content.header ui=vm.ui %}
-
 <div class="page">
       {% for child in vm.content.child_cards %}
         {% include "components/card_child_dailyplan.html" with child_card=child %}

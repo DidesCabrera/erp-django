@@ -34,11 +34,11 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-
-
-
-
-
+<!-- =============================== -->
+<!-- =============================== -->
+<!-- =============================== -->
+<!-- =============================== -->
+<!-- =============================== -->
 
 <body>
     <div class="app">
@@ -60,7 +60,6 @@
             </div>
         </div>
 
-
         <!-- ========= MENSAJES DJANGO ================= -->
         {% if messages %}
         <div class="toast-container">
@@ -77,244 +76,17 @@
         <!-- ======== APP BODY ========================== -->
         <div class="app-body">
 
-            <aside class="sidebar">
-
-                <div class="block-logo-sidebar">
-                    <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
-                    <button class="collapse-sidebar-btn" onclick="toggleSidebar()">
-                        <i data-lucide="panel-right-open" class="collapse-sidebar-icon"></i>
-                    </button>
-                </div>
-
-                <div class="user-block">                    
-                        {% if request.user.is_authenticated %}
-                        <a href="{% url 'profile_detail' %}" class="user">
-                            <i data-lucide="circle-user-round" class="profile-icon"></i>
-                            <h2>{{ request.user.username }}</h2>
-                        
-
-                            <div class="label-rol">
-                                {% if request.user.profile.role == "member" %}Member{% endif %}
-                                {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
-                            </div>
-                        </a>
-                        {% endif %}
-
-                    <div>
-                        <p class="personal-metrics">
-                            Mi peso corporal:
-                            <button class="btn-weight" onclick="openWeightModal()">
-                                {{ current_weight }}
-                            </button> kg
-                        </p>
-                    </div>
-                </div>
-
-                <nav class="sidebar-nav">
-
-                    <!-- DAILYPLAN ==========================-->
-                    <div class="sidebar-group">
-                        <p class="group-name-sidebar">Workspace</p>    
-                        
-                        <button type="button" class="sidebar-main">
-                            <span class="sidebar-left">
-                              <i data-lucide="clipboard-list" class="sidebar-main-icon"></i>
-                              <span class="sidebar-label">Planes Diarios</span>
-                            </span>                  
-                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
-                        </button>
-
-                        <div class="sidebar-sub">
-
-                            <a href="{% url 'dailyplan_list' %}"
-                                class="nav-tab nav-tab--personal tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "personal" %}is-active{% endif %}">
-                                <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Mi Libreria
-                                    <span class="nav-indicator"></span>
-                                </span>    
-                            </a>
-                    
-                            <a href="{% url 'dailyplan_explore_list' %}"
-                                class="nav-tab nav-tab--explore tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "explore" %}is-active{% endif %}">
-                                <i data-lucide="search" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Explorar
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-                            <!--
-                            <a href="{% url 'dailyplan_shared_list' %}"
-                                class="nav-tab nav-tab--shared tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "shared" %}is-active{% endif %}">
-                                <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">                                
-                                    Compartidos conmigo
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            -->
-                            </a>
-                    
-                            <a href="{% url 'dailyplan_draft_list' %}"
-                                class="nav-tab nav-tab--draft tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "draft" %}is-active{% endif %}">
-                                <i data-lucide="pencil" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Borradores
-                                    <span class="nav-indicator"></span>
-                                </span>
-                                
-                            </a>
-                    
-                            <a href="{% url 'dailyplan_create' %}"
-                                class="nav-tab nav-tab--create tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "create" %}is-active{% endif %}">
-                                <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Crear
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- MEAL ==========================-->
-                    <div class="sidebar-group">
-
-                        <button type="button" class="sidebar-main">
-                            <span class="sidebar-left">
-                              <i data-lucide="salad" class="sidebar-main-icon"></i>
-                              <span class="sidebar-label">Comidas</span>
-                            </span>                  
-                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
-                        </button>
-                        
-                        <div class="sidebar-sub">
-                            <a href="{% url 'meal_list' %}"
-                                class="nav-tab nav-tab--meal-personal tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "personal" %}is-active{% endif %}">
-                                <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Mi Libreria
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-
-                            <a href="{% url 'meal_explore_list' %}"
-                                class="nav-tab nav-tab--meal-explore tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "explore" %}is-active{% endif %}">
-                                <i data-lucide="search" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Explorar
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-                            <!--
-                            <a href="{% url 'meal_shared_list' %}"
-                                class="nav-tab nav-tab--meal-shared tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "shared" %}is-active{% endif %}">
-                                <i data-lucide="user-plus" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Compartidos conmigo
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-                            -->
-
-                            <a href="{% url 'meal_draft_list' %}"
-                                class="nav-tab nav-tab--meal-draft tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "draft" %}is-active{% endif %}">
-                                <i data-lucide="pencil" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Borradores
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-
-                            <a href="{% url 'meal_create' %}"
-                                class="nav-tab nav-tab--meal-create tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "create" %}is-active{% endif %}">
-                                <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Crear
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- FOOD ==========================-->
-                    <div class="sidebar-group">
-
-                        <button type="button" class="sidebar-main">
-                            <span class="sidebar-left">
-                              <i data-lucide="carrot" class="sidebar-main-icon"></i>
-                              <span class="sidebar-label">Alimentos</span>
-                            </span>                  
-                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
-                        </button>
-
-                        <div class="sidebar-sub">
-                            <a href="{% url 'food_list' %}"
-                                class="nav-tab nav-tab--food-personal tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "personal" %}is-active{% endif %}">
-                                <i data-lucide="bookmark" class="sidebar-leading-icon"></i>
-                                <span class="nav-text">
-                                    Todos
-                                    <span class="nav-indicator"></span>
-                                </span>
-                            </a>
-
-                            <a href="{% url 'food_create' %}"
-                            class="nav-tab nav-tab--food-create tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "create" %}is-active{% endif %}">
-                            <i data-lucide="circle-fading-plus" class="sidebar-leading-icon"></i>
-                            <span class="nav-text">
-                                Crear
-                                <span class="nav-indicator"></span>
-                            </span>
-                            </a>
-
-                            <a href="{% url 'import_foods' %}"
-                            class="nav-tab nav-tab--food-import tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "import" %}is-active{% endif %}">
-                            <i data-lucide="file-down" class="sidebar-leading-icon"></i>
-                            <span class="nav-text">
-                                Importar
-                                <span class="nav-indicator"></span>
-                            </span>
-                            </a>
-
-                        </div>
-                    </div>
-
-                    <!-- <hr class="sidebar-divider"> -->
-
-                    <p class="group-name-sidebar">Informative</p>   
-
-                    <!-- INBOX ==========================
-                    <a href="{% url 'inbox_list' %}"
-                        class="nav-tab nav-tab--inbox">
-                        <i data-lucide="bell" class="sidebar-main-icon"></i>
-                        <span class="nav-text nab-tab2">
-                            Notificaciones
-                            <span class="nav-indicator"></span>
-                        </span>                    
-                    </a>
-                    -->
-                    <!-- ELEMENTALES ==========================-->
-                    <a href="{% url 'elemental_context' %}"
-                    class="nav-tab nav-tab--elemental">
-                        <i data-lucide="graduation-cap" class="sidebar-main-icon"></i>
-                        <span class="nav-text nab-tab2">
-                            Elementales
-                            <span class="nav-indicator"></span>
-                        </span>
-                    </a>
-                    
-                    <!-- PROYECTO ==========================-->
-                    <a href="{% url 'project_view' %}"
-                    class="nav-tab nav-tab--project">
-                        <i data-lucide="house" class="sidebar-main-icon"></i>
-                        <span class="nav-text nab-tab2">
-                            Proyecto
-                            <span class="nav-indicator"></span>
-                        </span>
-                    </a>
-                </nav>
-            </aside>
-            <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+            <!--===============-->
+            <!--    SIDEBAR    -->
+            <!--===============-->
+            {% include "components/sidebar.html" with vm=vm %}
             
+            
+            <!--===================-->
+            <!--    APP CONTENT    -->
+            <!--===================-->
             <main class="app-content">
+                {% include "components/header.html" with header=vm.content.header ui=vm.ui %}
                 {% block content %}{% endblock %}
             </main>
 

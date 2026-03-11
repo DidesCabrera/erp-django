@@ -1,9 +1,19 @@
+:root{
+  --sidebar-width: 240px;
+  --header-height: 40px;
+}
+
+
 /* ===== RESET BASE ===== */
 
 html,
 body {
   height: 100%;
   margin: 0;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 *,
@@ -30,6 +40,7 @@ header {
 
 .app-body {
     display: flex;
+    width: 100%;
     flex: 1;
     margin-top: 0px;
     min-height: 0;
@@ -77,20 +88,20 @@ header {
 /* ===== CONTENT ===== */
 
 .app-content {
-    flex: 1;
-    overflow-y: auto;
-    background-color: var(--color-bg-2);
-    margin-left: 240px; /* sidebar */
-    padding: 0px;
-    padding-bottom: 40px;
-    overscroll-behavior: contain;
+  flex: 1;
+
+  margin-left: 240px;   /* sidebar */
+
+  padding-top: 40px;    /* altura del header */
+  padding-bottom: 40px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background-color: var(--color-bg-2);
+
+  overscroll-behavior-y: contain;
 }
-
-
-
-
-
-
 
 .sidebar-group {
     margin-bottom: 4px;

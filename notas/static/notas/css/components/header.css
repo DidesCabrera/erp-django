@@ -2,16 +2,22 @@
 
 
 .page-header {
-  position: sticky;
-  top: 0px;
-  width: 100%;
-  padding: 0 40px 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;        /* ancho actual del sidebar */
+  right: 0;
+
   height: 40px;
+
+  padding: 0 40px 0 20px;
+
   background: #ffffff;
   border-bottom: 1px solid var(--color-border-1);
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   z-index: 20;
 }
 

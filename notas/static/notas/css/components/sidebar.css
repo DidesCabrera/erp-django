@@ -26,6 +26,19 @@
     stroke-width: 1.5;
 }
 
+.enter-user-icon{
+    height: 16px;
+    width: 16px;
+    flex-shrink: 0;
+    color: rgb(134, 134, 134);
+    stroke-width: 1.5;
+
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+}
+
+
 @media (max-width: 768px) {
 
     .collapse-sidebar-btn {
@@ -50,10 +63,12 @@
   
 .user-block{
     margin-left: 6px;
+    height: 100px;
     padding: 8px 10px;
-    padding-bottom: 30px;
+    padding-bottom: 15px;
     border: 1px solid rgb(63, 63, 63);
     border-radius: 10px;
+    position: relative;
 }
   
 .user{
