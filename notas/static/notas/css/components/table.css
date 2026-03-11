@@ -31,7 +31,14 @@ tbody td {
   font-size: 14px;
   margin-bottom: 10px;
   border: 1px solid rgba(0, 0, 0, 0.05);
+
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
+
+
 
 .table-items.picker {
   padding: 10px;
@@ -263,4 +270,13 @@ th.alloc-col-food-table{
 
 .card-table-meals{
   margin-bottom: 30px;
+}
+
+.table-foods{
+  min-width: 700px;
+}
+
+.table-foods th,
+.table-foods td{
+  white-space: nowrap;
 }

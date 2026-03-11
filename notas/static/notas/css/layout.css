@@ -342,6 +342,7 @@ header {
     .sidebar {
       transform: translateX(-100%);
       transition: transform 0.25s ease;
+      width: 300px;
     }
   
     body.sidebar-open .sidebar {
