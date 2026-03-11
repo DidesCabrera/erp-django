@@ -52,14 +52,15 @@
 /* ====== HEADER MINI EDIT ====== */
 
 .header-mini-edit {
-  position: sticky;
+  position: fixed;
+  display: flex;
   top: 40px;
-  width: 100%;
+  left: 240px;
+  right: 0;
   background: #ffe683;
   z-index: 190;
-  text-align: center;
+  justify-content: center;
   align-items: center;
-  pointer-events: none;
 }
 
 
@@ -98,4 +99,14 @@
       align-items: center;
       padding-right: 10px;
   }
+
+  .header-mini-edit {
+    left: 0px;
+    height: 18px;
+  }
+
+  .header-mini-edit p {
+    font-size: 12px;
+  }
+
 }

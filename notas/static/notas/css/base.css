@@ -82,4 +82,8 @@ input[type="number"] {
   margin-bottom: 10px;
 }
 
-
+.truncate{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

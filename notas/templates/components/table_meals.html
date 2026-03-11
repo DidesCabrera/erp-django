@@ -6,7 +6,7 @@
     <thead>
       <tr>
         <th class="time-col">Hora</th>
-        <th class="name-col">Comidas</th>
+        <th class="meal-name-col">Comidas</th>
         <th class="kcal-col">Kcal</th>
         <th class="grams-col">P g</th>
         <th class="grams-col">C g</th>
@@ -22,7 +22,13 @@
       {% for row in items %}
         <tr>
           <td>{{ row.rel.hour|time:"H:i" }}</td>
-          <td class="col-name"><a href="{{ row.rel.url }}">{{ row.rel.name }}</a></td>
+          <td>
+            <div class="truncate">
+              <a href="{{ row.rel.url }}">
+                {{ row.rel.name }}
+              </a>
+            </div>
+          </td>
           <td><div class="cell-kcal">{{ row.rel.total_kcal|floatformat:0 }}</div></td>
           <td>{{ row.rel.g_protein|floatformat:1 }}</td>
           <td>{{ row.rel.g_carbs|floatformat:1 }}</td>

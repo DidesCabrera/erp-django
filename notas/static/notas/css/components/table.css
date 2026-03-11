@@ -42,6 +42,7 @@ tbody td {
 .table-meals{
   background: rgb(250, 250, 250);
   min-width: 700px;
+  table-layout: fixed;
 }
 
 .table-foods th,
@@ -162,10 +163,11 @@ table tr:last-child {
   width: 40px;
 }
 
-.name-col{
-  width: 120px;
+.meal-name-col{
+  width: 150px;
+  max-width: 150px;
   height: 9px;
-  white-space: nowrap;
+  padding-left: 5px;
 }
 
 .kcal-col,
@@ -196,7 +198,7 @@ table tr:last-child {
   width: 45px;
 }
 
-.name-col.edit{
+.meal-name-col.edit{
   width: 200px;
 }
 
@@ -231,10 +233,20 @@ table tr:last-child {
 }
 
 
-/* tabla food */
 
-.name-col-food-table {
-  width: 150px;  
+
+
+
+
+/* ===================================== */
+/* ============ TABLA FOODS ============ */
+/* ===================================== */
+
+.food-name-col {
+  width: 150px;
+  max-width: 150px;
+  height: 9px;
+  padding-left: 50px;  
 }
 
 .alloc-col-food-table {
@@ -251,7 +263,7 @@ table tr:last-child {
 
 /* tabla food edit*/
 
-.name-col-food-table.edit {
+.food-name-col.edit {
   width: 200px;  
 }
 
@@ -283,6 +295,13 @@ th.alloc-col-food-table{
 }
 
 
+
+
+
+
+
+
+
 @media (max-width: 768px) {
 
   .table-items{
@@ -291,22 +310,21 @@ th.alloc-col-food-table{
   }
 
   .table-foods th:first-child,
-  .table-foods td:first-child,
-  .table-meals th:first-child,
-  .table-meals td:first-child{
+  .table-foods td:first-child{
     background: rgb(250, 250, 250);
     position: sticky;
     left: 0;
     z-index: 100;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.03);
   }
 
   .table-meals th:nth-child(2),
   .table-meals td:nth-child(2){
     background: rgb(250, 250, 250);
     position: sticky;
-    left: 54px;
+    left: 0px;
     z-index: 100;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.05);
+    box-shadow: 2px 0 4px rgba(0,0,0,0.03);
   }
 
 }
