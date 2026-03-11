@@ -18,7 +18,7 @@
   justify-content: space-between;
   align-items: center;
 
-  z-index: 20;
+  z-index: 200;
 }
 
 .page-header-left{

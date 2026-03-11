@@ -3,7 +3,7 @@
 
   .alloc-cell {
     position: relative;
-    padding: 6px 6px;
+    padding: 6px 8px 6px 0px;
     overflow: hidden;
     background-color: #f3f3f100;  
     font-variant-numeric: tabular-nums;
