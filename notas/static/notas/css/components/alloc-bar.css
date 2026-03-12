@@ -10,6 +10,7 @@
   overflow: hidden;
 }
 
+
 /* alloc para card-mini */
 .alloc-bar-comp.mini {
   height: 18px;
@@ -62,8 +63,14 @@
 
 /* alloc para card-mini */
 .alloc-pct.mini {
-  font-size: 12.5px;
   height: 18px;
+  display: flex;
+  text-align: center;
+}
+
+.kpi-alloc.card-mini p {
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* kcal fija derecha */
@@ -84,3 +91,13 @@
 /* ======================================= */
 /* ======================================= */
 /* ======================================= */
+
+@media (max-width: 768px) {
+
+  .alloc-sub {
+    display: none;
+  }
+}
+
+
+

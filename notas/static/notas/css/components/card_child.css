@@ -16,11 +16,11 @@
   display: flex;
   width: 100%;
   margin-bottom: 14px;
-  justify-content: space-between;
 }
 
-
 .card-kpi {
+  flex: 1;
+  min-width: 0;
   padding-left: 5px;
   border-left: 1px solid var(--color-border-2);
 }
@@ -83,27 +83,12 @@ BOTTOM
     align-items: flex-start;
   }
 
-  .card-title {
-    width: 100%;
-    margin-bottom: 6px;
-  }
-
-}
-
-@media (max-width: 768px) {
-
   .card-kpi {
     width: 100%;
     padding-left: 0px;
     border: none;
     
   }
-
-}
-
-
-
-@media (max-width: 768px) {
 
   .hide-mobile {
     display: none !important;

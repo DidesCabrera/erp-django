@@ -17,6 +17,7 @@ class UI:
     icon: str | None = None
     breadcrumb: List["BreadcrumbItem"] = field(default_factory=list)
     section_label: Optional[str] = None
+    title: Optional[str] = None
     
 
 

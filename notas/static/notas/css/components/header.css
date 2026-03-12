@@ -35,6 +35,20 @@
   color: #0f0f0f;
 }
 
+
+.header-title-mobile{
+  display:none;
+  font-weight:600;
+  min-width:150px;
+  max-width: 200px;
+}
+
+.header-breadcrumbs{
+  display:block;
+}
+
+
+
 .collapse-btn {
   padding: 6px 12px;
   font-size: 12px;
@@ -108,5 +122,14 @@
   .header-mini-edit p {
     font-size: 12px;
   }
+  
+  .header-title-mobile{
+    display:block;
+  }
+
+  .header-breadcrumbs{
+    display:none;
+  }
+  
 
 }

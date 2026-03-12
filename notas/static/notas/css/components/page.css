@@ -1,5 +1,12 @@
 
 /* ============= PAGE ============= */
+.list-page-title{
+    margin-bottom: 10px;
+    font-size: 20px;
+    margin-left: 14px;
+    font-weight: 550;
+    color: rgb(62, 62, 62);
+}
 
 .page {
 /*    max-width: 882px;

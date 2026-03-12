@@ -18,6 +18,8 @@ def build_ui_vm(viewmode, instance=None, parents=None):
 
     section_label = nav_config.get("section", {}).get("label")
 
+    title = breadcrumb[-1].label if breadcrumb else ""
+    
     return UI(
         viewmode=str(viewmode),
         entity=viewmode.entity,
@@ -27,6 +29,7 @@ def build_ui_vm(viewmode, instance=None, parents=None):
         icon=icon,
         breadcrumb=breadcrumb,
         section_label=section_label,
+        title=title,
     )
 
 

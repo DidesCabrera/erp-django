@@ -1,12 +1,16 @@
 
 <div class="card-mini-dpm">
-    <p><i data-lucide="utensils" class="sidebar-leading-icon"></i>
-        {{ child.related_data.hour }}
-        {% if child.related_data.note %}
-        - {{ child.related_data.note }}
-        {% endif %}
-    </p>
-
+    
+    <div class="title-dpm-mini-card">
+        <i data-lucide="utensils" class="dpm-icon"></i>
+        <p>
+            {{ child.related_data.hour }}
+            {% if child.related_data.note %}
+            - {{ child.related_data.note }}
+            {% endif %}
+        </p>
+    </div>
+    
     <div class="alloc-block-card-mini">
         <div class="kpi-alloc card-mini">
             <p>P</p>
@@ -20,6 +24,7 @@
             <p>F</p>
             {% include "components/alloc_bar_mini.html" with value=child.kpis.alloc_fat kind="fat" kcal=child.kpis.kcal_fat %}
         </div>
+        <i data-lucide="info" class="card_mini-dpm-info-icon"></i>
     </div>
 
 
