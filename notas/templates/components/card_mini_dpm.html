@@ -1,14 +1,13 @@
 
-<div class="hour-note">
-    
-    <p><span class="circulo"></span>
+<div class="card-mini-dpm">
+    <p><i data-lucide="utensils" class="sidebar-leading-icon"></i>
         {{ child.related_data.hour }}
         {% if child.related_data.note %}
         - {{ child.related_data.note }}
-        {% endif %}</p>
+        {% endif %}
+    </p>
 
     <div class="alloc-block-card-mini">
-        <p class="label-alloc-ctx">% Kcal en Plan</p>
         <div class="kpi-alloc card-mini">
             <p>P</p>
             {% include "components/alloc_bar_mini.html" with value=child.kpis.alloc_protein kind="protein" kcal=child.kpis.kcal_protein %}

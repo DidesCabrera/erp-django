@@ -8,28 +8,32 @@
   <div class="page-add">
 
     <!-- SEARCH - PICKER-->
-    <div class="add-row">
+    <div class="add-title">
       <i data-lucide="plus" class="add-row-icon"></i>
       <i data-lucide="salad" class="add-row-icon"></i>
       <h4 id="meal-form-title">Agrega una Comida</h4>
+    </div>
 
+    <div class="add-row">
 
-      <div id="meal-picker" class="picker">
+      <div id="meal-picker" class="selector">
         <input
           type="text"
           id="meal-search"
           placeholder="Escribe la comida…"
           autocomplete="off"
         />
-        <ul id="meal-list" class="picker-list"></ul>
+        <ul id="meal-list" class="selector-list"></ul>
       </div>
       
       <input type="hidden" id="dp-selected-meal-id" name="meal_id">
       
-      <a href="{% url 'create_meal_for_dailyplan' main_id %}"
-      class="btn btn-sm btn-outline-primary">
-      o Crear nueva Comida
-      </a>
+      <div class="btn-create-picker">
+        <a href="{% url 'create_meal_for_dailyplan' main_id %}"
+        class="btn btn-sm btn-outline-primary">
+        o Crear nueva Comida
+        </a>
+      </div>
 
     </div>
 

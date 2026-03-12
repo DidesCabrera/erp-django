@@ -130,7 +130,6 @@ table.table-foods th:nth-child(1),
 table.table-foods td:nth-child(1),
 table.table-meals th:nth-child(2),
 table.table-meals td:nth-child(2) {
-  padding: 3px 4px;
   text-align: left;
   font-weight: 500;
 }
@@ -160,14 +159,15 @@ table tr:last-child {
 
 
 .time-col {
-  width: 40px;
+  width: 55px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .meal-name-col{
   width: 150px;
   max-width: 150px;
   height: 9px;
-  padding-left: 5px;
 }
 
 .kcal-col,
@@ -246,7 +246,7 @@ table tr:last-child {
   width: 150px;
   max-width: 150px;
   height: 9px;
-  padding-left: 50px;  
+  padding-left: 8px;  
 }
 
 .alloc-col-food-table {
@@ -304,7 +304,8 @@ th.alloc-col-food-table{
 
 @media (max-width: 768px) {
 
-  .table-items{
+  .table-items,
+  .table-items.picker {
     padding-left: 0px;
     padding-right: 0px;
   }

@@ -21,8 +21,8 @@
     <tbody>
       {% for row in items %}
         <tr>
-          <td>{{ row.rel.hour|time:"H:i" }}</td>
-          <td>
+          <td class="time-col">{{ row.rel.hour|time:"H:i" }}</td>
+          <td class="meal-name-col">
             <div class="truncate">
               <a href="{{ row.rel.url }}">
                 {{ row.rel.name }}

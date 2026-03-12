@@ -75,7 +75,7 @@ BOTTOM
 @media (max-width: 768px) {
   
   .card {
-    padding: 15px 15px;
+    padding: 15px 15px 0px 15px;;
   }
 
   .card-main {

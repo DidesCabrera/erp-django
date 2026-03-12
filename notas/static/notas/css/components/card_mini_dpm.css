@@ -4,7 +4,7 @@
 }
 
 
-.hour-note {
+.card-mini-dpm {
     display: flex;
     flex-direction: row;
     gap: 0px;
@@ -18,7 +18,7 @@
     border-radius: 12px;
 }
 
-.hour-note p{
+.card-mini-dpm p{
     padding: 2px;
     font-size: 13px;
     font-weight: 500;
@@ -41,14 +41,6 @@
     
 }
 
-.alloc-block-card-mini .label-alloc-ctx {
-    opacity: 0.9;
-    font-size: 12px;
-    font-weight: 400;
-    font-style: italic;
-    margin: 0 auto;
-}
-
 .alloc-block-card-mini.kpi-alloc {
     height: 18px;
 }
@@ -68,3 +60,25 @@
     margin-bottom: 2px;
   }
   
+
+  @media (max-width: 768px){
+
+    .card-mini-dpm{
+      flex-direction: column;
+      align-items: stretch;
+      height: auto;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  
+    .card-mini-dpm > *{
+      width: 100%;
+    }
+
+    .card-mini-dpm p{
+        padding: 2px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+  
+  }

@@ -22,7 +22,7 @@
     <tbody>
       {% for row in items %}
       <tr>
-        <td>{{ row.rel.name }}</td>
+        <td class="food-name-col">{{ row.rel.name }}</td>
         <td><div class="cell-qty">{{ row.rel.quantity|floatformat:0 }}</div></td>
         <td><div class="cell-kcal">{{ row.rel.total_kcal|floatformat:0 }}</div></td>
         <td>{{ row.rel.g_protein|floatformat:1 }}</td>
