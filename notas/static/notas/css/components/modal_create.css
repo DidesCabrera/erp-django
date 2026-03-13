@@ -1,9 +1,15 @@
+
+
 .page.page-modal{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 650px;
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    margin-top: 16px;
 }
+
 
 .wrap-page-modal{
     padding-top: 10px;
