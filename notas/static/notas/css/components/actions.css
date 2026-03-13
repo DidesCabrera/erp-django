@@ -52,3 +52,93 @@
   }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  
+  .overflow-menu{
+    position:relative;
+  }
+  
+  .overflow-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+  }
+  
+  .overflow-dropdown{
+    display:none;
+    position:absolute;
+    right:0;
+    top:100%;
+    background:white;
+    border:1px solid var(--color-border-1);
+    border-radius:8px;
+    padding:6px;
+    min-width:140px;
+    z-index:20;
+  }
+  
+  .overflow-menu:hover .overflow-dropdown{
+    display:block;
+  }
+  
+  .overflow-action{
+    display:block;
+    width:100%;
+    padding:6px 10px;
+    text-align:left;
+    background:none;
+    border:none;
+    cursor:pointer;
+  }
+
+  .actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  
+  .action-icon-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    background:none;
+    cursor:pointer;
+    padding:4px;
+  }
+  
+  .action-icon-btn i{
+    width:18px;
+    height:18px;
+    stroke-width:1.8;
+  }
+
+  .action-card-icon{
+    height: 18px;
+    width: 18px;
+    margin: 0px 4px;
+    stroke-width: 1.5;
+    flex-shrink: 0;
+    color: rgb(60, 60, 60);
+  }

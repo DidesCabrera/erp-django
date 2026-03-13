@@ -87,7 +87,8 @@
   color: rgb(255, 255, 255);
 }
 
-.mobile-menu-btn {
+.mobile-menu-btn,
+.back-header-icon {
   background-color: transparent;
   padding: 0;
   border: none;
@@ -111,6 +112,15 @@
   stroke-width: 2;
 }
 
+.more-horizontal-icon{
+  margin-top: 3px;
+  height: 20px;
+  width: 20px;
+  color: #262626;
+  flex-shrink: 0;
+  stroke-width: 2;
+}
+
 @media (max-width: 768px) {
 
   .page-header {
@@ -124,6 +134,13 @@
       align-items: center;
       padding-right: 8px;
   }
+
+  .back-header-icon{
+      display: flex;
+      align-items: center;
+      padding-right: 2px;
+  }
+
 
   .header-mini-edit {
     left: 0px;

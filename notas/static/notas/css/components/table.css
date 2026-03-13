@@ -64,7 +64,7 @@ tbody td {
 .table-foods.table1 {
   margin-bottom: 30px;
 }
-
+ /*
 .table-items tr:hover {
   background-color: var(--color-bg-4);
   border-radius: 4px;
@@ -74,7 +74,7 @@ tbody td {
   background-color: var(--color-bg-picker2);
   border-radius: 4px;
 }
-
+*/
 
 .table-items th {
   font-size: 11px;

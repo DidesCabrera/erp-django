@@ -2,7 +2,7 @@
 /* ============= PAGE ============= */
 
 .list-page-title{
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     margin-left: 14px;
     display: flex;
     align-items: center;
@@ -11,15 +11,15 @@
 
 .list-page-title h2{
     font-size: 20px;
-    font-weight: 550;
-    color: rgb(62, 62, 62);
+    font-weight: 400;
+    color: rgb(50, 50, 50);
     margin-bottom: 0;
 }
 
 .page-icon{
     height: 22px;
     width: 22px;
-    color: rgb(62, 62, 62);
+    color: rgb(50, 50, 50);
     stroke-width: 2;
     flex-shrink: 0;
 }

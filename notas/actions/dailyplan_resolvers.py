@@ -12,12 +12,18 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "detail": {
         "label": "Ver",
         "method": "get",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
     "shared_detail": {
         "label": "Ver",
         "method": "get",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_shared_detail", args=[dp.id]
         ),
@@ -26,6 +32,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "draft_detail": {
         "label": "Ver Draft",
         "method": "get",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_draft_detail", args=[dp.id]
         ),
@@ -34,6 +43,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "explore_detail": {
         "label": "Ver",
         "method": "get",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_explore_detail", args=[dp.id]
         ),
@@ -42,6 +54,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "configure": {
         "label": "Configurar",
         "method": "get",
+        "group": "overflow",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dp, context=None: dailyplan_configure_url(dp),
         "capability": "can_edit_own_content",
     },
@@ -51,6 +66,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "fork": {
         "label": "Duplicar",
         "method": "post",
+        "group": "overflow",
+        "icon": "copy",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
@@ -60,6 +78,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "fork_explore": {
         "label": "Guardar en Personal",
         "method": "post",
+        "group": "primary",
+        "icon": "bookmark",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
@@ -69,6 +90,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
      "save": {
         "label": "Guardar",
         "method": "post",
+        "group": "primary",
+        "icon": "bookmark",
+        "order": 90,
         "get_url": lambda dp, ctx=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
@@ -78,6 +102,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "save_my_list": {
         "label": "Guardar en Personal",
         "method": "post",
+        "group": "primary",
+        "icon": "bookmark",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
@@ -89,6 +116,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "copy": {
         "label": "Copiar",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_copy", args=[dp.id]
         ),
@@ -99,6 +129,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "delete": {
         "label": "Borrar",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_delete", args=[dp.id]
         ),
@@ -108,6 +141,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "share": {
         "label": "Compartir",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_share", args=[dp.id]
         ),
@@ -116,6 +152,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "remove": {
         "label": "Remover",
         "method": "post",
+        "group": "overflow",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_remove", args=[dp.id]
         ),
@@ -124,6 +163,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "unshare": {
         "label": "Quitar",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda share_id, context=None: reverse(
             "dailyplan_unshare", args=[share_id]
         ),
@@ -132,6 +174,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "edit": {
         "label": "Editar",
         "method": "post",
+        "group": "primary",
+        "icon": "pencil",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_edit", args=[dp.id]
         ),
@@ -140,6 +185,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "draft_edit": {
         "label": "Retomar",
         "method": "post",
+        "group": "primary",
+        "icon": "pencil",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_draft_edit", args=[dp.id]
         ),
@@ -148,12 +196,18 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "back_detail": {
         "label": "Finalizar",
         "method": "get",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
     "back_to_edit": {
         "label": "Volver",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_edit", args=[dp.id]
         ),
@@ -162,6 +216,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "back_to_list": {
         "label": "Salir",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_list"
         ),
@@ -170,6 +227,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "back_to_explore_list": {
         "label": "Salir",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_explore_list"
         ),
@@ -178,6 +238,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "back_to_shared_list": {
         "label": "Salir",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_shared_list"
         ),
@@ -186,6 +249,9 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "back_to_draft_list": {
         "label": "Salir",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_draft_list"
         ),
@@ -220,8 +286,8 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 
     # EXPLORE
     DAILYPLAN_VIEWMODE_EXPLORE_LIST: [
-        "explore_detail",
         "save",
+        "explore_detail",
     ],
 
     DAILYPLAN_VIEWMODE_EXPLORE_DETAIL: [
@@ -309,6 +375,9 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
             "label": definition["label"],
             "url": url,
             "method": definition["method"],
+            "group": definition.get("group", "primary"),
+            "icon": definition.get("icon"),
+            "order": definition.get("order", 100),
         })
 
     return actions

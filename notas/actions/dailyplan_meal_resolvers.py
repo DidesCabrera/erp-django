@@ -12,6 +12,9 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "detail": {
         "label": "Ver",
         "method": "get",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",
             args=[dpm.dailyplan.id, dpm.id],
@@ -21,6 +24,9 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "replace": {
         "label": "Cambiar",
         "method": "get",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "replace_dailyplan_meal",
             args=[dpm.dailyplan.id, dpm.id],
@@ -32,6 +38,9 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "remove": {
         "label": "Quitar",
         "method": "post",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "remove_meal",
             args=[dpm.dailyplan.id, dpm.id],
@@ -42,6 +51,9 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "back_dp_detail": {
         "label": "Volver",
         "method": "get",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_detail",
             args=[dpm.dailyplan.id],
@@ -51,6 +63,9 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "back_dpm_detail": {
         "label": "Finalizar",
         "method": "get",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",
             args=[dpm.dailyplan.id, dpm.id],
@@ -60,6 +75,9 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "deep_edit": {
         "label": "Editar Alimentos",
         "method": "get",
+        "group": "primary",
+        "icon": "trash-2",
+        "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplanmeal_deepedit",
             args=[dpm.dailyplan.id, dpm.id],
@@ -155,6 +173,9 @@ def resolve_dailyplan_meal_actions(dpm, user, context=None):
             "label": definition["label"],
             "url": url,
             "method": definition["method"],
+            "group": definition.get("group", "primary"),
+            "icon": definition.get("icon"),
+            "order": definition.get("order", 100),
         })
 
     return actions

@@ -3,8 +3,8 @@
     <div class="page-header-left">
 
         {% if vm.ui.is_inside %}
-            <button class="mobile-menu-btn" onclick="history.back()">
-                <i data-lucide="arrow-left" class="menu-icon"></i>
+            <button class="back-header-icon" onclick="history.back()">
+                <i data-lucide="chevron-left" class="menu-icon"></i>
             </button>
         {% else %}
             <button class="mobile-menu-btn" onclick="toggleSidebar()">
@@ -34,7 +34,7 @@
         {% else %}
         <div class="btn-list-header">
             <button id="collapse-list-btn" class="collapse-btn" type="button">
-                <i data-lucide="list-chevrons-down-up" class="collapse-list-icon"></i>
+                <i data-lucide="list-chevrons-up-down" class="collapse-list-icon"></i>
             </button>
         </div>
         {% endif %}

@@ -1,15 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* ============================
-     GLOBAL BUTTON
-     ============================ */
-
   const globalBtn = document.getElementById("collapse-list-btn");
   const allTables = document.querySelectorAll(".card-table-foods");
 
-  let allCollapsed = true; // por defecto TODO EXPANDIDO
+  let allCollapsed = true;
+
+  /* estado inicial: TODO colapsado */
+  allTables.forEach((table) => {
+    table.classList.add("is-collapsed");
+  });
 
   if (globalBtn) {
+
     globalBtn.addEventListener("click", function () {
 
       allCollapsed = !allCollapsed;
@@ -18,10 +20,18 @@ document.addEventListener("DOMContentLoaded", function () {
         table.classList.toggle("is-collapsed", allCollapsed);
       });
 
-      globalBtn.textContent = allCollapsed
-        ? "Expand List"
-        : "Collapse List";
+      const iconName = allCollapsed
+        ? "list-chevrons-up-down"
+        : "list-chevrons-down-up";
+
+      globalBtn.innerHTML = `
+        <i data-lucide="${iconName}" class="collapse-list-icon"></i>
+      `;
+
+      lucide.createIcons();
+
     });
+
   }
 
   /* ============================
@@ -40,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!table) return;
 
     table.classList.toggle("is-collapsed");
+
   });
 
 });
