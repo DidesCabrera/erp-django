@@ -92,7 +92,7 @@ header {
 
   margin-left: 240px;   /* sidebar */
 
-  padding-top: 40px;    /* altura del header */
+  margin-top: 40px;    /* altura del header */
   padding-bottom: 40px;
 
   overflow-y: auto;
@@ -350,9 +350,14 @@ header {
     }
   
     .app-content {
+      margin-top: 54px;
       margin-left: 0;
     }
-    
+
+    .nav-tab.tab-list .nav-text,
+    .sidebar-label {
+      font-size: 16px;
+    }
   
   }
 

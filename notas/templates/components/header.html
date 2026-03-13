@@ -2,16 +2,23 @@
 
     <div class="page-header-left">
 
-        <button class="mobile-menu-btn" onclick="toggleSidebar()">
-            <i data-lucide="menu" class="menu-icon"></i>
-        </button>
+        {% if vm.ui.is_inside %}
+            <button class="mobile-menu-btn" onclick="history.back()">
+                <i data-lucide="arrow-left" class="menu-icon"></i>
+            </button>
+        {% else %}
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                <i data-lucide="panel-right-close" class="menu-icon"></i>
+            </button>
+        {% endif %}
     
         <div class="label-entity header label-entity--{{ ui.nav_root }}">
             <i data-lucide="{{ ui.icon }}" class="label-icon"></i>
         </div>
     
         <div class="header-title-mobile truncate">
-            {{ ui.title }}
+            <p>{{ ui.title }}</p>
+            <p class="subtitle">{{ ui.root }}</p>
         </div>
     
         <div class="header-breadcrumbs">
@@ -19,7 +26,7 @@
         </div>
     
     </div>
-    
+
     <div class="page-header-right">
         <!-- acciones -->
         {% if header.actions %}
@@ -27,7 +34,7 @@
         {% else %}
         <div class="btn-list-header">
             <button id="collapse-list-btn" class="collapse-btn" type="button">
-            <i data-lucide="rows-2" class="sidebar-leading-icon"></i>
+                <i data-lucide="list-chevrons-down-up" class="collapse-list-icon"></i>
             </button>
         </div>
         {% endif %}

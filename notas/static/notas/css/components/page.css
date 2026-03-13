@@ -1,11 +1,27 @@
 
 /* ============= PAGE ============= */
+
 .list-page-title{
     margin-bottom: 10px;
-    font-size: 20px;
     margin-left: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px; /* espacio entre icono y texto */
+}
+
+.list-page-title h2{
+    font-size: 20px;
     font-weight: 550;
     color: rgb(62, 62, 62);
+    margin-bottom: 0;
+}
+
+.page-icon{
+    height: 22px;
+    width: 22px;
+    color: rgb(62, 62, 62);
+    stroke-width: 2;
+    flex-shrink: 0;
 }
 
 .page {
@@ -27,20 +43,6 @@
     background-color: white;
 }
 
-@media (max-width: 768px) {
-
-    .page--detail {
-      padding: 15px 15px;
-    }
-  
-    .card-title {
-      width: 100%;
-      margin-bottom: 6px;
-    }
-  
-  }
-
-
 .page--detail.dpm{
     margin-top: 8px;
 }
@@ -52,7 +54,7 @@
 }
 
 .page--detail.edit{
-    margin-top: 24px;
+    margin-top: 32px;
 }
 
 .page.project-page {
@@ -72,3 +74,16 @@
 .title-plane-page{
     margin-bottom: 20px;
 }
+
+@media (max-width: 768px) {
+
+    .page--detail {
+      padding: 15px 15px;
+    }
+  
+    .card-title {
+      width: 100%;
+      margin-bottom: 6px;
+    }
+  
+  }

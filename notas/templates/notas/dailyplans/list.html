@@ -3,9 +3,10 @@
 {% block content %}
 
 <div class="page">
-
-  <h2 class="list-page-title">{{ vm.ui.title }}</h2>
-
+  <div class="list-page-title">
+    <i data-lucide="{{ vm.ui.page_icon }}" class="page-icon"></i>
+    <h2>{{ vm.ui.title }}</h2>
+  </div>
       {% for child in vm.content.child_cards %}
         {% include "components/card_child_dailyplan.html" with child_card=child %}
       {% empty %}

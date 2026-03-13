@@ -18,6 +18,9 @@ class UI:
     breadcrumb: List["BreadcrumbItem"] = field(default_factory=list)
     section_label: Optional[str] = None
     title: Optional[str] = None
+    root: Optional[str] = None
+    page_icon: str | None = None
+    is_inside: bool = False
     
 
 
