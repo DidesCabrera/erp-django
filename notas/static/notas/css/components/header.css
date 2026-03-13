@@ -112,7 +112,8 @@
   stroke-width: 2;
 }
 
-.more-horizontal-icon{
+.more-horizontal-icon,
+.header-action-icon {
   margin-top: 3px;
   margin-right: 2px;
   height: 20px;
@@ -120,6 +121,12 @@
   color: #262626;
   flex-shrink: 0;
   stroke-width: 2;
+}
+
+.header-action-icon {
+  margin-top: 0;
+  margin-right: 4px;
+  margin-left: 4px;
 }
 
 @media (max-width: 768px) {
@@ -175,4 +182,41 @@
   }
   
 
+}
+
+.action-icon-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:4px;
+}
+
+.action-icon-btn i{
+  width:18px;
+  height:18px;
+  stroke-width:1.8;
+}
+
+
+.overflow-action{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:6px 10px;
+  width:100%;
+
+  background:none;
+  border:none;
+  cursor:pointer;
+  text-align:left;
+}
+
+.overflow-action i{
+  width:16px;
+  height:16px;
+  stroke-width:1.8;
 }

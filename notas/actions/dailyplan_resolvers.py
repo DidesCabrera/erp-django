@@ -217,7 +217,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "square-arrow-out-down-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_list"
@@ -228,7 +228,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "square-arrow-out-down-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_explore_list"
@@ -239,7 +239,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "square-arrow-out-down-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_shared_list"
@@ -250,7 +250,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "square-arrow-out-down-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_draft_list"
