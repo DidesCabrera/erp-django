@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 
@@ -19,16 +19,16 @@
 }
 
 .collapse-sidebar-icon{
-    height: 20px;
-    width: 20px;
+    height: 22px;
+    width: 22px;
     flex-shrink: 0;
     color: rgb(134, 134, 134);
     stroke-width: 1.5;
 }
 
 .enter-user-icon{
-    height: 16px;
-    width: 16px;
+    height: 18px;
+    width: 18px;
     flex-shrink: 0;
     color: rgb(134, 134, 134);
     stroke-width: 1.5;
@@ -55,7 +55,19 @@
         align-items: center;
         padding-right: 10px;
     }
-  }
+
+    .block-logo-sidebar{
+        margin-top: 3px;
+    }
+
+    .enter-user-icon{
+            height: 20px;
+            width: 20px;
+        
+    }
+
+}
+
 
 .brad-logo.project{
     align-items: center;
@@ -147,5 +159,6 @@
     border-width: 0px;
     height: 22px;
     font-weight: 600;
+    color: black;
   }
   

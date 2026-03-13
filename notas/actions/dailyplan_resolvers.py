@@ -192,7 +192,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
             "dailyplan_draft_edit", args=[dp.id]
         ),
     },
-
+    # Proveniente de un edit
     "back_detail": {
         "label": "Finalizar",
         "method": "get",
@@ -202,56 +202,66 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
+    # Proveniente de un configure o deep edit
     "back_to_edit": {
         "label": "Volver",
         "method": "post",
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
+        "mobile_display": "hidden",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_edit", args=[dp.id]
         ),
     },
 
+    # Proveniente de un detail
     "back_to_list": {
-        "label": "Salir",
+        "label": "Volver",
         "method": "post",
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
+        "mobile_display": "hidden",
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_list"
         ),
     },
 
+    # Proveniente de un detail
     "back_to_explore_list": {
         "label": "Salir",
         "method": "post",
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
+        "mobile_display": "hidden",
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_explore_list"
         ),
     },
 
+    # Proveniente de un detail
     "back_to_shared_list": {
         "label": "Salir",
         "method": "post",
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
+        "mobile_display": "hidden",
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_shared_list"
         ),
     },
 
+    # Proveniente de un detail
     "back_to_draft_list": {
         "label": "Salir",
         "method": "post",
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
+        "mobile_display": "hidden",
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_draft_list"
         ),
@@ -346,6 +356,7 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
 
     context = context or {}
     context_name = context.get("name")
+    is_mobile = context.get("is_mobile", False)
 
     caps = get_capabilities(user)
     actions = []
@@ -357,7 +368,17 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
         if not definition:
             continue
 
-        # --- capability check ---
+        # -----------------------------
+        # MOBILE FILTER
+        # -----------------------------
+        mobile_display = definition.get("mobile_display", "show")
+
+        if is_mobile and mobile_display == "hidden":
+            continue
+
+        # -----------------------------
+        # CAPABILITY CHECK
+        # -----------------------------
         capability_name = definition.get("capability")
         if capability_name:
             if not caps or not hasattr(caps, capability_name):
@@ -365,7 +386,9 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
             if not getattr(caps, capability_name)():
                 continue
 
-        # --- resolver URL (safe) ---
+        # -----------------------------
+        # RESOLVE URL
+        # -----------------------------
         try:
             url = definition["get_url"](dailyplan, context)
         except NoReverseMatch:

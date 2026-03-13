@@ -21,6 +21,7 @@ class UI:
     root: Optional[str] = None
     page_icon: str | None = None
     is_inside: bool = False
+    back_url: Optional[str] = None
     
 
 

@@ -46,6 +46,11 @@ def build_ui_vm(viewmode, instance=None, parents=None):
 
     is_inside = viewmode.mode != "list"
 
+    back_url = None
+
+    if len(breadcrumb) >= 2:
+        back_url = breadcrumb[-2].url
+
     return UI(
         viewmode=str(viewmode),
         entity=viewmode.entity,
@@ -59,4 +64,5 @@ def build_ui_vm(viewmode, instance=None, parents=None):
         title=title,
         root=root,
         is_inside=is_inside,
+        back_url=back_url
     )

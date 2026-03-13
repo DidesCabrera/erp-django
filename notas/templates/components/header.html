@@ -3,9 +3,9 @@
     <div class="page-header-left">
 
         {% if vm.ui.is_inside %}
-            <button class="back-header-icon" onclick="history.back()">
+            <a href="{{ ui.back_url }}" class="back-header-icon">
                 <i data-lucide="chevron-left" class="menu-icon"></i>
-            </button>
+            </a>
         {% else %}
             <button class="mobile-menu-btn" onclick="toggleSidebar()">
                 <i data-lucide="panel-right-close" class="menu-icon"></i>

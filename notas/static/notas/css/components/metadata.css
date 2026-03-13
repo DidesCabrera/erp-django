@@ -7,9 +7,9 @@
     padding: 0;
     height: 18px;
     width: 18px;
-    stroke-width: 1;
+    stroke-width: 1.5;
     flex-shrink: 0;
-    color: rgb(23, 23, 23);
+    color: rgb(60, 60, 60);
 }
 
 .metadata p{

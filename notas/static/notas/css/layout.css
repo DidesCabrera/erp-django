@@ -205,14 +205,6 @@ header {
     stroke-width: 2;
   }
 
-  
-  .sidebar-leading-icon,
-  .sidebar-icon {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
-
 
 
 
@@ -357,6 +349,19 @@ header {
     .nav-tab.tab-list .nav-text,
     .sidebar-label {
       font-size: 16px;
+    }
+
+    .sidebar-leading-icon {
+      width: 20px;
+      height: 20px;
+      padding-bottom: 2px;
+      margin-right: 4px;
+      stroke-width: 1.5;
+    }
+
+    .sidebar-icon{
+      width: 18px;
+      height: 18px;
     }
   
   }
