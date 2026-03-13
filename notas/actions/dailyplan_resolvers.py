@@ -209,7 +209,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
-        "mobile_display": "hidden",
+        "is_back": True,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_edit", args=[dp.id]
         ),
@@ -222,7 +222,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
-        "mobile_display": "hidden",
+        "is_back": True,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_list"
         ),
@@ -235,7 +235,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
-        "mobile_display": "hidden",
+        "is_back": True,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_explore_list"
         ),
@@ -248,7 +248,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
-        "mobile_display": "hidden",
+        "is_back": True,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_shared_list"
         ),
@@ -261,7 +261,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "group": "primary",
         "icon": "chevron-left",
         "order": 90,
-        "mobile_display": "hidden",
+        "is_back": True,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_draft_list"
         ),
@@ -356,7 +356,6 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
 
     context = context or {}
     context_name = context.get("name")
-    is_mobile = context.get("is_mobile", False)
 
     caps = get_capabilities(user)
     actions = []
@@ -366,14 +365,6 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
     for key in allowed_keys:
         definition = DAILYPLAN_ACTION_DEFINITIONS.get(key)
         if not definition:
-            continue
-
-        # -----------------------------
-        # MOBILE FILTER
-        # -----------------------------
-        mobile_display = definition.get("mobile_display", "show")
-
-        if is_mobile and mobile_display == "hidden":
             continue
 
         # -----------------------------
@@ -402,6 +393,7 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
             "group": definition.get("group", "primary"),
             "icon": definition.get("icon"),
             "order": definition.get("order", 100),
+            "is_back": definition.get("is_back", False),
         })
 
     return actions
