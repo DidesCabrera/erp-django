@@ -17,18 +17,27 @@ FOOD_ACTION_DEFINITIONS = {
     "detail": {
         "label": "View",
         "method": "get",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda food, context=None: food_url(food),
     },
 
     "cancel": {
         "label": "Cancel",
         "method": "get",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda food, context=None: food_list_url(),
     },
 
     "configure": {
         "label": "Configure",
         "method": "get",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda food, context=None: food_configure_url(food),
         "capability": "can_edit_own_content",
     },
@@ -38,6 +47,9 @@ FOOD_ACTION_DEFINITIONS = {
     "delete": {
         "label": "Delete",
         "method": "post",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda food, context=None: reverse(
             "food_delete", args=[food.id]
         ),
@@ -46,6 +58,9 @@ FOOD_ACTION_DEFINITIONS = {
     "edit": {
         "label": "Edit",
         "method": "post",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda food, context=None: reverse(
             "food_edit", args=[food.id]
         ),
@@ -54,6 +69,9 @@ FOOD_ACTION_DEFINITIONS = {
     "save": {
         "label": "Save",
         "method": "post",
+        "group": "primary",
+        "icon": "log-in",
+        "order": 90,
         "get_url": lambda food, context=None: reverse(
             "food_detail", args=[food.id]
         ),
@@ -132,6 +150,9 @@ def resolve_food_actions(food, user, context=None):
             "label": definition["label"],
             "url": url,
             "method": definition["method"],
+            "group": definition.get("group", "primary"),
+            "icon": definition.get("icon"),
+            "order": definition.get("order", 100),
         })
 
     return actions

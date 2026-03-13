@@ -55,7 +55,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Configurar",
         "method": "get",
         "group": "overflow",
-        "icon": "trash-2",
+        "icon": "settings",
         "order": 90,
         "get_url": lambda dp, context=None: dailyplan_configure_url(dp),
         "capability": "can_edit_own_content",
@@ -142,7 +142,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Compartir",
         "method": "post",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "send",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_share", args=[dp.id]
@@ -197,7 +197,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Finalizar",
         "method": "get",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "check",
         "order": 90,
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
@@ -206,7 +206,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Volver",
         "method": "post",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "chevron-left",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_edit", args=[dp.id]
@@ -217,7 +217,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "square-arrow-out-down-left",
+        "icon": "chevron-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_list"
@@ -228,7 +228,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "square-arrow-out-down-left",
+        "icon": "chevron-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_explore_list"
@@ -239,7 +239,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "square-arrow-out-down-left",
+        "icon": "chevron-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_shared_list"
@@ -250,7 +250,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Salir",
         "method": "post",
         "group": "primary",
-        "icon": "square-arrow-out-down-left",
+        "icon": "chevron-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "dailyplan_draft_list"
@@ -273,15 +273,15 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
         #"share",
-        "fork",
-        "edit",
         "back_to_list",
+        "edit",
+        "fork",
     ],
 
     DAILYPLAN_VIEWMODE_PERSONAL_EDIT: [
+        "back_detail",
         "configure",
         "remove",
-        "back_detail",
     ],
 
     # EXPLORE
@@ -291,18 +291,19 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     ],
 
     DAILYPLAN_VIEWMODE_EXPLORE_DETAIL: [
+        "back_to_explore_list",
         "fork_explore",
-        "back_to_explore_list"
     ],
 
     # SHARE
     DAILYPLAN_VIEWMODE_SHARED_LIST: [
-        "shared_detail",
         "save_my_list",
+        "shared_detail",
     ],
 
     DAILYPLAN_VIEWMODE_SHARED_DETAIL: [
         "save_my_list",
+        "unshare",
         "back_to_shared_list",
     ],
 

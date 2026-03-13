@@ -194,12 +194,6 @@
   padding:4px;
 }
 
-.action-icon-btn i{
-  width:18px;
-  height:18px;
-  stroke-width:1.8;
-}
-
 
 .overflow-action{
   display:flex;

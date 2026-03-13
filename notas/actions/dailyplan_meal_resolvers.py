@@ -13,7 +13,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "log-in",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",
@@ -25,7 +25,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "label": "Cambiar",
         "method": "get",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "repeat",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "replace_dailyplan_meal",
@@ -52,7 +52,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "label": "Volver",
         "method": "get",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "chevron-left",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_detail",
@@ -64,7 +64,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "label": "Finalizar",
         "method": "get",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "check",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",
@@ -76,7 +76,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "label": "Editar Alimentos",
         "method": "get",
         "group": "primary",
-        "icon": "trash-2",
+        "icon": "pencil",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplanmeal_deepedit",
@@ -92,16 +92,16 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
 DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     # Card dentro del DailyPlan
     DAILYPLAN_MEAL_VIEWMODE_LIST: [
-        "detail",
         "replace",
+        "detail",
     ],
 
     # Vista detail del DailyPlanMeal
     DAILYPLAN_MEAL_VIEWMODE_DETAIL: [
+        "back_dp_detail",
         "replace",
         "deep_edit",
-        "remove",
-        "back_dp_detail",
+        "remove"
     ],
 
     DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT:[
@@ -111,11 +111,15 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT:[
         "back_dpm_detail",
     ],
+    
+    # ===============================
+    # ===== DAILYPLAN VIEWMODE ======
+    # ===============================
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
-        "detail",
         "deep_edit",
         "remove",
+        "detail",
     ],
 
     DAILYPLAN_VIEWMODE_EXPLORE_DETAIL: [],

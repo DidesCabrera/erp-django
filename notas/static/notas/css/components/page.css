@@ -3,24 +3,24 @@
 
 .list-page-title{
     margin-bottom: 8px;
-    margin-left: 14px;
+    margin-left: 8px;
     display: flex;
     align-items: center;
     gap: 6px; /* espacio entre icono y texto */
 }
 
 .list-page-title h2{
-    font-size: 20px;
-    font-weight: 400;
-    color: rgb(50, 50, 50);
+    font-size: 24px;
+    font-weight: 600;
+    color: rgb(25, 25, 25);
     margin-bottom: 0;
 }
 
 .page-icon{
-    height: 22px;
-    width: 22px;
-    color: rgb(50, 50, 50);
-    stroke-width: 2;
+    height: 24px;
+    width: 24px;
+    color: rgb(25, 25, 25);
+    stroke-width: 2.5;
     flex-shrink: 0;
 }
 
