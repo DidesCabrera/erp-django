@@ -24,6 +24,12 @@
   z-index: 0;
 }
 
+.alloc-bar-bg.picker{
+  border-radius: 4px;
+  background-color: white;
+  border:1px solid var(--color-border-2);
+}
+
 /* Fill */
 .alloc-bar-fill {
   position: absolute;

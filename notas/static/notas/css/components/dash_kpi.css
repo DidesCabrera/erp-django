@@ -39,6 +39,12 @@
   flex: 0 0 70px;
   padding: 6px;
 }
+
+.dash-kpi-comp.picker .tot{
+  margin-left: 0;
+}
+
+
   
 .dash-kpi-comp .tot h2 {
     font-size: 1.9rem;
@@ -91,6 +97,14 @@
     padding: 5px 0;
     border-bottom: 1px solid var(--color-border-2);
 }
+
+.kpi-row.picker{
+  grid-template-columns:
+  60px    /* label */
+  55px    /* extra */
+  1fr;    /* alloc (flexible) */
+}
+
 
 .kpi-row.mini{
     /* Control de columnas */

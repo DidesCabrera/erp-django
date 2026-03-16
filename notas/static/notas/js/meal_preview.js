@@ -67,52 +67,25 @@ export function renderSelectedMeal(container, meal) {
 
 export function renderDayPreview(container, current, preview, meal) {
 
-  // CURRENT
-  renderBlock(container, "day-preview", "cur", current);
-
-  // MEAL IMPACT ✅ (ESTO FALTABA)
-  if (meal) {
-
-    resolveScoped(container, "day-preview", "impact-meal-kcal", "dp-meal-kcal")
-        .textContent = meal.total_kcal.toFixed(0);
-
-    resolveScoped(container, "day-preview", "impact-meal-protein", "dp-meal-protein")
-        .textContent = meal.protein.toFixed(1);
-
-    resolveScoped(container, "day-preview", "impact-meal-carbs", "dp-meal-carbs")
-        .textContent = meal.carbs.toFixed(1);
-
-    resolveScoped(container, "day-preview", "impact-meal-fat", "dp-meal-fat")
-        .textContent = meal.fat.toFixed(1);
-
-    setAlloc(container, "day-preview",
-        "impact-alloc-protein",
-        "impact-alloc-protein-text",
-        "meal-alloc-protein-cell",
-        "meal-alloc-protein-text",
-        meal.alloc.protein
-    );
-
-    setAlloc(container, "day-preview",
-        "impact-alloc-carbs",
-        "impact-alloc-carbs-text",
-        "meal-alloc-carbs-cell",
-        "meal-alloc-carbs-text",
-        meal.alloc.carbs
-    );
-
-    setAlloc(container, "day-preview",
-        "impact-alloc-fat",
-        "impact-alloc-fat-text",
-        "meal-alloc-fat-cell",
-        "meal-alloc-fat-text",
-        meal.alloc.fat
-    );
+    // MEAL IMPACT
+    if (meal) {
+  
+      resolveScoped(container, "day-preview", "impact-meal-kcal", "dp-meal-kcal")
+          .textContent = meal.total_kcal.toFixed(0);
+  
+      resolveScoped(container, "day-preview", "impact-meal-protein", "dp-meal-protein")
+          .textContent = meal.protein.toFixed(1);
+  
+      resolveScoped(container, "day-preview", "impact-meal-carbs", "dp-meal-carbs")
+          .textContent = meal.carbs.toFixed(1);
+  
+      resolveScoped(container, "day-preview", "impact-meal-fat", "dp-meal-fat")
+          .textContent = meal.fat.toFixed(1);
+    }
+  
+    // PREVIEW
+    renderBlock(container, "day-preview", "prev", preview);
   }
-
-  // PREVIEW
-  renderBlock(container, "day-preview", "prev", preview);
-}
 
 
 

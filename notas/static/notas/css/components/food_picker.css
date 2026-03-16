@@ -259,3 +259,96 @@ p.h3-table2{
   }
 
 }
+
+.impact-positive {
+  color: #1a7f37;
+  font-weight: 500;
+}
+
+.macro-with-ppk {
+  display: flex;
+  justify-content: center;
+}
+
+.ppk-inline {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.picker-layout{
+  display:flex;
+  width:100%;
+}
+
+.picker-section{
+  flex:1;
+  min-width:0;
+}
+
+/* mobile */
+
+@media (max-width: 768px){
+
+  .picker-layout{
+    flex-direction:column;
+  }
+
+}
+
+.table-preview-picker{
+  min-width: 0;
+}
+
+.table-preview-picker {
+  width: 100%;
+}
+
+/* activar grid por fila */
+.table-preview-picker thead tr,
+.table-preview-picker tbody tr {
+  display: grid;
+  grid-template-columns:
+    70px   /* label (Kcal / Protein etc) */
+    70px     /* Meal */
+    70px     /* Meal */
+    70px     /* Meal */
+    1fr;  /* Alloc bar */
+  align-items: center;
+}
+
+.card.picker-layout{
+  padding: 18px;
+  background: rgb(250, 250, 250);
+}
+
+
+.preview-picker {
+  background-color: white;
+  margin: 0;
+  border: none;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-1);
+  border-radius: 14px;
+}
+
+.table-preview-picker{
+  background-color: transparent;
+}
+
+.picker-impact{
+  margin-left: 18px;
+  padding-left: 18px;
+  border-left: 1px solid var(--color-border-1);
+}
+
+@media (max-width: 768px){
+
+  .picker-impact{
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    margin-top: 22px;
+    margin-bottom: 10px;
+  }
+
+}

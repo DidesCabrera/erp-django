@@ -8,7 +8,7 @@
             {% if action.group != "overflow" %}
     
                 {% if action.method == "get" %}
-                    <a href="{{ action.url }}" class="action-icon-btn primary-action" title="{{ action.label }}">
+                    <a href="{{ action.url }}" class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}" title="{{ action.label }}">
                         <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
                     </a>
     
@@ -19,7 +19,7 @@
                             type="submit"
                             name="{{ action.key }}"
                             value="1"
-                            class="action-icon-btn primary-action"
+                            class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}"
                             title="{{ action.label }}">
     
                             <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
