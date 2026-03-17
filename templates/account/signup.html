@@ -1,0 +1,64 @@
+{% load socialaccount static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crear cuenta</title>
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-card">
+    <img class="auth-logo" src="/static/img/logo_negro.png">
+<h1 class="auth-title">Crear cuenta</h1>
+
+<a class="btn-google"
+href="{% provider_login_url 'google' %}">
+Continuar con Google
+</a>
+
+<div class="divider">
+<span>o</span>
+</div>
+
+<form method="post" class="auth-form">
+{% csrf_token %}
+
+<input
+type="email"
+name="email"
+placeholder="Email"
+required>
+
+<input
+type="password"
+name="password1"
+placeholder="Password"
+required>
+
+<input
+type="password"
+name="password2"
+placeholder="Confirm password"
+required>
+
+<button type="submit">
+Crear cuenta
+</button>
+
+</form>
+
+<p class="auth-links">
+¿Ya tienes cuenta?
+<a href="{% url 'account_login' %}">
+Iniciar sesión
+</a>
+</p>
+
+</div>
+
+</body>
+</html>

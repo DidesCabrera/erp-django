@@ -6,7 +6,6 @@
 <div class="auth-card">
     <div class="brand-auth">
         <img src="{% static 'img/logo_gris.png' %}" alt="Logo" class="brand-logo">
-        <p class="brand-quote">“Lo que se mide, se controla”</p>
     </div>
 
     <h1>{% block auth_title %}{% endblock %}</h1>
@@ -18,6 +17,13 @@
             {% block auth_button %}{% endblock %}
         </button>
     </form>
+
+    {% load socialaccount %}
+
+    <a class="btn-google"
+       href="{% provider_login_url 'google' %}">
+       Continuar con Google
+    </a>
 
     <p class="auth-footer">
         {% block auth_footer %}{% endblock %}
