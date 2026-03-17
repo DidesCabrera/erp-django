@@ -2,242 +2,274 @@
 
     <!-- SEARCH + PICKER -->
     <div class="add-title">
-        <i data-lucide="plus" class="add-row-icon"></i>
-        <i data-lucide="carrot" class="add-row-icon"></i>
-        <h4 id="food-form-title">Agrega un Alimento</h4>
-    </div>
-    
-    <div class="add-row">
-        <div id="food-picker" class="selector">
-            <input
-            type="text"
-            id="food-search"
-            placeholder="Escribe el alimento…"
-            autocomplete="off"
-            />
-            <ul id="food-list" class="selector-list"></ul>
-        </div>
+      <i data-lucide="plus" class="add-row-icon"></i>
+      <i data-lucide="carrot" class="add-row-icon"></i>
+      <h4 id="food-form-title">Agrega un Alimento</h4>
     </div>
   
-    <!-- PREVIEW + FORM -->
+    <div class="add-row">
+      <div id="food-picker" class="selector">
+        <input
+          type="text"
+          id="food-search"
+          placeholder="Escribe el alimento…"
+          autocomplete="off"
+        />
+        <ul id="food-list" class="selector-list"></ul>
+      </div>
+    </div>
+  
+    <!-- FORM -->
     <form
       method="post"
       action="{% url 'add_food_to_meal' main_id %}"
       id="form-preview"
       data-meal-id="{{ main_id }}"
-      >
+    >
       {% csrf_token %}
   
-      <!-- Hidden fields required by backend -->
+      <!-- Hidden fields -->
       <input type="hidden" name="food_id" id="selected-food-id">
       <input type="hidden" name="quantity" id="selected-food-quantity">
       <input type="hidden" id="food-picker-mode" value="add">
       <input type="hidden" name="return_to" value="{{ request.path }}">
-
-
-      <!-- Edit mode controls -->
+  
       <input type="hidden" id="editing-mealfood-id">
       <input type="hidden" id="editing-original-quantity">
-
-
-      <!-- FOOD PREVIEW =================================== -->
+  
+      <!-- PREVIEW -->
       <div id="food-preview" style="display:none;">
+  
+        <div class="picker-layout card">
+  
+          <!-- LEFT : FOOD INFO -->
+          <div class="picker-section picker-food-info">
+  
+            {% include "components/card_picker_food.html" %}
 
-        <div class="table-items picker">
+  
+          </div>
+  
+  
+          <!-- RIGHT : IMPACT -->
+          <div class="picker-section picker-impact">
 
-            <table class="table-foods preview table1" id="table-foods-preview">
-                <thead>
-                    <tr>
-                        <th class="food-name-col">
-                            <p class="h3-table2">INFORMACIÓN ALIMENTO</p>
+            <h3>Preview</h3>
+            <!-- QUANTITY -->
+            <div class="qty-preview">
+                <label>
+                    Porción:
+                    <input
+                    type="number"
+                    id="food-quantity"
+                    value="100"
+                    min="0"
+                    >
+                </label>
+            </div>
+  
+            <div class="preview-picker">
+  
+                <table class="table-foods table-preview-picker">
+
+                    <thead>
+                      <tr>
+                  
+                        <th>
+                          <i data-lucide="box" class="add-row-icon"></i>
                         </th>
-                        <th class="qty-col-food-table">Qty g|ml</th>
-                        <th class="kcal-col-food-table">Kcal</th>
-                        <th class="grams-col-food-table">P g</th>
-                        <th class="grams-col-food-table">C g</th>
-                        <th class="grams-col-food-table">F g</th>
-                        <th class="alloc-col alloc-col-food-table">P %kcal</th>
-                        <th class="alloc-col alloc-col-food-table">C %kcal</th>
-                        <th class="alloc-col alloc-col-food-table">F %kcal</th>
-                    </tr>
-                </thead>
-    
-                <tbody>
-                    <!-- BASE -->
-                    <tr>
+                  
+                        <th>
+                          <i data-lucide="plus" class="add-row-icon"></i>
+                          <i data-lucide="carrot" class="add-row-icon"></i>
+                        </th>
+                  
+                        <th>
+                          <i data-lucide="equal" class="add-row-icon"></i>
+                          <i data-lucide="salad" class="add-row-icon"></i>
+                        </th>
+                  
+                        <th></th> <!-- PPK -->
+                  
+                        <th></th> <!-- ALLOC -->
+                  
+                      </tr>
+                    </thead>
+                  
+                  
+                    <tbody>
+                  
+                      <!-- KCAL -->
+                      <tr>
+                  
+                        <td class="kcal-col">
+                          Kcal
+                        </td>
+                  
+                        <td class="impact-positive">
+                          +<span id="qty-kcal"></span>
+                        </td>
+                  
                         <td>
-                            <p id="preview-name" class="h3-table"></p>
+                          <span id="meal-prev-kcal"></span>
                         </td>
-                        <td>100</td>
-                        <td><span id="base-kcal"></span></td>
-                        <td><span id="base-protein"></span></td>
-                        <td><span id="base-carbs"></span></td>
-                        <td><span id="base-fat"></span></td>
-            
-                        <td class="alloc-cell" id="base-alloc-protein-cell">
-                            <div class="alloc-bar alloc-bar--protein"></div>
-                            <span class="alloc-text" id="base-alloc-protein-text"></span>
-                        </td>
-            
-                        <td class="alloc-cell" id="base-alloc-carbs-cell">
-                            <div class="alloc-bar alloc-bar--carbs"></div>
-                            <span class="alloc-text" id="base-alloc-carbs-text"></span>
-                        </td>
-            
-                        <td class="alloc-cell" id="base-alloc-fat-cell">
-                            <div class="alloc-bar alloc-bar--fat"></div>
-                            <span class="alloc-text" id="base-alloc-fat-text"></span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-
-            <table class="table-foods preview">
-                <thead>
-                    <!-- PREVIEW block-->
-                    <tr>
-                        <th class="food-name-col">
-                            <p class="h3-table2">PREVIEW COMIDA</p>
-                        </th>
-                        <th class="qty-col-food-table">Qty g|ml</th>
-                        <th class="kcal-col-food-table">Kcal</th>
-                        <th class="grams-col-food-table">P g</th>
-                        <th class="grams-col-food-table">C g</th>
-                        <th class="grams-col-food-table">F g</th>
-                        <th class="alloc-col alloc-col-food-table">P %kcal</th>
-                        <th class="alloc-col alloc-col-food-table">C %kcal</th>
-                        <th class="alloc-col alloc-col-food-table">F %kcal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Comida sin Alimento</td>
+                  
                         <td></td>
-                        <td><span id="meal-kcal"></span></td>
-                        <td><span id="meal-protein"></span></td>
-                        <td><span id="meal-carbs"></span></td>
-                        <td><span id="meal-fat"></span></td>
-            
-                        <td class="alloc-cell" id="meal-alloc-protein-cell">
-                            <div class="alloc-bar alloc-bar--protein"></div>
-                            <span class="alloc-text" id="meal-alloc-protein-text"></span>
-                        </td>
-            
-                        <td class="alloc-cell" id="meal-alloc-carbs-cell">
-                            <div class="alloc-bar alloc-bar--carbs"></div>
-                            <span class="alloc-text" id="meal-alloc-carbs-text"></span>
-                        </td>
-            
-                        <td class="alloc-cell" id="meal-alloc-fat-cell">
-                            <div class="alloc-bar alloc-bar--fat"></div>
-                            <span class="alloc-text" id="meal-alloc-fat-text"></span>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td>Aporte Porción</td>
-                        <td class="qty-preview">
-                            <label>
-                            <input
-                                type="number"
-                                id="food-quantity"
-                                value="100"
-                                min="0"
-                            >
-                            </label>
-                        </td>
-            
-                        <td><span id="qty-kcal"></span></td>
-                        <td><span id="qty-protein"></span></td>
-                        <td><span id="qty-carbs"></span></td>
-                        <td><span id="qty-fat"></span></td>
-                        
-                        <td class="alloc-cell" id="qty-alloc-protein-cell">
-                            <div class="alloc-bar alloc-bar--protein"></div>
-                            <span class="alloc-text" id="qty-alloc-protein-text"></span>
-                        </td>
-            
-                        <td class="alloc-cell" id="qty-alloc-carbs-cell">
-                            <div class="alloc-bar alloc-bar--carbs"></div>
-                            <span class="alloc-text" id="qty-alloc-carbs-text"></span>
-                        </td>
-            
-                        <td class="alloc-cell" id="qty-alloc-fat-cell">
-                            <div class="alloc-bar alloc-bar--fat"></div>
-                            <span class="alloc-text" id="qty-alloc-fat-text"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Comida con Alimento</td>
+                  
                         <td></td>
-                        <td><span id="meal-prev-kcal"></span></td>
-                        <td><span id="meal-prev-protein"></span></td>
-                        <td><span id="meal-prev-carbs"></span></td>
-                        <td><span id="meal-prev-fat"></span></td>
-            
-                        <td class="alloc-cell" id="meal-prev-alloc-protein-cell">
-                            <div class="alloc-bar alloc-bar--protein"></div>
-                            <span class="alloc-text" id="meal-prev-alloc-protein-text"></span>
+                  
+                      </tr>
+                  
+                  
+                      <!-- PROTEIN -->
+                      <tr>
+                  
+                        <td class="grams-col">
+                          Protein
                         </td>
-            
-                        <td class="alloc-cell" id="meal-prev-alloc-carbs-cell">
-                            <div class="alloc-bar alloc-bar--carbs"></div>
-                            <span class="alloc-text" id="meal-prev-alloc-carbs-text"></span>
+                  
+                        <td class="impact-positive">
+                          +<span id="qty-protein"></span>g
                         </td>
-            
-                        <td class="alloc-cell" id="meal-prev-alloc-fat-cell">
-                            <div class="alloc-bar alloc-bar--fat"></div>
-                            <span class="alloc-text" id="meal-prev-alloc-fat-text"></span>
+                  
+                        <td>
+                          <span id="meal-prev-protein"></span>g
                         </td>
-                    </tr>
-                    <tr>
+                  
+                        <!-- PPK -->
+                        <td>
+                          <span
+                            class="ppk-inline"
+                            data-role="prev-ppk"
+                          ></span>
+                        </td>
+                  
+                        <!-- ALLOC -->
+                        <td
+                          class="alloc-cell"
+                          id="meal-prev-alloc-protein-cell"
+                        >
+                  
+                          <div class="alloc-bar alloc-bar--protein"></div>
+                  
+                          <span
+                            class="alloc-text"
+                            id="meal-prev-alloc-protein-text"
+                          ></span>
+                  
+                        </td>
+                  
+                      </tr>
+                  
+                  
+                      <!-- CARBS -->
+                      <tr>
+                  
+                        <td class="grams-col">
+                          Carbs
+                        </td>
+                  
+                        <td class="impact-positive">
+                          +<span id="qty-carbs"></span>g
+                        </td>
+                  
+                        <td>
+                          <span id="meal-prev-carbs"></span>g
+                        </td>
+                  
                         <td></td>
+                  
+                        <td
+                          class="alloc-cell"
+                          id="meal-prev-alloc-carbs-cell"
+                        >
+                  
+                          <div class="alloc-bar alloc-bar--carbs"></div>
+                  
+                          <span
+                            class="alloc-text"
+                            id="meal-prev-alloc-carbs-text"
+                          ></span>
+                  
+                        </td>
+                  
+                      </tr>
+                  
+                  
+                      <!-- FAT -->
+                      <tr>
+                  
+                        <td class="grams-col">
+                          Fat
+                        </td>
+                  
+                        <td class="impact-positive">
+                          +<span id="qty-fat"></span>g
+                        </td>
+                  
+                        <td>
+                          <span id="meal-prev-fat"></span>g
+                        </td>
+                  
                         <td></td>
-                        <td></td>
-                        <td><span data-role="prev-ppk">1,6 g/kg</span></td>
-                    </tr>
-                </tbody>
-            </table>
-
+                  
+                        <td
+                          class="alloc-cell"
+                          id="meal-prev-alloc-fat-cell"
+                        >
+                  
+                          <div class="alloc-bar alloc-bar--fat"></div>
+                  
+                          <span
+                            class="alloc-text"
+                            id="meal-prev-alloc-fat-text"
+                          ></span>
+                  
+                        </td>
+                  
+                      </tr>
+                  
+                    </tbody>
+                  
+                  </table>
+  
+            </div>
+  
+          </div>
+  
         </div>
-    
-        <!-- BOTONES =================================== -->
+  
+        <!-- BUTTONS -->
         <div class="actions-row">
-    
-            <!-- 🔵 BOTÓN PARA AGREGAR (ADD MODE) -->
-            <button type="submit" id="btn-add-food" class="btn-add-picker">
-            Add food to meal
-            </button>
-
-            <!-- 🟠 BOTÓN PARA GUARDAR CAMBIOS (EDIT MODE) -->
-            <button type="submit" id="btn-update-food" style="display:none;" class="btn-update-picker">
-            Save changes
-            </button>
-        
-            <!-- ⚪ CANCELAR EDICIÓN -->
-            <button type="button" id="btn-cancel-edit" class="btn-cancel-picker">
-            Cancel
-            </button>
-
-    
+          <button type="button" id="btn-cancel-edit" class="btn-cancel-picker">
+            Cancelar
+          </button>
+          
+          <button type="submit" id="btn-add-food" class="btn-add-picker">
+            Agregar Alimento
+          </button>
+  
+          <button type="submit" id="btn-update-food" style="display:none;" class="btn-update-picker">
+            Guardar Cambios
+          </button>
+  
         </div>
-    
+  
       </div>
-    
+  
     </form>
   
-  </div>
+</div>
   
 
-  <!-- JS DATA -->
-  {% load static %}
-  <script>
-    window.FOOD_PICKER_FOODS = {{ foods_json|safe }};
-    window.FOOD_PICKER_CONTEXT = {{ food_picker_context|safe }};
-  </script>
+<!-- JS DATA -->
+{% load static %}
+<script>
+window.FOOD_PICKER_FOODS = {{ foods_json|safe }};
+window.FOOD_PICKER_CONTEXT = {{ food_picker_context|safe }};
+</script>
 
 
-  <script type="module" src="{% static 'notas/js/food_math.js' %}"></script>
-  <script type="module" src="{% static 'notas/js/food_picker.js' %}"></script>
-  <script type="module" src="{% static 'notas/js/food_preview.js' %}"></script>
+<script type="module" src="{% static 'notas/js/food_math.js' %}"></script>
+<script type="module" src="{% static 'notas/js/food_picker.js' %}"></script>
+<script type="module" src="{% static 'notas/js/food_preview.js' %}"></script>

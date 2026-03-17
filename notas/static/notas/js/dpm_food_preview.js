@@ -48,20 +48,6 @@ export function renderPortion(portion) {
   setAlloc("qty-alloc-fat-cell",     "qty-alloc-fat-text",     alloc.fat);
 }
 
-// -------- MEAL CURRENT
-export function renderMeal(mealTotals) {
-  const alloc = computeAlloc(mealTotals);
-
-  setValue("meal-kcal", mealTotals.total_kcal, 0);
-  setValue("meal-protein", mealTotals.protein, 1);
-  setValue("meal-carbs", mealTotals.carbs, 1);
-  setValue("meal-fat", mealTotals.fat, 1);
-
-  setAlloc("meal-alloc-protein-cell", "meal-alloc-protein-text", alloc.protein);
-  setAlloc("meal-alloc-carbs-cell",   "meal-alloc-carbs-text",   alloc.carbs);
-  setAlloc("meal-alloc-fat-cell",     "meal-alloc-fat-text",     alloc.fat);
-}
-
 // -------- MEAL PREVIEW
 export function renderPreviewTotals(previewTotals) {
   const alloc = computeAlloc(previewTotals);

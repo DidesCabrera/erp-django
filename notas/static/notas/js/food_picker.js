@@ -14,7 +14,6 @@ import {
 import {
   renderBase,
   renderPortion,
-  renderMeal,
   renderPreviewTotals
 } from "./food_preview.js";
 
@@ -140,8 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
       baseMeal = removePortionTotals(ctx.meal.kpis, oldPortion);
     }
 
-    renderMeal(baseMeal);
-
     const previewMeal = previewTotals(baseMeal, newPortion);
 
     const weight = ctx.meal.kpis.weight;
@@ -193,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       if (!selectedFood) return;
 
-      title.textContent = "Edit food";
+      title.textContent = "Edita el Alimento";
       btnAdd.style.display = "none";
       btnUpdate.style.display = "inline-block";
       btnCancel.style.display = "inline-block";
@@ -214,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.mode = "add";
     ctx.editing = null;
 
-    title.textContent = "Add food";
+    title.textContent = "Agrega un Alimento";
     btnAdd.style.display = "inline-block";
     btnUpdate.style.display = "none";
 

@@ -72,7 +72,7 @@
   left: 240px;
   right: 0;
   height: 18px;
-  background: #017fb0;
+  background: #64f58b;
   z-index: 190;
   justify-content: center;
   align-items: center;
@@ -83,8 +83,8 @@
   line-height: 1.2;
   font-size: 11px;
   font-style: italic;
-  font-weight: 500;
-  color: rgb(255, 255, 255);
+  font-weight: 600;
+  color: rgb(0, 0, 0);
 }
 
 .mobile-menu-btn,

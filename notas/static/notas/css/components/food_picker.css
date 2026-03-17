@@ -316,6 +316,20 @@ p.h3-table2{
   align-items: center;
 }
 
+/* activar grid por fila */
+.table-preview-picker.dpm thead tr,
+.table-preview-picker.dpm tbody tr {
+  display: grid;
+  grid-template-columns:
+    55px   /* label (Kcal / Protein etc) */
+    65px     /* Meal */
+    65px     /* Meal */
+    1fr  /* Alloc bar */
+    65px     /* Meal */
+    1fr;  /* Alloc bar */
+  align-items: center;
+}
+
 .card.picker-layout{
   padding: 18px;
   background: rgb(250, 250, 250);

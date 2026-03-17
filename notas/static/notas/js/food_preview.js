@@ -44,23 +44,6 @@ export function renderPortion(portion) {
   document.getElementById("qty-fat").textContent     = portion.fat.toFixed(1);
   document.getElementById("qty-kcal").textContent    = portion.total_kcal.toFixed(0);
 
-  setAlloc("qty-alloc-protein-cell", "qty-alloc-protein-text", alloc.protein);
-  setAlloc("qty-alloc-carbs-cell",   "qty-alloc-carbs-text",   alloc.carbs);
-  setAlloc("qty-alloc-fat-cell",     "qty-alloc-fat-text",     alloc.fat);
-}
-
-// -------- MEAL ACTUAL
-export function renderMeal(mealTotals) {
-  const alloc = computeAlloc(mealTotals);
-
-  document.getElementById("meal-kcal").textContent    = mealTotals.total_kcal.toFixed(0);
-  document.getElementById("meal-protein").textContent = mealTotals.protein.toFixed(1);
-  document.getElementById("meal-carbs").textContent   = mealTotals.carbs.toFixed(1);
-  document.getElementById("meal-fat").textContent     = mealTotals.fat.toFixed(1);
-
-  setAlloc("meal-alloc-protein-cell", "meal-alloc-protein-text", alloc.protein);
-  setAlloc("meal-alloc-carbs-cell",   "meal-alloc-carbs-text",   alloc.carbs);
-  setAlloc("meal-alloc-fat-cell",     "meal-alloc-fat-text",     alloc.fat);
 }
 
 // -------- PREVIEW RESULTANTE
