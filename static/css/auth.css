@@ -1,148 +1,201 @@
 /* =========================
-   BASE / RESET AUTH
+   BASE
    ========================= */
+   /* RESET LAYOUT */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 .auth-body {
     margin: 0;
     min-height: 100vh;
-    background-color: #000;
+  
+    background: #000;
     color: #fff;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
     display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* =========================
-   LAYOUT
-   ========================= */
-
-.auth-wrapper {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;       /* logo arriba, card abajo */
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-}
-
-/* =========================
-   BRAND
-   ========================= */
-
-.brand-auth {
+    align-items: center;      /* centra vertical */
+    justify-content: center;  /* centra horizontal */
+  }
+  
+  
+  /* =========================
+     WRAPPER
+     ========================= */
+  
+     .auth-wrapper {
+        width: 100%;
+        max-width: 420px;
+      
+        padding: 24px 16px;
+      
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+  
+  
+  /* =========================
+     BRAND
+     ========================= */
+  
+  .brand-auth {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-}
-
-.brand-logo {
-    max-width: 120px;
-    padding-left: 5px;
-    margin-bottom: 0.6rem;
-}
-
-.brand-quote {
-    font-size: 0.95rem;
-    opacity: 0.8;
+  }
+  
+  .brand-logo {
+    width: 110px;
+    margin-bottom: 10px;
+  }
+  
+  .brand-quote {
+    font-size: 0.9rem;
+    opacity: 0.75;
     font-style: italic;
-    margin: 6px;
-}
-
-/* =========================
-   CARD
-   ========================= */
-
+  }
+  
+  
+  /* =========================
+     CARD
+     ========================= */
+  
 .auth-card {
-    background-color:   rgb(32, 32, 32);
     width: 100%;
-    max-width: 300px;
-    padding: 40px 32px;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    
+    background: #1a1a1a;
+    
+    padding: 26px 20px;
+    
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
-
-.auth-card h1 {
+  
+  .auth-card h1 {
     text-align: center;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.6rem;
     font-size: 1.4rem;
-}
-
-/* =========================
-   FORM
-   ========================= */
-
-.auth-form {
+  }
+  
+  
+  /* =========================
+     FORM
+     ========================= */
+  
+  .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-}
-
-/* Django form.as_p structure */
-.auth-form p {
+    gap: 18px;
+  }
+  
+  /* Django form.as_p */
+  
+  .auth-form p {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
+    gap: 6px;
     margin: 0;
-}
-
-/* Labels */
-.auth-form label {
+  }
+  
+  .auth-form label {
     font-size: 0.85rem;
-    opacity: 0.85;
+    opacity: 0.8;
     text-align: center;
-}
-
-/* Inputs */
-.auth-form input {
+  }
+  
+  
+  /* INPUTS */
+  
+  .auth-form input {
     width: 100%;
-    max-width: 276px;
-    padding: 10px 12px;
+  
+    padding: 12px 14px;
+  
     border-radius: 8px;
-    border: none;
-    background-color: #1e1e1e;
+    border: 1px solid #2a2a2a;
+  
+    background: #111;
     color: #fff;
+  
     text-align: center;
-}
-
-.auth-form input:focus {
-    outline: 2px solid #444;
-}
-
-/* =========================
-   BUTTON
-   ========================= */
-
-.auth-form button {
-    width: 300px;
-    margin-top: 1rem;
-    padding: 12px 12px;
+    font-size: 14px;
+  }
+  
+  .auth-form input:focus {
+    outline: none;
+    border-color: #444;
+  }
+  
+  
+  /* BUTTON */
+  
+  .auth-form button {
+    width: 100%;
+  
+    margin-top: 10px;
+  
+    padding: 12px;
+  
     border-radius: 10px;
     border: none;
-    background-color: #fff;
+  
+    background: #fff;
     color: #000;
+  
     font-weight: 600;
+    font-size: 14px;
+  
     cursor: pointer;
-}
-
-.auth-form button:hover {
-    background-color: #ddd;
-}
-
-/* =========================
-   FOOTER
-   ========================= */
-
-.auth-footer {
-    margin-top: 1.2rem;
+  }
+  
+  .auth-form button:hover {
+    background: #ddd;
+  }
+  
+  
+  /* =========================
+     FOOTER
+     ========================= */
+  
+  .auth-footer {
+    margin-top: 18px;
     text-align: center;
     font-size: 0.85rem;
-}
-
-.auth-footer a {
+  }
+  
+  .auth-footer a {
     color: #fff;
     text-decoration: underline;
-}
+  }
+  
+  
+  /* =========================
+     TABLET
+     ========================= */
+     @media (min-width: 700px) {
+
+        .auth-body {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+        }
+      
+        .auth-wrapper {
+          max-width: 420px;
+        }
+      
+        .auth-card {
+          padding: 40px 36px;
+        }
+      
+      }

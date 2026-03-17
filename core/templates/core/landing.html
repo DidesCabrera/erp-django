@@ -1,81 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>My Scoope</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>My Scoope</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0f172a;
-            color: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 700px;
-            padding: 2rem;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        p {
-            font-size: 1.2rem;
-            color: #cbd5e1;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .cta {
-            display: inline-block;
-            padding: 0.9rem 2rem;
-            background: #22c55e;
-            color: #0f172a;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: 0.2s ease;
-        }
-
-        .cta:hover {
-            background: #16a34a;
-        }
-
-        .secondary {
-            display: block;
-            margin-top: 1rem;
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 0.95rem;
-        }
-    </style>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}">
 </head>
+
 <body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="logo">My Scoope</div>
+
+      <nav class="nav">
+        <a href="#product">Producto</a>
+        <a href="#how">Cómo funciona</a>
+        <a href="/accounts/login/" class="login">Ingresar</a>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+  
+      <img src="{% static 'img/logo.png' %}" alt="My Scoope" class="hero-logo">
+  
+      <h1>Diseña tu nutrición<br>como un sistema</h1>
+  
+      <p>
+        Construye planes diarios entendiendo exactamente cómo cada alimento
+        impacta tus calorías y macronutrientes.
+      </p>
+  
+      <div class="hero-actions">
+        <a href="/accounts/login/" class="btn-primary">Comenzar</a>
+        <a href="#how" class="btn-secondary">Ver cómo funciona</a>
+      </div>
+  
+    </div>
+  </section>
+
+
+  <!-- PRODUCT PREVIEW -->
+<!-- PRODUCT PREVIEW -->
+<section id="product" class="product">
     <div class="container">
-        <h1>Diseña tu nutrición.</h1>
-        <p>
-            My Scoope te ayuda a crear comidas, medir lo importante
-            y aprender a ajustar tus porciones con claridad.
-            No es una app para depender. Es una herramienta para entender.
+  
+      <h2>Construye tu día visualmente</h2>
+  
+      <p class="section-desc">
+        Agrega alimentos y observa en tiempo real cómo impactan tus macros y calorías.
+      </p>
+  
+      <div class="planner-preview">
+  
+        <div class="planner-header">
+          <span>Plan diario</span>
+          <span class="kcal">2340 kcal</span>
+        </div>
+  
+        <div class="meal">
+  
+          <div class="meal-title">Desayuno</div>
+  
+          <div class="food-row">
+            <span>Huevos (3)</span>
+            <span>210 kcal</span>
+          </div>
+  
+          <div class="food-row">
+            <span>Avena (80 g)</span>
+            <span>300 kcal</span>
+          </div>
+  
+          <div class="food-row">
+            <span>Plátano</span>
+            <span>110 kcal</span>
+          </div>
+  
+        </div>
+  
+        <div class="meal">
+  
+          <div class="meal-title">Almuerzo</div>
+  
+          <div class="food-row">
+            <span>Pollo (200 g)</span>
+            <span>330 kcal</span>
+          </div>
+  
+          <div class="food-row">
+            <span>Arroz (150 g)</span>
+            <span>180 kcal</span>
+          </div>
+  
+          <div class="food-row">
+            <span>Aceite de oliva</span>
+            <span>120 kcal</span>
+          </div>
+  
+        </div>
+  
+        <div class="macros">
+  
+          <div class="macro">
+            <span>Proteína</span>
+            <strong>165 g</strong>
+          </div>
+  
+          <div class="macro">
+            <span>Carbohidratos</span>
+            <strong>220 g</strong>
+          </div>
+  
+          <div class="macro">
+            <span>Grasa</span>
+            <strong>70 g</strong>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  </section>
+
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="how">
+    <div class="container">
+
+      <h2>Cómo funciona</h2>
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Crea tus comidas</h3>
+          <p>Define desayuno, almuerzo, cena o snacks dentro del día.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Agrega alimentos</h3>
+          <p>Selecciona alimentos y ajusta sus porciones.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Observa el impacto</h3>
+          <p>Las calorías y macros se actualizan automáticamente.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Ajusta tu día</h3>
+          <p>Refina tu plan hasta alcanzar tu objetivo nutricional.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- EXAMPLE PLAN -->
+  <section class="example">
+    <div class="container example-inner">
+
+      <div class="example-text">
+
+        <h2>Ejemplo de plan diario</h2>
+
+        <p class="section-desc">
+          Un día construido con alimentos simples y balance nutricional claro.
         </p>
 
-        <a href="/accounts/login/" class="cta">
-            Crear mi primera comida
-        </a>
+        <ul class="plan">
+          <li><strong>Desayuno</strong> — Huevos, Avena, Plátano</li>
+          <li><strong>Almuerzo</strong> — Pollo, Arroz, Aceite de oliva</li>
+          <li><strong>Cena</strong> — Salmón, Papas, Verduras</li>
+        </ul>
 
-        <a href="/accounts/login/" class="secondary">
-            Ya tengo cuenta
-        </a>
+        <div class="macro-box">
+          <p>Proteína: 165 g</p>
+          <p>Carbohidratos: 220 g</p>
+          <p>Grasa: 70 g</p>
+          <p>Calorías: 2340 kcal</p>
+        </div>
+
+      </div>
+
+      <div class="plan-shot">
+        <!-- Screenshot ejemplo plan -->
+        <div class="mock">Captura del plan</div>
+      </div>
+
     </div>
+  </section>
+
+
+  <!-- PHILOSOPHY -->
+  <section class="philosophy">
+    <div class="container philosophy-inner">
+
+      <h2>La nutrición es comprensión</h2>
+
+      <p>
+        My Scoope no está diseñado para que dependas de una aplicación.
+        Su propósito es ayudarte a entender cómo funcionan los alimentos,
+        para que puedas construir tu propio sistema nutricional.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container cta-inner">
+
+      <h2>Empieza a construir tu sistema nutricional</h2>
+      <p>Crea tu primer plan diario en minutos.</p>
+
+      <a href="/accounts/login/" class="btn-primary">Comenzar ahora</a>
+
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© My Scoope</p>
+    </div>
+  </footer>
+
 </body>
 </html>
