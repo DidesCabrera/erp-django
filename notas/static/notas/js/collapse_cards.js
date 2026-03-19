@@ -1,14 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
 
   const globalBtn = document.getElementById("collapse-list-btn");
+
   const allTables = document.querySelectorAll(".card-table-foods");
+  const allAggregations = document.querySelectorAll(".card-foods-aggregation");
+
+  const allCollapsables = [
+    ...allTables,
+    ...allAggregations
+  ];
 
   let allCollapsed = true;
 
-  /* estado inicial: TODO colapsado */
-  allTables.forEach((table) => {
-    table.classList.add("is-collapsed");
+  /* ============================
+     INITIAL STATE
+     ============================ */
+
+  allCollapsables.forEach((el) => {
+    el.classList.add("is-collapsed");
   });
+
+  /* ============================
+     GLOBAL BUTTON
+     ============================ */
 
   if (globalBtn) {
 
@@ -16,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       allCollapsed = !allCollapsed;
 
-      allTables.forEach((table) => {
-        table.classList.toggle("is-collapsed", allCollapsed);
+      allCollapsables.forEach((el) => {
+        el.classList.toggle("is-collapsed", allCollapsed);
       });
 
       const iconName = allCollapsed
@@ -40,16 +54,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.addEventListener("click", function (e) {
 
-    const btn = e.target.closest(".btn-desplegar-tabla");
-    if (!btn) return;
+    /* TABLA NUTRICIONAL */
+    const btnTabla = e.target.closest(".btn-desplegar-tabla");
 
-    const card = btn.closest(".card");
-    if (!card) return;
+    if (btnTabla) {
 
-    const table = card.querySelector(".card-table-foods");
-    if (!table) return;
+      const card = btnTabla.closest(".card");
+      if (!card) return;
 
-    table.classList.toggle("is-collapsed");
+      const table = card.querySelector(".card-table-foods");
+      if (!table) return;
+
+      table.classList.toggle("is-collapsed");
+
+    }
+
+    /* LISTA DE ALIMENTOS */
+    const btnMenu = e.target.closest(".btn-desplegar-menu");
+
+    if (btnMenu) {
+
+      const card = btnMenu.closest(".card");
+      if (!card) return;
+
+      const aggregation = card.querySelector(".card-foods-aggregation");
+      if (!aggregation) return;
+
+      aggregation.classList.toggle("is-collapsed");
+
+    }
 
   });
 

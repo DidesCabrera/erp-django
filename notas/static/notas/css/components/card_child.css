@@ -15,7 +15,6 @@
 .card-main {
   display: flex;
   width: 100%;
-  margin-bottom: 14px;
 }
 
 .card-kpi {
@@ -38,7 +37,7 @@ BOTTOM
 .card-bottom {
   display: flex; /*justify-content: space-between; /* magia aquí */
   align-items: center; 
-  margin: 14px 0 16px 0;
+  margin: 18px 0 18px 0;
 }
 
 .card-actions {
@@ -50,7 +49,8 @@ BOTTOM
   ============================ */
 
 /* Estado por defecto: EXPANDIDO */
-.card-table-foods {
+.card-table-foods,
+.card-foods-aggregation {
   max-height: 800px;
   overflow: hidden;
   opacity: 1;
@@ -58,13 +58,15 @@ BOTTOM
   transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
 }
 
+
+
 /* Estado COLAPSADO */
-.card-table-foods.is-collapsed {
+.card-table-foods.is-collapsed,
+.card-foods-aggregation.is-collapsed {
   max-height: 0;
   opacity: 0;
   padding-bottom: 0;
 }
-
 
 
 
@@ -81,6 +83,7 @@ BOTTOM
   .card-main {
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 10px;
   }
 
   .card-kpi {

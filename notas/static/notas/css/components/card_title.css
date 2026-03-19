@@ -131,13 +131,15 @@
   align-self: flex-start;
 }
 
-.btn-desplegar-tabla {
+.btn-desplegar-tabla,
+.btn-desplegar-menu {
   display: flex;
   align-items: center;
   gap: 4px;            /* espacio entre texto e icono */
 }
 
-.btn-desplegar-tabla p{
+.btn-desplegar-tabla p,
+.btn-desplegar-menu p{
   margin: 0;
 }
 
