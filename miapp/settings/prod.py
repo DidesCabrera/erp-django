@@ -8,3 +8,5 @@ ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS",
     "www.myscoope.com,myscoope.com,my-scoope.onrender.com"
 ).split(",")
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
