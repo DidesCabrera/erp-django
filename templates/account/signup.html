@@ -1,64 +1,85 @@
-{% load socialaccount static %}
+{% load static socialaccount %}
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crear cuenta</title>
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crear cuenta</title>
+
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
 </head>
 
 <body class="auth-body">
 
-<div class="auth-card">
-    <img class="auth-logo" src="{% static 'img/logo_negro.png' %}">
-<h1 class="auth-title">Crear cuenta</h1>
+    <div class="auth-card">
 
-<a class="btn-google"
-href="{% provider_login_url 'google' %}">
-Continuar con Google
-</a>
+        <img
+            class="auth-logo"
+            src="{% static 'img/logo_negro.png' %}"
+        >
 
-<div class="divider">
-<span>o</span>
-</div>
+        <h1 class="auth-title">
+            Crear cuenta
+        </h1>
 
-<form method="post" class="auth-form">
-{% csrf_token %}
+        <a
+            class="btn-google"
+            href="{% provider_login_url 'google' %}"
+        >
+            Continuar con Google
+        </a>
 
-<input
-type="email"
-name="email"
-placeholder="Email"
-required>
+        <div class="divider">
+            <span>o</span>
+        </div>
 
-<input
-type="password"
-name="password1"
-placeholder="Password"
-required>
+        <form
+            method="post"
+            class="auth-form"
+        >
+            {% csrf_token %}
 
-<input
-type="password"
-name="password2"
-placeholder="Confirm password"
-required>
+            <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                required
+            >
 
-<button type="submit">
-Crear cuenta
-</button>
+            <input
+                type="password"
+                name="password1"
+                placeholder="Password"
+                required
+            >
 
-</form>
+            <input
+                type="password"
+                name="password2"
+                placeholder="Confirm password"
+                required
+            >
 
-<p class="auth-links">
-¿Ya tienes cuenta?
-<a href="{% url 'account_login' %}">
-Iniciar sesión
-</a>
-</p>
+            <button type="submit">
+                Crear cuenta
+            </button>
 
-</div>
+        </form>
+
+        <p class="auth-links">
+
+            ¿Ya tienes cuenta?
+
+            <a href="{% url 'account_login' %}">
+                Iniciar sesión
+            </a>
+
+        </p>
+
+    </div>
 
 </body>
+
 </html>
