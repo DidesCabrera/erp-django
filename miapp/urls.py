@@ -8,7 +8,6 @@ urlpatterns = [
     path("", include("core.urls")),
 
     # Auth system
-    path("auth/", include("accounts.urls")),
     path("accounts/", include("allauth.urls")),
 
     # Main app
