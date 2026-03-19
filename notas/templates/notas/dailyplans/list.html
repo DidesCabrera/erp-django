@@ -9,7 +9,7 @@
     <h2>{{ vm.ui.title }}</h2>
   </div>
       {% for child in vm.content.child_cards %}
-        {% include "components/card_child_dailyplan.html" with child_card=child %}
+        {% include "components//card_child_dailyplan.html" with child_card=child %}
       {% empty %}
       <div>
         <p>No tienes planes diarios aun, puedes explorar Planes de otros usuarios, o crear un nuevo Plan Diario </p>

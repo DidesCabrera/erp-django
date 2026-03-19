@@ -31,9 +31,10 @@
 
 
     <!-- METADATA ========================================= -->
-    <div class="card-bottom"> 
+    <div class="card-bottom main"> 
+        <h3>Creador de esta comida</h3>
         <div class="card-metadata">
-            {% include "components/metadata.html" with metadata=main_card.metadata %}
+            {% include "components//card_child_metadata.html" with metadata=main_card.metadata %}
         </div>
     </div>
 

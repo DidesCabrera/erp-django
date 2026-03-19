@@ -5,7 +5,7 @@
     <div class="card-main">
       <!-- TITULO ===================== -->
         <div class="card-title">
-          {% include "components/card_child_title.html" with titulo=child_card.titulo %}
+          {% include "components//card_child_title.html" with titulo=child_card.titulo %}
         </div>    
         
       <!-- KPI ======================== -->
@@ -15,36 +15,34 @@
     </div>
 
     <div class="block-desplegar-tabla block-card-desplegar">
-      <div class="btn-desplegar-menu">
-        <p>Alimentos</p>
+
+      <div class="btn-desplegar" data-target=".card-menu">
+        <p>Menú</p>
         <i data-lucide="chevron-right" class="sidebar-icon"></i>
       </div>
-      <div class="btn-desplegar-tabla">
+    
+      <div class="btn-desplegar" data-target=".card-table-foods">
         <p>Tabla Nutricional</p>
         <i data-lucide="chevron-right" class="sidebar-icon"></i>
       </div>
+    
     </div>
-
-  
-  <!-- FOODS TABLE ========================================= -->
-  <!-- ===================================================== -->
+    
+    
+    <div class="card-menu">
+      {% include "components/card_child_menu.html" with menu=child_card.menu %}
+    </div>
+    
     <div class="card-table-foods">
       {% include "components/table_meals.html" with items=child_card.table.items %}
     </div>
-  
-  <!-- FOODS LIST ========================================= -->
-  <!-- ===================================================== -->
-  <div class="card-foods-aggregation">
-    {% include "components/card_foods_aggregation.html" with foods=child_card.foods_aggregation %}
-  </div>
-
   
   <!-- BOTTOM SECTION ====================================== -->
   <!-- ===================================================== -->
     <div class="card-bottom">
       <!-- METADATA ===================== -->
         <div class="card-metadata">
-          {% include "components/metadata.html" with metadata=child_card.metadata %}
+          {% include "components//card_child_metadata.html" with metadata=child_card.metadata %}
         </div>
   
       <!-- ACTIONS ====================== -->

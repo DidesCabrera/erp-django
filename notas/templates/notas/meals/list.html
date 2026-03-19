@@ -12,7 +12,7 @@
   </div>
   
   {% for child in vm.content.child_cards %}
-    {% include "components/card_child_meal.html" with child_card=child %}
+    {% include "components//card_child_meal.html" with child_card=child %}
   {% empty %}
     <p>No meals yet.</p>
   {% endfor %}

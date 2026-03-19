@@ -79,31 +79,6 @@
   font-weight: 700;
 }
 
-/* kcal fija derecha */
-.alloc-sub {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  font-weight: 300;
-  font-style: italic;
-  font-size: 12px;
-  opacity: 0.75;
-
-  z-index: 3;
-}
-
-/* ======================================= */
-/* ======================================= */
-/* ======================================= */
-
-@media (max-width: 768px) {
-
-  .alloc-sub {
-    display: none;
-  }
-}
 
 
 

@@ -12,17 +12,6 @@ class FoodsAggregationUI:
     foods_aggregation: List[Dict[str, Any]]
 
 
-@dataclass
-class MenuMealUI:
-    meal_name: str
-    foods: List[str]
-
-
-@dataclass
-class MenuUI:
-    meals: List[MenuMealUI]
-
-
 # notas/viewmodels/list_vm.py (o donde tengas los UI models)
 @dataclass
 class StructuralIndicatorsUI:
@@ -87,7 +76,6 @@ class ChildCardUI:
     titulo: TitleUI
     kpis: KPIUI
     table: dict
-    menu: MenuUI
     foods_aggregation: FoodsAggregationUI
     metadata: MetadataUI
     actions: list

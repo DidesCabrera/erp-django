@@ -1,0 +1,72 @@
+/* =========================
+   MENU CONTAINER
+   ========================= */
+
+   .menu {
+    display: flex;
+    flex-direction: column;
+    background: rgb(250, 250, 250);
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 12px;
+    border: 1px solid var(--color-border-2);
+}
+  
+  
+  /* =========================
+     ROW
+     ========================= */
+  
+  .menu-row {
+    display: grid;
+    grid-template-columns: 110px 16px 1fr;
+  
+    align-items: start;   /* 👈 alineación superior */
+  
+    gap: 6px;
+  
+    padding: 6px 0px;
+  
+    border-bottom: 1px solid #efefef;
+
+  }
+  
+  
+  /* quitar linea en ultimo item */
+  
+  .menu-row:last-child {
+    border-bottom: none;
+  }
+  
+  
+  /* =========================
+     MEAL NAME
+     ========================= */
+  
+  .menu-meal-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #37352f;
+  }
+  
+  
+  /* =========================
+     ARROW
+     ========================= */
+  
+  .menu-arrow {
+    font-size: 12px;
+    color: #b3b3b1;
+    text-align: center;
+  }
+  
+  
+  /* =========================
+     FOODS
+     ========================= */
+  
+  .menu-foods {
+    font-size: 13px;
+    color: #787774;
+    line-height: 1.5;
+  } 

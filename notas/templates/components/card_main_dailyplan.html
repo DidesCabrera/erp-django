@@ -21,7 +21,7 @@
 
     <!-- TABLE ========================================= -->
         <div class="page-detail">
-            <h3>Comidas en este Plan Diario</h3>
+            <h3>Comidas en este Plan</h3>
             <div class="card-table-meals">
             {% include "components/table_meals.html" with items=main_card.table.items %}
             </div>
@@ -32,9 +32,10 @@
     <!-- BOTTOM SECTION ====================================== -->
 
         <!-- METADATA ========================================= -->
-        <div class="card-bottom"> 
+        <div class="card-bottom main"> 
+            <h3>Creador de este Plan</h3>
             <div class="card-metadata main">
-                {% include "components/metadata.html" with metadata=main_card.metadata %}
+                {% include "components//card_child_metadata.html" with metadata=main_card.metadata %}
             </div>
         </div>
 

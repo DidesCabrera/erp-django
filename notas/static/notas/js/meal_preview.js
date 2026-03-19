@@ -16,14 +16,17 @@ function resolveScoped(container, scope, role, fallbackId) {
 
 function setAlloc(container, scope, role, textRole, fallbackCellId, fallbackTextId, value) {
 
-  const cell = resolveScoped(container, scope, role, fallbackCellId);
-  const text = resolveScoped(container, scope, textRole, fallbackTextId);
-
-  if (!cell || !text) return;
-
-  cell.style.setProperty("--alloc", value.toFixed(0));
-  text.textContent = value.toFixed(0) + "%";
-}
+    const cell = resolveScoped(container, scope, role, fallbackCellId);
+    const text = resolveScoped(container, scope, textRole, fallbackTextId);
+  
+    if (cell) {
+        cell.style.setProperty("--alloc", value.toFixed(0));
+    }
+  
+    if (text) {
+        text.textContent = value.toFixed(0) + "%";
+    }
+  }
 
 
 // ======================================================
@@ -47,7 +50,7 @@ export function renderSelectedMeal(container, meal) {
   resolveScoped(container, "meal-preview", "meal-fat", "dp-meal-fat").textContent =
       meal.fat.toFixed(1);
 
-
+ 
   const alloc = meal.alloc;
 
   setAlloc(container, "meal-preview", "alloc-protein", "alloc-protein-text",

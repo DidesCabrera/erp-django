@@ -7,13 +7,13 @@
     padding: 0;
     height: 18px;
     width: 18px;
-    stroke-width: 1.5;
+    stroke-width: 2;
     flex-shrink: 0;
     color: rgb(60, 60, 60);
 }
 
 .metadata p{
-    font-size: 12px;
+    font-size: 14px;
     margin-left: 5px;
     margin-top: 0;
     margin-bottom: 0;
@@ -29,5 +29,6 @@
 }
 
 .card-metadata.main{
+    padding-top: 12px;
     margin-bottom: 15px;
 }

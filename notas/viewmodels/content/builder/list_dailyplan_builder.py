@@ -6,6 +6,7 @@ from notas.viewmodels.content.builder.builder_table_items import build_dailyplan
 from notas.actions.constants import ALLOC_PCT_OUTSIDE_THRESHOLD
 
 from notas.viewmodels.content.builder.builder_foods_aggregation import  build_dailyplan_foods_aggregation
+from notas.viewmodels.content.builder.builder_menu import build_dailyplan_menu
 
 from notas.viewmodels.content.registry import CONTENT_ICON_REGISTRY
 
@@ -51,8 +52,10 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
             build_dailyplanmeal_table_item(dpm)
             for dpm in dailyplan_meals
         ]
-
+        
+        menu = build_dailyplan_menu(dailyplan_meals)
         foods_aggregation = build_dailyplan_foods_aggregation(dailyplan_meals)
+
 
         # ==================================================
         # Actions & Share (if exists)
@@ -125,6 +128,8 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
             ),
 
             table={"items": dailyplan_meals_table_items},
+
+            menu=menu,
 
             foods_aggregation=foods_aggregation,
 

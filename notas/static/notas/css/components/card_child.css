@@ -40,6 +40,10 @@ BOTTOM
   margin: 18px 0 18px 0;
 }
 
+.card-bottom.main {
+  display: inline
+}
+
 .card-actions {
   margin-left: auto;
 }
@@ -50,7 +54,8 @@ BOTTOM
 
 /* Estado por defecto: EXPANDIDO */
 .card-table-foods,
-.card-foods-aggregation {
+.card-foods-aggregation,
+.card-menu {
   max-height: 800px;
   overflow: hidden;
   opacity: 1;
@@ -59,10 +64,10 @@ BOTTOM
 }
 
 
-
 /* Estado COLAPSADO */
 .card-table-foods.is-collapsed,
-.card-foods-aggregation.is-collapsed {
+.card-foods-aggregation.is-collapsed,
+.card-menu.is-collapsed {
   max-height: 0;
   opacity: 0;
   padding-bottom: 0;
@@ -90,7 +95,6 @@ BOTTOM
     width: 100%;
     padding-left: 0px;
     border: none;
-    
   }
 
   .hide-mobile {

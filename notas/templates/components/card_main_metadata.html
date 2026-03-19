@@ -1,0 +1,22 @@
+{# components/card_main_metadata.html #}
+
+<!-- MAIN-CARD 
+<div class="metadata">
+    <p>Editor: {{ item.obj.created_by.username }}  |  {{ item.obj.created_at|date:"d/m/Y" }}</p>
+    {% if item.obj.forked_from %}
+        <p>Forked from:{{ item.obj.forked_from.name }}(by {{ item.obj.forked_from.created_by.username }})</p>
+    {% endif %}
+    <p>{% if item.obj.is_public %}Public{% else %}Private{% endif %}  |  
+    Forkable: {{ item.obj.is_forkable|yesno:"Yes,No" }}  |  
+    Copiable: {{ item.obj.is_copiable|yesno:"Yes,No" }}</p>
+</div>
+======================================-->
+
+<h1>{{ titulo.name }}</h1>
+
+<div class="metadata">
+    <i data-lucide="circle-user-round" class="metadata-icon"></i>
+    <p>Creador: {{ metadata.owner }}</p>
+</div>
+
+

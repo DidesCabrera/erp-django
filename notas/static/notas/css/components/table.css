@@ -8,11 +8,11 @@ table {
 thead th {
   text-align: center;
   font-weight: 500;
-  padding: 6px 8px;
+  padding: 10px 8px 8px 8px;
 }
 
 tbody td {
-  padding: 6px 8px;
+  padding: 7px 8px;
   color: rgb(20, 20, 20);
   text-align: center;
   vertical-align: middle;
@@ -246,7 +246,7 @@ table tr:last-child {
   width: 150px;
   max-width: 150px;
   height: 9px;
-  padding-left: 8px;  
+  padding-left: 12px;  
 }
 
 .alloc-col-food-table {

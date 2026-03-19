@@ -200,12 +200,12 @@ class Meal(models.Model):
         Categoría lógica de la meal.
         """
         if self.is_dpm_instance:
-            return "#instance"
+            return "en plan"
 
         if self.forked_from:
-            return "#duplicado"
+            return "duplicada"
 
-        return "#original"
+        return "original"
 
     # ---- gramos ----
 
@@ -434,12 +434,12 @@ class DailyPlan(models.Model):
         """Categoría lógica del DailyPlan."""
         # FUTURO: instancia dentro de programa
         if hasattr(self, "programdailyplan_set") and self.programdailyplan_set.exists():
-            return "#instance"
+            return "en plan"
 
         if self.forked_from:
-            return "#duplicado"
+            return "duplicado"
 
-        return "#original"
+        return "original"
 
 
     @property

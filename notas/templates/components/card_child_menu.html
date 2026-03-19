@@ -1,0 +1,24 @@
+
+<div class="menu">
+    <p class="title-card-block">Menu</p>
+    {% for meal in menu.meals %}
+  
+      <div class="menu-row">
+  
+        <div class="menu-meal-name">
+          {{ meal.meal_name }}
+        </div>
+  
+        <div class="menu-arrow">
+          →
+        </div>
+  
+        <div class="menu-foods">
+          {{ meal.foods|join:" · " }}
+        </div>
+  
+      </div>
+  
+    {% endfor %}
+  
+  </div>
