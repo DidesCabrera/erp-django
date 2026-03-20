@@ -1,6 +1,5 @@
 .dpm-mini-card-list{
     margin-top: 36px;
-    margin-bottom: 10px;
 }
 
 
@@ -9,13 +8,12 @@
     flex-direction: row;
     gap: 0px;
     justify-content: space-between;
-    padding: 1px 12px 1px 10px;
+    padding: 1px 16px 1px 14px;
     margin-top: 10px; /*48*/
-    margin-bottom: 4px;
-    background-color: rgb(56, 120, 134);
+    background-color: var(--color-dailyplan);
     color: rgb(255, 255, 255);
     font-weight: 600;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
 }
 
 .card-mini-dpm p{
@@ -97,7 +95,10 @@
         height: 14px;
         margin-top: 3px;
         margin-bottom: 2px;
+        justify-content: center;
     }
+
+
 
     .card-mini-dpm p{
         padding: 2px;
@@ -107,6 +108,8 @@
 
     .alloc-block-card-mini{
         width:100%;
+        padding-left: 10px;
+        padding-right: 10px;
         grid-template-columns: 1fr 1fr 1fr auto;
     }
     

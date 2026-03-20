@@ -8,6 +8,12 @@
   padding: 17px 22px 0px 22px;
   margin-bottom: 24px;
 }
+
+.card.dpm_meal{
+  border-radius: 0 0 14px 14px;
+  border-width: 0 1px 1px 1px;
+}
+
 /* =========================
    MAIN
    ========================= */

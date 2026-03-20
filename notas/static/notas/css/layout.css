@@ -50,7 +50,7 @@ header {
 
 .sidebar {
     width: 240px;
-    background-color: rgb(28, 28, 28);
+    background-color: rgb(19, 19, 19);
     color: white;
     padding-left: 4px;
     padding-right: 10px;
@@ -76,7 +76,7 @@ header {
 .sidebar .nav-tab {
   display: flex;
   align-items: flex-start;
-  padding: 4px 12px;
+  padding: 4px 12px 4px 32px;
   border-radius: 6px;
   color: white;
 }
@@ -109,7 +109,7 @@ header {
 
   .sidebar-main {
     width: 100%;
-    padding: 4px 12px;
+    padding: 6px 12px;
     background: none;
     border: none;
     color: white;
@@ -156,7 +156,7 @@ header {
     display: block;             /* 🔥 elimina baseline inline */
     flex-shrink: 0;
     transition: transform 0.2s ease;
-    stroke-width: 3;
+    stroke-width: 2;
   }
     
 .nab-tab2 {
@@ -335,6 +335,7 @@ header {
       transform: translateX(-100%);
       transition: transform 0.25s ease;
       width: 300px;
+      border-radius: 0 14px 14px 0;
     }
   
     body.sidebar-open .sidebar {
@@ -378,7 +379,7 @@ header {
   
     transition: opacity 0.2s ease;
   
-    z-index: 25;
+    z-index: 299;
   
   }
   

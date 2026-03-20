@@ -26,7 +26,7 @@
       <div class="dpm-mini-card-list">
         {% include "components/card_mini_dpm.html" with child=child %}
       </div>
-        {% include "components//card_child_meal.html" with child_card=child %}
+        {% include "components//card_child_meal.html" with child_card=child dpm_meal="dpm_meal"%}
       {% empty %}
         <p>No meals added yet.</p>
       {% endfor %}
