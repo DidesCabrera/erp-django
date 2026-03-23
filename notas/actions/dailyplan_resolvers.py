@@ -152,7 +152,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "remove": {
         "label": "Remover",
         "method": "post",
-        "group": "overflow",
+        "group": "primary",
         "icon": "trash-2",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
@@ -277,6 +277,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     
     # PERSONAL
     DAILYPLAN_VIEWMODE_PERSONAL_LIST: [
+        "remove",
         "detail",
         #"share",
     ],
@@ -286,6 +287,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
         "back_to_list",
         "edit",
         "fork",
+        "remove",
     ],
 
     DAILYPLAN_VIEWMODE_PERSONAL_EDIT: [

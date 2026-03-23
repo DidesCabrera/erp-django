@@ -16,21 +16,13 @@
     margin-bottom: 0;
 }
 
-.page-icon{
-    height: 24px;
-    width: 24px;
-    color: rgb(25, 25, 25);
-    stroke-width: 2.5;
-    flex-shrink: 0;
-}
-
 .page {
 /*    max-width: 882px;
     margin: 0 auto; */
     width: 100%;
     max-width: 840px;
     margin: 0 auto;
-    margin-top: 16px;
+    margin-top: 14px;
     padding: 0px;
     border-radius: 14px;
 }
@@ -43,17 +35,24 @@
     background-color: white;
 }
 
-.page--detail.dpm{
-    margin-top: 8px;
+.page--detail.edit{
+    margin-top: 32px;
+}
+
+.page--detail.dpm_meal{
+    border-radius: 0 0 14px 14px;
+    margin-top: 0;
+    border-width: 0 1px 1px 1px;
 }
 
 
 .page--minicard{
     max-width: 900px;
     margin: 0 auto;
+    margin-top: 14px;
 }
 
-.page--detail.edit{
+.page--minicard.edit {
     margin-top: 32px;
 }
 
@@ -84,6 +83,10 @@
     .card-title {
       width: 100%;
       margin-bottom: 6px;
+    }
+
+    .list-page-title{
+        display: none;
     }
   
   }

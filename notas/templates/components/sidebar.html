@@ -44,6 +44,51 @@
     <nav class="sidebar-nav">
 
         <p class="group-name-sidebar">Workspace</p>   
+
+        <!-- MI LIBRERIA ==========================-->
+        <div class="sidebar-group">    
+    
+            <button type="button" class="sidebar-main">
+                <span class="sidebar-left">
+                    <i data-lucide="chevron-right" class="sidebar-icon"></i>
+                    <i data-lucide="bookmark" class="sidebar-main-icon"></i>
+                    <span class="sidebar-label">Mi Libreria</span>
+                </span>                    
+            </button>
+
+            
+            <div class="sidebar-sub">
+
+                <a href="{% url 'dailyplan_list' %}"
+                    class="nav-tab nav-tab--personal tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "personal" %}is-active{% endif %}">
+                    <i data-lucide="clipboard-list" class="sidebar-leading-icon"></i>
+                    <span class="nav-text">
+                        Mis Planes Diarios
+                        <span class="nav-indicator"></span>
+                    </span>    
+                </a>
+
+                <a href="{% url 'meal_list' %}"
+                    class="nav-tab nav-tab--meal-personal tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "personal" %}is-active{% endif %}">
+                    <i data-lucide="salad" class="sidebar-leading-icon"></i>
+                    <span class="nav-text">
+                        Mis Comidas
+                        <span class="nav-indicator"></span>
+                    </span>
+                </a>
+
+                <a href="{% url 'food_list' %}"
+                    class="nav-tab nav-tab--food-personal tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "personal" %}is-active{% endif %}">
+                    <i data-lucide="carrot" class="sidebar-leading-icon"></i>
+                    <span class="nav-text">
+                        Mis Alimentos 
+                        <span class="nav-indicator"></span>
+                    </span>
+                </a>
+
+            </div>
+        </div>
+
         <!-- CREAR ==========================-->
         <div class="sidebar-group">
 
@@ -93,50 +138,6 @@
                     </span>
                 </a>
 
-
-            </div>
-        </div>
-
-        <!-- MI LIBRERIA ==========================-->
-        <div class="sidebar-group">    
-            
-            <button type="button" class="sidebar-main">
-                <span class="sidebar-left">
-                    <i data-lucide="chevron-right" class="sidebar-icon"></i>
-                    <i data-lucide="bookmark" class="sidebar-main-icon"></i>
-                    <span class="sidebar-label">Mi Libreria</span>
-                </span>                    
-            </button>
-
-            
-            <div class="sidebar-sub">
-
-                <a href="{% url 'dailyplan_list' %}"
-                    class="nav-tab nav-tab--personal tab-list {% if vm.ui.nav_root == "dailyplan" and vm.ui.scope == "personal" %}is-active{% endif %}">
-                    <i data-lucide="clipboard-list" class="sidebar-leading-icon"></i>
-                    <span class="nav-text">
-                        Mis Planes Diarios
-                        <span class="nav-indicator"></span>
-                    </span>    
-                </a>
-
-                <a href="{% url 'meal_list' %}"
-                    class="nav-tab nav-tab--meal-personal tab-list {% if vm.ui.nav_root == "meal" and vm.ui.scope == "personal" %}is-active{% endif %}">
-                    <i data-lucide="salad" class="sidebar-leading-icon"></i>
-                    <span class="nav-text">
-                        Mis Comidas
-                        <span class="nav-indicator"></span>
-                    </span>
-                </a>
-
-                <a href="{% url 'food_list' %}"
-                    class="nav-tab nav-tab--food-personal tab-list {% if vm.ui.nav_root == "food" and vm.ui.scope == "personal" %}is-active{% endif %}">
-                    <i data-lucide="carrot" class="sidebar-leading-icon"></i>
-                    <span class="nav-text">
-                        Mis Alimentos 
-                        <span class="nav-indicator"></span>
-                    </span>
-                </a>
 
             </div>
         </div>

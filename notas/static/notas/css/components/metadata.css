@@ -3,15 +3,6 @@
     align-items: center;
 }
 
-.metadata-icon{
-    padding: 0;
-    height: 18px;
-    width: 18px;
-    stroke-width: 2;
-    flex-shrink: 0;
-    color: rgb(60, 60, 60);
-}
-
 .metadata p{
     font-size: 14px;
     margin-left: 5px;

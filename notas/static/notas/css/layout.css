@@ -150,59 +150,18 @@ header {
     font-weight: 500;
   }
 
-  .sidebar-icon {
-    width: 16px;
-    height: 16px;
-    display: block;             /* 🔥 elimina baseline inline */
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-    stroke-width: 2;
-  }
+
     
 .nab-tab2 {
     font-size: 14px;    
 }
-
-  .profile-icon {
-    height: 20px;
-    width: 20px;
-    flex-shrink: 0;
-    color: white;
-    stroke-width: 1.5;  
-  }
   
 
-  .sidebar-group.is-open .sidebar-icon {
-    transform: rotate(90deg);
-  }
+
 
   .sidebar-divider {
     border-top: 1px solid rgb(255, 255, 255, 0.12);
     margin: 10px 0;
-  }
-
-
-  .sidebar-leading-icon {
-    width: 18px;
-    height: 18px;
-    padding-bottom: 2px;
-    margin-right: 4px;
-    stroke-width: 1.5;
-  }
-
-  .sidebar-main-icon {
-    width: 20px;
-    height: 20px;
-    padding-bottom: 2px;
-    margin-right: 0px;
-    stroke-width: 2;
-  }
-
-  .label-icon{
-    width: 14px;
-    height: 14px;
-    margin-right: 0px;
-    stroke-width: 2;
   }
 
 
@@ -335,7 +294,6 @@ header {
       transform: translateX(-100%);
       transition: transform 0.25s ease;
       width: 300px;
-      border-radius: 0 14px 14px 0;
     }
   
     body.sidebar-open .sidebar {
@@ -350,19 +308,6 @@ header {
     .nav-tab.tab-list .nav-text,
     .sidebar-label {
       font-size: 16px;
-    }
-
-    .sidebar-leading-icon {
-      width: 20px;
-      height: 20px;
-      padding-bottom: 2px;
-      margin-right: 4px;
-      stroke-width: 1.5;
-    }
-
-    .sidebar-icon{
-      width: 18px;
-      height: 18px;
     }
   
   }

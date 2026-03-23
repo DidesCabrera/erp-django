@@ -26,15 +26,6 @@
   justify-content: center;
 }
 
-
-.add-row-icon {
-  height: 18px;
-  width: 18px;
-  stroke-width: 2.5;
-  color: rgb(27, 27, 27);
-  flex-shrink: 0;
-}
-
 /* merge code */
 
 .selector {

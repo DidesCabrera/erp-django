@@ -61,14 +61,6 @@
   align-items: center;
 }
 
-.edit-title-icon{
-  color: #1d1d1d;
-  height: 22px;
-  width: 22px;
-  stroke-width: 2;
-  margin-left: 10px;
-}
-
 .label-entity.page-modal{
   margin-bottom: 10px;
 }
@@ -166,17 +158,6 @@
   margin-top: 6px;
 }
 
-.card-icon{
-    width: 12px;
-    height: 12px;
-    margin-right: 2px;
-    display: block;             /* 🔥 elimina baseline inline */
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-    stroke-width: 2;
-}
-
-
 @media (max-width: 768px) {
   .card-title {
     width: 100%;
@@ -194,13 +175,6 @@
   }
 }
 
-.sidebar-icon{
-  transition: transform 0.18s ease;
-}
-
-.btn-desplegar.is-open .sidebar-icon{
-  transform: rotate(90deg);
-}
 
 /* BOTONES DESPLEGAR */
 

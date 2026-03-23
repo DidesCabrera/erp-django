@@ -85,9 +85,9 @@
   
     /* Control de columnas */
     grid-template-columns:
-      60px    /* label */
+      55px    /* label */
       55px    /* extra */
-      72px    /* grams */
+      68px    /* grams */
       1fr;    /* alloc (flexible) */
   
     align-items: center;
@@ -138,7 +138,7 @@
     text-align: right;
     font-variant-numeric: tabular-nums;
     font-size: 0.9rem;
-    font-weight: 400;
+    font-weight: 500;
     margin-right: 8px;
 }
 

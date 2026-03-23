@@ -8,11 +8,11 @@ Edit Meal in Daily Plan – {{ vm.meal.name }}
   <p>Editando</p>
 </div>
 
-<div class="page--minicard">
+<div class="page--minicard edit">
   {% include "components/card_mini_dpm.html" with child=vm.content.father_card %}
 </div>
 
-<div class="page page--detail edit" data-page="meal-detail">
+<div class="page page--detail dpm_meal" data-page="meal-detail">
 
     <!-- MAIN CARD ====-->  
     {% include "components/card_main_dpm_edit.html" with main_card=vm.content.main_card %}
