@@ -1,9 +1,9 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from notas.models import Profile, Plan, MealFood
-from notas.services.meal_nutrition import compute_meal_nutrition
-from notas.services.foods_aggregation import build_meal_foods_projection
+from notas.domain.models import Profile, Plan, MealFood
+from notas.application.services.meal_nutrition import compute_meal_nutrition
+from notas.application.services.foods_aggregation import build_meal_foods_projection
 
 
 

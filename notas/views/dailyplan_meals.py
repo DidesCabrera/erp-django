@@ -3,25 +3,24 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from notas.services.capabilities import get_capabilities
-from notas.models import Meal, MealFood, DailyPlan, DailyPlanMeal, Food
-from django.urls import reverse
-from notas.actions.constants import (
+from notas.application.services.capabilities import get_capabilities
+from notas.domain.models import Meal, MealFood, DailyPlan, DailyPlanMeal, Food
+from notas.presentation.config.viewmodel_config import (
     DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
     DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
     DAILYPLAN_MEAL_VIEWMODE_DETAIL,
 )
-from notas.viewmodels.content.builder.detail_dpm_builder import build_dpm_detail_vm
-from notas.jscontext.builder.dpm_food_picker_builder import build_dpm_food_picker_context_payload
-from notas.jscontext.builder.food_picker_builder import build_food_picker_foods_payload
-from notas.services.kpis import build_nutrition_kpis_from_meal, build_nutrition_kpis_from_dailyplan
+from notas.presentation.composition.viewmodel.detail_dpm_builder import build_dpm_detail_vm
+from notas.presentation.composition.js.dpm_food_picker_builder import build_dpm_food_picker_context_payload
+from notas.presentation.composition.js.food_picker_builder import build_food_picker_foods_payload
+from notas.application.services.kpis import build_nutrition_kpis_from_meal, build_nutrition_kpis_from_dailyplan
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from notas.services.dpm import ensure_dpm_meal_isolated
+from notas.application.services.dpm import ensure_dpm_meal_isolated
 
-from notas.viewmodels.base_vm import BaseVM
-from notas.viewmodels.ui.builder_ui import build_ui_vm
-from notas.services.meal import fork_meal_for_dailyplan
+from notas.presentation.viewmodels.base_vm import BaseVM
+from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
+from notas.application.services.meal import fork_meal_for_dailyplan
 
 
 

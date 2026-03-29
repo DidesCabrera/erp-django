@@ -1,5 +1,5 @@
-from notas.services.weight import get_current_weight
-from notas.models import DailyPlanShare
+from notas.application.services.weight import get_current_weight
+from notas.domain.models import DailyPlanShare
 
 def user_weight(request):
     if request.user.is_authenticated:

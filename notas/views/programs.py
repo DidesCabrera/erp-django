@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
-from notas.models import Program, ProgramDay, DailyPlan
+from notas.domain.models import Program, ProgramDay, DailyPlan
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.contrib import messages
 from datetime import date
-from notas.services.capabilities import get_capabilities
+from notas.application.services.capabilities import get_capabilities
 from django.db.models import Sum, F, ExpressionWrapper, FloatField
-from notas.services.nutrition import (
+from notas.application.services.nutrition import (
     PROTEIN_KCAL_PER_GRAM,
     CARBS_KCAL_PER_GRAM,
     FAT_KCAL_PER_GRAM,

@@ -1,0 +1,67 @@
+from django.urls import reverse
+from notas.application.resolvers.dailyplan_meal_resolvers import resolve_dailyplan_meal_actions
+from notas.application.resolvers.dailyplan_resolvers import resolve_dailyplan_actions
+from notas.application.resolvers.meal_resolvers import resolve_meal_actions
+from notas.application.resolvers.food_resolvers import resolve_food_actions
+from notas.presentation.config.viewmodel_config import *
+
+
+def build_food_header(*, food, user, context_name):
+    actions = resolve_food_actions(
+            food,
+            user,
+            context={
+                "name": context_name
+            },
+        )
+
+    return {
+        "title": food.name,
+        "actions": actions,
+    }
+
+
+def build_meal_header(*, meal, user, context_name):
+    actions = resolve_meal_actions(
+            meal,
+            user,
+            context={
+                "name": context_name
+            },
+        )
+
+    return {
+        "title": meal.name,
+        "actions": actions,
+    }
+
+
+def build_dailyplan_meal_header(*, dpm, user, context_name):
+    meal = dpm.meal
+    actions = resolve_dailyplan_meal_actions(
+            dpm,
+            user,
+            context={
+                "name": context_name
+            },
+        )
+
+    return {
+        "title": meal.name,
+        "actions": actions,
+    }
+
+
+def build_dailyplan_header(*, dailyplan, user, context_name):
+
+    actions = resolve_dailyplan_actions(
+            dailyplan,
+            user,
+            context={
+                "name": context_name
+            },
+        )
+    
+    return {
+        "actions": actions,
+    }

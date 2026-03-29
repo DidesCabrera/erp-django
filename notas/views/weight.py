@@ -2,7 +2,7 @@ from datetime import date
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from notas.models import WeightLog
+from notas.domain.models import WeightLog
 
 @login_required
 def register_weight(request):

@@ -4,26 +4,26 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.contrib import messages
-from notas.services.capabilities import get_capabilities
-from notas.models import Food
-from notas.actions.constants import (
+from notas.application.services.capabilities import get_capabilities
+from notas.domain.models import Food
+from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_LIST, 
     FOOD_VIEWMODE_PERSONAL_DETAIL,
     FOOD_VIEWMODE_PERSONAL_EDIT,
     FOOD_VIEWMODE_CREATE,
     FOOD_VIEWMODE_IMPORT
 )
-from notas.routing.food import food_url
-from notas.viewmodels.content.builder.list_foods_builder import build_food_list_vm
-from notas.viewmodels.content.builder.detail_food_builder import build_food_detail_vm
-from notas.viewmodels.content.builder.edit_food_builder import build_edit_food_vm
-from notas.forms.forms import FoodEditForm
+from notas.interface.routing.food import food_url
+from notas.presentation.composition.viewmodel.list_foods_builder import build_food_list_vm
+from notas.presentation.composition.viewmodel.detail_food_builder import build_food_detail_vm
+from notas.presentation.composition.viewmodel.edit_food_builder import build_edit_food_vm
+from notas.interface.forms.forms import FoodEditForm
 
-from notas.services.food import create_food
+from notas.application.services.food import create_food
 
 
-from notas.viewmodels.base_vm import BaseVM
-from notas.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.viewmodels.base_vm import BaseVM
+from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
 
 #************ RENDER COMPLEJOS *********************
 # ---------- LIST - DETAIL ----------

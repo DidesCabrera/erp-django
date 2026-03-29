@@ -1,30 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
-from notas.models import DailyPlan, DailyPlanMeal, Meal, DailyPlanShare
+from notas.domain.models import DailyPlan, DailyPlanMeal, Meal, DailyPlanShare
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from notas.actions.constants import *
+from notas.presentation.config.viewmodel_config import *
 
-from notas.services.capabilities import get_capabilities
-from notas.services.kpis import build_nutrition_kpis_from_dailyplan
+from notas.application.services.capabilities import get_capabilities
+from notas.application.services.kpis import build_nutrition_kpis_from_dailyplan
 
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from notas.viewmodels.content.builder.detail_dailyplan_builder import build_dailyplan_detail_vm
-from notas.viewmodels.content.builder.list_dailyplan_builder import build_dailyplan_list_vm
-from notas.viewmodels.content.builder.configure_dailyplan_builder import build_dailyplan_configure_vm
-from notas.jscontext.builder.meal_picker_builder import build_meal_picker_meals_payload ,build_meal_picker_context_payload
-from notas.services.dailyplan_queries import dailyplans_with_kcal, get_dailyplan_for_edit
-from notas.services.access import get_dailyplan_for_user
+from notas.presentation.composition.viewmodel.detail_dailyplan_builder import build_dailyplan_detail_vm
+from notas.presentation.composition.viewmodel.list_dailyplan_builder import build_dailyplan_list_vm
+from notas.presentation.composition.viewmodel.configure_dailyplan_builder import build_dailyplan_configure_vm
+from notas.presentation.composition.js.meal_picker_builder import build_meal_picker_meals_payload ,build_meal_picker_context_payload
+from notas.application.services.dailyplan_queries import dailyplans_with_kcal, get_dailyplan_for_edit
+from notas.application.services.access import get_dailyplan_for_user
 
-from notas.forms.forms import DailyPlanShareForm
+from notas.interface.forms.forms import DailyPlanShareForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 
-from notas.viewmodels.base_vm import BaseVM
-from notas.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.viewmodels.base_vm import BaseVM
+from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
 
 
 

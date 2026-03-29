@@ -3,26 +3,26 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from notas.services.capabilities import get_capabilities
-from notas.models import Meal, MealFood, Food, MealShare
-from notas.actions.constants import *
+from notas.application.services.capabilities import get_capabilities
+from notas.domain.models import Meal, MealFood, Food, MealShare
+from notas.presentation.config.viewmodel_config import *
 
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from notas.services.kpis import build_nutrition_kpis_from_meal
-from notas.viewmodels.content.builder.detail_meal_builder import build_meal_detail_vm
-from notas.viewmodels.content.builder.list_meal_builder import build_meal_list_vm
-from notas.viewmodels.content.builder.configure_meal_builder import build_meal_configure_vm
-from notas.jscontext.builder.food_picker_builder import build_food_picker_foods_payload, build_food_picker_context_payload
-from notas.services.meal_queries import meals_with_kcal
+from notas.application.services.kpis import build_nutrition_kpis_from_meal
+from notas.presentation.composition.viewmodel.detail_meal_builder import build_meal_detail_vm
+from notas.presentation.composition.viewmodel.list_meal_builder import build_meal_list_vm
+from notas.presentation.composition.viewmodel.configure_meal_builder import build_meal_configure_vm
+from notas.presentation.composition.js.food_picker_builder import build_food_picker_foods_payload, build_food_picker_context_payload
+from notas.application.services.meal_queries import meals_with_kcal
 
-from notas.forms.forms import MealShareForm
+from notas.interface.forms.forms import MealShareForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 
-from notas.viewmodels.base_vm import BaseVM
-from notas.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.viewmodels.base_vm import BaseVM
+from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
 
 #************ VIEW DE INBOX *********************
 

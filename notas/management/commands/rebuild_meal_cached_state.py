@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
-from notas.models import Meal
-from notas.services.foods_aggregation import build_meal_foods_projection
+from notas.domain.models import Meal
+from notas.application.services.foods_aggregation import build_meal_foods_projection
 
 
 class Command(BaseCommand):
