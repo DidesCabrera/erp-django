@@ -1,4 +1,3 @@
-
 from notas.domain.models import DailyPlan
 from django.db.models import Sum, F, ExpressionWrapper, FloatField
 from notas.application.services.nutrition import (

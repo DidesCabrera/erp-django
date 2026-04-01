@@ -250,10 +250,12 @@
 {% load static %}
 
 <script>
-  window.MEAL_PICKER_MEALS = {{ meals_json|safe }};
+  window.MEAL_PICKER_DATA = {{ meal_picker_data_json|safe }};
   window.MEAL_PICKER_CONTEXT = {{ meal_picker_context|safe }};
   window.dailyplanInitialMeal = {{ selected_meal_id|default:"null" }};
 </script>
+
+
 
 <script type="module" src="{% static 'notas/js/meal_picker.js' %}"></script>
 <script type="module" src="{% static 'notas/js/meal_math.js' %}"></script>

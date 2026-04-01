@@ -1,4 +1,3 @@
-# notas/services/dailyplan.py
 from django.db import transaction
 from notas.domain.models import DailyPlan, DailyPlanMeal
 
@@ -19,12 +18,17 @@ def get_dailyplan_origin(dp: DailyPlan) -> DailyPlan:
 
 def clone_dailyplan_meals(source: DailyPlan, target: DailyPlan) -> None:
     """
-    Copia todas las meals desde source hacia target (snapshot).
+    Copia todas las meals desde source hacia target creando snapshots
+    independientes para cada slot del DailyPlan.
     """
-    for dpm in source.dailyplan_meals.all():
+    from notas.application.services.meal import fork_meal
+
+    for dpm in source.dailyplan_meals.all().order_by("order", "id"):
+        forked_meal = fork_meal(dpm.meal, target.created_by)
+
         DailyPlanMeal.objects.create(
             dailyplan=target,
-            meal=dpm.meal,
+            meal=forked_meal,
             note=dpm.note,
             hour=dpm.hour,
             order=dpm.order,

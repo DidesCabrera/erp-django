@@ -7,6 +7,16 @@ class BreadcrumbItem:
     url: Optional[str] = None
 
 
+from dataclasses import dataclass, asdict, field
+from typing import Any, Optional, List
+
+
+@dataclass
+class BreadcrumbItem:
+    label: str
+    url: Optional[str] = None
+
+
 @dataclass
 class UI:
     viewmode: str
@@ -22,7 +32,7 @@ class UI:
     page_icon: str | None = None
     is_inside: bool = False
     back_url: Optional[str] = None
-    
+    sidebar_sections: List[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -37,4 +47,3 @@ class BaseVM:
                 "content": asdict(self.content) if self.content else None,
             }
         }
-        

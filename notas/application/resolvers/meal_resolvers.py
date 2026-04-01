@@ -46,7 +46,7 @@ MEAL_ACTION_DEFINITIONS = {
         "icon": "settings",
         "order": 90,
         "get_url": lambda meal, context=None: meal_configure_url(meal),
-        "capability": "can_edit_own_content",
+        "capability": "can_access_distribution_settings",
     },
 
     "fork": {

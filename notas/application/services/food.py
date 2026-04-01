@@ -1,7 +1,4 @@
-# notas/services/food.py
-
 from notas.domain.models import Food
-
 
 def create_food(user, name, protein, carbs, fat):
     food = Food.objects.create(

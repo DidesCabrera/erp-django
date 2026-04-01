@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from notas.domain.models import DailyPlan, DailyPlanShare
 
 def get_dailyplan_for_user(user, pk):

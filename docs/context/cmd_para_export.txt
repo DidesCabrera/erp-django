@@ -1,0 +1,34 @@
+1) Limpiar basura del proyecto original. Desde la raíz del proyecto:
+
+find . -type d -name "__pycache__" -exec rm -rf {} +
+find . -type f -name "*.pyc" -delete
+find . -name ".DS_Store" -delete
+find . -name "__MACOSX" -type d -exec rm -rf {} +
+
+
+2) Crear export limpio. Desde la carpeta padre del proyecto:
+
+rsync -av \
+  --exclude '.git' \
+  --exclude '__pycache__' \
+  --exclude '*.pyc' \
+  --exclude '.DS_Store' \
+  --exclude '__MACOSX' \
+  --exclude 'db.sqlite3' \
+  --exclude 'venv' \
+  --exclude '.venv' \
+  --exclude 'staticfiles' \
+  --exclude '*.zip' \
+  ./ ../proyecto_django_export/
+
+
+3) Exportar
+
+cd ..
+zip -r proyecto_django_export.zip proyecto_django_export -x "*.DS_Store" "__MACOSX/*"
+
+
+cd desktop
+cd proyecto_django
+source /Users/felipedides/Desktop/proyecto_django/venv/bin/activate
+python manage.py runserver

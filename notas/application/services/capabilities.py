@@ -52,10 +52,13 @@ class Capabilities:
     # -----------------
 
     def can_edit_own_content(self):
-        return True  # regla base del producto
+        return True
 
     def can_replace_meal(self):
-        return True  # MVP: permitido
+        return True
+
+    def can_access_distribution_settings(self):
+        return self.can_publish() or self.can_copy()
 
     # -----------------
     # ROLE OVERRIDES

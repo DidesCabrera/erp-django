@@ -32,7 +32,7 @@
         <div class="page-detail">
             <h3>Alimentos en esta Comida</h3>
             <div class="card-table-meals">
-            {% include "components/table_foods_edit.html" with items=main_card.table.items %}
+            {% include "components/table_foods_edit.html" with items=main_card.table.items main_id=main_card.main_id %}
             </div>
         </div>
 

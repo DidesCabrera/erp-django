@@ -1,0 +1,41 @@
+def test_dpm_food_picker_cancel_resets_state(page):
+    page.goto("http://127.0.0.1:8000/app/dailyplans/122/meals/343/deepedit/")
+    page.wait_for_load_state("networkidle")
+
+    assert "/accounts/login/" not in page.url, f"Redirigido a login: {page.url}"
+
+    food_search = page.locator("#food-search")
+    food_list = page.locator("#food-list")
+    food_preview = page.locator("#food-preview")
+    add_button = page.locator("#btn-add-food")
+    cancel_button = page.locator("#btn-cancel-edit")
+    quantity_input = page.locator("#food-quantity")
+
+    food_search.wait_for()
+    food_search.fill("Pechuga Pollo Cocida")
+
+    page.wait_for_timeout(700)
+
+    first_result = food_list.locator("li").first
+    first_result.wait_for()
+    first_result.click()
+
+    page.wait_for_timeout(700)
+
+    assert food_preview.is_visible(), "El preview no se mostró tras seleccionar un alimento"
+    assert add_button.is_visible(), "El botón agregar no se mostró tras seleccionar un alimento"
+
+    quantity_input.fill("250")
+    page.wait_for_timeout(500)
+
+    cancel_button.wait_for()
+    cancel_button.click()
+
+    page.wait_for_timeout(700)
+
+    assert not food_preview.is_visible(), "El preview siguió visible después de cancelar"
+    assert not add_button.is_visible(), "El botón agregar siguió visible después de cancelar"
+    assert not food_list.is_visible(), "La lista siguió visible después de cancelar"
+
+    current_search_value = food_search.input_value()
+    assert current_search_value == "", f"El buscador no se limpió al cancelar: {current_search_value!r}"

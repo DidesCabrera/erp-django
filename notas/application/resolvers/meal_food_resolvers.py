@@ -1,6 +1,6 @@
 from django.urls import reverse, NoReverseMatch
 from notas.application.services.capabilities import get_capabilities
-from notas.interface.routing.food import food_url, food_configure_url, food_list_url
+from notas.interface.routing.food import food_url, food_list_url
 from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_LIST,
     FOOD_VIEWMODE_PERSONAL_DETAIL,
@@ -32,16 +32,6 @@ FOOD_ACTION_DEFINITIONS = {
         "get_url": lambda food, context=None: food_list_url(),
     },
 
-    "configure": {
-        "label": "Configure",
-        "method": "get",
-        "group": "primary",
-        "icon": "log-in",
-        "order": 90,
-        "get_url": lambda food, context=None: food_configure_url(food),
-        "capability": "can_edit_own_content",
-    },
-
     # ---- FUTURAS (safe no-op si no se usan) ----
 
     "delete": {
@@ -59,7 +49,7 @@ FOOD_ACTION_DEFINITIONS = {
         "label": "Edit",
         "method": "post",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "pencil",
         "order": 90,
         "get_url": lambda food, context=None: reverse(
             "food_edit", args=[food.id]
@@ -94,14 +84,12 @@ FOOD_ACTIONS_BY_VIEWMODE = {
         "fork",
         "copy",
         "add_to_dailyplan",
-        "configure",
         "edit",
         "delete",
     ],
 
     FOOD_VIEWMODE_PERSONAL_EDIT: [
         "save",
-        "configure",
         "cancel",
     ],
 

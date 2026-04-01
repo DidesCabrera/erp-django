@@ -1,0 +1,32 @@
+def test_food_picker_edit_quantity_updates_preview(page):
+    page.goto("http://127.0.0.1:8000/app/meals/222/edit/")
+    page.wait_for_load_state("networkidle")
+
+    assert "/accounts/login/" not in page.url, f"Redirigido a login: {page.url}"
+
+    edit_button = page.locator(".edit-food-btn").first
+    quantity_input = page.locator("#food-quantity")
+    qty_kcal = page.locator("#qty-kcal")
+    food_preview = page.locator("#food-preview")
+    update_button = page.locator("#btn-update-food")
+
+    edit_button.wait_for()
+    edit_button.click()
+
+    page.wait_for_timeout(800)
+
+    assert food_preview.is_visible(), "El preview no se mostró al entrar en edit"
+    assert update_button.is_visible(), "El botón Guardar Cambios no apareció en modo edit"
+
+    initial_kcal = qty_kcal.text_content()
+
+    quantity_input.wait_for()
+    quantity_input.fill("120")
+
+    page.wait_for_timeout(700)
+
+    updated_kcal = qty_kcal.text_content()
+
+    assert initial_kcal is not None and initial_kcal.strip() != ""
+    assert updated_kcal is not None and updated_kcal.strip() != ""
+    assert initial_kcal != updated_kcal, "Las kcal no cambiaron al modificar la cantidad en edit"

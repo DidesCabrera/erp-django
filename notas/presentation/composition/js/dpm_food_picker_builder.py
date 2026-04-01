@@ -1,6 +1,4 @@
-from django.urls import reverse
 from notas.presentation.frontend.jscontext.dpm_food_picker import DpmFoodPickerContextPayload
-
 
 
 def build_dpm_food_picker_context_payload(
@@ -25,16 +23,16 @@ def build_dpm_food_picker_context_payload(
     if mealfood:
         return DpmFoodPickerContextPayload(
             **base,
-            mode= "edit",
+            mode="edit",
             editing={
                 "mealfood_id": mealfood.id,
                 "food_id": mealfood.food_id,
                 "original_quantity": float(mealfood.quantity),
-            }
+            },
         )
 
-    return {
+    return DpmFoodPickerContextPayload(
         **base,
-        "mode": "add",
-        "editing": None,
-    }
+        mode="add",
+        editing=None,
+    )

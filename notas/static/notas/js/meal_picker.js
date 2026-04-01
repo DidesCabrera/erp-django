@@ -21,31 +21,50 @@ import { renderMealItem } from "./meal_item_list.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const ctx   = window.MEAL_PICKER_CONTEXT;
-  const meals = window.MEAL_PICKER_MEALS || [];
+  const ctx = window.MEAL_PICKER_CONTEXT;
+  const pickerData = window.MEAL_PICKER_DATA || {};
+
+  const browseMeals = pickerData.browse_meals || [];
+  const existingMeals = pickerData.existing_meals || [];
+
+  const mealById = new Map();
+
+  browseMeals.forEach(meal => {
+    if (meal && meal.id != null) {
+      mealById.set(Number(meal.id), meal);
+    }
+  });
+
+  existingMeals.forEach(meal => {
+    if (meal && meal.id != null) {
+      mealById.set(Number(meal.id), meal);
+    }
+  });
 
   const picker = document.getElementById("meal-picker");
   const previewRoot = document.getElementById("dp-preview");
 
-  if (!picker) return;
+  if (!picker || !ctx) return;
 
   // ---------------------------
   // DOM
   // ---------------------------
 
-  const input      = document.getElementById("meal-search");
-  const list       = document.getElementById("meal-list");
-  const hidden     = document.getElementById("dp-selected-meal-id");
+  const input = document.getElementById("meal-search");
+  const list = document.getElementById("meal-list");
+  const hidden = document.getElementById("dp-selected-meal-id");
   const previewBox = document.getElementById("dp-preview");
-  const form       = document.getElementById("dp-form");
+  const form = document.getElementById("dp-form");
 
-  const hourInput  = form.querySelector('input[name="hour"]');
-  const noteInput  = form.querySelector('input[name="note"]');
-  const title      = document.getElementById("meal-form-title");
+  if (!input || !list || !hidden || !previewBox || !form) return;
 
-  const btnAdd     = document.getElementById("btn-add-meal");
-  const btnUpdate  = document.getElementById("btn-update-meal");
-  const btnCancel  = document.getElementById("btn-cancel-meal-edit");
+  const hourInput = form.querySelector('input[name="hour"]');
+  const noteInput = form.querySelector('input[name="note"]');
+  const title = document.getElementById("meal-form-title");
+
+  const btnAdd = document.getElementById("btn-add-meal");
+  const btnUpdate = document.getElementById("btn-update-meal");
+  const btnCancel = document.getElementById("btn-cancel-meal-edit");
 
   const ADD_ACTION = form.action;
 
@@ -67,25 +86,52 @@ document.addEventListener("DOMContentLoaded", () => {
     list.style.display = "none";
   }
 
+  function clearSelection() {
+    selectedMeal = null;
+    hidden.value = "";
+    input.value = "";
+
+    previewBox.style.display = "none";
+    form.classList.remove("has-selection");
+  }
+
+  function applySelectedMeal(meal) {
+    if (!meal) return;
+
+    selectedMeal = meal;
+    hidden.value = meal.id;
+    input.value = meal.name;
+
+    showPreview();
+    form.classList.add("has-selection");
+  }
+
   function enterAddMode() {
     ctx.mode = "add";
     ctx.editing = null;
     form.action = ADD_ACTION;
 
-    btnAdd.style.display    = "inline-block";
-    btnUpdate.style.display = "none";
-    btnCancel.style.display = "inline-block";
+    if (btnAdd) btnAdd.style.display = "inline-block";
+    if (btnUpdate) btnUpdate.style.display = "none";
+    if (btnCancel) btnCancel.style.display = "inline-block";
 
     if (hourInput) hourInput.value = "";
     if (noteInput) noteInput.value = "";
 
-    title.textContent = "Add meal";
+    if (title) title.textContent = "Agrega una Comida";
   }
 
   function enterEditMode() {
-    btnAdd.style.display    = "none";
-    btnUpdate.style.display = "inline-block";
-    btnCancel.style.display = "inline-block";
+    if (btnAdd) btnAdd.style.display = "none";
+    if (btnUpdate) btnUpdate.style.display = "inline-block";
+    if (btnCancel) btnCancel.style.display = "inline-block";
+
+    if (title) title.textContent = "Reemplaza la Comida";
+  }
+
+  function findMealById(mealId) {
+    if (mealId == null || mealId === "") return null;
+    return mealById.get(Number(mealId)) || null;
   }
 
   // ---------------------------
@@ -93,40 +139,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------
 
   function renderMealList(items) {
-
     list.innerHTML = "";
-
-    if (!items.length) {
+  
+    if (!Array.isArray(items) || !items.length) {
       list.innerHTML = `<li class="empty">No meals found</li>`;
       return;
     }
-
+  
     items.forEach(meal => {
-
       if (!meal || !meal.name) return;
-
-      const li = document.createElement("li");
-      li.className = "food-item";
-
-      li.innerHTML = renderMealItem(meal);
-
-      li.addEventListener("click", () => {
-
-        selectedMeal = meal;
-
-        window.__DEBUG_MEAL = selectedMeal;
-        console.log("__DEBUG_MEAL", window.__DEBUG_MEAL);
-
-        hidden.value = meal.id;
-        input.value  = meal.name;
-
-        closeList();
-        showPreview();
-
-        form.classList.add("has-selection");
-      });
-
-      list.appendChild(li);
+  
+      try {
+        const li = document.createElement("li");
+        li.className = "food-item";
+        li.innerHTML = renderMealItem(meal);
+  
+        li.addEventListener("click", () => {
+          applySelectedMeal(meal);
+          closeList();
+        });
+  
+        list.appendChild(li);
+      } catch (error) {
+        console.error("Error renderizando meal del selector:", meal, error);
+      }
     });
   }
 
@@ -135,12 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------
 
   function showPreview() {
-
     if (!selectedMeal) return;
 
     let basePlanKpis = ctx.dailyplan.kpis;
 
-    if (isEdit()) {
+    if (isEdit() && ctx.editing?.original_kpis) {
       basePlanKpis = subtractKpis(
         ctx.dailyplan.kpis,
         ctx.editing.original_kpis
@@ -165,16 +200,20 @@ document.addEventListener("DOMContentLoaded", () => {
       ...previewPlanKpis,
       alloc: computeAlloc(previewPlanKpis),
     };
+
     const weight = ctx.dailyplan.kpis.weight;
 
     currentWithAlloc.ppk = computePPK(currentWithAlloc.protein, weight);
     previewWithAlloc.ppk = computePPK(previewWithAlloc.protein, weight);
 
     renderSelectedMeal(previewRoot, selectedMeal);
-    renderFoodsAggregation(previewRoot, selectedMeal.foods);
-    renderDayPreview(previewRoot, currentWithAlloc, previewWithAlloc, selectedMeal);
-
-
+    renderFoodsAggregation(previewRoot, selectedMeal.foods || []);
+    renderDayPreview(
+      previewRoot,
+      currentWithAlloc,
+      previewWithAlloc,
+      selectedMeal
+    );
 
     previewBox.style.display = "block";
   }
@@ -184,34 +223,34 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------
 
   input.addEventListener("focus", () => {
-    renderMealList(meals);
     openList();
+    renderMealList(browseMeals);
   });
 
   input.addEventListener("input", () => {
+    const raw = input.value || "";
+    const q = raw.trim().toLowerCase();
 
-    if (!input.value) {
-
-      selectedMeal = null;
-      hidden.value = "";
-
-      previewBox.style.display = "none";
-      form.classList.remove("has-selection");
-
+    if (!q) {
+      clearSelection();
       enterAddMode();
+      renderMealList(browseMeals);
+      openList();
+      return;
     }
 
-    const q = input.value.toLowerCase();
-
-    renderMealList(
-      meals.filter(m => m.name.toLowerCase().includes(q))
+    const filteredMeals = browseMeals.filter(meal =>
+      meal.name.toLowerCase().includes(q)
     );
 
+    renderMealList(filteredMeals);
     openList();
   });
 
   document.addEventListener("mousedown", e => {
-    if (!picker.contains(e.target)) closeList();
+    if (!picker.contains(e.target)) {
+      closeList();
+    }
   });
 
   // ---------------------------
@@ -219,11 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------
 
   document.querySelectorAll(".edit-meal-btn").forEach(btn => {
-
     btn.addEventListener("click", () => {
-
-      title.textContent = "Replace meal";
-
       ctx.mode = "edit";
       ctx.editing = {
         dailyplanmeal_id: Number(btn.dataset.dpmId),
@@ -241,19 +276,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (noteInput) noteInput.value = ctx.editing.note;
 
       const mealId = Number(btn.dataset.mealId);
+      const meal = findMealById(mealId);
 
-      selectedMeal = meals.find(m => m.id === mealId);
-      if (!selectedMeal) return;
-
-      hidden.value = mealId;
-      input.value  = btn.dataset.mealName;
+      if (!meal) {
+        console.warn("Meal no encontrada para edit:", mealId);
+        return;
+      }
 
       form.action = `/dailyplans/${ctx.dailyplan.id}/meals/${ctx.editing.dailyplanmeal_id}/update/`;
 
       enterEditMode();
-      showPreview();
-
-      form.classList.add("has-selection");
+      applySelectedMeal(meal);
+      closeList();
     });
   });
 
@@ -261,17 +295,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // CANCEL EDIT
   // ---------------------------
 
-  btnCancel.addEventListener("click", () => {
-
-    selectedMeal = null;
-    hidden.value = "";
-    input.value  = "";
-
-    previewBox.style.display = "none";
-    form.classList.remove("has-selection");
-
-    enterAddMode();
-  });
+  if (btnCancel) {
+    btnCancel.addEventListener("click", () => {
+      clearSelection();
+      enterAddMode();
+      closeList();
+    });
+  }
 
   // ---------------------------
   // INITIAL MEAL FROM URL
@@ -280,21 +310,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const initialMealId = window.dailyplanInitialMeal;
 
   if (initialMealId) {
-
-    const meal = meals.find(m => m.id === Number(initialMealId));
+    const meal = findMealById(initialMealId);
 
     if (meal) {
+      applySelectedMeal(meal);
 
-      selectedMeal = meal;
-
-      hidden.value = meal.id;
-      input.value  = meal.name;
-
-      showPreview();
-
-      form.classList.add("has-selection");
-
-      // limpiar la URL para evitar repetir la acción al refrescar
       const url = new URL(window.location);
       url.searchParams.delete("select_meal");
       window.history.replaceState({}, "", url);

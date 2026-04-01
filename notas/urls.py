@@ -1,16 +1,15 @@
 from django.urls import path
-from .views.foods import (
+from notas.interface.views.foods import (
     food_list,
     food_detail,
     food_create,
-    food_configure,
     food_edit,
     foods_json,
     import_foods, 
     download_food_template
 )
 
-from .views.meals import (
+from notas.interface.views.meals import (
     meal_fork,  
     meal_copy, 
     meal_detail, 
@@ -32,13 +31,13 @@ from .views.meals import (
     meal_share_detail,
 )
 
-from notas.views.meal_foods import (
+from notas.interface.views.meal_foods import (
     mealfood_remove,
     mealfood_update,
     add_food_to_meal,
 )
 
-from .views.dailyplans import (
+from notas.interface.views.dailyplans import (
     dailyplan_fork,
     dailyplan_copy,
     dailyplan_detail,
@@ -67,7 +66,7 @@ from .views.dailyplans import (
 
 
 
-from notas.views.dailyplan_meals import (
+from notas.interface.views.dailyplan_meals import (
     dailyplan_meal_detail, 
     dailyplan_meal_edit, 
     dailyplan_add_meal,
@@ -80,7 +79,7 @@ from notas.views.dailyplan_meals import (
     dailyplanmeal_create_meal,
 )
 
-from .views.programs import (
+from notas.interface.views.programs import (
     fork_program,
     copy_program,
     program_detail,
@@ -91,19 +90,19 @@ from .views.programs import (
 )
 
 
-from notas.views.profile import profile_detail
+from notas.interface.views.profile import profile_detail
 
-from notas.views.authors import (
+from notas.interface.views.authors import (
     author_profile,
     author_programs,
     author_dailyplans,
     author_meals,
 )
 
-from notas.views.weight import register_weight
-from notas.views.inbox import inbox_list
-from notas.views.project import project_view
-from notas.views.nutrition import elemental_context, elemental_nutrition, elemental_platform
+from notas.interface.views.weight import register_weight
+from notas.interface.views.inbox import inbox_list
+from notas.interface.views.project import project_view
+from notas.interface.views.nutrition import elemental_context, elemental_nutrition, elemental_platform
 
 
     
@@ -154,7 +153,6 @@ urlpatterns = [
     path("foods/", food_list, name="food_list"),
     path("foods/<int:pk>/", food_detail, name="food_detail"),
     path("foods/create/", food_create, name="food_create"),
-    path("foods/<int:pk>/configure/", food_configure, name="food_configure"),
     path("foods/<int:pk>/edit/", food_edit, name="food_edit"),
 
     #MEALS

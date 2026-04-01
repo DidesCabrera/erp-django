@@ -103,6 +103,23 @@ NAVIGATION_STRUCTURE = {
             }
         }
     },
+
+    "profile": {
+        "icon": "circle-user-round",
+        "navigation_root": "profile",
+        "section": {
+            "label": "Cuenta",
+            "page-icon": "circle-user-round",
+            "url_name": "profile_detail",
+        },
+        "subgroups": {
+            "personal": {
+                "label": "Mi Perfil",
+                "page-icon": "circle-user-round",
+                "url_name": "profile_detail",
+            },
+        },
+    },
 }
 
 

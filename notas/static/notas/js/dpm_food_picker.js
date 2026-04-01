@@ -1,6 +1,6 @@
 // ======================================================
 // dpm_food_picker.js
-// CLON funcional de food_picker + DailyPlan preview
+// Picker DPM Food
 // ======================================================
 
 import {
@@ -22,8 +22,10 @@ import { renderFoodItem } from "./food_item_list.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const ctx   = window.FOOD_PICKER_CONTEXT;
-  const foods = window.FOOD_PICKER_FOODS;
+  const ctx = window.FOOD_PICKER_CONTEXT;
+  const foods = Array.isArray(window.FOOD_PICKER_FOODS)
+  ? window.FOOD_PICKER_FOODS
+  : [];
 
   const picker = document.getElementById("food-picker");
   if (!picker) return;
@@ -31,22 +33,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------
   // DOM
   // ---------------------------
-  const input         = document.getElementById("food-search");
-  const list          = document.getElementById("food-list");
-  const preview       = document.getElementById("food-preview");
+  const input = document.getElementById("food-search");
+  const list = document.getElementById("food-list");
+  const preview = document.getElementById("food-preview");
   const quantityInput = document.getElementById("food-quantity");
 
-  const form   = document.getElementById("form-preview");
-  const mealId = form.dataset.mealId;
+  const form = document.getElementById("form-preview");
 
   const title = document.getElementById("food-form-title");
 
-  const btnAdd    = document.getElementById("btn-add-food");
+  const btnAdd = document.getElementById("btn-add-food");
   const btnUpdate = document.getElementById("btn-update-food");
   const btnCancel = document.getElementById("btn-cancel-edit");
 
-  const hiddenFoodId   = document.getElementById("selected-food-id");
+  const hiddenFoodId = document.getElementById("selected-food-id");
   const hiddenQuantity = document.getElementById("selected-food-quantity");
+
+  const hiddenPickerMode = document.getElementById("food-picker-mode");
+  const hiddenEditingMealfoodId = document.getElementById("editing-mealfood-id");
+  const hiddenEditingOriginalQuantity = document.getElementById("editing-original-quantity");
 
   let selectedFood = null;
 
@@ -65,10 +70,80 @@ document.addEventListener("DOMContentLoaded", () => {
     list.style.display = "none";
   }
 
+  function syncHiddenState() {
+    if (hiddenPickerMode) {
+      hiddenPickerMode.value = ctx.mode || "add";
+    }
+  
+    if (ctx.editing) {
+      if (hiddenEditingMealfoodId) {
+        hiddenEditingMealfoodId.value = String(ctx.editing.mealfood_id ?? "");
+      }
+      if (hiddenEditingOriginalQuantity) {
+        hiddenEditingOriginalQuantity.value = String(ctx.editing.original_quantity ?? "");
+      }
+    } else {
+      if (hiddenEditingMealfoodId) {
+        hiddenEditingMealfoodId.value = "";
+      }
+      if (hiddenEditingOriginalQuantity) {
+        hiddenEditingOriginalQuantity.value = "";
+      }
+    }
+  }
+
+  function setAddMode() {
+    ctx.mode = "add";
+    ctx.editing = null;
+
+    title.textContent = "Agrega un Alimento";
+    btnAdd.style.display = "inline-block";
+    btnUpdate.style.display = "none";
+    btnCancel.style.display = "inline-block";
+
+    form.action = form.dataset.defaultAction || form.action;
+
+    syncHiddenState();
+  }
+
+  function setEditMode({ mealfoodId, foodId, originalQuantity, updateUrl }) {
+    ctx.mode = "edit";
+    ctx.editing = {
+      mealfood_id: Number(mealfoodId),
+      food_id: Number(foodId),
+      original_quantity: Number(originalQuantity)
+    };
+  
+    title.textContent = "Edita el Alimento";
+    btnAdd.style.display = "none";
+    btnUpdate.style.display = "inline-block";
+    btnCancel.style.display = "inline-block";
+  
+    form.action = updateUrl;
+  
+    syncHiddenState();
+  }
+
+  function resetPickerState() {
+    selectedFood = null;
+
+    hiddenFoodId.value = "";
+    hiddenQuantity.value = "";
+
+    input.value = "";
+    quantityInput.value = "100";
+
+    preview.style.display = "none";
+    closeList();
+  }
+
+  function findFoodById(foodId) {
+    return foods.find(food => Number(food.id) === Number(foodId)) || null;
+  }
+
   // ---------------------------
   // Food list
   // ---------------------------
-
   function renderFoodList(items) {
     list.innerHTML = "";
 
@@ -77,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const li = document.createElement("li");
       li.className = "food-item";
-
       li.innerHTML = renderFoodItem(food);
 
       li.addEventListener("click", () => {
@@ -102,12 +176,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     hiddenFoodId.value = selectedFood.id;
 
-    // BASE 100g
     renderBase(selectedFood);
 
     quantityInput.value = isEdit()
-      ? ctx.editing.original_quantity
-      : 100;
+      ? String(ctx.editing.original_quantity)
+      : "100";
 
     updateQuantity();
   }
@@ -115,13 +188,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateQuantity() {
     if (!selectedFood) return;
 
-    const q = Number(quantityInput.value);
-    if (!q || q <= 0) return;
+    const quantity = Number(quantityInput.value);
+    if (!quantity || quantity <= 0) return;
 
-    hiddenQuantity.value = q;
+    hiddenQuantity.value = String(quantity);
 
     // -------- FOOD PORTION --------
-    const newPortion = portionFromFood(selectedFood, q);
+    const newPortion = portionFromFood(selectedFood, quantity);
     renderPortion(newPortion);
 
     // -------- MEAL BASE --------
@@ -133,13 +206,14 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
+
       baseMeal = removePortionTotals(ctx.meal.kpis, oldPortion);
     }
 
     const previewMeal = previewTotals(baseMeal, newPortion);
     renderPreviewTotals(previewMeal);
 
-    // -------- DAILYPLAN (DPM EXTRA) --------
+    // -------- DAILYPLAN BASE --------
     let baseDailyPlan = ctx.dailyplan.kpis;
 
     if (isEdit()) {
@@ -148,23 +222,21 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
+
       baseDailyPlan = removePortionTotals(
         ctx.dailyplan.kpis,
         oldPortion
       );
     }
 
-    const previewDailyPlan = previewTotals(
-      baseDailyPlan,
-      newPortion
-    );
+    const previewDailyPlan = previewTotals(baseDailyPlan, newPortion);
 
     renderDailyPlanPreview(previewDailyPlan);
     renderDpmAlloc(previewMeal, previewDailyPlan);
   }
 
   // ---------------------------
-  // Events
+  // Input events
   // ---------------------------
   input.addEventListener("focus", () => {
     renderFoodList(foods);
@@ -172,68 +244,57 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   input.addEventListener("input", () => {
-    const v = input.value.toLowerCase();
+    const value = input.value.toLowerCase();
+
     renderFoodList(
-      foods.filter(f => f.name.toLowerCase().includes(v))
+      foods.filter(food => food.name.toLowerCase().includes(value))
     );
+
     openList();
   });
 
   quantityInput.addEventListener("input", updateQuantity);
 
-  document.addEventListener("mousedown", e => {
-    if (!picker.contains(e.target)) closeList();
+  document.addEventListener("mousedown", event => {
+    if (!picker.contains(event.target)) {
+      closeList();
+    }
   });
 
   // ---------------------------
-  // EDIT MODE
+  // Edit mode
   // ---------------------------
-  document.querySelectorAll(".edit-food-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-
-      ctx.mode = "edit";
-      ctx.editing = {
-        mealfood_id: Number(btn.dataset.id),
-        food_id: Number(btn.dataset.foodId),
-        original_quantity: Number(btn.dataset.qty)
-      };
-
-      selectedFood = foods.find(
-        f => f.id === ctx.editing.food_id
-      );
+  document.querySelectorAll(".edit-food-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      setEditMode({
+        mealfoodId: button.dataset.id,
+        foodId: button.dataset.foodId,
+        originalQuantity: button.dataset.qty,
+        updateUrl: button.dataset.updateUrl
+      });
+  
+      selectedFood = findFoodById(ctx.editing.food_id);
       if (!selectedFood) return;
-
-      title.textContent = "Edita el Alimento";
-      btnAdd.style.display = "none";
-      btnUpdate.style.display = "inline-block";
-      btnCancel.style.display = "inline-block";
-
-      form.action =
-        `/meals/${mealId}/mealfoods/${ctx.editing.mealfood_id}/update/`;
-
+  
+      input.value = selectedFood.name;
       showPreview();
     });
   });
 
   // ---------------------------
-  // CANCEL EDIT
+  // Cancel
   // ---------------------------
   btnCancel.addEventListener("click", () => {
-
-    ctx.mode = "add";
-    ctx.editing = null;
-
-    title.textContent = "Agrega un Alimento";
-    btnAdd.style.display = "inline-block";
-    btnUpdate.style.display = "none";
-
-    hiddenFoodId.value = "";
-    hiddenQuantity.value = "";
-
-    input.value = "";
-    quantityInput.value = 100;
-
-    preview.style.display = "none";
+    setAddMode();
+    resetPickerState();
   });
 
+  // ---------------------------
+  // Init
+  // ---------------------------
+  if (!form.dataset.defaultAction) {
+    form.dataset.defaultAction = form.action;
+  }
+
+  syncHiddenState();
 });

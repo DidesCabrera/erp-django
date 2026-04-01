@@ -1,4 +1,3 @@
-# notas/services/meal.py
 from django.db import transaction
 from notas.domain.models import Meal, MealFood
 
@@ -63,6 +62,7 @@ def fork_meal(original: Meal, user) -> Meal:
 
 
 def _clone_meal(original: Meal, user) -> Meal:
+    from notas.application.services.meal_nutrition import rebuild_meal_cached_state
 
     origin = get_meal_origin(original)
 
@@ -78,8 +78,10 @@ def _clone_meal(original: Meal, user) -> Meal:
     )
 
     clone_meal_foods(original, forked)
+    rebuild_meal_cached_state(forked)
 
     return forked
+
 
 def fork_meal_for_library(original: Meal, user) -> Meal:
 

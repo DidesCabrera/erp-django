@@ -1,18 +1,7 @@
 from notas.presentation.viewmodels.base_vm import UI
 from notas.presentation.navigation.breadcrumb_builder import build_breadcrumb
+from notas.presentation.navigation.builders import build_sidebar_vm, resolve_navigation_root
 from notas.presentation.navigation.registry import NAVIGATION_STRUCTURE
-
-
-def resolve_navigation_root(entity: str) -> str:
-    config = NAVIGATION_STRUCTURE.get(entity)
-
-    if not config:
-        return entity
-
-    if "navigation_root" in config:
-        return config["navigation_root"]
-
-    return entity
 
 
 def build_ui_vm(viewmode, instance=None, parents=None):
@@ -51,6 +40,8 @@ def build_ui_vm(viewmode, instance=None, parents=None):
     if len(breadcrumb) >= 2:
         back_url = breadcrumb[-2].url
 
+    sidebar_sections = build_sidebar_vm(viewmode)
+
     return UI(
         viewmode=str(viewmode),
         entity=viewmode.entity,
@@ -64,5 +55,6 @@ def build_ui_vm(viewmode, instance=None, parents=None):
         title=title,
         root=root,
         is_inside=is_inside,
-        back_url=back_url
+        back_url=back_url,
+        sidebar_sections=sidebar_sections,
     )

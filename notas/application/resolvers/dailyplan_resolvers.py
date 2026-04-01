@@ -58,7 +58,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "icon": "settings",
         "order": 90,
         "get_url": lambda dp, context=None: dailyplan_configure_url(dp),
-        "capability": "can_edit_own_content",
+        "capability": "can_access_distribution_settings",
     },
 
 # FORK FAMILY ===================================

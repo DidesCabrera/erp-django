@@ -1,0 +1,28 @@
+def test_dpm_food_picker_edit_submit_updates_food(page):
+    page.goto("http://127.0.0.1:8000/app/dailyplans/122/meals/343/deepedit/")
+    page.wait_for_load_state("networkidle")
+
+    assert "/accounts/login/" not in page.url, f"Redirigido a login: {page.url}"
+
+    edit_button = page.locator(".edit-food-btn").first
+    quantity_input = page.locator("#food-quantity")
+    update_button = page.locator("#btn-update-food")
+
+    edit_button.wait_for()
+    edit_button.click()
+
+    page.wait_for_timeout(800)
+
+    quantity_input.wait_for()
+    quantity_input.fill("120")
+
+    page.wait_for_timeout(700)
+
+    update_button.wait_for()
+    update_button.click()
+
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(1000)
+
+    assert "120" in page.content(), "La nueva cantidad no apareció en la página después de guardar cambios"
+    assert "/update/" not in page.url or "404" not in page.content()
