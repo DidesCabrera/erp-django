@@ -492,9 +492,7 @@ def dailyplan_draft_edit(request, pk):
     # Aggregate load
     # ==================================================
     dailyplan = get_dailyplan_for_edit(request.user, pk)
-
     dailyplan_meals = dailyplan.meals_with_foods()
-
     user = request.user
 
     # ==================================================
@@ -513,20 +511,33 @@ def dailyplan_draft_edit(request, pk):
     # ==================================================
     # Meal picker payload
     # ==================================================
-
-    meals = (
-        Meal.objects
-        .filter(is_draft=False)
-        .order_by("name")
+    browse_meals = (
+        meals_with_kcal()
+        .filter(
+            created_by=user,
+            is_draft=False,
+            dailyplanmeal__isnull=True,
+        )
+        .order_by("-created_at")
+        .distinct()
     )
 
-    meals_payload = build_meal_picker_meals_payload(meals)
+    existing_meals = (
+        meals_with_kcal()
+        .filter(
+            dailyplanmeal__dailyplan=dailyplan,
+        )
+        .distinct()
+    )
 
+    meal_picker_data = build_meal_picker_data_payload(
+        browse_meals_qs=browse_meals,
+        existing_meals_qs=existing_meals,
+    )
 
     # ==================================================
     # Picker context
     # ==================================================
-
     dailyplan_kpis = build_nutrition_kpis_from_dailyplan(dailyplan, user)
 
     meal_picker_ctx = build_meal_picker_context_payload(
@@ -538,7 +549,6 @@ def dailyplan_draft_edit(request, pk):
     # ==================================================
     # ViewModel
     # ==================================================
-
     viewmode = DAILYPLAN_VIEWMODE_DRAFT_EDIT
 
     content_vm = build_dailyplan_detail_vm(
@@ -548,7 +558,10 @@ def dailyplan_draft_edit(request, pk):
         viewmode,
     )
 
-    ui_vm = build_ui_vm(viewmode, instance=dailyplan)
+    ui_vm = build_ui_vm(
+        viewmode,
+        instance=dailyplan,
+    )
 
     base_vm = BaseVM(
         ui=ui_vm,
@@ -557,8 +570,8 @@ def dailyplan_draft_edit(request, pk):
 
     context = base_vm.as_context()
 
-    context["meals_json"] = json.dumps(
-        meals_payload.as_list(),
+    context["meal_picker_data_json"] = json.dumps(
+        meal_picker_data,
         cls=DjangoJSONEncoder,
     )
 
@@ -567,12 +580,13 @@ def dailyplan_draft_edit(request, pk):
         cls=DjangoJSONEncoder,
     )
 
+    context["selected_meal_id"] = request.GET.get("select_meal")
+
     return render(
         request,
         "notas/dailyplans/edit.html",
         context,
     )
-
 
 #************ RENDER BÁSICOS *********************
 # ---------- CREATE - RENAME - CONFIGURE ----------
