@@ -3,7 +3,7 @@
     <div class="page-header-left">
 
         {% if vm.ui.is_inside %}
-            <a href="{{ ui.back_url }}" class="back-header-icon">
+            <a href="{{ vm.ui.back_url }}" class="back-header-icon">
                 <i data-lucide="chevron-left" class="menu-icon"></i>
             </a>
         {% else %}
@@ -12,34 +12,31 @@
             </button>
         {% endif %}
     
-        <div class="label-entity header label-entity--{{ ui.nav_root }}">
-            <i data-lucide="{{ ui.icon }}" class="label-icon"></i>
+        <div class="label-entity header label-entity--{{ vm.ui.nav_root }}">
+            <i data-lucide="{{ vm.ui.icon }}" class="label-icon"></i>
         </div>
     
         <div class="header-title-mobile truncate">
-            <p>{{ ui.title }}</p>
-            <p class="subtitle">{{ ui.root }}</p>
+            <p>{{ vm.ui.title }}</p>
+            <p class="subtitle">{{ vm.ui.root }}</p>
         </div>
     
         <div class="header-breadcrumbs">
-            {% include "components/header_breadcrumbs.html" with breadcrumb=ui.breadcrumb %}
+            {% include "components/header_breadcrumbs.html" with breadcrumb=vm.ui.breadcrumb %}
         </div>
     
     </div>
 
     <div class="page-header-right">
-        <!-- acciones -->
         {% if header.actions %}
             {% include "components/header_actions.html" with actions=header.actions %}
         {% else %}
-        <div class="btn-list-header">
-            <button id="collapse-list-btn" class="collapse-btn" type="button">
-                <i data-lucide="list-chevrons-up-down" class="collapse-list-icon"></i>
-            </button>
-        </div>
+            <div class="btn-list-header">
+                <button id="collapse-list-btn" class="collapse-btn" type="button">
+                    <i data-lucide="list-chevrons-up-down" class="collapse-list-icon"></i>
+                </button>
+            </div>
         {% endif %}
     </div>
 
 </div>
-
- 

@@ -103,16 +103,13 @@ FOOD_ACTIONS_BY_VIEWMODE = {
 # 3. RESOLVER PRINCIPAL
 # ==================================================
 
-def resolve_food_actions(food, user, context=None):
-
-    context = context or {}
-    context_name = context.get("name")
+def resolve_food_actions(food, user, viewmode):
 
     caps = get_capabilities(user)
     actions = []
 
     # --- acciones permitidas según contexto ---
-    allowed_keys = FOOD_ACTIONS_BY_VIEWMODE.get(context_name, [])
+    allowed_keys = FOOD_ACTIONS_BY_VIEWMODE.get(viewmode, [])
 
     for key in allowed_keys:
         definition = FOOD_ACTION_DEFINITIONS.get(key)
@@ -129,7 +126,11 @@ def resolve_food_actions(food, user, context=None):
 
         # --- resolver URL (safe) ---
         try:
-            url = definition["get_url"](food, context)
+            get_url = definition["get_url"]
+            try:
+                url = get_url(food, None)
+            except TypeError:
+                url = get_url(food)
         except NoReverseMatch:
             continue
 

@@ -7,7 +7,7 @@ from notas.presentation.composition.viewmodel.builder_foods_aggregation import b
 from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
 
 
-def build_meal_list_vm(meals, user, action_context):
+def build_meal_list_vm(meals, user, viewmode):
     
     children = []
 
@@ -76,7 +76,7 @@ def build_meal_list_vm(meals, user, action_context):
             resolve_meal_actions(
                 meal,
                 user,
-                context={"name": action_context}
+                viewmode
             )
         )
 
@@ -85,7 +85,7 @@ def build_meal_list_vm(meals, user, action_context):
                 resolve_share_actions(
                     share,
                     user,
-                    context={"name": action_context}
+                    viewmode
                 )
             )
 

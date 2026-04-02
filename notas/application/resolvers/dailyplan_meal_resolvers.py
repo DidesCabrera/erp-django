@@ -139,26 +139,22 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
 # 3. RESOLVER PRINCIPAL
 # ==================================================
 
-def resolve_dailyplan_meal_actions(dpm, user, context=None):
+def resolve_dailyplan_meal_actions(dpm, user, viewmode):
     """
-    Devuelve las acciones disponibles para un DailyPlanMeal,
-    según contexto + capabilities del usuario.
+    Devuelve una lista de acciones disponibles para un DailyPlanMeal,
+    según viewmode + capabilities del usuario.
     """
-
-    context = context or {}
-    context_name = context.get("name")
 
     caps = get_capabilities(user)
     actions = []
 
-    allowed_keys = DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE.get(context_name, [])
+    allowed_keys = DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE.get(viewmode, [])
 
     for key in allowed_keys:
         definition = DAILYPLAN_MEAL_ACTION_DEFINITIONS.get(key)
         if not definition:
             continue
 
-        # --- capability check ---
         capability_name = definition.get("capability")
         if capability_name:
             if not caps or not hasattr(caps, capability_name):
@@ -166,20 +162,28 @@ def resolve_dailyplan_meal_actions(dpm, user, context=None):
             if not getattr(caps, capability_name)():
                 continue
 
-        # --- resolver URL (safe) ---
         try:
-            url = definition["get_url"](dpm, context)
+            get_url = definition["get_url"]
+
+            try:
+                url = get_url(dpm, None)
+            except TypeError:
+                url = get_url(dpm)
+
         except NoReverseMatch:
             continue
 
-        actions.append({
-            "key": key,
-            "label": definition["label"],
-            "url": url,
-            "method": definition["method"],
-            "group": definition.get("group", "primary"),
-            "icon": definition.get("icon"),
-            "order": definition.get("order", 100),
-        })
+        actions.append(
+            {
+                "key": key,
+                "label": definition["label"],
+                "url": url,
+                "method": definition["method"],
+                "group": definition.get("group", "primary"),
+                "icon": definition.get("icon"),
+                "order": definition.get("order", 100),
+                "is_back": definition.get("is_back", False),
+            }
+        )
 
     return actions

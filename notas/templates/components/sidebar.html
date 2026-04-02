@@ -2,7 +2,6 @@
 
 <aside class="sidebar">
                 
-    <!-- SIDEBAR - BRAND LOGO BLOCK-->
     <div class="block-logo-sidebar">
         <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
         <button class="collapse-sidebar-btn" onclick="toggleSidebar()">
@@ -10,21 +9,17 @@
         </button>
     </div>
 
-    <!--================-->
-    <!-- SIDEBAR - USER -->
-    <!--================-->
     <div class="user-block">     
-                       
         {% if request.user.is_authenticated %}
             <div class="user">
                 <a href="{% url 'profile_detail' %}" class="user">
-                <i data-lucide="circle-user-round" class="profile-icon"></i>
-                <h2>{{ request.user.username }}</h2>
-                <div class="label-rol">
-                    {% if request.user.profile.role == "member" %}Member{% endif %}
-                    {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
-                </div>
-                <i data-lucide="chevron-right" class="enter-user-icon"></i>
+                    <i data-lucide="circle-user-round" class="profile-icon"></i>
+                    <h2>{{ request.user.username }}</h2>
+                    <div class="label-rol">
+                        {% if request.user.profile.role == "member" %}Member{% endif %}
+                        {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
+                    </div>
+                    <i data-lucide="chevron-right" class="enter-user-icon"></i>
                 </a>
             </div>
         {% endif %}
@@ -34,81 +29,40 @@
         </p>
     </div>
 
-    <!--=====================-->
-    <!-- SIDEBAR - WORKSPACE -->
-    <!--=====================-->
+    <nav class="sidebar-nav">
+        {% for section in vm.ui.sidebar_sections %}
+            <p class="group-name-sidebar">{{ section.label }}</p>
 
-    <aside class="sidebar">
-                    
-        <!-- SIDEBAR - BRAND LOGO BLOCK-->
-        <div class="block-logo-sidebar">
-            <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
-            <button class="collapse-sidebar-btn" onclick="toggleSidebar()">
-                <i data-lucide="panel-right-open" class="collapse-sidebar-icon"></i>
-            </button>
-        </div>
-    
-        <!--================-->
-        <!-- SIDEBAR - USER -->
-        <!--================-->
-        <div class="user-block">     
-                           
-            {% if request.user.is_authenticated %}
-                <div class="user">
-                    <a href="{% url 'profile_detail' %}" class="user">
-                        <i data-lucide="circle-user-round" class="profile-icon"></i>
-                        <h2>{{ request.user.username }}</h2>
-                        <div class="label-rol">
-                            {% if request.user.profile.role == "member" %}Member{% endif %}
-                            {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
-                        </div>
-                        <i data-lucide="chevron-right" class="enter-user-icon"></i>
-                    </a>
-                </div>
-            {% endif %}
-            
-            <p class="personal-metrics">
-                Mi peso corporal: {{ current_weight }}kg
-            </p>
-        </div>
-    
-        <nav class="sidebar-nav">
-    
-            {% for section in vm.ui.sidebar_sections %}
-                <p class="group-name-sidebar">{{ section.label }}</p>
-    
-                {% for group in section.groups %}
-                    <div class="sidebar-group">
-    
-                        <button type="button" class="sidebar-main">
-                            <span class="sidebar-left">
-                                <i data-lucide="chevron-right" class="sidebar-icon"></i>
-                                <i data-lucide="{{ group.icon }}" class="sidebar-main-icon"></i>
-                                <span class="sidebar-label">{{ group.label }}</span>
-                            </span>
-                        </button>
-    
-                        <div class="sidebar-sub">
-                            {% for item in group.items %}
-                                <a href="{{ item.url }}"
-                                   class="nav-tab tab-list {% if item.is_active %}is-active{% endif %}">
-                                    <i data-lucide="{{ item.icon }}" class="sidebar-leading-icon"></i>
-                                    <span class="nav-text">
-                                        {{ item.label }}
-                                        <span class="nav-indicator"></span>
-                                    </span>
-                                </a>
-                            {% endfor %}
-                        </div>
-    
+            {% for group in section.groups %}
+                <div class="sidebar-group">
+
+                    <button type="button" class="sidebar-main">
+                        <span class="sidebar-left">
+                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
+                            <i data-lucide="{{ group.icon }}" class="sidebar-main-icon"></i>
+                            <span class="sidebar-label">{{ group.label }}</span>
+                        </span>
+                    </button>
+
+                    <div class="sidebar-sub">
+                        {% for item in group.items %}
+                            <a href="{{ item.url }}"
+                               class="nav-tab tab-list {% if item.is_active %}is-active{% endif %}">
+                                <i data-lucide="{{ item.icon }}" class="sidebar-leading-icon"></i>
+                                <span class="nav-text">
+                                    {{ item.label }}
+                                    <span class="nav-indicator"></span>
+                                </span>
+                            </a>
+                        {% endfor %}
                     </div>
-                {% endfor %}
-            {% endfor %}
-    
-        </nav>
-    </aside>
 
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </nav>
 </aside>
 
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 <!-- FONDO GRIS PARA EFECTO SIDEBAR -->
 <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>

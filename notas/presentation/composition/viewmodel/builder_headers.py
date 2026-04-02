@@ -6,13 +6,11 @@ from notas.application.resolvers.food_resolvers import resolve_food_actions
 from notas.presentation.config.viewmodel_config import *
 
 
-def build_food_header(*, food, user, context_name):
+def build_food_header(*, food, user, viewmode):
     actions = resolve_food_actions(
             food,
             user,
-            context={
-                "name": context_name
-            },
+            viewmode
         )
 
     return {
@@ -21,13 +19,11 @@ def build_food_header(*, food, user, context_name):
     }
 
 
-def build_meal_header(*, meal, user, context_name):
+def build_meal_header(*, meal, user, viewmode):
     actions = resolve_meal_actions(
             meal,
             user,
-            context={
-                "name": context_name
-            },
+            viewmode
         )
 
     return {
@@ -36,14 +32,12 @@ def build_meal_header(*, meal, user, context_name):
     }
 
 
-def build_dailyplan_meal_header(*, dpm, user, context_name):
+def build_dailyplan_meal_header(*, dpm, user, viewmode):
     meal = dpm.meal
     actions = resolve_dailyplan_meal_actions(
             dpm,
             user,
-            context={
-                "name": context_name
-            },
+            viewmode
         )
 
     return {
@@ -52,14 +46,12 @@ def build_dailyplan_meal_header(*, dpm, user, context_name):
     }
 
 
-def build_dailyplan_header(*, dailyplan, user, context_name):
+def build_dailyplan_header(*, dailyplan, user, viewmode):
 
     actions = resolve_dailyplan_actions(
             dailyplan,
             user,
-            context={
-                "name": context_name
-            },
+            viewmode
         )
     
     return {

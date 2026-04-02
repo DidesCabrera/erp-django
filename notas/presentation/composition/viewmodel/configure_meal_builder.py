@@ -11,7 +11,7 @@ def build_meal_configure_vm(meal, user, viewmode):
     header = build_meal_header(
         meal=meal,
         user=user,
-        context_name=viewmode
+        viewmode=viewmode
     )
 
     sections = [

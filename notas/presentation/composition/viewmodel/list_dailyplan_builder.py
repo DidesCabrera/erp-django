@@ -76,7 +76,7 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
             resolve_dailyplan_actions(
                 dailyplan,
                 user,
-                context={"name": viewmode}
+                viewmode
             )
         )
 
@@ -85,7 +85,7 @@ def build_dailyplan_list_vm(dailyplans, user, viewmode):
                 resolve_share_actions(
                     share,
                     user,
-                    context={"name": viewmode}
+                    viewmode
                 )
             )
 

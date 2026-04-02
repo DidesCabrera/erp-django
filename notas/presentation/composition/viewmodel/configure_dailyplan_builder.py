@@ -14,7 +14,7 @@ def build_dailyplan_configure_vm(dailyplan, user, viewmode):
     header = build_dailyplan_header(
         dailyplan=dailyplan,
         user=user,
-        context_name=viewmode,
+        viewmode=viewmode,
     )
 
     sections = [

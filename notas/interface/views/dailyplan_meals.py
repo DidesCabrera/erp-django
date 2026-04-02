@@ -21,6 +21,8 @@ from notas.presentation.viewmodels.base_vm import BaseVM
 from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
 from notas.application.services.meal import fork_meal_for_dailyplan
 
+from django.urls import reverse
+
 
 
 #************ RENDER COMPLEJOS *********************
@@ -126,7 +128,6 @@ def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
         base_vm.as_context(),
     )
 
-
 @login_required
 def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
@@ -139,7 +140,7 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
             .select_related("meal", "dailyplan")
             .prefetch_related(
                 "meal__meal_food_set",
-                "meal__meal_food_set__food"
+                "meal__meal_food_set__food",
             ),
         id=dailyplanmeal_id,
         dailyplan_id=dailyplan_id,
@@ -148,7 +149,6 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
     user = request.user
     dailyplan = dpm.dailyplan
-
     meal = dpm.meal
 
     caps = get_capabilities(user)
@@ -219,8 +219,15 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
     ui_vm = build_ui_vm(
         viewmode,
-        parents=[dailyplan],   # 🔹 jerarquía real
-        instance=meal,         # 🔹 entidad visible final
+        parents=[dailyplan],
+        instance=meal,
+        back_config={
+            "type": "url",
+            "value": reverse(
+                "dailyplan_meal_detail",
+                args=[dailyplan.id, dpm.id],
+            ),
+        },
     )
 
     base_vm = BaseVM(
@@ -245,6 +252,8 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
         "notas/dailyplan_meals/deep_edit.html",
         context,
     )
+
+
 
 @login_required
 def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):

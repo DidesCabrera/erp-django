@@ -20,7 +20,7 @@ def build_food_list_vm(foods, user, viewmode):
                 actions=resolve_food_actions(
                     food,
                     user,
-                    context={"name": viewmode},
+                    viewmode
                 ),
             )
         )

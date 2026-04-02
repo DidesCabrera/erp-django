@@ -18,7 +18,7 @@ from notas.presentation.composition.viewmodel.builder_foods_aggregation import  
 
 
 
-def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
+def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, viewmode):
 
     # ==================================================
     # HEADER
@@ -27,7 +27,7 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
     header = build_dailyplan_header(
         dailyplan=dailyplan,
         user=user,
-        context_name=action_context
+        viewmode=viewmode
     )
     
     main_entity_icon = CONTENT_ICON_REGISTRY.get("dailyplan")
@@ -194,7 +194,7 @@ def build_dailyplan_detail_vm(dailyplan, dailyplan_meals, user, action_context):
             actions=resolve_dailyplan_meal_actions(
                 dpm,
                 user,
-                context={"name": action_context}
+                viewmode
             )
         )
 

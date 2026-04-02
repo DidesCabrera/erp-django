@@ -52,7 +52,7 @@ MEAL_ACTION_DEFINITIONS = {
     "fork": {
         "label": "Duplicar",
         "method": "post",
-        "group": "overflow",
+        "group": "primary",
         "icon": "copy",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
@@ -260,7 +260,7 @@ MEAL_ACTIONS_BY_VIEWMODE = {
         "fork",
         #"share",
         "add_to_dailyplan",
-        #"remove",
+        "remove",
     ],
     
     MEAL_VIEWMODE_EXPLORE_DETAIL: [
@@ -299,19 +299,57 @@ MEAL_ACTIONS_BY_VIEWMODE = {
 # 3. RESOLVER PRINCIPAL
 # ==================================================
 
-def resolve_meal_actions(meal, user, context=None):
+def resolve_meal_actions(meal, user, viewmode):
+    caps = get_capabilities(user)
+    actions = []
+
+    allowed_keys = MEAL_ACTIONS_BY_VIEWMODE.get(viewmode, [])
+
+    for key in allowed_keys:
+        definition = MEAL_ACTION_DEFINITIONS.get(key)
+        if not definition:
+            continue
+
+        capability_name = definition.get("capability")
+        if capability_name:
+            if not caps or not hasattr(caps, capability_name):
+                continue
+            if not getattr(caps, capability_name)():
+                continue
+
+        try:
+            get_url = definition["get_url"]
+
+            try:
+                url = get_url(meal, None)
+            except TypeError:
+                url = get_url(meal)
+
+        except NoReverseMatch:
+            continue
+
+        actions.append(
+            {
+                "key": key,
+                "label": definition["label"],
+                "url": url,
+                "method": definition["method"],
+                "group": definition.get("group", "primary"),
+                "icon": definition.get("icon"),
+                "order": definition.get("order", 100),
+                "is_back": definition.get("is_back", False),
+            }
+        )
+
+    return actions
     """
     Devuelve una lista de acciones disponibles para una Meal
     según viewmode + capabilities.
     """
-
-    context = context or {}
-    context_name = context.get("name")
-
     caps = get_capabilities(user)
     actions = []
 
-    allowed_keys = MEAL_ACTIONS_BY_VIEWMODE.get(context_name, [])
+    allowed_keys = MEAL_ACTIONS_BY_VIEWMODE.get(viewmode, [])
 
     for key in allowed_keys:
 

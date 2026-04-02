@@ -9,7 +9,7 @@ from notas.domain.models import DailyPlanShare, MealShare
 
 @dataclass
 class InboxItem:
-    kind: str               # "dailyplan" | "meal"
+    kind: str # "dailyplan" | "meal"
     created_at: datetime
     sender: str
     title: str

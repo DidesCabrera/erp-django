@@ -1,125 +1,118 @@
-from django.urls import reverse, NoReverseMatch
+from django.urls import NoReverseMatch, reverse
+
 from notas.application.services.capabilities import get_capabilities
-from notas.interface.routing.food import food_url, food_list_url
+from notas.interface.routing.food import food_list_url, food_url
 from notas.presentation.config.viewmodel_config import (
-    FOOD_VIEWMODE_PERSONAL_LIST,
-    FOOD_VIEWMODE_PERSONAL_DETAIL,
-    FOOD_VIEWMODE_MEAL,
-    FOOD_VIEWMODE_PERSONAL_EDIT,
+    MEAL_FOOD_VIEWMODE_DETAIL,
+    MEAL_FOOD_VIEWMODE_DRAFT_DEEP_EDIT,
+    MEAL_FOOD_VIEWMODE_LIST,
+    MEAL_FOOD_VIEWMODE_PERSONAL_DEEP_EDIT,
 )
+
 
 # ==================================================
 # 1. DEFINICIÓN DECLARATIVA DE ACCIONES
 # (qué es cada acción, NO cuándo aparece)
 # ==================================================
 
-FOOD_ACTION_DEFINITIONS = {
+MEAL_FOOD_ACTION_DEFINITIONS = {
     "detail": {
         "label": "View",
         "method": "get",
         "group": "primary",
         "icon": "log-in",
         "order": 90,
-        "get_url": lambda food, context=None: food_url(food),
+        "get_url": lambda food: food_url(food),
     },
-
     "cancel": {
         "label": "Cancel",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "x",
         "order": 90,
-        "get_url": lambda food, context=None: food_list_url(),
+        "get_url": lambda food: food_list_url(),
     },
-
-    # ---- FUTURAS (safe no-op si no se usan) ----
-
     "delete": {
         "label": "Delete",
         "method": "post",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "trash-2",
         "order": 90,
-        "get_url": lambda food, context=None: reverse(
-            "food_delete", args=[food.id]
+        "get_url": lambda food: reverse(
+            "food_delete",
+            args=[food.id],
         ),
     },
-
     "edit": {
         "label": "Edit",
-        "method": "post",
+        "method": "get",
         "group": "primary",
         "icon": "pencil",
         "order": 90,
-        "get_url": lambda food, context=None: reverse(
-            "food_edit", args=[food.id]
+        "get_url": lambda food: reverse(
+            "food_edit",
+            args=[food.id],
         ),
     },
-
     "save": {
         "label": "Save",
         "method": "post",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "check",
         "order": 90,
-        "get_url": lambda food, context=None: reverse(
-            "food_detail", args=[food.id]
+        "get_url": lambda food: reverse(
+            "food_detail",
+            args=[food.id],
         ),
     },
 }
 
+
 # ==================================================
-# 2. ACCIONES PERMITIDAS POR CONTEXTO
+# 2. ACCIONES PERMITIDAS POR VIEWMODE
 # ==================================================
 
-FOOD_ACTIONS_BY_VIEWMODE = {
-    FOOD_VIEWMODE_PERSONAL_LIST: [
+MEAL_FOOD_ACTIONS_BY_VIEWMODE = {
+    MEAL_FOOD_VIEWMODE_LIST: [
         "detail",
-        "fork",
-        "copy",
-        "add_to_dailyplan",
     ],
-
-    FOOD_VIEWMODE_PERSONAL_DETAIL: [
-        "fork",
-        "copy",
-        "add_to_dailyplan",
+    MEAL_FOOD_VIEWMODE_DETAIL: [
+        "detail",
         "edit",
         "delete",
     ],
-
-    FOOD_VIEWMODE_PERSONAL_EDIT: [
+    MEAL_FOOD_VIEWMODE_PERSONAL_DEEP_EDIT: [
         "save",
         "cancel",
     ],
-
-    FOOD_VIEWMODE_MEAL: [
-        # dentro de un dailyplan
-        "detail",
+    MEAL_FOOD_VIEWMODE_DRAFT_DEEP_EDIT: [
+        "save",
+        "cancel",
     ],
 }
+
 
 # ==================================================
 # 3. RESOLVER PRINCIPAL
 # ==================================================
 
-def resolve_food_actions(food, user, context=None):
-
-    context = context or {}
-    context_name = context.get("name")
+def resolve_meal_food_actions(food, user, viewmode):
+    """
+    Devuelve una lista de acciones disponibles para un food
+    renderizado en el contexto meal_food, según viewmode
+    + capabilities del usuario.
+    """
 
     caps = get_capabilities(user)
     actions = []
 
-    # --- acciones permitidas según contexto ---
-    allowed_keys = FOOD_ACTIONS_BY_VIEWMODE.get(context_name, [])
+    allowed_keys = MEAL_FOOD_ACTIONS_BY_VIEWMODE.get(viewmode, [])
 
     for key in allowed_keys:
-        definition = FOOD_ACTION_DEFINITIONS.get(key)
+        definition = MEAL_FOOD_ACTION_DEFINITIONS.get(key)
         if not definition:
             continue
 
-        # --- capability check ---
         capability_name = definition.get("capability")
         if capability_name:
             if not caps or not hasattr(caps, capability_name):
@@ -127,20 +120,22 @@ def resolve_food_actions(food, user, context=None):
             if not getattr(caps, capability_name)():
                 continue
 
-        # --- resolver URL (safe) ---
         try:
-            url = definition["get_url"](food, context)
+            url = definition["get_url"](food)
         except NoReverseMatch:
             continue
 
-        actions.append({
-            "key": key,
-            "label": definition["label"],
-            "url": url,
-            "method": definition["method"],
-            "group": definition.get("group", "primary"),
-            "icon": definition.get("icon"),
-            "order": definition.get("order", 100),
-        })
+        actions.append(
+            {
+                "key": key,
+                "label": definition["label"],
+                "url": url,
+                "method": definition["method"],
+                "group": definition.get("group", "primary"),
+                "icon": definition.get("icon"),
+                "order": definition.get("order", 100),
+                "is_back": definition.get("is_back", False),
+            }
+        )
 
     return actions

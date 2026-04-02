@@ -1,44 +1,38 @@
 from notas.presentation.viewmodels.base_vm import UI
-from notas.presentation.navigation.breadcrumb_builder import build_breadcrumb
-from notas.presentation.navigation.builders import build_sidebar_vm, resolve_navigation_root
-from notas.presentation.navigation.registry import NAVIGATION_STRUCTURE
+from notas.presentation.navigation.builders import (
+    build_back_url,
+    build_breadcrumb_vm,
+    build_navigation_meta,
+    build_sidebar_vm,
+    resolve_navigation_root,
+)
 
 
-def build_ui_vm(viewmode, instance=None, parents=None):
-
-    breadcrumb = build_breadcrumb(
-        entity=viewmode.entity,
-        subgroup=viewmode.scope,
+def build_ui_vm(viewmode, instance=None, parents=None, back_config=None):
+    breadcrumb = build_breadcrumb_vm(
+        viewmode,
         parents=parents,
         instance=instance,
     )
 
-    nav_root = resolve_navigation_root(viewmode.entity)
+    meta = build_navigation_meta(viewmode)
 
-    nav_config = NAVIGATION_STRUCTURE.get(nav_root, {})
-    icon = nav_config.get("icon")
+    title = breadcrumb[-1].label if breadcrumb else meta["default_title"]
 
-    section_label = nav_config.get("section", {}).get("label")
-
-    subgroups = nav_config.get("subgroups", {})
-
-    page_icon = None
-
-    if viewmode.scope and viewmode.scope in subgroups:
-        page_icon = subgroups[viewmode.scope].get("page-icon")
-
-    if not page_icon:
-        page_icon = nav_config.get("section", {}).get("page-icon")
-
-    title = breadcrumb[-1].label if breadcrumb else ""
-    root = breadcrumb[-2].label if breadcrumb else ""
+    root = ""
+    if len(breadcrumb) >= 2:
+        root = breadcrumb[-2].label
+    else:
+        root = meta["default_root"]
 
     is_inside = viewmode.mode != "list"
 
-    back_url = None
-
-    if len(breadcrumb) >= 2:
-        back_url = breadcrumb[-2].url
+    back_url = build_back_url(
+        viewmode,
+        parents=parents,
+        breadcrumb=breadcrumb,
+        back_config=back_config,
+    )
 
     sidebar_sections = build_sidebar_vm(viewmode)
 
@@ -47,11 +41,11 @@ def build_ui_vm(viewmode, instance=None, parents=None):
         entity=viewmode.entity,
         mode=viewmode.mode,
         scope=viewmode.scope,
-        nav_root=nav_root,
-        icon=icon,
-        page_icon=page_icon,
+        nav_root=resolve_navigation_root(viewmode.entity),
+        icon=meta["icon"],
+        page_icon=meta["page_icon"],
         breadcrumb=breadcrumb,
-        section_label=section_label,
+        section_label=meta["section_label"],
         title=title,
         root=root,
         is_inside=is_inside,

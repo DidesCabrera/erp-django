@@ -1,0 +1,65 @@
+from django.contrib.auth import get_user_model
+from django.test import Client, TestCase
+from django.urls import reverse
+
+from notas.domain.models import DailyPlan, DailyPlanMeal, Meal
+
+
+User = get_user_model()
+
+
+class DailyPlanMealNavigationTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="felipe",
+            email="felipe@test.com",
+            password="12345678",
+        )
+
+        self.client = Client()
+        self.client.login(
+            username="felipe",
+            password="12345678",
+        )
+
+        self.dailyplan = DailyPlan.objects.create(
+            name="Plan 1",
+            created_by=self.user,
+            is_draft=False,
+        )
+
+        self.meal = Meal.objects.create(
+            name="Meal Test",
+            created_by=self.user,
+            is_draft=False,
+            is_public=False,
+            is_forkable=True,
+            is_copiable=False,
+        )
+
+        self.dpm = DailyPlanMeal.objects.create(
+            dailyplan=self.dailyplan,
+            meal=self.meal,
+            order=1,
+        )
+
+    def test_dailyplanmeal_deepedit_sets_back_url_to_dpm_detail(self):
+        response = self.client.get(
+            reverse(
+                "dailyplanmeal_deepedit",
+                args=[self.dailyplan.id, self.dpm.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        expected_back_url = reverse(
+            "dailyplan_meal_detail",
+            args=[self.dailyplan.id, self.dpm.id],
+        )
+
+        self.assertEqual(
+            response.context["vm"]["ui"]["back_url"],
+            expected_back_url,
+        )

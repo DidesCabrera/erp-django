@@ -4,7 +4,7 @@ from notas.presentation.composition.viewmodel.builder_headers import build_food_
 from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
 
 
-def build_food_detail_vm(food, user, action_context):
+def build_food_detail_vm(food, user, viewmode):
 
     main_entity_icon = CONTENT_ICON_REGISTRY.get("food")
     main_entity_label = "Food"
@@ -16,7 +16,7 @@ def build_food_detail_vm(food, user, action_context):
     header = build_food_header(
         food=food,
         user=user,
-        context_name=action_context
+        viewmode=viewmode
     )
 
     # ==================================================

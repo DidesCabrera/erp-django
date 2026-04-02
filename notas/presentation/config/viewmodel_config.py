@@ -15,6 +15,11 @@ FOOD_VIEWMODE_IMPORT = vm("food", "list", "import")
 
 FOOD_VIEWMODE_MEAL = vm("food", "meal")
 
+# MF VIEWMODE ---------------------------------------------
+MEAL_FOOD_VIEWMODE_LIST = vm("meal_food", "list", "personal")
+MEAL_FOOD_VIEWMODE_DETAIL = vm("meal_food", "detail", "personal")
+MEAL_FOOD_VIEWMODE_PERSONAL_DEEP_EDIT = vm("meal_food", "deep_edit", "personal")
+MEAL_FOOD_VIEWMODE_DRAFT_DEEP_EDIT = vm("meal_food", "deep_edit", "draft")
 
 # Meal VIEWMODE ---------------------------------------------
 MEAL_VIEWMODE_PERSONAL_LIST = vm("meal", "list", "personal")

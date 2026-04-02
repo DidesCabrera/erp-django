@@ -1,5 +1,5 @@
 from notas.application.services.kpis import get_ppk_meal
-from notas.application.resolvers.meal_food_resolvers import resolve_food_actions
+from notas.application.resolvers.meal_food_resolvers import resolve_meal_food_actions
 from notas.presentation.viewmodels.content.detail_meal_vm import *
 from notas.presentation.composition.viewmodel.builder_table_items import build_mealfood_table_item
 from notas.presentation.composition.viewmodel.builder_headers import build_meal_header
@@ -7,7 +7,7 @@ from notas.presentation.composition.viewmodel.builder_headers import build_meal_
 from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
 
 
-def build_meal_detail_vm(meal, user, action_context):
+def build_meal_detail_vm(meal, user, viewmode):
 
     main_entity_icon = CONTENT_ICON_REGISTRY.get("meal")
     main_entity_label = "Meal"
@@ -19,7 +19,7 @@ def build_meal_detail_vm(meal, user, action_context):
     header = build_meal_header(
         meal=meal,
         user=user,
-        context_name=action_context
+        viewmode=viewmode
     )
 
     # ==================================================
@@ -146,10 +146,10 @@ def build_meal_detail_vm(meal, user, action_context):
                 alloc_fat=food_alloc["fat"],
             ),
 
-            actions=resolve_food_actions(
+            actions=resolve_meal_food_actions(
                 mf,
                 user,
-                context={"name": action_context}
+                viewmode
             )
         )
 

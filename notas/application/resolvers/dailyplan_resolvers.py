@@ -66,7 +66,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "fork": {
         "label": "Duplicar",
         "method": "post",
-        "group": "overflow",
+        "group": "primary",
         "icon": "copy",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
@@ -350,28 +350,22 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 # 3. RESOLVER PRINCIPAL
 # ==================================================
 
-def resolve_dailyplan_actions(dailyplan, user, context=None):
+def resolve_dailyplan_actions(dailyplan, user, viewmode):
     """
     Devuelve una lista de acciones disponibles para un DailyPlan,
-    según contexto + capabilities del usuario.
+    según viewmode + capabilities del usuario.
     """
-
-    context = context or {}
-    context_name = context.get("name")
 
     caps = get_capabilities(user)
     actions = []
 
-    allowed_keys = DAILYPLAN_ACTIONS_BY_VIEWMODE.get(context_name, [])
+    allowed_keys = DAILYPLAN_ACTIONS_BY_VIEWMODE.get(viewmode, [])
 
     for key in allowed_keys:
         definition = DAILYPLAN_ACTION_DEFINITIONS.get(key)
         if not definition:
             continue
 
-        # -----------------------------
-        # CAPABILITY CHECK
-        # -----------------------------
         capability_name = definition.get("capability")
         if capability_name:
             if not caps or not hasattr(caps, capability_name):
@@ -379,23 +373,28 @@ def resolve_dailyplan_actions(dailyplan, user, context=None):
             if not getattr(caps, capability_name)():
                 continue
 
-        # -----------------------------
-        # RESOLVE URL
-        # -----------------------------
         try:
-            url = definition["get_url"](dailyplan, context)
+            get_url = definition["get_url"]
+
+            try:
+                url = get_url(dailyplan, None)
+            except TypeError:
+                url = get_url(dailyplan)
+
         except NoReverseMatch:
             continue
 
-        actions.append({
-            "key": key,
-            "label": definition["label"],
-            "url": url,
-            "method": definition["method"],
-            "group": definition.get("group", "primary"),
-            "icon": definition.get("icon"),
-            "order": definition.get("order", 100),
-            "is_back": definition.get("is_back", False),
-        })
+        actions.append(
+            {
+                "key": key,
+                "label": definition["label"],
+                "url": url,
+                "method": definition["method"],
+                "group": definition.get("group", "primary"),
+                "icon": definition.get("icon"),
+                "order": definition.get("order", 100),
+                "is_back": definition.get("is_back", False),
+            }
+        )
 
     return actions
