@@ -1,7 +1,7 @@
 from notas.application.services.capabilities import get_capabilities
-from notas.presentation.viewmodels.content.configure_vm import *
+from notas.presentation.viewmodels.content.dailyplan.configure_vm import *
 
-from notas.presentation.composition.viewmodel.builder_headers import build_meal_header
+from notas.presentation.composition.viewmodel.components.builder_headers import build_meal_header
 
 
 def build_meal_configure_vm(meal, user, viewmode):

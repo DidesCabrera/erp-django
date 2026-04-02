@@ -6,7 +6,7 @@ from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_DETAIL,
     PROFILE_VIEWMODE,
 )
-from notas.presentation.navigation.builders import build_back_url
+from notas.presentation.navigation.nav_builders import build_back_url
 
 
 class DummyParentWithAbsoluteUrl:

@@ -1,10 +1,10 @@
 from notas.application.services.kpis import get_ppk_meal
 from notas.application.resolvers.meal_resolvers import resolve_meal_actions
 from notas.application.resolvers.share_resolvers import resolve_share_actions
-from notas.presentation.viewmodels.content.list_meal_vm import *
-from notas.presentation.composition.viewmodel.builder_table_items import build_mealfood_table_item
-from notas.presentation.composition.viewmodel.builder_foods_aggregation import build_meal_foods_aggregation
-from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
+from notas.presentation.viewmodels.content.meal.list_meal_vm import *
+from notas.presentation.composition.viewmodel.components.builder_table_items import build_mealfood_table_item
+from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import build_meal_foods_aggregation
+from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
 
 
 def build_meal_list_vm(meals, user, viewmode):

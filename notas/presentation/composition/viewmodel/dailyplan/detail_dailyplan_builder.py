@@ -6,13 +6,13 @@ from notas.application.services.kpis import (
 from notas.application.resolvers.dailyplan_resolvers import resolve_dailyplan_actions
 from notas.application.resolvers.dailyplan_meal_resolvers import resolve_dailyplan_meal_actions
 
-from notas.presentation.viewmodels.content.detail_dailyplan_vm import *
-from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
+from notas.presentation.viewmodels.content.dailyplan.detail_dailyplan_vm import *
+from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
 
-from notas.presentation.composition.viewmodel.builder_table_items import build_dailyplanmeal_table_item, build_mealfood_table_item
-from notas.presentation.composition.viewmodel.builder_headers import build_dailyplan_header
+from notas.presentation.composition.viewmodel.components.builder_table_items import build_dailyplanmeal_table_item, build_mealfood_table_item
+from notas.presentation.composition.viewmodel.components.builder_headers import build_dailyplan_header
 
-from notas.presentation.composition.viewmodel.builder_foods_aggregation import  build_dailyplan_foods_aggregation, build_meal_foods_aggregation
+from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import  build_dailyplan_foods_aggregation, build_meal_foods_aggregation
 
 
 

@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from notas.presentation.config.viewmodel_config import DAILYPLAN_VIEWMODE_CONFIGURE
-from notas.presentation.navigation.builders import build_back_url
+from notas.presentation.navigation.nav_builders import build_back_url
 
 
 class NavigationBackConfigTests(TestCase):

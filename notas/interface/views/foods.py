@@ -14,16 +14,16 @@ from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_IMPORT
 )
 from notas.interface.routing.food import food_url
-from notas.presentation.composition.viewmodel.list_foods_builder import build_food_list_vm
-from notas.presentation.composition.viewmodel.detail_food_builder import build_food_detail_vm
-from notas.presentation.composition.viewmodel.edit_food_builder import build_edit_food_vm
+from notas.presentation.composition.viewmodel.food.list_foods_builder import build_food_list_vm
+from notas.presentation.composition.viewmodel.dpm.detail_food_builder import build_food_detail_vm
+from notas.presentation.composition.viewmodel.food.edit_food_builder import build_edit_food_vm
 from notas.interface.forms.forms import FoodEditForm
 
 from notas.application.services.food import create_food
 
 
 from notas.presentation.viewmodels.base_vm import BaseVM
-from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
 #************ RENDER COMPLEJOS *********************
 # ---------- LIST - DETAIL ----------

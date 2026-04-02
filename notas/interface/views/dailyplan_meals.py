@@ -10,7 +10,7 @@ from notas.presentation.config.viewmodel_config import (
     DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
     DAILYPLAN_MEAL_VIEWMODE_DETAIL,
 )
-from notas.presentation.composition.viewmodel.detail_dpm_builder import build_dpm_detail_vm
+from notas.presentation.composition.viewmodel.dpm.detail_dpm_builder import build_dpm_detail_vm
 from notas.presentation.composition.js.dpm_food_picker_builder import build_dpm_food_picker_context_payload
 from notas.presentation.composition.js.food_picker_builder import build_food_picker_foods_payload
 from notas.application.services.kpis import build_nutrition_kpis_from_meal, build_nutrition_kpis_from_dailyplan
@@ -18,7 +18,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 
 from notas.presentation.viewmodels.base_vm import BaseVM
-from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 from notas.application.services.meal import fork_meal_for_dailyplan
 
 from django.urls import reverse

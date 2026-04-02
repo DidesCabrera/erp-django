@@ -11,9 +11,9 @@ from notas.application.services.kpis import build_nutrition_kpis_from_dailyplan
 
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from notas.presentation.composition.viewmodel.detail_dailyplan_builder import build_dailyplan_detail_vm
-from notas.presentation.composition.viewmodel.list_dailyplan_builder import build_dailyplan_list_vm
-from notas.presentation.composition.viewmodel.configure_dailyplan_builder import build_dailyplan_configure_vm
+from notas.presentation.composition.viewmodel.dailyplan.detail_dailyplan_builder import build_dailyplan_detail_vm
+from notas.presentation.composition.viewmodel.dailyplan.list_dailyplan_builder import build_dailyplan_list_vm
+from notas.presentation.composition.viewmodel.dailyplan.configure_dailyplan_builder import build_dailyplan_configure_vm
 from notas.presentation.composition.js.meal_picker_builder import build_meal_picker_meals_payload ,build_meal_picker_context_payload, build_meal_picker_data_payload
 from notas.application.services.dailyplan_queries import dailyplans_with_kcal, get_dailyplan_for_edit
 from notas.application.services.meal_queries import meals_with_kcal
@@ -26,7 +26,7 @@ from django.conf import settings
 from django.urls import reverse
 
 from notas.presentation.viewmodels.base_vm import BaseVM
-from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
 
 

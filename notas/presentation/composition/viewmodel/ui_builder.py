@@ -1,5 +1,5 @@
 from notas.presentation.viewmodels.base_vm import UI
-from notas.presentation.navigation.builders import (
+from notas.presentation.navigation.nav_builders import (
     build_back_url,
     build_breadcrumb_vm,
     build_navigation_meta,

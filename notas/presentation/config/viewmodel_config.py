@@ -1,4 +1,4 @@
-from notas.presentation.viewmodels.ui.viewmode import vm
+from notas.presentation.config.viewmode import vm
 
 
 PROFILE_VIEWMODE = vm("profile", "list", "personal")

@@ -1,4 +1,4 @@
-from notas.presentation.viewmodels.content.list_vm import MenuUI, MenuMealUI
+from notas.presentation.viewmodels.content.dailyplan.list_vm import MenuUI, MenuMealUI
 
 
 def build_dailyplan_menu(dailyplan_meals):

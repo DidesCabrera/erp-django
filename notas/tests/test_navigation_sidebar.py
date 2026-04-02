@@ -7,11 +7,11 @@ from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_LIST,
     PROFILE_VIEWMODE,
 )
-from notas.presentation.navigation.builders import (
+from notas.presentation.navigation.nav_builders import (
     build_sidebar_vm,
     resolve_navigation_root,
 )
-from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
 
 User = get_user_model()

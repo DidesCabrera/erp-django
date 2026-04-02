@@ -1,7 +1,7 @@
-from notas.presentation.viewmodels.content.detail_food_vm import *
-from notas.presentation.composition.viewmodel.builder_headers import build_food_header
+from notas.presentation.viewmodels.content.food.detail_food_vm import *
+from notas.presentation.composition.viewmodel.components.builder_headers import build_food_header
 
-from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
+from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
 
 
 def build_food_detail_vm(food, user, viewmode):

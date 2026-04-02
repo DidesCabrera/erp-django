@@ -1,4 +1,4 @@
-from notas.presentation.viewmodels.content.list_food_vm import FoodListVM, FoodListItemVM
+from notas.presentation.viewmodels.content.food.list_food_vm import FoodListVM, FoodListItemVM
 from notas.interface.routing.food import food_url
 from notas.application.resolvers.food_resolvers import resolve_food_actions
 

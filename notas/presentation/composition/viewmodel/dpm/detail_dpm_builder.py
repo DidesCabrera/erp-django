@@ -1,13 +1,21 @@
-from notas.application.services.kpis import get_ppk_meal
+from notas.application.services.kpis import (
+    get_ppk_dailyplan,
+    get_ppk_meal,
+)
+
 from notas.application.resolvers.meal_food_resolvers import resolve_meal_food_actions
-from notas.presentation.viewmodels.content.detail_meal_vm import *
-from notas.presentation.composition.viewmodel.builder_table_items import build_mealfood_table_item
-from notas.presentation.composition.viewmodel.builder_headers import build_meal_header
 
-from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
+from notas.presentation.viewmodels.content.dpm.detail_dpm_vm import *
+from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
+
+from notas.presentation.composition.viewmodel.components.builder_table_items import build_mealfood_table_item
+from notas.presentation.composition.viewmodel.components.builder_headers import build_dailyplan_meal_header
 
 
-def build_meal_detail_vm(meal, user, viewmode):
+
+
+
+def build_dpm_detail_vm(dailyplan, dpm, user, viewmode):
 
     main_entity_icon = CONTENT_ICON_REGISTRY.get("meal")
     main_entity_label = "Meal"
@@ -16,11 +24,30 @@ def build_meal_detail_vm(meal, user, viewmode):
     # HEADER
     # ==================================================
 
-    header = build_meal_header(
-        meal=meal,
+    header = build_dailyplan_meal_header(
+        dpm=dpm,
         user=user,
         viewmode=viewmode
     )
+
+    # ==================================================
+    # Freeze DAILYPLAN aggregates
+    # ==================================================
+
+    dp_total_kcal = dailyplan.total_kcal
+    dp_protein = dailyplan.protein
+    dp_carbs = dailyplan.carbs
+    dp_fat = dailyplan.fat
+
+    dp_kcal_protein = dailyplan.kcal_protein
+    dp_kcal_carbs = dailyplan.kcal_carbs
+    dp_kcal_fat = dailyplan.kcal_fat
+
+    dp_alloc = dailyplan.alloc
+
+    father_ppk = get_ppk_dailyplan(dailyplan, user)
+
+    meal = dpm.meal
 
     # ==================================================
     # Freeze MEAL aggregates (cached if available)
@@ -41,11 +68,53 @@ def build_meal_detail_vm(meal, user, viewmode):
         "fat": meal.alloc_fat_cached or meal.alloc["fat"],
     }
 
+    meal_ppk = get_ppk_meal(meal, user)
+
     # ==================================================
-    # MAIN CARD
+    # FATHER CARD (DailyPlan)
     # ==================================================
 
-    ppk = get_ppk_meal(meal, user)
+    father = FatherCardUI(
+        father_id=dailyplan.id,
+
+        titulo=TitleUI(
+            name=dailyplan.name,
+            label= "Daily Plan",
+            category=dailyplan.category,
+        ),
+
+        rel_id=dpm.id,
+
+        kpis=KPIUI(
+            ppk=father_ppk["ppk"],
+            tot_kcal=dp_total_kcal,
+
+            g_protein=dp_protein,
+            g_carbs=dp_carbs,
+            g_fat=dp_fat,
+
+            kcal_protein=dp_kcal_protein,
+            kcal_carbs=dp_kcal_carbs,
+            kcal_fat=dp_kcal_fat,
+
+            alloc_protein=dp_alloc["protein"],
+            alloc_carbs=dp_alloc["carbs"],
+            alloc_fat=dp_alloc["fat"],
+        ),
+
+        related_data=DpmRelatedDataUI(
+            rel_id=dpm.id,
+            hour=str(dpm.hour) if dpm.hour else None,
+            note=dpm.note,
+            alloc_protein=meal_alloc["protein"],
+            alloc_carbs=meal_alloc["carbs"],
+            alloc_fat=meal_alloc["fat"],
+        ),
+    )
+
+    # ==================================================
+    # MAIN CARD (Meal)
+    # ==================================================
 
     meal_foods = list(meal.meal_food_set.all())
 
@@ -53,8 +122,6 @@ def build_meal_detail_vm(meal, user, viewmode):
         build_mealfood_table_item(mf)
         for mf in meal_foods
     ]
-
-    has_mf = len(meal_foods) > 0
 
     main = MainCardUI(
         main_id=meal.id,
@@ -67,7 +134,7 @@ def build_meal_detail_vm(meal, user, viewmode):
         ),
 
         kpis=KPIUI(
-            ppk=ppk["ppk"],
+            ppk=meal_ppk["ppk"],
             tot_kcal=meal_total_kcal,
 
             g_protein=meal_protein,
@@ -85,9 +152,6 @@ def build_meal_detail_vm(meal, user, viewmode):
 
         table={"items": meal_foods_table_items},
 
-        show_kpis=has_mf,
-        show_table=has_mf,
-
         metadata=MetadataUI(
             owner=str(meal.created_by),
             author=str(meal.original_author),
@@ -96,7 +160,7 @@ def build_meal_detail_vm(meal, user, viewmode):
     )
 
     # ==================================================
-    # CHILD CARDS (FOODS)
+    # CHILD CARDS (Foods)
     # ==================================================
 
     children = []
@@ -105,12 +169,7 @@ def build_meal_detail_vm(meal, user, viewmode):
 
         food = mf.food
 
-        # --- freeze food aggregates (food is per 100g) ---
-        food_total_kcal = food.total_kcal
-        food_protein = food.protein
-        food_carbs = food.carbs
-        food_fat = food.fat
-
+        # food values are per 100g → no cache needed
         food_alloc = food.alloc
 
         child = ChildCardUI(
@@ -130,12 +189,12 @@ def build_meal_detail_vm(meal, user, viewmode):
             ),
 
             kpis=KPIUI(
-                ppk=ppk["ppk"],
-                tot_kcal=food_total_kcal,
+                ppk=meal_ppk["ppk"],
+                tot_kcal=food.total_kcal,
 
-                g_protein=food_protein,
-                g_carbs=food_carbs,
-                g_fat=food_fat,
+                g_protein=food.protein,
+                g_carbs=food.carbs,
+                g_fat=food.fat,
 
                 kcal_protein=food.kcal_protein,
                 kcal_carbs=food.kcal_carbs,
@@ -159,8 +218,9 @@ def build_meal_detail_vm(meal, user, viewmode):
     # FINAL VM
     # ==================================================
 
-    return MealDetailVM(
+    return DpmDeepDetailVM(
         header=header,
+        father_card=father,
         main_card=main,
         child_cards=children,
     )

@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from notas.presentation.config.viewmodel_config import PROFILE_VIEWMODE
 from notas.presentation.viewmodels.base_vm import BaseVM
-from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
 
 @login_required

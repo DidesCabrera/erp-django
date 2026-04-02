@@ -10,9 +10,9 @@ from notas.presentation.config.viewmodel_config import *
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from notas.application.services.kpis import build_nutrition_kpis_from_meal
-from notas.presentation.composition.viewmodel.detail_meal_builder import build_meal_detail_vm
-from notas.presentation.composition.viewmodel.list_meal_builder import build_meal_list_vm
-from notas.presentation.composition.viewmodel.configure_meal_builder import build_meal_configure_vm
+from notas.presentation.composition.viewmodel.meal.detail_meal_builder import build_meal_detail_vm
+from notas.presentation.composition.viewmodel.meal.list_meal_builder import build_meal_list_vm
+from notas.presentation.composition.viewmodel.meal.configure_meal_builder import build_meal_configure_vm
 from notas.presentation.composition.js.food_picker_builder import build_food_picker_foods_payload, build_food_picker_context_payload
 from notas.application.services.meal_queries import meals_with_kcal
 
@@ -22,7 +22,7 @@ from django.conf import settings
 from django.urls import reverse
 
 from notas.presentation.viewmodels.base_vm import BaseVM
-from notas.presentation.viewmodels.ui.builder_ui import build_ui_vm
+from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
 #************ VIEW DE INBOX *********************
 

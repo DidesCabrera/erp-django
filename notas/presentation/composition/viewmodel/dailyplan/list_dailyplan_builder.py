@@ -1,13 +1,13 @@
 from notas.application.services.kpis import get_ppk_dailyplan
 from notas.application.resolvers.dailyplan_resolvers import resolve_dailyplan_actions
 from notas.application.resolvers.share_resolvers import resolve_share_actions
-from notas.presentation.viewmodels.content.list_vm import *
-from notas.presentation.viewmodels.content.registry import CONTENT_ICON_REGISTRY
-from notas.presentation.composition.viewmodel.builder_table_items import build_dailyplanmeal_table_item
+from notas.presentation.viewmodels.content.dailyplan.list_vm import *
+from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
+from notas.presentation.composition.viewmodel.components.builder_table_items import build_dailyplanmeal_table_item
 from notas.presentation.config.viewmodel_config import ALLOC_PCT_OUTSIDE_THRESHOLD
 
-from notas.presentation.composition.viewmodel.builder_foods_aggregation import  build_dailyplan_foods_aggregation
-from notas.presentation.composition.viewmodel.builder_menu import build_dailyplan_menu
+from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import  build_dailyplan_foods_aggregation
+from notas.presentation.composition.viewmodel.components.builder_menu import build_dailyplan_menu
 
 
 
