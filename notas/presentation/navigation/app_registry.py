@@ -50,7 +50,7 @@ APP_NAVIGATION = (
                     NavItemSpec(
                         key="meal_personal",
                         label="Mis Comidas",
-                        icon="salad",
+                        icon="utensils",
                         page_icon="bookmark",
                         url_name="meal_list",
                         nav_root="meal",
@@ -84,7 +84,7 @@ APP_NAVIGATION = (
                     NavItemSpec(
                         key="meal_create",
                         label="Nueva Comida",
-                        icon="salad",
+                        icon="utensils",
                         page_icon="circle-fading-plus",
                         url_name="meal_create",
                         nav_root="meal",
@@ -127,7 +127,7 @@ APP_NAVIGATION = (
                     NavItemSpec(
                         key="meal_draft",
                         label="Comidas",
-                        icon="salad",
+                        icon="utensils",
                         page_icon="pencil",
                         url_name="meal_draft_list",
                         nav_root="meal",
@@ -152,7 +152,7 @@ APP_NAVIGATION = (
                     NavItemSpec(
                         key="meal_explore",
                         label="Explorar Comidas",
-                        icon="salad",
+                        icon="utensils",
                         page_icon="search",
                         url_name="meal_explore_list",
                         nav_root="meal",

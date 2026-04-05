@@ -176,21 +176,30 @@
 
 /* BOTONES DESPLEGAR */
 
-.btn-desplegar{
+.btn-desplegar {
   display: inline-flex;
   align-items: center;
   padding: 0px 8px;
   border-radius: 8px;
-  background-color: #247cff;
+  background-color: #dfe7f5;
   gap: 2px;
-
   cursor: pointer;
   user-select: none;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
-.btn-desplegar p{
+.btn-desplegar p {
   margin: 0;
   font-size: 12px;
-  color: rgb(255, 255, 255);
+  color: #42526b;
   font-weight: 450;
 }
+
+.btn-desplegar.is-active {
+  background-color: #247cff;
+}
+
+.btn-desplegar.is-active p {
+  color: rgb(255, 255, 255);
+}
+

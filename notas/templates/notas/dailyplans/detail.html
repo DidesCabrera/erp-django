@@ -1,9 +1,11 @@
 {% extends "notas/base.html" %}
+{% load static %}
+
 {% block title %}
   My Scoope
 {% endblock %}
-{% block content %}
 
+{% block content %}
 
 <div class="page page--detail" data-page="dailyplan-detail">
   
@@ -14,29 +16,31 @@
 
   <!-- MEALS LIST =========================== -->
   <div class="page-list">
-    {% if vm.content.child_cards  %}
+    {% if vm.content.child_cards %}
       <h3>Información de Comidas</h3>
-      <p class="structural_indicators"> {{ vm.content.structural_indicators.meals_count }} Comidas | {{ vm.content.structural_indicators.foods_count }} Alimentos</p>
+      <p class="structural_indicators">
+        {{ vm.content.structural_indicators.meals_count }} Comidas |
+        {{ vm.content.structural_indicators.foods_count }} Alimentos
+      </p>
+
       <div>
         {% include "components/card_foods_aggregation.html" with foods=vm.content.foods_aggregation %}
-      </div> 
-      
+      </div>
 
       {% for child in vm.content.child_cards %}
-      <div class="dpm-mini-card-list">
-        {% include "components/card_mini_dpm.html" with child=child %}
-      </div>
-        {% include "components//card_child_meal.html" with child_card=child dpm_meal="dpm_meal" %}
+        <div class="dpm-mini-card-list">
+          {% include "components/card_mini_dpm.html" with child=child %}
+        </div>
+
+        {% include "components/card_child_meal.html" with child_card=child dpm_meal="dpm_meal" %}
       {% empty %}
         <p>No meals added yet.</p>
       {% endfor %}
     {% endif %}
   </div>
 
+</div>
 
+<script src="{% static 'notas/js/collapse_cards.js' %}"></script>
 
-</div> <!-- cierre div page -->
-
-
-<!-- FIN ============================================== -->
 {% endblock %}
