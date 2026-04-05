@@ -1,5 +1,5 @@
 from django.urls import reverse, NoReverseMatch
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.interface.routing.food import food_url, food_list_url
 from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_LIST,
@@ -18,7 +18,7 @@ FOOD_ACTION_DEFINITIONS = {
         "label": "View",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda food, context=None: food_url(food),
     },
@@ -27,7 +27,7 @@ FOOD_ACTION_DEFINITIONS = {
         "label": "Cancel",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda food, context=None: food_list_url(),
     },
@@ -38,7 +38,7 @@ FOOD_ACTION_DEFINITIONS = {
         "label": "Delete",
         "method": "post",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda food, context=None: reverse(
             "food_delete", args=[food.id]
@@ -60,7 +60,7 @@ FOOD_ACTION_DEFINITIONS = {
         "label": "Save",
         "method": "post",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda food, context=None: reverse(
             "food_detail", args=[food.id]

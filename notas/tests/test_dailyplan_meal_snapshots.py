@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from notas.application.services.meal import fork_meal
+from notas.application.services.commands.meal_commands import fork_meal
 from notas.domain.models import DailyPlan, DailyPlanMeal, Meal
 
 

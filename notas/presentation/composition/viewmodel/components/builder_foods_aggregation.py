@@ -22,7 +22,6 @@ def build_dailyplan_foods_aggregation(dailyplan_meals):
     )
 
 
-
 def build_meal_foods_aggregation(meal):
     foods_aggregation = defaultdict(lambda: {
         "food": None,
@@ -41,3 +40,21 @@ def build_meal_foods_aggregation(meal):
         key=lambda x: (-x["total_grams"], x["food"].name)
     )   
 
+
+def build_meal_foods_projection(meal):
+
+    foods = build_meal_foods_aggregation(meal)
+
+    ordered = sorted(
+        foods,
+        key=lambda x: (-x["total_grams"], x["food"].name)
+    )
+
+    return [
+        {
+            "id": f["food"].id,
+            "name": f["food"].name,
+            "grams": round(f["total_grams"], 1),
+        }
+        for f in ordered
+    ]

@@ -23,11 +23,7 @@
         <tr>
           <td class="time-col">{{ row.rel.hour|time:"H:i" }}</td>
           <td class="meal-name-col">
-            <div class="truncate">
-              <a href="{{ row.rel.url }}">
-                {{ row.rel.name }}
-              </a>
-            </div>
+            <div class="truncate">{{ row.rel.name }}</div>
           </td>
           <td><div class="cell-kcal">{{ row.rel.total_kcal|floatformat:0 }}</div></td>
           <td>{{ row.rel.g_protein|floatformat:1 }}</td>

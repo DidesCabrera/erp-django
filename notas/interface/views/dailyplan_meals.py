@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.domain.models import Meal, MealFood, DailyPlan, DailyPlanMeal, Food
 from notas.presentation.config.viewmodel_config import (
     DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
@@ -13,16 +13,21 @@ from notas.presentation.config.viewmodel_config import (
 from notas.presentation.composition.viewmodel.dpm.detail_dpm_builder import build_dpm_detail_vm
 from notas.presentation.composition.js.dpm_food_picker_builder import build_dpm_food_picker_context_payload
 from notas.presentation.composition.js.food_picker_builder import build_food_picker_foods_payload
-from notas.application.services.kpis import build_nutrition_kpis_from_meal, build_nutrition_kpis_from_dailyplan
+from notas.application.services.nutrition.nutrition_kpis import build_nutrition_kpis_from_meal, build_nutrition_kpis_from_dailyplan
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
 from notas.presentation.viewmodels.base_vm import BaseVM
 from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
-from notas.application.services.meal import fork_meal_for_dailyplan
+from notas.application.services.commands.meal_commands import fork_meal_for_dailyplan
 
 from django.urls import reverse
 
+from notas.application.use_cases.dpm_pages import (
+    get_dpm_detail_page_data,
+    get_dpm_edit_page_data,
+    get_dpm_deep_edit_page_data,
+)
 
 
 #************ RENDER COMPLEJOS *********************
@@ -31,41 +36,21 @@ from django.urls import reverse
 @login_required
 def dailyplan_meal_detail(request, dailyplan_id, pk):
 
-    # ==================================================
-    # Aggregate load
-    # ==================================================
-
-    dailyplan = get_object_or_404(
-        DailyPlan,
-        pk=dailyplan_id,
-        created_by=request.user,
+    page = get_dpm_detail_page_data(
+        user=request.user,
+        dailyplan_id=dailyplan_id,
+        dpm_id=pk,
+        viewmode=DAILYPLAN_MEAL_VIEWMODE_DETAIL,
     )
-
-    dpm = get_object_or_404(
-        DailyPlanMeal.objects
-            .select_related("meal", "dailyplan")
-            .prefetch_related("meal__meal_food_set__food"),
-        pk=pk,
-        dailyplan=dailyplan,
-    )
-
-    # ==================================================
-    # ViewModel
-    # ==================================================
-
-    viewmode = DAILYPLAN_MEAL_VIEWMODE_DETAIL
 
     content_vm = build_dpm_detail_vm(
-        dailyplan,
-        dpm,
-        request.user,
-        viewmode,
+        page.detail_content_data,
     )
 
     ui_vm = build_ui_vm(
-        viewmode,
-        parents=[dailyplan],     # 🔹 parent jerárquico real
-        instance=dpm.meal,       # 🔹 entidad final visible
+        page.viewmode,
+        parents=[page.dailyplan],
+        instance=page.meal,
     )
 
     base_vm = BaseVM(
@@ -85,37 +70,27 @@ def dailyplan_meal_detail(request, dailyplan_id, pk):
 @login_required
 def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
 
-    dailyplan = get_object_or_404(
-        DailyPlan,
-        pk=dailyplan_id,
-        created_by=request.user,
-    )
-
-    dpm = get_object_or_404(
-        DailyPlanMeal.objects
-            .select_related("meal", "dailyplan")
-            .prefetch_related("meal__meal_food_set__food"),
-        pk=dailyplanmeal_id,
-        dailyplan=dailyplan,
+    page = get_dpm_edit_page_data(
+        user=request.user,
+        dailyplan_id=dailyplan_id,
+        dpm_id=dailyplanmeal_id,
+        viewmode=DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
     )
 
     if request.method == "POST":
-        dpm.hour = request.POST.get("hour") or None
-        dpm.note = request.POST.get("note") or None
-        dpm.save()
-        return redirect("dailyplan_edit", pk=dailyplan.id)
-
-
-    viewmode = DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT
+        page.dpm.hour = request.POST.get("hour") or None
+        page.dpm.note = request.POST.get("note") or None
+        page.dpm.save()
+        return redirect("dailyplan_edit", pk=page.dailyplan.id)
 
     content_vm = build_dpm_detail_vm(
-        dailyplan,
-        dpm,
-        request.user,
-        viewmode,
+        page.detail_content_data,
     )
 
-    ui_vm = build_ui_vm(viewmode, instance=dpm)
+    ui_vm = build_ui_vm(
+        page.viewmode,
+        instance=page.dpm,
+    )
 
     base_vm = BaseVM(
         ui=ui_vm,
@@ -128,104 +103,61 @@ def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
         base_vm.as_context(),
     )
 
+
 @login_required
 def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
-    # ==================================================
-    # Aggregate load
-    # ==================================================
-
-    dpm = get_object_or_404(
-        DailyPlanMeal.objects
-            .select_related("meal", "dailyplan")
-            .prefetch_related(
-                "meal__meal_food_set",
-                "meal__meal_food_set__food",
-            ),
-        id=dailyplanmeal_id,
+    page = get_dpm_deep_edit_page_data(
+        user=request.user,
         dailyplan_id=dailyplan_id,
-        dailyplan__created_by=request.user,
+        dpm_id=dailyplanmeal_id,
+        request_get=request.GET,
+        viewmode=DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
     )
 
-    user = request.user
-    dailyplan = dpm.dailyplan
-    meal = dpm.meal
-
-    caps = get_capabilities(user)
+    caps = get_capabilities(request.user)
     if not caps or not caps.can_edit_own_content():
         return HttpResponseForbidden("You cannot edit this meal")
-
-    # ==================================================
-    # Edit state
-    # ==================================================
-
-    edit_mf_id = request.GET.get("edit_food")
-    mealfood = None
-
-    if edit_mf_id:
-        mealfood = get_object_or_404(
-            MealFood,
-            pk=edit_mf_id,
-            meal=meal,
-        )
-
-    # ==================================================
-    # POST handling
-    # ==================================================
 
     if request.method == "POST" and "save_food" in request.POST:
         mf_id = request.POST.get("mealfood_id")
 
         if mf_id:
-            mf = get_object_or_404(MealFood, pk=mf_id, meal=meal)
+            mf = get_object_or_404(
+                MealFood,
+                pk=mf_id,
+                meal=page.meal,
+            )
             mf.quantity = request.POST.get("quantity")
             mf.save()
         else:
             MealFood.objects.create(
-                meal=meal,
+                meal=page.meal,
                 food_id=request.POST.get("food_id"),
                 quantity=request.POST.get("quantity"),
             )
 
-    # ==================================================
-    # Food picker payload
-    # ==================================================
-
-    foods_payload = build_food_picker_foods_payload(Food.objects.all())
-
-    meal_kpis = build_nutrition_kpis_from_meal(meal, user)
-    dailyplan_kpis = build_nutrition_kpis_from_dailyplan(dailyplan, user)
-
-    dpm_food_picker_ctx = build_dpm_food_picker_context_payload(
-        meal=meal,
-        meal_kpis=meal_kpis,
-        dailyplan=dailyplan,
-        dailyplan_kpis=dailyplan_kpis,
-        mealfood=mealfood,
-    )
-
-    # ==================================================
-    # ViewModel
-    # ==================================================
-
-    viewmode = DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT
+        page = get_dpm_deep_edit_page_data(
+            user=request.user,
+            dailyplan_id=dailyplan_id,
+            dpm_id=dailyplanmeal_id,
+            request_get=request.GET,
+            viewmode=DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
+        )
 
     content_vm = build_dpm_detail_vm(
-        dailyplan,
-        dpm,
-        request.user,
-        viewmode,
+        page.detail_content_data,
     )
 
     ui_vm = build_ui_vm(
-        viewmode,
-        parents=[dailyplan],
-        instance=meal,
+        page.viewmode,
+        parents=[page.dailyplan],
+        instance=page.meal,
         back_config={
             "type": "url",
             "value": reverse(
                 "dailyplan_meal_detail",
-                args=[dailyplan.id, dpm.id],
+                args=[page.dailyplan.id, page.dpm.id],
             ),
         },
     )
@@ -236,16 +168,8 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
     )
 
     context = base_vm.as_context()
-
-    context["foods_json"] = json.dumps(
-        foods_payload.as_list(),
-        cls=DjangoJSONEncoder,
-    )
-
-    context["food_picker_json"] = json.dumps(
-        dpm_food_picker_ctx.as_dict(),
-        cls=DjangoJSONEncoder,
-    )
+    context["foods_json"] = page.foods_json
+    context["food_picker_json"] = page.food_picker_context_json
 
     return render(
         request,
@@ -254,102 +178,55 @@ def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
     )
 
 
-
 @login_required
 def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
-    # ==================================================
-    # Aggregate load
-    # ==================================================
-
-    dpm = get_object_or_404(
-        DailyPlanMeal.objects
-            .select_related("meal", "dailyplan")
-            .prefetch_related(
-                "meal__meal_food_set",
-                "meal__meal_food_set__food"
-            ),
-        id=dailyplanmeal_id,
+    page = get_dpm_deep_edit_page_data(
+        user=request.user,
         dailyplan_id=dailyplan_id,
-        dailyplan__created_by=request.user,
+        dpm_id=dailyplanmeal_id,
+        request_get=request.GET,
+        viewmode=DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
     )
 
-    user = request.user
-    dailyplan = dpm.dailyplan
-
-    # Aísla meal si corresponde
-    meal = dpm.meal
-
-    caps = get_capabilities(user)
+    caps = get_capabilities(request.user)
     if not caps or not caps.can_edit_own_content():
         return HttpResponseForbidden("You cannot edit this meal")
-
-    # ==================================================
-    # Edit state
-    # ==================================================
-
-    edit_mf_id = request.GET.get("edit_food")
-    mealfood = None
-
-    if edit_mf_id:
-        mealfood = get_object_or_404(
-            MealFood,
-            pk=edit_mf_id,
-            meal=meal,
-        )
-
-    # ==================================================
-    # POST handling
-    # ==================================================
 
     if request.method == "POST" and "save_food" in request.POST:
         mf_id = request.POST.get("mealfood_id")
 
         if mf_id:
-            mf = get_object_or_404(MealFood, pk=mf_id, meal=meal)
+            mf = get_object_or_404(
+                MealFood,
+                pk=mf_id,
+                meal=page.meal,
+            )
             mf.quantity = request.POST.get("quantity")
             mf.save()
         else:
             MealFood.objects.create(
-                meal=meal,
+                meal=page.meal,
                 food_id=request.POST.get("food_id"),
                 quantity=request.POST.get("quantity"),
             )
 
-    # ==================================================
-    # Food picker payload
-    # ==================================================
-
-    foods_payload = build_food_picker_foods_payload(Food.objects.all())
-
-    meal_kpis = build_nutrition_kpis_from_meal(meal, user)
-    dailyplan_kpis = build_nutrition_kpis_from_dailyplan(dailyplan, user)
-
-    dpm_food_picker_ctx = build_dpm_food_picker_context_payload(
-        meal=meal,
-        meal_kpis=meal_kpis,
-        dailyplan=dailyplan,
-        dailyplan_kpis=dailyplan_kpis,
-        mealfood=mealfood,
-    )
-
-    # ==================================================
-    # ViewModel
-    # ==================================================
-
-    viewmode = DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT
+        page = get_dpm_deep_edit_page_data(
+            user=request.user,
+            dailyplan_id=dailyplan_id,
+            dpm_id=dailyplanmeal_id,
+            request_get=request.GET,
+            viewmode=DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
+        )
 
     content_vm = build_dpm_detail_vm(
-        dailyplan,
-        dpm,
-        request.user,
-        viewmode,
+        page.detail_content_data,
     )
 
     ui_vm = build_ui_vm(
-        viewmode,
-        parents=[dailyplan],   # 🔹 jerarquía real
-        instance=meal,         # 🔹 entidad visible final
+        page.viewmode,
+        parents=[page.dailyplan],
+        instance=page.meal,
     )
 
     base_vm = BaseVM(
@@ -358,23 +235,14 @@ def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
     )
 
     context = base_vm.as_context()
-
-    context["foods_json"] = json.dumps(
-        foods_payload.as_list(),
-        cls=DjangoJSONEncoder,
-    )
-
-    context["food_picker_json"] = json.dumps(
-        dpm_food_picker_ctx.as_dict(),
-        cls=DjangoJSONEncoder,
-    )
+    context["foods_json"] = page.foods_json
+    context["food_picker_json"] = page.food_picker_context_json
 
     return render(
         request,
         "notas/dailyplan_meals/deep_edit.html",
         context,
     )
-
 #************ AUXILIARES *********************
 
 # ========== ACTIONS ====================
@@ -553,12 +421,6 @@ def dailyplanmeal_create_meal(request, dailyplan_id, dailyplanmeal_id):
         dailyplan_id=dailyplan_id,
         dailyplanmeal_id=dpm.id
     )
-
-
-
-
-
-
 
 
 

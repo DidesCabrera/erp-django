@@ -1,4 +1,4 @@
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.presentation.viewmodels.content.dailyplan.configure_vm import (
     ConfigureVM,
     ConfigureSectionUI,

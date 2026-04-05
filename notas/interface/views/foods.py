@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.contrib import messages
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.domain.models import Food
 from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_LIST, 
@@ -15,11 +15,11 @@ from notas.presentation.config.viewmodel_config import (
 )
 from notas.interface.routing.food import food_url
 from notas.presentation.composition.viewmodel.food.list_foods_builder import build_food_list_vm
-from notas.presentation.composition.viewmodel.dpm.detail_food_builder import build_food_detail_vm
+from notas.presentation.composition.viewmodel.food.detail_food_builder import build_food_detail_vm
 from notas.presentation.composition.viewmodel.food.edit_food_builder import build_edit_food_vm
 from notas.interface.forms.forms import FoodEditForm
 
-from notas.application.services.food import create_food
+from notas.application.services.commands.food_commands import create_food
 
 
 from notas.presentation.viewmodels.base_vm import BaseVM

@@ -6,9 +6,9 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.contrib import messages
 from datetime import date
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from django.db.models import Sum, F, ExpressionWrapper, FloatField
-from notas.application.services.nutrition import (
+from notas.domain.constants.nutrition import (
     PROTEIN_KCAL_PER_GRAM,
     CARBS_KCAL_PER_GRAM,
     FAT_KCAL_PER_GRAM,

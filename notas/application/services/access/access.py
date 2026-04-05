@@ -31,3 +31,24 @@ def get_dailyplan_for_user(user, pk):
         return share.dailyplan
 
     raise DailyPlan.DoesNotExist
+
+
+from django.shortcuts import get_object_or_404
+from notas.domain.models import Meal
+
+
+def get_meal_for_user(user, meal_id):
+    """
+    Retorna una Meal accesible para el usuario actual.
+
+    Ajusta aquí las reglas si más adelante quieres permitir:
+    - meals compartidas
+    - públicas
+    - forkables
+    - drafts propios
+    """
+    return get_object_or_404(
+        Meal,
+        pk=meal_id,
+        created_by=user,
+    )

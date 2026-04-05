@@ -23,11 +23,12 @@
   
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
   
     text-align: center;
-    padding: 10px;
+    padding: 10px 10px;
+
 
     margin:4px;
     background-color: var(--color-kcal);
@@ -60,7 +61,7 @@
   
 .dash-kpi-comp .tot p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 500;
 }
 
@@ -87,7 +88,7 @@
     grid-template-columns:
       55px    /* label */
       55px    /* extra */
-      68px    /* grams */
+      55px    /* grams */
       1fr;    /* alloc (flexible) */
   
     align-items: center;
@@ -155,7 +156,7 @@
     height: 24px; 
     background-color: var(--color-ppk); 
     border-radius: 5px;
-    margin-right: 10px;
+    margin-left: 10px;
 
     display: flex;
     flex-direction: column;

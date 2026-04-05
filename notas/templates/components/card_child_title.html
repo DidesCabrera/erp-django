@@ -1,13 +1,13 @@
 <div class="card-title-comp">
 
+  <h3>{{ titulo.name }}</h3>
+  
   <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
     <i data-lucide="{{ titulo.icon }}" class="card-icon"></i>
     {{ titulo.label }}
   </div>
 
   <div class="label-fork">{{ titulo.category }}</div>
-
-  <h3>{{ titulo.name }}</h3>
 
   <div class="label-class">
     {% for class in titulo.classes %}

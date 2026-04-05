@@ -1,151 +1,72 @@
-from notas.application.services.kpis import get_ppk_dailyplan
-from notas.application.resolvers.dailyplan_resolvers import resolve_dailyplan_actions
-from notas.application.resolvers.share_resolvers import resolve_share_actions
 from notas.presentation.viewmodels.content.dailyplan.list_vm import *
-from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
-from notas.presentation.composition.viewmodel.components.builder_table_items import build_dailyplanmeal_table_item
 from notas.presentation.config.viewmodel_config import ALLOC_PCT_OUTSIDE_THRESHOLD
 
-from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import  build_dailyplan_foods_aggregation
-from notas.presentation.composition.viewmodel.components.builder_menu import build_dailyplan_menu
 
-
-
-
-
-def build_dailyplan_list_vm(dailyplans, user, viewmode):
+def build_dailyplan_list_vm(content_data):
 
     children = []
 
-    for dailyplan in dailyplans:
-
-        child_entity_icon = CONTENT_ICON_REGISTRY.get("dailyplan")
-        child_entity_label = "DailyPlan"
-
-        # ==================================================
-        # Freeze dailyplan aggregates (single access)
-        # ==================================================
-
-        dp_total_kcal = dailyplan.total_kcal
-        dp_protein = dailyplan.protein
-        dp_carbs = dailyplan.carbs
-        dp_fat = dailyplan.fat
-
-        dp_kcal_protein = dailyplan.kcal_protein
-        dp_kcal_carbs = dailyplan.kcal_carbs
-        dp_kcal_fat = dailyplan.kcal_fat
-
-        dp_alloc = dailyplan.alloc
-
-        # ==================================================
-        # KPIs
-        # ==================================================
-
-        ppk = get_ppk_dailyplan(dailyplan, user)
-
-        # ==================================================
-        # Meals + aggregations
-        # ==================================================
-
-        dailyplan_meals = dailyplan.meals_with_foods()
-
-        dailyplan_meals_table_items = [
-            build_dailyplanmeal_table_item(dpm)
-            for dpm in dailyplan_meals
-        ]
-        
-        menu = build_dailyplan_menu(dailyplan_meals)
-        foods_aggregation = build_dailyplan_foods_aggregation(dailyplan_meals)
-
-
-        # ==================================================
-        # Actions & Share (if exists)
-        # ==================================================
-
-        share = next(
-            (
-                s for s in dailyplan.shares.all()
-                if s.accepted_by_id == user.id and not s.removed
-            ),
-            None
-        )
-
-        actions = []
-
-        actions.extend(
-            resolve_dailyplan_actions(
-                dailyplan,
-                user,
-                viewmode
-            )
-        )
-
-        if share:
-            actions.extend(
-                resolve_share_actions(
-                    share,
-                    user,
-                    viewmode
-                )
-            )
-
-        # ==================================================
-        # Completar Child card con la información respectiva
-        # ==================================================
+    for child_data in content_data.child_cards_data:
 
         child = ChildCardUI(
-            child_id=dailyplan.id,
+            child_id=child_data["child_id"],
 
             titulo=TitleUI(
-                name=dailyplan.name,
-                label= child_entity_label,
-                icon= child_entity_icon,
-                category=dailyplan.category,
+                name=child_data["title"]["name"],
+                label=child_data["title"]["label"],
+                icon=child_data["title"]["icon"],
+                category=child_data["title"]["category"],
                 structural_indicators=StructuralIndicatorsUI(
-                    meals_count=len(dailyplan_meals),
-                    foods_count=len(foods_aggregation),
+                    meals_count=child_data["title"]["meals_count"],
+                    foods_count=child_data["title"]["foods_count"],
                 )
             ),
 
             kpis=KPIUI(
-                ppk=ppk["ppk"],
-                tot_kcal=dp_total_kcal,
+                ppk=child_data["kpis"]["ppk"],
+                tot_kcal=child_data["kpis"]["tot_kcal"],
 
-                g_protein=dp_protein,
-                g_carbs=dp_carbs,
-                g_fat=dp_fat,
+                g_protein=child_data["kpis"]["g_protein"],
+                g_carbs=child_data["kpis"]["g_carbs"],
+                g_fat=child_data["kpis"]["g_fat"],
 
-                kcal_protein=dp_kcal_protein,
-                kcal_carbs=dp_kcal_carbs,
-                kcal_fat=dp_kcal_fat,
+                kcal_protein=child_data["kpis"]["kcal_protein"],
+                kcal_carbs=child_data["kpis"]["kcal_carbs"],
+                kcal_fat=child_data["kpis"]["kcal_fat"],
 
-                alloc_protein=dp_alloc["protein"],
-                alloc_carbs=dp_alloc["carbs"],
-                alloc_fat=dp_alloc["fat"],
+                alloc_protein=child_data["kpis"]["alloc_protein"],
+                alloc_carbs=child_data["kpis"]["alloc_carbs"],
+                alloc_fat=child_data["kpis"]["alloc_fat"],
 
-                pct_outside_protein=dp_alloc["protein"] < ALLOC_PCT_OUTSIDE_THRESHOLD,
-                pct_outside_carbs=dp_alloc["carbs"] < ALLOC_PCT_OUTSIDE_THRESHOLD,
-                pct_outside_fat=dp_alloc["fat"] < ALLOC_PCT_OUTSIDE_THRESHOLD,
+                pct_outside_protein=(
+                    child_data["kpis"]["alloc_protein"] < ALLOC_PCT_OUTSIDE_THRESHOLD
+                ),
+                pct_outside_carbs=(
+                    child_data["kpis"]["alloc_carbs"] < ALLOC_PCT_OUTSIDE_THRESHOLD
+                ),
+                pct_outside_fat=(
+                    child_data["kpis"]["alloc_fat"] < ALLOC_PCT_OUTSIDE_THRESHOLD
+                ),
             ),
 
-            table={"items": dailyplan_meals_table_items},
+            table={"items": child_data["table_items"]},
 
-            menu=menu,
+            menu=child_data["menu"],
 
-            foods_aggregation=foods_aggregation,
+            foods_aggregation=child_data["foods_aggregation"],
 
             metadata=MetadataUI(
-                owner=str(dailyplan.created_by),
-                author=str(dailyplan.original_author),
-                fork_from=str(dailyplan.forked_from) if dailyplan.forked_from else None,
+                owner=child_data["metadata"]["owner"],
+                author=child_data["metadata"]["author"],
+                fork_from=child_data["metadata"]["fork_from"],
             ),
 
-            actions=actions,
+            actions=child_data["actions"],
 
             if_shared=IfShared(
-                child_id=dailyplan.id,
-                share_id=share.id if share else None
-            )
+                child_id=child_data["if_shared"]["child_id"],
+                share_id=child_data["if_shared"]["share_id"],
+            ),
         )
 
         children.append(child)

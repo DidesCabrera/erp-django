@@ -1,6 +1,6 @@
 from django.urls import reverse, NoReverseMatch
 
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.presentation.config.viewmodel_config import *
 
 # ==================================================
@@ -13,7 +13,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",

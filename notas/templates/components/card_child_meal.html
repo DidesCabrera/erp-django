@@ -13,27 +13,28 @@
         {% include "components/dash_kpi.html" with kpis=child_card.kpis %}
       </div>
     </div>
+    
+    <!-- BLOCK DETAIL ======================== -->
+    <div class="card-detail-block">
+      <div class="card-detail-tabs block-desplegar-tabla block-card-desplegar">
 
-    <div class="block-desplegar-tabla block-card-desplegar">
-
-      <div class="btn-desplegar" data-target=".card-foods-aggregation">
-        <p>Alimentos</p>
-        <i data-lucide="chevron-right" class="sidebar-icon"></i>
+        <div class="btn-desplegar" data-target=".card-foods-aggregation">
+          <p>Alimentos</p>
+        </div>
+      
+        <div class="btn-desplegar" data-target=".card-table-foods">
+          <p>Tabla Nutricional</p>
+        </div>
+      
       </div>
-    
-      <div class="btn-desplegar" data-target=".card-table-foods">
-        <p>Tabla Nutricional</p>
-        <i data-lucide="chevron-right" class="sidebar-icon"></i>
+      
+      <div class="card-foods-aggregation">
+        {% include "components/card_foods_aggregation.html" with foods=child_card.foods_aggregation %}
       </div>
-    
-    </div>
-    
-    <div class="card-foods-aggregation">
-      {% include "components/card_foods_aggregation.html" with foods=child_card.foods_aggregation %}
-    </div>
-    
-    <div class="card-table-foods">
-      {% include "components/table_foods.html" with items=child_card.table.items %}
+      
+      <div class="card-table-foods">
+        {% include "components/table_foods.html" with items=child_card.table.items %}
+      </div>
     </div>
   
 

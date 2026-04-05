@@ -1,6 +1,6 @@
 from django.urls import reverse, NoReverseMatch
 
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.interface.routing.dailyplan import dailyplan_url, dailyplan_configure_url
 from notas.presentation.config.viewmodel_config import *
 
@@ -13,7 +13,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
@@ -22,7 +22,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_shared_detail", args=[dp.id]
@@ -33,7 +33,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Ver Draft",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_draft_detail", args=[dp.id]
@@ -44,7 +44,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_explore_detail", args=[dp.id]
@@ -277,7 +277,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     
     # PERSONAL
     DAILYPLAN_VIEWMODE_PERSONAL_LIST: [
-        "remove",
+        "fork",
         "detail",
         #"share",
     ],

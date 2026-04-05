@@ -1,6 +1,6 @@
 from django.urls import reverse, NoReverseMatch
 
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.interface.routing.meal import meal_url, meal_configure_url, meal_list_url
 from notas.presentation.config.viewmodel_config import *
 
@@ -14,7 +14,7 @@ MEAL_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda meal, context=None: meal_url(meal),
     },
@@ -23,7 +23,7 @@ MEAL_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "meal_explore_detail", args=[meal.id]
@@ -34,7 +34,7 @@ MEAL_ACTION_DEFINITIONS = {
         "label": "Cancelar",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda meal, context=None: meal_list_url(),
     },
@@ -77,7 +77,7 @@ MEAL_ACTION_DEFINITIONS = {
         "label": "Copy",
         "method": "post",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
             "meal_copy", args=[meal.id]

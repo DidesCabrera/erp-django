@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from notas.application.services.inbox import build_inbox_items
+from notas.application.use_cases.inbox_pages import build_inbox_items
 from notas.presentation.composition.viewmodel.inbox.inbox_list_builder import build_inbox_list_vm
 
 

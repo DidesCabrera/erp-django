@@ -21,7 +21,7 @@ def clone_dailyplan_meals(source: DailyPlan, target: DailyPlan) -> None:
     Copia todas las meals desde source hacia target creando snapshots
     independientes para cada slot del DailyPlan.
     """
-    from notas.application.services.meal import fork_meal
+    from notas.application.services.commands.meal_commands import fork_meal
 
     for dpm in source.dailyplan_meals.all().order_by("order", "id"):
         forked_meal = fork_meal(dpm.meal, target.created_by)

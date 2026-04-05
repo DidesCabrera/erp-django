@@ -1,5 +1,4 @@
-from notas.application.services.weight import get_current_weight
-from notas.presentation.viewmodels.content.kpi_contract import KPIContract
+from notas.application.services.nutrition.weight import get_current_weight
  
 
 #=====CALCULO PPK=========
@@ -61,13 +60,3 @@ def build_nutrition_kpis_from_dailyplan(dailyplan, user):
     }
 
 
-#=====REFACTO VIEW MODELS=========
-
-def kpis_from_dailyplan(dp, user):
-    raw = get_ppk_dailyplan(dp, user)
-    return KPIContract(raw, ppk=raw.get("ppk"))
-
-
-def kpis_from_meal(meal, user):
-    raw = get_ppk_meal(meal, user)
-    return KPIContract(raw, ppk=raw.get("ppk"))

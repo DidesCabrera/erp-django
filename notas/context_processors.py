@@ -1,4 +1,4 @@
-from notas.application.services.weight import get_current_weight
+from notas.application.services.nutrition.weight import get_current_weight
 from notas.domain.models import DailyPlanShare
 
 def user_weight(request):

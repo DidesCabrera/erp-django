@@ -1,4 +1,4 @@
-from notas.application.services.foods_aggregation import build_meal_foods_projection
+from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import build_meal_foods_projection
 
 
 def compute_meal_nutrition(meal):

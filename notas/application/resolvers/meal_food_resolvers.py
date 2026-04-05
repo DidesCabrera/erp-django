@@ -1,6 +1,6 @@
 from django.urls import NoReverseMatch, reverse
 
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.interface.routing.food import food_list_url, food_url
 from notas.presentation.config.viewmodel_config import (
     MEAL_FOOD_VIEWMODE_DETAIL,
@@ -20,7 +20,7 @@ MEAL_FOOD_ACTION_DEFINITIONS = {
         "label": "View",
         "method": "get",
         "group": "primary",
-        "icon": "log-in",
+        "icon": "chevron-right",
         "order": 90,
         "get_url": lambda food: food_url(food),
     },

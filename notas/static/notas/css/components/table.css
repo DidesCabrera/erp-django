@@ -24,13 +24,11 @@ tbody td {
 
 .table-items {
   display: block;
-  background: rgb(250, 250, 250);
+  background: transparent;
   border-radius: 5px;
   padding: 0px 0px;
   table-layout: fixed;
   font-size: 14px;
-  margin-top: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
 
   width: 100%;
   overflow-x: auto;
@@ -40,7 +38,7 @@ tbody td {
 
 .table-foods,
 .table-meals{
-  background: rgb(250, 250, 250);
+  background: transparent;
   min-width: 700px;
   table-layout: fixed;
   margin-bottom: 4px;

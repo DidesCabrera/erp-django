@@ -62,7 +62,7 @@ def fork_meal(original: Meal, user) -> Meal:
 
 
 def _clone_meal(original: Meal, user) -> Meal:
-    from notas.application.services.meal_nutrition import rebuild_meal_cached_state
+    from notas.application.services.nutrition.meal_nutrition import rebuild_meal_cached_state
 
     origin = get_meal_origin(original)
 

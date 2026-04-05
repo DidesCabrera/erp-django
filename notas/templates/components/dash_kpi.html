@@ -2,8 +2,9 @@
 
   <!-- TOTAL CAL -->
   <div class="tot">
+    <p>Calories</p>
     <h2>{{ kpis.tot_kcal|floatformat:0 }}</h2>
-    <p>Total kcal</p>
+    <p></p>
   </div>
 
   <!-- MACROS -->
@@ -13,14 +14,14 @@
     <div class="kpi-row">
       <div class="kpi-label">Protein</div>
 
-      <div class="kpi-grams">
-        {{ kpis.g_protein|floatformat:0 }} g
-      </div>
-
       <div class="kpi-ppk">
         <span class="proteins_per_kilo">
           {{ kpis.ppk|floatformat:1 }}g/kg
         </span>
+      </div>
+
+      <div class="kpi-grams">
+        {{ kpis.g_protein|floatformat:0 }} g
       </div>
 
       <div class="kpi-alloc">
@@ -33,11 +34,11 @@
     <div class="kpi-row">
       <div class="kpi-label">Carbs</div>
 
+      <div></div>
+
       <div class="kpi-grams">
         {{ kpis.g_carbs|floatformat:0 }} g
       </div>
-
-      <div></div>
 
       <div class="kpi-alloc">
         {% include "components/alloc_bar.html" with value=kpis.alloc_carbs kind="carbs" kcal=kpis.kcal_carbs %}
@@ -49,11 +50,11 @@
     <div class="kpi-row">
       <div class="kpi-label">Fat</div>
 
+      <div></div>
+      
       <div class="kpi-grams">
         {{ kpis.g_fat|floatformat:0 }} g
       </div>
-
-      <div></div>
 
       <div class="kpi-alloc">
         {% include "components/alloc_bar.html" with value=kpis.alloc_fat kind="fat" kcal=kpis.kcal_fat %}

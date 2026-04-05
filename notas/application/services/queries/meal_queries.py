@@ -1,6 +1,6 @@
 from django.db.models import Sum, F, ExpressionWrapper, FloatField
 from notas.domain.models import Meal
-from notas.application.services.nutrition import (
+from notas.domain.constants.nutrition import (
     PROTEIN_KCAL_PER_GRAM,
     CARBS_KCAL_PER_GRAM,
     FAT_KCAL_PER_GRAM,

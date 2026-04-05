@@ -58,6 +58,16 @@ BOTTOM
   CARD TABLE COLLAPSE EFFECT
   ============================ */
 
+.card-detail-block {
+  background: var(--color-bg-3);
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.card-detail-tabs{
+  padding: 10px 10px;
+}
+
 /* Estado por defecto: EXPANDIDO */
 .card-table-foods,
 .card-foods-aggregation,
@@ -65,6 +75,7 @@ BOTTOM
   max-height: 800px;
   overflow: hidden;
   opacity: 1;
+  margin: 0px;
   padding-bottom: 0px;
   transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
 }

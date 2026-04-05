@@ -14,27 +14,28 @@
       </div>
     </div>
 
-    <div class="block-desplegar-tabla block-card-desplegar">
+    <!-- BLOCK DETAIL ======================== -->
+    <div class="card-detail-block">
+      <div class="card-detail-tabs block-desplegar-tabla block-card-desplegar">
 
-      <div class="btn-desplegar" data-target=".card-menu">
-        <p>Menú</p>
-        <i data-lucide="chevron-right" class="sidebar-icon"></i>
+        <div class="btn-desplegar" data-target=".card-menu">
+          <p>Menú</p>
+        </div>
+      
+        <div class="btn-desplegar" data-target=".card-table-foods">
+          <p>Tabla Nutricional</p>
+        </div>
+      
       </div>
-    
-      <div class="btn-desplegar" data-target=".card-table-foods">
-        <p>Tabla Nutricional</p>
-        <i data-lucide="chevron-right" class="sidebar-icon"></i>
+      
+      
+      <div class="card-menu">
+        {% include "components/card_child_menu.html" with menu=child_card.menu %}
       </div>
-    
-    </div>
-    
-    
-    <div class="card-menu">
-      {% include "components/card_child_menu.html" with menu=child_card.menu %}
-    </div>
-    
-    <div class="card-table-foods">
-      {% include "components/table_meals.html" with items=child_card.table.items %}
+      
+      <div class="card-table-foods">
+        {% include "components/table_meals.html" with items=child_card.table.items %}
+      </div>
     </div>
   
   <!-- BOTTOM SECTION ====================================== -->

@@ -1,6 +1,6 @@
 from django.urls import NoReverseMatch, reverse
 
-from notas.application.services.capabilities import get_capabilities
+from notas.application.services.access.capabilities import get_capabilities
 from notas.presentation.config.viewmodel_config import (
     DAILYPLAN_VIEWMODE_SHARED_LIST,
     MEAL_VIEWMODE_SHARED_LIST,

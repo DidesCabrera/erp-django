@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from django.contrib.auth.models import User
 from notas.domain.models import Profile, Plan, MealFood
-from notas.application.services.meal_nutrition import rebuild_meal_cached_state
+from notas.application.services.nutrition.meal_nutrition import rebuild_meal_cached_state
 
 
 @receiver(post_save, sender=User)

@@ -1,13 +1,13 @@
 from django.db import models
 from django.db.models import Prefetch
 from django.contrib.auth.models import User
-from notas.application.services.nutrition import (
+from notas.domain.constants.nutrition import (
     PROTEIN_KCAL_PER_GRAM,
     CARBS_KCAL_PER_GRAM,
     FAT_KCAL_PER_GRAM,
 )
 import uuid
-from notas.application.services.meal_nutrition import compute_meal_nutrition
+from notas.application.services.nutrition.meal_nutrition import compute_meal_nutrition
 
 
 
@@ -283,15 +283,15 @@ class Meal(models.Model):
 
 
     def fork_for_user(self, user):
-        from notas.application.services.meal import fork_meal_for_library
+        from notas.application.services.commands.meal_commands import fork_meal_for_library
         return fork_meal_for_library(self, user)
 
     def copy_for_user(self, user):
-        from notas.application.services.meal import copy_meal
+        from notas.application.services.commands.meal_commands import copy_meal
         return copy_meal(self, user)
 
     def save_for_user(self, user):
-        from notas.application.services.meal import save_meal
+        from notas.application.services.commands.meal_commands import save_meal
         return save_meal(self, user)
 
     def update_draft_status(self):
@@ -498,18 +498,18 @@ class DailyPlan(models.Model):
     # ==================================================
 
     def fork_for_user(self, user):
-        from notas.application.services.dailyplan import fork_dailyplan
+        from notas.application.services.commands.dailyplan_commands import fork_dailyplan
         return fork_dailyplan(self, user)
 
     def copy_for_user(self, user):
-        from notas.application.services.dailyplan import copy_dailyplan
+        from notas.application.services.commands.dailyplan_commands import copy_dailyplan
         return copy_dailyplan(self, user)
 
     def save_for_user(self, user):
         """
         Explore UX: Guardar = Fork
         """
-        from notas.application.services.dailyplan import save_dailyplan
+        from notas.application.services.commands.dailyplan_commands import save_dailyplan
         return save_dailyplan(self, user)
 
     def update_draft_status(self):
