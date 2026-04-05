@@ -7,7 +7,7 @@ from notas.domain.constants.nutrition import (
     FAT_KCAL_PER_GRAM,
 )
 import uuid
-from notas.application.services.nutrition.meal_nutrition import compute_meal_nutrition
+from notas.domain.services.nutrition import compute_meal_nutrition
 
 
 
@@ -281,26 +281,11 @@ class Meal(models.Model):
     # DOMAIN API (delegates to services)
     # ==================================================
 
-
-    def fork_for_user(self, user):
-        from notas.application.services.commands.meal_commands import fork_meal_for_library
-        return fork_meal_for_library(self, user)
-
-    def copy_for_user(self, user):
-        from notas.application.services.commands.meal_commands import copy_meal
-        return copy_meal(self, user)
-
-    def save_for_user(self, user):
-        from notas.application.services.commands.meal_commands import save_meal
-        return save_meal(self, user)
-
     def update_draft_status(self):
         if self.meal_food_set.exists():
             if self.is_draft:
                 self.is_draft = False
                 self.save(update_fields=["is_draft"])
-
-
 
 
 
@@ -496,21 +481,6 @@ class DailyPlan(models.Model):
     # ==================================================
     # DOMAIN API (delegates to services)
     # ==================================================
-
-    def fork_for_user(self, user):
-        from notas.application.services.commands.dailyplan_commands import fork_dailyplan
-        return fork_dailyplan(self, user)
-
-    def copy_for_user(self, user):
-        from notas.application.services.commands.dailyplan_commands import copy_dailyplan
-        return copy_dailyplan(self, user)
-
-    def save_for_user(self, user):
-        """
-        Explore UX: Guardar = Fork
-        """
-        from notas.application.services.commands.dailyplan_commands import save_dailyplan
-        return save_dailyplan(self, user)
 
     def update_draft_status(self):
 

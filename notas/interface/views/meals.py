@@ -34,6 +34,14 @@ from notas.application.use_cases.meal_pages import (
     get_meal_edit_page_data,
 )
 
+from notas.application.services.commands.meal_commands import (
+    fork_meal_for_library,
+    copy_meal,
+    save_meal,
+)
+
+
+
 #************ VIEW DE INBOX *********************
 
 @login_required
@@ -602,7 +610,7 @@ def meal_fork(request, meal_id):
     if not original.is_forkable:
         return HttpResponseForbidden("No puedes forkear esta meal")
 
-    forked = original.fork_for_user(request.user)
+    forked = fork_meal_for_library(original, request.user)
 
     messages.success(request, "Meal guardada en tu biblioteca")
     return redirect("meal_detail", pk=forked.pk)
@@ -617,7 +625,7 @@ def meal_copy(request, pk):
     if not original.is_copiable:
         return HttpResponseForbidden("No tienes permiso para copiar esta meal")
 
-    copy = original.copy_for_user(request.user)
+    copy = copy_meal(original, request.user)
 
     messages.success(request, "Meal copiada correctamente")
     return redirect("meal_detail", pk=copy.pk)

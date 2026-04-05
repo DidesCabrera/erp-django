@@ -36,7 +36,11 @@ from notas.application.use_cases.dailyplan_pages import (
     get_dailyplan_draft_list_page_data,
 )
 
-
+from notas.application.services.commands.dailyplan_commands import (
+    fork_dailyplan,
+    copy_dailyplan,
+    save_dailyplan,
+)
 
 #************ VIEW DE INBOX *********************
 
@@ -568,7 +572,7 @@ def dailyplan_fork(request, dailyplan_id):
     if not original.is_forkable:
         return HttpResponseForbidden("No puedes forkear este daily plan")
 
-    forked = original.fork_for_user(request.user)
+    forked = fork_dailyplan(original, request.user)
 
     messages.success(request, "Daily plan guardado en tu biblioteca")
     return redirect("dailyplan_detail", pk=forked.pk)
@@ -583,7 +587,7 @@ def dailyplan_save(request, dailyplan_id):
     if not original.is_forkable:
         return HttpResponseForbidden("No puedes forkear este daily plan")
 
-    forked = original.fork_for_user(request.user)
+    forked = fork_dailyplan(original, request.user)
 
     messages.success(request, "Daily plan guardado en tu biblioteca")
     return redirect("dailyplan_list")
@@ -598,7 +602,7 @@ def dailyplan_copy(request, pk):
     if not dailyplan.is_copiable:
         return HttpResponseForbidden()
 
-    copy = dailyplan.copy_for_user(request.user)
+    copy = copy_dailyplan(dailyplan, request.user)
 
     messages.success(request, "Daily plan copied successfully")
     return redirect("dailyplan_detail", pk=copy.pk)

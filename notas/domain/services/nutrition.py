@@ -1,7 +1,3 @@
-# =========================
-# DOMAIN NUTRITION SERVICES
-# =========================
-
 from notas.domain.constants.nutrition import (
     PROTEIN_KCAL_PER_GRAM,
     CARBS_KCAL_PER_GRAM,
@@ -10,10 +6,6 @@ from notas.domain.constants.nutrition import (
 
 
 def kcal_from_macros(protein: float, carbs: float, fat: float) -> float:
-    """
-    Compute total kcal from macros.
-    Pure function. No side effects.
-    """
     return (
         protein * PROTEIN_KCAL_PER_GRAM
         + carbs * CARBS_KCAL_PER_GRAM
@@ -22,9 +14,6 @@ def kcal_from_macros(protein: float, carbs: float, fat: float) -> float:
 
 
 def macro_kcal_breakdown(protein: float, carbs: float, fat: float) -> dict:
-    """
-    Returns kcal contribution per macro.
-    """
     return {
         "kcal_protein": protein * PROTEIN_KCAL_PER_GRAM,
         "kcal_carbs": carbs * CARBS_KCAL_PER_GRAM,
@@ -33,9 +22,6 @@ def macro_kcal_breakdown(protein: float, carbs: float, fat: float) -> dict:
 
 
 def macro_allocation(protein: float, carbs: float, fat: float) -> dict:
-    """
-    Returns percentage allocation of macros.
-    """
     total = protein + carbs + fat
 
     if total == 0:
@@ -49,4 +35,49 @@ def macro_allocation(protein: float, carbs: float, fat: float) -> dict:
         "protein": round((protein / total) * 100, 2),
         "carbs": round((carbs / total) * 100, 2),
         "fat": round((fat / total) * 100, 2),
+    }
+
+
+def compute_meal_nutrition(meal) -> dict:
+    protein = 0.0
+    carbs = 0.0
+    fat = 0.0
+
+    kcal_protein = 0.0
+    kcal_carbs = 0.0
+    kcal_fat = 0.0
+
+    for mf in meal.meal_food_set.all():
+        protein += mf.protein
+        carbs += mf.carbs
+        fat += mf.fat
+
+        kcal_protein += mf.kcal_protein
+        kcal_carbs += mf.kcal_carbs
+        kcal_fat += mf.kcal_fat
+
+    total_kcal = kcal_protein + kcal_carbs + kcal_fat
+
+    if total_kcal > 0:
+        alloc = {
+            "protein": kcal_protein / total_kcal * 100,
+            "carbs": kcal_carbs / total_kcal * 100,
+            "fat": kcal_fat / total_kcal * 100,
+        }
+    else:
+        alloc = {
+            "protein": 0,
+            "carbs": 0,
+            "fat": 0,
+        }
+
+    return {
+        "protein": protein,
+        "carbs": carbs,
+        "fat": fat,
+        "kcal_protein": kcal_protein,
+        "kcal_carbs": kcal_carbs,
+        "kcal_fat": kcal_fat,
+        "total_kcal": total_kcal,
+        "alloc": alloc,
     }

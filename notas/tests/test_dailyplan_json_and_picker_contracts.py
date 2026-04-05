@@ -5,7 +5,11 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 
 from notas.domain.models import DailyPlan, DailyPlanMeal, Food, Meal, MealFood
-
+from notas.application.services.commands.dailyplan_commands import (
+    fork_dailyplan,
+    copy_dailyplan,
+    save_dailyplan,
+)
 
 User = get_user_model()
 
@@ -149,7 +153,7 @@ class DailyPlanJsonAndPickerContractTests(TestCase):
             is_copiable=False,
         )
 
-        forked = original.fork_for_user(self.user)
+        forked = fork_dailyplan(original, self.user)
 
         self.assertNotEqual(forked.id, original.id)
         self.assertEqual(forked.created_by, self.user)
@@ -199,7 +203,7 @@ class DailyPlanJsonAndPickerContractTests(TestCase):
             order=1,
         )
 
-        forked = dailyplan.fork_for_user(self.user)
+        forked = fork_dailyplan(dailyplan, self.user)
 
         dpm = forked.dailyplan_meals.first()
 
