@@ -69,11 +69,16 @@
 .label-entity--meal {color: var(--color-meal);}
 .label-entity--dailyplan {color: var(--color-dailyplan);}
 .label-entity--program {color: var(--color-program);}
+.label-entity--home {background-color: var(--color-home);}
+.label-entity--profile {background-color: var(--color-profile);}
+
 
 .label-entity.header.label-entity--food {background-color: var(--color-food);}
 .label-entity.header.label-entity--meal {background-color: var(--color-meal);}
 .label-entity.header.label-entity--dailyplan {background-color: var(--color-dailyplan);}
 .label-entity.header.label-entity--program {background-color: var(--color-program);}
+.label-entity.header.label-entity--home {background-color: var(--color-home);}
+.label-entity.header.label-entity--profile {background-color: var(--color-profile);}
 
 
 
@@ -181,7 +186,7 @@
   align-items: center;
   padding: 0px 8px;
   border-radius: 8px;
-  background-color: #dfe7f5;
+  background-color: rgb(233, 233, 233);
   gap: 2px;
   cursor: pointer;
   user-select: none;
@@ -191,12 +196,12 @@
 .btn-desplegar p {
   margin: 0;
   font-size: 12px;
-  color: #42526b;
+  color: #565656;
   font-weight: 450;
 }
 
 .btn-desplegar.is-active {
-  background-color: #247cff;
+  background-color: #000000;
 }
 
 .btn-desplegar.is-active p {

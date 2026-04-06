@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'notas/css/icons.css' %}">
 
     <link rel="stylesheet" href="{% static 'notas/css/components//home.css' %}">
+    <link rel="stylesheet" href="{% static 'notas/css/components//profile.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/page.css' %}">
     <link rel="stylesheet" href="{% static 'notas/css/components/modal_create.css' %}">
@@ -52,6 +53,7 @@
                 <h3>Registrar un nuevo peso corporal</h3>
                 <form method="post" action="{% url 'weight_register' %}">
                     {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
                     <label>Peso (kg)</label>
                     <input id="weightInput" type="number" step="0.1" name="weight" required>
                     <div class="modal-actions">
@@ -160,7 +162,41 @@
 <script>
     lucide.createIcons();
 </script>
+<script>
+    function openWeightModal() {
+        const modal = document.getElementById("weightModal");
+        const input = document.getElementById("weightInput");
 
+        if (!modal) return;
+
+        modal.classList.remove("hidden");
+
+        if (input) {
+            setTimeout(() => input.focus(), 0);
+        }
+    }
+
+    function closeWeightModal() {
+        const modal = document.getElementById("weightModal");
+        if (!modal) return;
+        modal.classList.add("hidden");
+    }
+
+    document.addEventListener("click", function (event) {
+        const modal = document.getElementById("weightModal");
+        if (!modal || modal.classList.contains("hidden")) return;
+
+        if (event.target === modal) {
+            closeWeightModal();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeWeightModal();
+        }
+    });
+</script>
 </body>
 </html>
 

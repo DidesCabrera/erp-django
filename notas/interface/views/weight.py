@@ -1,12 +1,15 @@
 from datetime import date
+
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+
 from notas.domain.models import WeightLog
+
 
 @login_required
 def register_weight(request):
-    back_url = request.META.get("HTTP_REFERER", "meal_list")
+    back_url = request.POST.get("next") or request.META.get("HTTP_REFERER") or "/app/profile/"
 
     if request.method != "POST":
         return redirect(back_url)
