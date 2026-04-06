@@ -1,6 +1,7 @@
 from notas.presentation.config.viewmode import vm
 
-
+# HOME ----------------------------------------------
+HOME_VIEWMODE = vm("home", "list", "personal")
 
 # PROFILE  -------------------------------------------
 PROFILE_VIEWMODE = vm("profile", "list", "personal")

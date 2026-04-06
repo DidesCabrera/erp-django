@@ -3,7 +3,9 @@
 <aside class="sidebar">
                 
     <div class="block-logo-sidebar">
-        <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
+        <a href="{% url 'home_view' %}">
+            <img src="{% static 'img/logo_negro2.png' %}" alt="Logo" class="brand-logo">
+        </a>
         <button class="collapse-sidebar-btn" onclick="toggleSidebar()">
             <i data-lucide="panel-right-open" class="collapse-sidebar-icon"></i>
         </button>

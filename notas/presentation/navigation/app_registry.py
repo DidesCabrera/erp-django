@@ -34,6 +34,22 @@ APP_NAVIGATION = (
         label="Workspace",
         groups=(
             NavGroupSpec(
+                key="home",
+                label="Inicio",
+                icon="house",
+                items=(
+                    NavItemSpec(
+                        key="home_personal",
+                        label="Home",
+                        icon="house",
+                        page_icon="house",
+                        url_name="home_view",
+                        nav_root="home",
+                        scope="personal",
+                    ),
+                ),
+            ),
+            NavGroupSpec(
                 key="library",
                 label="Mi Librería",
                 icon="bookmark",

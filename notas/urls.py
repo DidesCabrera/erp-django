@@ -104,12 +104,13 @@ from notas.interface.views.inbox import inbox_list
 from notas.interface.views.project import project_view
 from notas.interface.views.nutrition import elemental_context, elemental_nutrition, elemental_platform
 
-
+from notas.interface.views.home import home_view
     
 
 
 urlpatterns = [
-
+    
+    path("", home_view, name="home_view"),
 
     path("inbox/", inbox_list, name="inbox_list"),
     path("project/", project_view, name="project_view"),

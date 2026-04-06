@@ -1,0 +1,174 @@
+{% extends "notas/base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="page home-page">
+
+  <!-- HERO ================================================== -->
+  <section class="home-hero card-father">
+    <div class="home-hero-copy">
+      <p class="home-eyebrow">Workspace</p>
+      <h1>{{ vm.content.hero.title }}</h1>
+      <p class="home-hero-subtitle">
+        {{ vm.content.hero.subtitle }}
+      </p>
+    </div>
+  </section>
+
+  <!-- STATS ================================================= -->
+  <section class="home-stats">
+    <div class="home-stat-card">
+      <a href="{% url 'dailyplan_list' %}" class="home-stat-card-link">
+        <div class="home-stat-top">
+          <i data-lucide="clipboard-list" class="home-stat-icon"></i>
+          <span class="home-stat-label">Planes Diarios</span>
+        </div>
+
+        <div class="home-stat-value-row">
+          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+          <div class="home-stat-value">{{ vm.content.stats.0.value }}</div>
+        </div>
+      </a>
+
+      <div class="home-stat-actions">
+        <a href="{% url 'dailyplan_create' %}" class="home-cta home-cta--primary">
+          Crear nuevo
+        </a>
+        <a href="{% url 'dailyplan_explore_list' %}" class="home-cta">
+          Explorar
+        </a>
+      </div>
+    </div>
+
+    <div class="home-stat-card">
+      <a href="{% url 'meal_list' %}" class="home-stat-card-link">
+        <div class="home-stat-top">
+          <i data-lucide="salad" class="home-stat-icon"></i>
+          <span class="home-stat-label">Comidas</span>
+        </div>
+
+        <div class="home-stat-value-row">
+          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+          <div class="home-stat-value">{{ vm.content.stats.1.value }}</div>
+        </div>
+      </a>
+
+      <div class="home-stat-actions">
+        <a href="{% url 'meal_create' %}" class="home-cta home-cta--primary">
+          Crear nuevo
+        </a>
+        <a href="{% url 'meal_explore_list' %}" class="home-cta">
+          Explorar
+        </a>
+      </div>
+    </div>
+
+    <div class="home-stat-card">
+      <a href="{% url 'food_list' %}" class="home-stat-card-link">
+        <div class="home-stat-top">
+          <i data-lucide="carrot" class="home-stat-icon"></i>
+          <span class="home-stat-label">Alimentos</span>
+        </div>
+
+        <div class="home-stat-value-row">
+          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+          <div class="home-stat-value">{{ vm.content.stats.2.value }}</div>
+        </div>
+      </a>
+
+      <div class="home-stat-actions">
+        <a href="{% url 'food_create' %}" class="home-cta home-cta--primary">
+          Crear nuevo
+        </a>
+        <a href="{% url 'food_list' %}" class="home-cta">
+          Explorar
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAILYPLANS =========================================== -->
+  <section class="home-section">
+    <div class="home-section-header">
+      <div>
+        <h2>{{ vm.content.dailyplans.title }}</h2>
+        <p>{{ vm.content.dailyplans.subtitle }}</p>
+      </div>
+
+      <a href="{{ vm.content.dailyplans.cta_url }}" class="home-link">
+        Ver todos
+      </a>
+    </div>
+
+    {% if vm.content.dailyplans.items %}
+      {% for child in vm.content.dailyplans.items %}
+        {% include "components/card_child_dailyplan.html" with child_card=child %}
+      {% endfor %}
+    {% else %}
+      <p class="home-empty">{{ vm.content.dailyplans.empty_message }}</p>
+    {% endif %}
+  </section>
+
+  <!-- MEALS ================================================ -->
+  <section class="home-section">
+    <div class="home-section-header">
+      <div>
+        <h2>{{ vm.content.meals.title }}</h2>
+        <p>{{ vm.content.meals.subtitle }}</p>
+      </div>
+
+      <a href="{{ vm.content.meals.cta_url }}" class="home-link">
+        Ver todas
+      </a>
+    </div>
+
+    {% if vm.content.meals.items %}
+      {% for child in vm.content.meals.items %}
+        {% include "components/card_child_meal.html" with child_card=child %}
+      {% endfor %}
+    {% else %}
+      <p class="home-empty">{{ vm.content.meals.empty_message }}</p>
+    {% endif %}
+  </section>
+
+  <!-- FOODS ================================================ -->
+  <section class="home-section">
+    <div class="home-section-header">
+      <div>
+        <h2>{{ vm.content.foods.title }}</h2>
+        <p>{{ vm.content.foods.subtitle }}</p>
+      </div>
+
+      <a href="{{ vm.content.foods.cta_url }}" class="home-link">
+        Ver todos
+      </a>
+    </div>
+
+    {% if vm.content.foods.items %}
+      <div class="home-food-list">
+        {% for item in vm.content.foods.items %}
+          <a href="{{ item.url }}" class="home-food-row">
+            <div class="home-food-main">
+              <strong>{{ item.name }}</strong>
+              <span>{{ item.total_kcal|floatformat:0 }} kcal</span>
+            </div>
+
+            <div class="home-food-macros">
+              <span>P {{ item.protein|floatformat:1 }}</span>
+              <span>C {{ item.carbs|floatformat:1 }}</span>
+              <span>F {{ item.fat|floatformat:1 }}</span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="home-empty">{{ vm.content.foods.empty_message }}</p>
+    {% endif %}
+  </section>
+
+</div>
+
+<script src="{% static 'notas/js/collapse_cards.js' %}"></script>
+{% endblock %}
