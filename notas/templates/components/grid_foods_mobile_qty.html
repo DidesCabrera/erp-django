@@ -1,0 +1,22 @@
+<div class="data-grid-mobile data-grid-mobile--foods-qty">
+
+    {% for row in items %}
+        <div class="data-grid-mobile-card data-grid-mobile-card--foods-qty">
+
+            <div class="data-grid-mobile-card-title">
+                {{ row.rel.name }}
+            </div>
+
+            <div class="data-grid-mobile-card-qty">
+                <span>Qty</span>
+                <strong>{{ row.rel.quantity|floatformat:0 }}</strong>
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="data-grid-empty">
+            No foods added yet.
+        </div>
+    {% endfor %}
+
+</div>

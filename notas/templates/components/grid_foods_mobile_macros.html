@@ -1,0 +1,38 @@
+<div class="data-grid-mobile data-grid-mobile--foods-macros">
+
+    {% for row in items %}
+        <div class="data-grid-mobile-card data-grid-mobile-card--foods-macros">
+
+            <div class="data-grid-mobile-card-title">
+                {{ row.rel.name }}
+            </div>
+
+            <div class="data-grid-mobile-card-metrics">
+                <div class="data-grid-mobile-card-kcal">
+                    {{ row.rel.total_kcal|floatformat:0 }} kcal
+                </div>
+
+                <div class="data-grid-mobile-card-macro">
+                    <span>P</span>
+                    <strong>{{ row.rel.g_protein|floatformat:1 }}</strong>
+                </div>
+
+                <div class="data-grid-mobile-card-macro">
+                    <span>C</span>
+                    <strong>{{ row.rel.g_carbs|floatformat:1 }}</strong>
+                </div>
+
+                <div class="data-grid-mobile-card-macro">
+                    <span>F</span>
+                    <strong>{{ row.rel.g_fat|floatformat:1 }}</strong>
+                </div>
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="data-grid-empty">
+            No foods added yet.
+        </div>
+    {% endfor %}
+
+</div>

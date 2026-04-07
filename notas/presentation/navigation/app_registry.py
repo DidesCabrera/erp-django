@@ -30,8 +30,8 @@ class NavSectionSpec:
 
 APP_NAVIGATION = (
     NavSectionSpec(
-        key="workspace",
-        label="Workspace",
+        key="account",
+        label="Cuenta",
         groups=(
             NavGroupSpec(
                 key="home",
@@ -49,6 +49,28 @@ APP_NAVIGATION = (
                     ),
                 ),
             ),
+            NavGroupSpec(
+                key="profile",
+                label="Perfil",
+                icon="circle-user-round",
+                items=(
+                    NavItemSpec(
+                        key="profile_detail",
+                        label="Mi Perfil",
+                        icon="circle-user-round",
+                        page_icon="circle-user-round",
+                        url_name="profile_detail",
+                        nav_root="profile",
+                        scope="personal",
+                    ),
+                ),
+            ),
+        ),
+    ),
+    NavSectionSpec(
+        key="workspace",
+        label="Workspace",
+        groups=(
             NavGroupSpec(
                 key="library",
                 label="Mi Librería",
@@ -173,28 +195,6 @@ APP_NAVIGATION = (
                         url_name="meal_explore_list",
                         nav_root="meal",
                         scope="explore",
-                    ),
-                ),
-            ),
-        ),
-    ),
-    NavSectionSpec(
-        key="account",
-        label="Cuenta",
-        groups=(
-            NavGroupSpec(
-                key="profile",
-                label="Perfil",
-                icon="circle-user-round",
-                items=(
-                    NavItemSpec(
-                        key="profile_detail",
-                        label="Mi Perfil",
-                        icon="circle-user-round",
-                        page_icon="circle-user-round",
-                        url_name="profile_detail",
-                        nav_root="profile",
-                        scope="personal",
                     ),
                 ),
             ),

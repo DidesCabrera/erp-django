@@ -22,8 +22,8 @@
     <!-- TABLE ========================================= -->
         <div class="page-detail">
             <h3>Comidas en este Plan</h3>
-            <div class="card-table-meals">
-            {% include "components/table_meals.html" with items=main_card.table.items %}
+            <div class="card-table-meals" data-mobile-view="menu">
+            {% include "components/grid_meals.html" with items=main_card.table.items %}
             </div>
         </div>
 

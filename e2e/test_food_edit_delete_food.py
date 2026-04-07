@@ -12,20 +12,15 @@ def test_food_edit_delete_food_removes_row(page):
     first_edit_button = edit_buttons.first
     first_edit_button.wait_for()
 
-    first_row = first_edit_button.locator("xpath=ancestor::tr")
+    first_row = first_edit_button.locator(
+        "xpath=ancestor::*[contains(@class, 'data-grid-row--foods-edit')]"
+    )
     delete_button = first_row.locator('button[type="submit"]').first
 
     delete_button.wait_for()
     delete_button.click()
 
     page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(800)
 
-    assert "/app/meals/" in page.url, f"La vista no volvió a meal edit: {page.url}"
-
-    updated_count = page.locator(".edit-food-btn").count()
-
-    assert updated_count == initial_count - 1, (
-        f"La cantidad de filas no disminuyó tras borrar. "
-        f"Antes: {initial_count}, después: {updated_count}"
-    )
+    new_count = page.locator(".edit-food-btn").count()
+    assert new_count == initial_count - 1

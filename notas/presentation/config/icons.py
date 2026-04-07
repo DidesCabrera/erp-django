@@ -1,5 +1,5 @@
 CONTENT_ICON_REGISTRY = {
     "dailyplan": "clipboard-list",
-    "meal": "utensils",
+    "meal": "salad",
     "food": "carrot",
 }

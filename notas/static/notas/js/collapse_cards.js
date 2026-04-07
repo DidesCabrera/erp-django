@@ -1,177 +1,152 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const FADE_OUT_DURATION = 100;
+  const FADE_IN_DURATION = 180;
 
-  const DETAIL_SELECTORS = [
-    ".card-table-foods",
-    ".card-menu",
-    ".card-foods-aggregation"
-  ];
-
-  function getCssTimeMs(variableName, fallbackMs) {
-    const value = getComputedStyle(document.documentElement)
-      .getPropertyValue(variableName)
-      .trim();
-
-    if (!value) return fallbackMs;
-
-    if (value.endsWith("ms")) {
-      return parseFloat(value);
-    }
-
-    if (value.endsWith("s")) {
-      return parseFloat(value) * 1000;
-    }
-
-    const numeric = parseFloat(value);
-    return Number.isNaN(numeric) ? fallbackMs : numeric;
+  function getButtons(detailBlock) {
+    return Array.from(
+      detailBlock.querySelectorAll(
+        ".card-detail-tabs--desktop [data-target], .card-detail-tabs-mobile [data-target]"
+      )
+    );
   }
 
-  function getBlocks(container) {
-    return DETAIL_SELECTORS
-      .map(selector => container.querySelector(selector))
+  function getPanels(detailBlock) {
+    const selectors = getButtons(detailBlock)
+      .map((button) => button.dataset.target)
+      .filter(Boolean);
+
+    const uniqueSelectors = [...new Set(selectors)];
+
+    return uniqueSelectors
+      .map((selector) => detailBlock.querySelector(selector))
       .filter(Boolean);
   }
 
-  function getVisibleBlock(container) {
-    return getBlocks(container).find(block => block.classList.contains("is-visible"));
-  }
-
-  function stopRunningAnimation(block) {
-    block.getAnimations().forEach(animation => animation.cancel());
-  }
-
-  async function fadeOutBlock(block, duration) {
-    if (!block) return;
-
-    stopRunningAnimation(block);
-
-    block.style.display = "block";
-    block.style.opacity = "1";
-
-    const animation = block.animate(
-      [
-        { opacity: 1 },
-        { opacity: 0 }
-      ],
-      {
-        duration,
-        easing: "ease",
-        fill: "forwards"
-      }
+  function getVisiblePanel(detailBlock) {
+    return getPanels(detailBlock).find((panel) =>
+      panel.classList.contains("is-visible")
     );
-
-    await animation.finished;
-
-    block.classList.remove("is-visible");
-    block.style.display = "none";
-    block.style.opacity = "0";
   }
 
-  async function fadeInBlock(block, duration) {
-    if (!block) return;
-
-    stopRunningAnimation(block);
-
-    block.classList.add("is-visible");
-    block.style.display = "block";
-    block.style.opacity = "0";
-
-    const animation = block.animate(
-      [
-        { opacity: 0 },
-        { opacity: 1 }
-      ],
-      {
-        duration,
-        easing: "ease",
-        fill: "forwards"
-      }
-    );
-
-    await animation.finished;
-
-    block.style.opacity = "1";
+  function resetPanel(panel) {
+    panel.classList.remove("is-visible", "is-fading-in", "is-fading-out");
   }
 
-  async function activateTab(detailBlock, btn) {
-    if (!detailBlock || !btn) return;
+  function hideImmediately(panel) {
+    resetPanel(panel);
+    panel.style.display = "none";
+    panel.style.opacity = "0";
+  }
+
+  function showPanel(panel) {
+    resetPanel(panel);
+    panel.style.display = "block";
+    panel.style.opacity = "0";
+
+    requestAnimationFrame(() => {
+      panel.classList.add("is-visible", "is-fading-in");
+      panel.style.opacity = "1";
+    });
+
+    window.setTimeout(() => {
+      panel.classList.remove("is-fading-in");
+    }, FADE_IN_DURATION);
+  }
+
+  function hidePanel(panel, callback) {
+    if (!panel) {
+      if (callback) callback();
+      return;
+    }
+
+    resetPanel(panel);
+    panel.classList.add("is-visible", "is-fading-out");
+    panel.style.display = "block";
+    panel.style.opacity = "1";
+
+    requestAnimationFrame(() => {
+      panel.style.opacity = "0";
+    });
+
+    window.setTimeout(() => {
+      hideImmediately(panel);
+      if (callback) callback();
+    }, FADE_OUT_DURATION);
+  }
+
+  function syncButtons(detailBlock, selector) {
+    getButtons(detailBlock).forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.target === selector);
+    });
+  }
+
+  function activatePanel(detailBlock, selector) {
+    if (!detailBlock || !selector) return;
     if (detailBlock.dataset.switching === "true") return;
 
-    const selector = btn.dataset.target;
-    if (!selector) return;
+    const nextPanel = detailBlock.querySelector(selector);
+    if (!nextPanel) return;
 
-    const nextBlock = detailBlock.querySelector(selector);
-    if (!nextBlock) return;
+    const currentPanel = getVisiblePanel(detailBlock);
 
-    const currentBlock = getVisibleBlock(detailBlock);
-    if (currentBlock === nextBlock) return;
+    if (currentPanel === nextPanel) {
+      syncButtons(detailBlock, selector);
+      return;
+    }
 
-    const tabsContainer = btn.closest(".card-detail-tabs");
-    if (!tabsContainer) return;
-
-    const buttons = tabsContainer.querySelectorAll(".btn-desplegar");
-    buttons.forEach(button => button.classList.remove("is-active"));
-    btn.classList.add("is-active");
-
-    const fadeOutDuration = getCssTimeMs("--tab-fade-out-duration", 180);
-    const fadeInDuration = getCssTimeMs("--tab-fade-in-duration", 220);
-
+    syncButtons(detailBlock, selector);
     detailBlock.dataset.switching = "true";
 
-    try {
-      await fadeOutBlock(currentBlock, fadeOutDuration);
-      await fadeInBlock(nextBlock, fadeInDuration);
-    } finally {
-      detailBlock.dataset.switching = "false";
-    }
+    hidePanel(currentPanel, () => {
+      showPanel(nextPanel);
+
+      window.setTimeout(() => {
+        detailBlock.dataset.switching = "false";
+      }, FADE_IN_DURATION);
+    });
   }
 
   function initDetailBlock(detailBlock) {
-    const tabsContainer = detailBlock.querySelector(".card-detail-tabs");
-    if (!tabsContainer) return;
-
-    const buttons = tabsContainer.querySelectorAll(".btn-desplegar");
+    const buttons = getButtons(detailBlock);
     if (!buttons.length) return;
 
-    const blocks = getBlocks(detailBlock);
-
-    blocks.forEach(block => {
-      stopRunningAnimation(block);
-      block.classList.remove("is-visible");
-      block.style.display = "none";
-      block.style.opacity = "0";
+    getPanels(detailBlock).forEach((panel) => {
+      hideImmediately(panel);
     });
 
-    buttons.forEach(button => {
-      button.classList.remove("is-active");
-    });
+    const defaultButton =
+      detailBlock.querySelector(".card-detail-tabs--desktop .is-active[data-target]") ||
+      detailBlock.querySelector(".card-detail-tabs-mobile .is-active[data-target]") ||
+      buttons[0];
 
-    const defaultBtn =
-      tabsContainer.querySelector(".btn-desplegar.is-active") || buttons[0];
+    const selector = defaultButton.dataset.target;
+    const defaultPanel = detailBlock.querySelector(selector);
 
-    const selector = defaultBtn.dataset.target;
-    const defaultBlock = detailBlock.querySelector(selector);
+    syncButtons(detailBlock, selector);
 
-    defaultBtn.classList.add("is-active");
-
-    if (defaultBlock) {
-      defaultBlock.classList.add("is-visible");
-      defaultBlock.style.display = "block";
-      defaultBlock.style.opacity = "1";
+    if (defaultPanel) {
+      defaultPanel.style.display = "block";
+      defaultPanel.style.opacity = "1";
+      defaultPanel.classList.add("is-visible");
     }
 
     detailBlock.dataset.switching = "false";
   }
 
-  document.querySelectorAll(".card-detail-block").forEach(initDetailBlock);
-
-  document.addEventListener("click", function (e) {
-    const btn = e.target.closest(".btn-desplegar");
-    if (!btn) return;
-
-    const detailBlock = btn.closest(".card-detail-block");
-    if (!detailBlock) return;
-
-    activateTab(detailBlock, btn);
+  document.querySelectorAll(".card-detail-block").forEach((detailBlock) => {
+    initDetailBlock(detailBlock);
   });
 
+  document.addEventListener("click", function (event) {
+    const button = event.target.closest(
+      ".card-detail-tabs--desktop [data-target], .card-detail-tabs-mobile [data-target]"
+    );
+
+    if (!button) return;
+
+    const detailBlock = button.closest(".card-detail-block");
+    if (!detailBlock) return;
+
+    activatePanel(detailBlock, button.dataset.target);
+  });
 });

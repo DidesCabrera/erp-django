@@ -114,30 +114,6 @@
   background: rgba(0,0,0,0.06);
 }
 
-.block-desplegar-tabla {
-  display: flex;
-  gap: 6px;           /* espacio entre botones */
-  width: fit-content;
-  color: #0c61ff;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: auto;
-  align-self: flex-start;
-}
-
-.btn-desplegar-tabla,
-.btn-desplegar-menu {
-  display: flex;
-  align-items: center;
-  gap: 4px;            /* espacio entre texto e icono */
-}
-
-.btn-desplegar-tabla p,
-.btn-desplegar-menu p{
-  margin: 0;
-}
-
 
 .block-title-card-edit {
   display: flex;
@@ -179,32 +155,4 @@
 }
 
 
-/* BOTONES DESPLEGAR */
-
-.btn-desplegar {
-  display: inline-flex;
-  align-items: center;
-  padding: 0px 8px;
-  border-radius: 8px;
-  background-color: rgb(233, 233, 233);
-  gap: 2px;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
-}
-
-.btn-desplegar p {
-  margin: 0;
-  font-size: 12px;
-  color: #565656;
-  font-weight: 450;
-}
-
-.btn-desplegar.is-active {
-  background-color: #000000;
-}
-
-.btn-desplegar.is-active p {
-  color: rgb(255, 255, 255);
-}
 

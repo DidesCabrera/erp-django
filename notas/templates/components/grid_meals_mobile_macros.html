@@ -1,0 +1,39 @@
+<div class="data-grid data-grid--mobile-macros">
+
+    <div class="data-grid-header data-grid-header--mobile-macros">
+        <div class="data-grid-col data-grid-col--name">Meal</div>
+        <div class="data-grid-col data-grid-col--kcal">Kcal</div>
+        <div class="data-grid-col data-grid-col--macro">P</div>
+        <div class="data-grid-col data-grid-col--macro">C</div>
+        <div class="data-grid-col data-grid-col--macro">F</div>
+    </div>
+
+    {% for row in items %}
+        <div class="data-grid-row data-grid-row--mobile-macros">
+            <div class="data-grid-cell data-grid-cell--name">
+                {{ row.rel.name }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--kcal">
+                {{ row.rel.total_kcal|floatformat:0 }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--macro">
+                {{ row.rel.g_protein|floatformat:1 }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--macro">
+                {{ row.rel.g_carbs|floatformat:1 }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--macro">
+                {{ row.rel.g_fat|floatformat:1 }}
+            </div>
+        </div>
+    {% empty %}
+        <div class="data-grid-empty">
+            No meals added yet.
+        </div>
+    {% endfor %}
+
+</div>

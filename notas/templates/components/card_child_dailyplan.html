@@ -3,49 +3,87 @@
   <!-- HEADER CARD ========================================= -->
   <!-- ===================================================== -->
   <div class="card-main">
-    <!-- TITULO ===================== -->
     <div class="card-title">
       {% include "components//card_child_title.html" with titulo=child_card.titulo %}
     </div>
 
-    <!-- KPI ======================== -->
     <div class="card-kpi">
       {% include "components/dash_kpi.html" with kpis=child_card.kpis %}
     </div>
   </div>
 
-  <!-- BLOCK DETAIL ======================== -->
-  <div class="card-detail-block">
-    <div class="card-detail-tabs block-desplegar-tabla block-card-desplegar">
+  <!-- BLOCK DETAIL ======================================== -->
+  {% with panel_id=child_card.id|default:forloop.counter %}
+    <div class="card-detail-block">
 
-      <div class="btn-desplegar is-active" data-target=".card-menu">
-        <p>Menú</p>
+      <!-- MENU DESKTOP DEL DETAIL BLOCK -->
+      <div class="card-detail-tabs card-detail-tabs--desktop block-desplegar-tabla block-card-desplegar">
+        <div class="btn-desplegar is-active" data-target="#card-menu-{{ panel_id }}">
+          <p>Menú</p>
+        </div>
+
+        <div class="btn-desplegar" data-target="#card-grid-meals-{{ panel_id }}">
+          <p>Tabla Nutricional</p>
+        </div>
       </div>
 
-      <div class="btn-desplegar" data-target=".card-table-foods">
-        <p>Tabla Nutricional</p>
+      <!-- MENU MOBILE DEL DETAIL BLOCK -->
+      <div class="card-detail-tabs-mobile">
+        <button
+          type="button"
+          class="btn-mobile-detail-tab is-active"
+          data-target="#card-menu-{{ panel_id }}"
+        >
+          Menú
+        </button>
+
+        <button
+          type="button"
+          class="btn-mobile-detail-tab"
+          data-target="#card-grid-macros-{{ panel_id }}"
+        >
+          Tabla Macros
+        </button>
+
+        <button
+          type="button"
+          class="btn-mobile-detail-tab"
+          data-target="#card-grid-alloc-{{ panel_id }}"
+        >
+          Tabla Alloc
+        </button>
+      </div>
+
+      <!-- PANEL MENU -->
+      <div id="card-menu-{{ panel_id }}" class="card-menu">
+        {% include "components/card_child_menu.html" with menu=child_card.menu %}
+      </div>
+
+      <!-- PANEL GRID DESKTOP -->
+      <div id="card-grid-meals-{{ panel_id }}" class="card-table-meals">
+        {% include "components/grid_meals.html" with items=child_card.table.items %}
+      </div>
+
+      <!-- PANEL GRID MOBILE MACROS -->
+      <div id="card-grid-macros-{{ panel_id }}" class="card-table-meals-mobile">
+        {% include "components/grid_meals_mobile_macros.html" with items=child_card.table.items %}
+      </div>
+
+      <!-- PANEL GRID MOBILE ALLOC -->
+      <div id="card-grid-alloc-{{ panel_id }}" class="card-table-meals-mobile">
+        {% include "components/grid_meals_mobile_alloc.html" with items=child_card.table.items %}
       </div>
 
     </div>
-
-    <div class="card-menu">
-      {% include "components/card_child_menu.html" with menu=child_card.menu %}
-    </div>
-
-    <div class="card-table-foods">
-      {% include "components/table_meals.html" with items=child_card.table.items %}
-    </div>
-  </div>
+  {% endwith %}
 
   <!-- BOTTOM SECTION ====================================== -->
   <!-- ===================================================== -->
   <div class="card-bottom">
-    <!-- METADATA ===================== -->
     <div class="card-metadata">
       {% include "components//card_child_metadata.html" with metadata=child_card.metadata %}
     </div>
 
-    <!-- ACTIONS ====================== -->
     <div class="card-actions">
       {% include "components/card_actions.html" with actions=child_card.actions %}
     </div>

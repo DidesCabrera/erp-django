@@ -9,9 +9,9 @@
     gap: 0px;
     justify-content: space-between;
     padding: 1px 16px 1px 14px;
-    background-color: var(--color-dailyplan);
-    color: rgb(255, 255, 255);
-    font-weight: 600;
+    background-color: rgb(21, 21, 21);
+    color: rgb(227, 227, 227);
+    font-weight: 500;
     border: 1px solid var(--color-border-1);
     border-width: 1px 1px 0 1px;
     border-radius: 14px 14px 0 0;

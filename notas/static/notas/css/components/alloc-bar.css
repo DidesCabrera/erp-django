@@ -6,7 +6,7 @@
   width: 100%;
   min-width: 0;
   height: inherit;
-  border-radius: 0px 4px 4px 0px;
+  border-radius: 0px 6px 6px 0px;
   overflow: hidden;
 }
 
@@ -58,7 +58,7 @@
   white-space: nowrap;
   width: 60px;
   height: inherit;
-  border-radius: 4px 0px 0px 4px;
+  border-radius: 6px 0px 0px 6px;
   border-right: 1px solid rgba(0, 0, 0, 0.18);
 
   display: flex;

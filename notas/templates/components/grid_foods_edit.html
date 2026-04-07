@@ -1,0 +1,87 @@
+<div class="data-grid data-grid--foods data-grid--foods-edit">
+
+    <div class="data-grid-header data-grid-header--foods-edit">
+        <div class="data-grid-col data-grid-col--name">Food</div>
+        <div class="data-grid-col data-grid-col--qty">Qty</div>
+        <div class="data-grid-col data-grid-col--kcal">Kcal</div>
+        <div class="data-grid-col data-grid-col--macro">P</div>
+        <div class="data-grid-col data-grid-col--macro">C</div>
+        <div class="data-grid-col data-grid-col--macro">F</div>
+        <div class="data-grid-col data-grid-col--alloc">P kcal%</div>
+        <div class="data-grid-col data-grid-col--alloc">C kcal%</div>
+        <div class="data-grid-col data-grid-col--alloc">F kcal%</div>
+        <div class="data-grid-col data-grid-col--action"></div>
+        <div class="data-grid-col data-grid-col--action"></div>
+    </div>
+
+    {% for row in items %}
+        <div class="data-grid-row data-grid-row--foods-edit">
+
+            <div class="data-grid-cell data-grid-cell--name">
+                {{ row.rel.name }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--qty">
+                <div class="cell-qty">{{ row.rel.quantity|floatformat:0 }}</div>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--kcal">
+                <div class="cell-kcal">{{ row.rel.total_kcal|floatformat:0 }}</div>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--macro">
+                {{ row.rel.g_protein|floatformat:1 }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--macro">
+                {{ row.rel.g_carbs|floatformat:1 }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--macro">
+                {{ row.rel.g_fat|floatformat:1 }}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--alloc">
+                {% include "components/grid_alloc_item.html" with value=row.rel.alloc_protein kind="protein" %}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--alloc">
+                {% include "components/grid_alloc_item.html" with value=row.rel.alloc_carbs kind="carbs" %}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--alloc">
+                {% include "components/grid_alloc_item.html" with value=row.rel.alloc_fat kind="fat" %}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--action">
+                <button
+                    type="button"
+                    class="edit-food-btn"
+                    data-id="{{ row.rel.id }}"
+                    data-food-id="{{ row.child.id }}"
+                    data-name="{{ row.rel.name }}"
+                    data-qty="{{ row.rel.quantity|floatformat:0 }}"
+                    data-update-url="{% url 'mealfood_update' main_id row.rel.id %}"
+                >
+                    <i data-lucide="pencil" class="table-icon"></i>
+                </button>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--action">
+                <form method="post" action="{% url 'mealfood_remove' row.rel.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="return_to" value="{{ request.path }}">
+                    <button type="submit">
+                        <i data-lucide="trash" class="table-icon"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="data-grid-empty">
+            No foods added yet.
+        </div>
+    {% endfor %}
+
+</div>
