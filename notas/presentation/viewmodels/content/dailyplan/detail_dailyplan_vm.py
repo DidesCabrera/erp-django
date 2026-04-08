@@ -1,6 +1,6 @@
 from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional
-
+from notas.presentation.resolvers.title_resolvers import CategoryBadgeUI
 
 # =========================
 # UI ATOMS
@@ -20,6 +20,7 @@ class TitleUI:
     label: Optional[str] = None
     icon: Optional[str] = None
     category: Optional[str] = None
+    category_badge: Optional[CategoryBadgeUI] = None
     structural_indicators: Optional[StructuralIndicatorsUI] = None
 
 @dataclass

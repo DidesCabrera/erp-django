@@ -108,7 +108,7 @@ def home_view(request):
             HomeStatVM(
                 label="Comidas",
                 value=meals_count,
-                icon="salad",
+                icon="utensils",
                 url=reverse("meal_list"),
             ),
             HomeStatVM(

@@ -29,6 +29,8 @@ from notas.application.resolvers.meal_food_resolvers import (
 )
 from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
 
+from notas.presentation.resolvers.title_resolvers import resolve_category_badge
+
 
 def _get_dpm_for_user(user, dailyplan_id: int, dpm_id: int):
     return get_object_or_404(
@@ -316,6 +318,7 @@ def build_dpm_detail_content_data(
             "name": dailyplan.name,
             "label": "Daily Plan",
             "category": dailyplan.category,
+            "category_badge": resolve_category_badge(meal.category),
             "icon": CONTENT_ICON_REGISTRY.get("dailyplan"),
         },
         "rel_id": dpm.id,
@@ -349,6 +352,7 @@ def build_dpm_detail_content_data(
             "label": "Meal",
             "icon": CONTENT_ICON_REGISTRY.get("meal"),
             "category": meal.category,
+            "category_badge": resolve_category_badge(meal.category),
         },
         "kpis": {
             "ppk": meal_ppk["ppk"],
@@ -392,6 +396,7 @@ def build_dpm_detail_content_data(
                     "label": "Food",
                     "icon": CONTENT_ICON_REGISTRY.get("food"),
                     "category": getattr(food, "category", None),
+                    "category_badge": resolve_category_badge(food.category),
                 },
                 "kpis": {
                     "ppk": meal_ppk["ppk"],

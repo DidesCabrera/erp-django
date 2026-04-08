@@ -47,3 +47,14 @@ git checkout -b feature/ux-improvements #crear nuevo branch
 git add .
 git commit -m "Create Home v1"
 git push origin HEAD
+
+dides dides@gmail.com True True
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+user = User.objects.get(email="dides@gmail.com")
+user.set_password("CabrerA1988")
+user.is_staff = True
+user.is_superuser = True
+user.save()

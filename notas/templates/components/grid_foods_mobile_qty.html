@@ -1,17 +1,19 @@
-<div class="data-grid-mobile data-grid-mobile--foods-qty">
+<div class="data-grid data-grid--mobile-foods-qty">
+
+    <div class="data-grid-header data-grid-header--mobile-foods-qty">
+        <div class="data-grid-col data-grid-col--name">Food</div>
+        <div class="data-grid-col data-grid-col--qty">Qty</div>
+    </div>
 
     {% for row in items %}
-        <div class="data-grid-mobile-card data-grid-mobile-card--foods-qty">
-
-            <div class="data-grid-mobile-card-title">
+        <div class="data-grid-row data-grid-row--mobile-foods-qty">
+            <div class="data-grid-cell data-grid-cell--name">
                 {{ row.rel.name }}
             </div>
 
-            <div class="data-grid-mobile-card-qty">
-                <span>Qty</span>
-                <strong>{{ row.rel.quantity|floatformat:0 }}</strong>
+            <div class="data-grid-cell data-grid-cell--qty">
+                {{ row.rel.quantity|floatformat:0 }}
             </div>
-
         </div>
     {% empty %}
         <div class="data-grid-empty">

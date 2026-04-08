@@ -1,29 +1,29 @@
-<div class="data-grid-mobile data-grid-mobile--foods-alloc">
+<div class="data-grid data-grid--mobile-foods-alloc">
+
+    <div class="data-grid-header data-grid-header--mobile-foods-alloc">
+        <div class="data-grid-col data-grid-col--name">Food</div>
+        <div class="data-grid-col data-grid-col--alloc">P kcal%</div>
+        <div class="data-grid-col data-grid-col--alloc">C kcal%</div>
+        <div class="data-grid-col data-grid-col--alloc">F kcal%</div>
+    </div>
 
     {% for row in items %}
-        <div class="data-grid-mobile-card data-grid-mobile-card--foods-alloc">
-
-            <div class="data-grid-mobile-card-title">
+        <div class="data-grid-row data-grid-row--mobile-foods-alloc">
+            <div class="data-grid-cell data-grid-cell--name">
                 {{ row.rel.name }}
             </div>
 
-            <div class="data-grid-mobile-card-allocs">
-                <div class="data-grid-mobile-card-alloc-row">
-                    <div class="data-grid-mobile-card-alloc-label">P kcal%</div>
-                    {% include "components/grid_alloc_item.html" with value=row.rel.alloc_protein kind="protein" %}
-                </div>
-
-                <div class="data-grid-mobile-card-alloc-row">
-                    <div class="data-grid-mobile-card-alloc-label">C kcal%</div>
-                    {% include "components/grid_alloc_item.html" with value=row.rel.alloc_carbs kind="carbs" %}
-                </div>
-
-                <div class="data-grid-mobile-card-alloc-row">
-                    <div class="data-grid-mobile-card-alloc-label">F kcal%</div>
-                    {% include "components/grid_alloc_item.html" with value=row.rel.alloc_fat kind="fat" %}
-                </div>
+            <div class="data-grid-cell data-grid-cell--alloc">
+                {% include "components/grid_alloc_item.html" with value=row.rel.alloc_protein kind="protein" %}
             </div>
 
+            <div class="data-grid-cell data-grid-cell--alloc">
+                {% include "components/grid_alloc_item.html" with value=row.rel.alloc_carbs kind="carbs" %}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--alloc">
+                {% include "components/grid_alloc_item.html" with value=row.rel.alloc_fat kind="fat" %}
+            </div>
         </div>
     {% empty %}
         <div class="data-grid-empty">

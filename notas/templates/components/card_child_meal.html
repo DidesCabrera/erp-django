@@ -1,92 +1,30 @@
 <div class="card {{ dpm_meal }}">
 
-  <div class="card-main">
-      <div class="card-title">
-          {% include "components//card_child_title.html" with titulo=child_card.titulo %}
-      </div>
+    <div class="card-main">
+        <div class="card-title">
+            {% include "components//card_child_title.html" with titulo=child_card.titulo %}
+        </div>
 
-      <div class="card-kpi">
-          {% include "components/dash_kpi.html" with kpis=child_card.kpis %}
-      </div>
-  </div>
+        <div class="card-kpi">
+            {% include "components/dash_kpi.html" with kpis=child_card.kpis %}
+        </div>
+    </div>
 
-  {% with panel_id=child_card.id|default:forloop.counter %}
-      <div class="card-detail-block">
+{% with panel_id=child_card.id|default:forloop.counter %}
+    <div class="card-detail-block">
+        {% include "components/detail_tabs_foods.html" with panel_id=panel_id %}
+        {% include "components/detail_panels_foods.html" with panel_id=panel_id foods=child_card.foods_aggregation items=child_card.table.items desktop_grid_template="components/grid_foods.html" %}
+    </div>
+{% endwith %}
 
-          <!-- MENU DESKTOP DEL DETAIL BLOCK -->
-          <div class="card-detail-tabs card-detail-tabs--desktop block-desplegar-tabla block-card-desplegar">
-              <div class="btn-desplegar is-active" data-target="#card-foods-aggregation-{{ panel_id }}">
-                  <p>Alimentos</p>
-              </div>
+    <div class="card-bottom">
+        <div class="card-metadata">
+            {% include "components//card_child_metadata.html" with metadata=child_card.metadata %}
+        </div>
 
-              <div class="btn-desplegar" data-target="#card-grid-foods-{{ panel_id }}">
-                  <p>Tabla Nutricional</p>
-              </div>
-          </div>
-
-          <!-- MENU MOBILE DEL DETAIL BLOCK -->
-          <div class="card-detail-tabs-mobile">
-              <button
-                  type="button"
-                  class="btn-mobile-detail-tab is-active"
-                  data-target="#card-grid-qty-{{ panel_id }}"
-              >
-                  Alimentos
-              </button>
-
-              <button
-                  type="button"
-                  class="btn-mobile-detail-tab"
-                  data-target="#card-grid-macros-{{ panel_id }}"
-              >
-                  Tabla Macros
-              </button>
-
-              <button
-                  type="button"
-                  class="btn-mobile-detail-tab"
-                  data-target="#card-grid-alloc-{{ panel_id }}"
-              >
-                  Tabla Alloc
-              </button>
-          </div>
-
-          <!-- PANEL DESKTOP: FOODS AGGREGATION -->
-          <div id="card-foods-aggregation-{{ panel_id }}" class="card-foods-aggregation">
-              {% include "components/card_foods_aggregation.html" with foods=child_card.foods_aggregation %}
-          </div>
-
-          <!-- PANEL DESKTOP: GRID FOODS -->
-          <div id="card-grid-foods-{{ panel_id }}" class="card-table-foods">
-              {% include "components/grid_foods.html" with items=child_card.table.items %}
-          </div>
-
-          <!-- PANEL MOBILE: GRID QTY -->
-          <div id="card-grid-qty-{{ panel_id }}" class="card-table-foods-mobile">
-              {% include "components/grid_foods_mobile_qty.html" with items=child_card.table.items %}
-          </div>
-
-          <!-- PANEL MOBILE: GRID MACROS -->
-          <div id="card-grid-macros-{{ panel_id }}" class="card-table-foods-mobile">
-              {% include "components/grid_foods_mobile_macros.html" with items=child_card.table.items %}
-          </div>
-
-          <!-- PANEL MOBILE: GRID ALLOC -->
-          <div id="card-grid-alloc-{{ panel_id }}" class="card-table-foods-mobile">
-              {% include "components/grid_foods_mobile_alloc.html" with items=child_card.table.items %}
-          </div>
-
-      </div>
-  {% endwith %}
-
-  <div class="card-bottom">
-      <div class="card-metadata">
-          {% include "components//card_child_metadata.html" with metadata=child_card.metadata %}
-      </div>
-
-      <div class="card-actions">
-          {% include "components/card_actions.html" with actions=child_card.actions %}
-      </div>
-  </div>
+        <div class="card-actions">
+            {% include "components/card_actions.html" with actions=child_card.actions %}
+        </div>
+    </div>
 
 </div>

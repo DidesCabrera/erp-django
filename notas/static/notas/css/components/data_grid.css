@@ -104,7 +104,7 @@
 }
 
 .data-grid-cell--name {
-    font-weight: 400;
+    font-weight: 600;
     padding: 8px 0;
 }
 
@@ -379,3 +379,77 @@
 }
 
 
+.data-grid-header--mobile-foods-qty,
+.data-grid-row--mobile-foods-qty {
+    grid-template-columns:
+        minmax(150px, 1.8fr)
+        64px;
+}
+
+.data-grid-header--mobile-foods-macros,
+.data-grid-row--mobile-foods-macros {
+    grid-template-columns:
+        minmax(150px, 1.8fr)
+        60px
+        60px
+        60px
+        60px;
+}
+
+.data-grid-header--mobile-foods-alloc,
+.data-grid-row--mobile-foods-alloc {
+    grid-template-columns:
+        minmax(150px, 1.8fr)
+        minmax(80px, 1fr)
+        minmax(80px, 1fr)
+        minmax(80px, 1fr);
+}
+
+.data-grid-header--menu,
+.data-grid-row--menu {
+    grid-template-columns:
+        minmax(120px, 0.9fr)
+        minmax(220px, 2.1fr);
+}
+
+.data-grid--menu .data-grid-cell--meal{
+    font-weight: 600;
+    padding: 8px 0;
+}
+
+.data-grid--menu .data-grid-col--meal {
+    font-weight: 600;
+    padding: 0 0 8px 0;
+}
+
+.data-grid--menu .data-grid-cell--foods {
+    line-height: 1.35;
+}
+
+
+.data-grid-header--foods-aggregation,
+.data-grid-row--foods-aggregation {
+    grid-template-columns: 1fr;
+}
+
+.data-grid--foods-aggregation .data-grid-cell--foods {
+    line-height: 1.35;
+}
+
+.data-grid--menu .data-grid-cell--meal {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.data-grid--menu .data-grid-meal-name {
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.data-grid--menu .data-grid-meal-hour {
+    font-size: 12px;
+    line-height: 1.1;
+    font-weight: 400;
+    opacity: 0.75;
+}

@@ -4,9 +4,8 @@
     flex-direction: row;   /* TOTAL al lado */
     align-items: stretch;
     background: rgb(248, 248, 248);
-    padding: 8px 12px;
     border-radius: 6px;
-    margin-top: 12px;
+    padding-bottom: 8px;
 }
 
 .card-food-aggregation.picker {

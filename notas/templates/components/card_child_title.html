@@ -1,27 +1,44 @@
 <div class="card-title-comp">
 
-  <h3>{{ titulo.name }}</h3>
+  <div class="main-title">
+    <h3>{{ titulo.name }}</h3>
+    <div class="label-class">
+      {% for class in titulo.classes %}
+        <span class="class-tag">{{ class }}</span>
+      {% endfor %}
+    </div>
+    <div class="structural-indicators">
+        {% if titulo.structural_indicators.meals_count %}
+            <span class="structural-item">
+                <span class="structural-value">{{ titulo.structural_indicators.meals_count }}</span>
+                <i data-lucide="utensils" class="card-icon main"></i>
+            </span>
+    
+            <span class="structural-divider"></span>
+        {% endif %}
+    
+        <span class="structural-item">
+            <span class="structural-value">{{ titulo.structural_indicators.foods_count }}</span>
+            <i data-lucide="carrot" class="card-icon main"></i>
+        </span>
+    </div>
+  </div> 
+
+  <div class="icons-title">
+    <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+      <i data-lucide="{{ titulo.icon }}" class="card-icon"></i>
+    </div>
+    
+    {% if titulo.category_badge %}
+      <div
+          class="label-fork label-fork--{{ titulo.category_badge.css }}"
+          title="{{ titulo.category_badge.label }}"
+          aria-label="{{ titulo.category_badge.label }}"
+      >
+          <i data-lucide="{{ titulo.category_badge.icon }}" class="card-icon"></i>
+      </div>
+    {% endif %}
   
-  <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
-    <i data-lucide="{{ titulo.icon }}" class="card-icon"></i>
-    {{ titulo.label }}
-  </div>
-
-  <div class="label-fork">{{ titulo.category }}</div>
-
-  <div class="label-class">
-    {% for class in titulo.classes %}
-      <span class="class-tag">{{ class }}</span>
-    {% endfor %}
-  </div>
-
-  <div class="structural-indicators">
-    <p>
-      {% if titulo.structural_indicators.meals_count %}
-        {{ titulo.structural_indicators.meals_count }} Comidas |
-      {% endif %}
-      {{ titulo.structural_indicators.foods_count }} Alimentos
-    </p>
   </div>
 
 </div>

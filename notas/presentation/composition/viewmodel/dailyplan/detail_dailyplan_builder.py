@@ -1,5 +1,6 @@
 from notas.presentation.viewmodels.content.dailyplan.detail_dailyplan_vm import *
 
+
 def build_dailyplan_detail_vm(content_data):
     main = MainCardUI(
         main_id=content_data.main_card_data["main_id"],
@@ -7,6 +8,7 @@ def build_dailyplan_detail_vm(content_data):
             name=content_data.main_card_data["title"]["name"],
             label=content_data.main_card_data["title"]["label"],
             category=content_data.main_card_data["title"]["category"],
+            category_badge=content_data.main_card_data["title"]["category_badge"],
             icon=content_data.main_card_data["title"]["icon"],
         ),
         kpis=KPIUI(
@@ -52,6 +54,7 @@ def build_dailyplan_detail_vm(content_data):
                 label=child_data["title"]["label"],
                 icon=child_data["title"]["icon"],
                 category=child_data["title"]["category"],
+                category_badge=child_data["title"]["category_badge"],
                 structural_indicators=StructuralIndicatorsUI(
                     foods_count=child_data["title"]["foods_count"],
                 ),

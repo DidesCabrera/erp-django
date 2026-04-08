@@ -1,0 +1,32 @@
+<div class="data-grid data-grid--menu">
+
+    <div class="data-grid-header data-grid-header--menu">
+        <div class="data-grid-col data-grid-col--meal">Meal</div>
+        <div class="data-grid-col data-grid-col--foods">Foods</div>
+    </div>
+
+    {% for meal in menu.meals %}
+        <div class="data-grid-row data-grid-row--menu">
+            <div class="data-grid-cell data-grid-cell--meal">
+                <div class="data-grid-meal-name">
+                    {{ meal.meal_name }}
+                </div>
+
+                {% if meal.hour %}
+                    <div class="data-grid-meal-hour">
+                        {{ meal.hour }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--foods">
+                {{ meal.foods|join:" · " }}
+            </div>
+        </div>
+    {% empty %}
+        <div class="data-grid-empty">
+            No meals yet.
+        </div>
+    {% endfor %}
+
+</div>

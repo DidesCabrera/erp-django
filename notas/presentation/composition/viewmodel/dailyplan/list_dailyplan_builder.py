@@ -16,6 +16,7 @@ def build_dailyplan_list_vm(content_data):
                 label=child_data["title"]["label"],
                 icon=child_data["title"]["icon"],
                 category=child_data["title"]["category"],
+                category_badge=child_data["title"]["category_badge"],
                 structural_indicators=StructuralIndicatorsUI(
                     meals_count=child_data["title"]["meals_count"],
                     foods_count=child_data["title"]["foods_count"],

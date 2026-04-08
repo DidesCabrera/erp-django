@@ -75,13 +75,6 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-
-.structural_indicators{
-  font-size: 14px;
-  font-weight: 400;
-  margin-bottom: 10px;
-}
-
 .truncate{
   overflow: hidden;
   white-space: nowrap;

@@ -47,7 +47,7 @@ from notas.application.resolvers.dailyplan_resolvers import resolve_dailyplan_ac
 from notas.application.resolvers.share_resolvers import resolve_share_actions
 from notas.presentation.composition.viewmodel.components.builder_menu import build_dailyplan_menu
 
-
+from notas.presentation.resolvers.title_resolvers import resolve_category_badge
 
 @dataclass
 class DailyPlanEditPageData:
@@ -303,6 +303,7 @@ def build_dailyplan_detail_content_data(
             "name": dailyplan.name,
             "label": "DailyPlan",
             "category": dailyplan.category,
+            "category_badge": resolve_category_badge(dailyplan.category),
             "icon": CONTENT_ICON_REGISTRY.get("dailyplan"),
         },
         "kpis": {
@@ -375,6 +376,7 @@ def build_dailyplan_detail_content_data(
                     "label": "Meal",
                     "icon": CONTENT_ICON_REGISTRY.get("meal"),
                     "category": meal.category,
+                    "category_badge": resolve_category_badge(meal.category),
                     "foods_count": len(meal_foods_aggregation),
                 },
                 "kpis": {
@@ -591,6 +593,7 @@ def build_dailyplan_list_content_data(dailyplans, user, viewmode):
                     "label": "DailyPlan",
                     "icon": CONTENT_ICON_REGISTRY.get("dailyplan"),
                     "category": dailyplan.category,
+                    "category_badge": resolve_category_badge(dailyplan.category),
                     "meals_count": len(dailyplan_meals),
                     "foods_count": len(foods_aggregation),
                 },

@@ -38,8 +38,15 @@
   .label-icon{
     width: 14px;
     height: 14px;
-    margin-right: 0px;
     stroke-width: 2;
+  }
+
+  @media (max-width: 768px) {
+    .label-icon{
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
   }
 
   .action-icon-btn{
@@ -87,7 +94,6 @@
   .card-icon{
     width: 13px;
     height: 13px;
-    margin-right: 2px;
     display: block;             /* 🔥 elimina baseline inline */
     flex-shrink: 0;
     transition: transform 0.2s ease;

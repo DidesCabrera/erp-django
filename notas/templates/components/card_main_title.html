@@ -1,18 +1,49 @@
 <div class="card-title-comp">
+  
+  <div class="main-title">
 
-  <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
-    <i data-lucide="{{ titulo.icon }}" class="card-icon main"></i>
-    {{ titulo.label }}
+    <h1>{{ titulo.name }}</h1>
+
+    <div class="label-class">
+      {% for class in titulo.classes %}
+        <span class="class-tag">{{ class }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="structural-indicators">
+        {% if titulo.structural_indicators.meals_count %}
+            <span class="structural-item">
+                <span class="structural-value">{{ titulo.structural_indicators.meals_count }}</span>
+                <i data-lucide="utensils" class="card-icon main"></i>
+            </span>
+    
+            <span class="structural-divider"></span>
+        {% endif %}
+    
+        <span class="structural-item">
+            <span class="structural-value">{{ titulo.structural_indicators.foods_count }}</span>
+            <i data-lucide="carrot" class="card-icon main"></i>
+        </span>
+    </div>
   </div>
 
-  <div class="label-fork">{{ titulo.category }}</div>
+  <div class="icons-title">
+    <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
+      <i data-lucide="{{ titulo.icon }}" class="card-icon main"></i>
+    </div>
 
-  <h1>{{ titulo.name }}</h1>
+    {% if titulo.category_badge %}
+        <div
+            class="label-fork label-fork--{{ titulo.category_badge.css }}"
+            title="{{ titulo.category_badge.label }}"
+            aria-label="{{ titulo.category_badge.label }}"
+        >
+            <i data-lucide="{{ titulo.category_badge.icon }}" class="card-icon"></i>
+        </div>
+    {% endif %}
 
-  <div class="label-class">
-    {% for class in titulo.classes %}
-      <span class="class-tag">{{ class }}</span>
-    {% endfor %}
   </div>
+
+
 
 </div>

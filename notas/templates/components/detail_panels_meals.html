@@ -1,0 +1,19 @@
+<div id="card-menu-{{ panel_id }}" class="card-menu">
+    {% include "components/grid_meals_menu.html" with menu=menu %}
+</div>
+
+<div id="card-grid-meals-{{ panel_id }}" class="card-table-meals">
+    {% if is_edit %}
+        {% include "components/grid_meals_edit.html" with items=items %}
+    {% else %}
+        {% include "components/grid_meals.html" with items=items %}
+    {% endif %}
+</div>
+
+<div id="card-grid-macros-{{ panel_id }}" class="card-table-meals-mobile">
+    {% include "components/grid_meals_mobile_macros.html" with items=items %}
+</div>
+
+<div id="card-grid-alloc-{{ panel_id }}" class="card-table-meals-mobile">
+    {% include "components/grid_meals_mobile_alloc.html" with items=items %}
+</div>

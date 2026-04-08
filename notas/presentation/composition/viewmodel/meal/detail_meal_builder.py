@@ -8,6 +8,7 @@ def build_meal_detail_vm(content_data):
             label=content_data.main_card_data["title"]["label"],
             icon=content_data.main_card_data["title"]["icon"],
             category=content_data.main_card_data["title"]["category"],
+            category_badge=content_data.main_card_data["title"]["category_badge"],
             structural_indicators=StructuralIndicatorsUI(
                 foods_count=content_data.structural_indicators["foods_count"],
             ),
@@ -52,6 +53,7 @@ def build_meal_detail_vm(content_data):
                 label=child_data["title"]["label"],
                 icon=child_data["title"]["icon"],
                 category=child_data["title"]["category"],
+                category_badge=child_data["title"]["category_badge"],
             ),
             kpis=KPIUI(
                 ppk=child_data["kpis"]["ppk"],

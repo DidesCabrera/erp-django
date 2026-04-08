@@ -1,11 +1,19 @@
 <div class="card-title-comp">
 
     <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
-      <i data-lucide="salad" class="card-icon main"></i>
+      <i data-lucide="utensils" class="card-icon main"></i>
       {{ titulo.label }}
     </div>
 
-    <div class="label-fork">{{ titulo.category }}</div>
+    {% if titulo.category_badge %}
+        <div
+            class="label-fork label-fork--{{ titulo.category_badge.css }}"
+            title="{{ titulo.category_badge.label }}"
+            aria-label="{{ titulo.category_badge.label }}"
+        >
+            <i data-lucide="{{ titulo.category_badge.icon }}" class="card-icon"></i>
+        </div>
+    {% endif %}
 
     <div class="block-title-card-edit">
         <h1>{{ titulo.name }}</h1>

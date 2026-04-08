@@ -17,12 +17,35 @@
 }
 
   /* Contenedor relativo para posicionar label-fork */
-.card-title-comp {
+  .card-title-comp {
     position: relative;
     display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    height: 100%;
+}
+
+.card-title-comp .main-title {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.main-title h3 {
+  width: 100%;
+  margin: 0;
+}
+
+.card-title-comp .icons-title {
+    padding-top: 4px;
+    flex: 0 0 20px;
+    width: 20px;
+    display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Esto hace que los hijos se ajusten a su contenido, no al ancho completo. */
-    height: 100%; /* importante si quieres que tenga fondo completo */
+    align-items: flex-end;
+    gap: 2px;
 }
 
 .card-title-comp h3 {
@@ -42,33 +65,40 @@
 
 
   /*--- LABEL ------ */
-.label-entity{
+.label-entity {
+  height: 20px;
+  width: 20px;
   font-weight: 500;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   margin-bottom: 2px;
+  color: white;
 }
 
 
 .label-entity.header{
-  padding: 3px 4px 1px 4px;
+  height: 24px;
+  width: 24px;
   margin: 0;
-  border-radius: 3px;
+  border-radius: 6px;
   font-size: 13px;
   margin-right: 8px;
   color: white;
-  display: inline-block;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
 }
 
 .label-entity.page-modal{
   margin-bottom: 10px;
 }
 
-.label-entity--food {color: var(--color-food);}
-.label-entity--meal {color: var(--color-meal);}
-.label-entity--dailyplan {color: var(--color-dailyplan);}
-.label-entity--program {color: var(--color-program);}
+.label-entity--food {background-color: var(--color-food);}
+.label-entity--meal {background-color: var(--color-meal);}
+.label-entity--dailyplan {background-color: var(--color-dailyplan);}
+.label-entity--program {background-color: var(--color-program);}
 .label-entity--home {background-color: var(--color-home);}
 .label-entity--profile {background-color: var(--color-profile);}
 
@@ -127,15 +157,70 @@
   margin-left: 20px;
 }
 
-.structural-indicators{
+.structural-indicators {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
   background-color: #f1f1f0;
   color: #6f6e69;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  padding: 0px 6px;
   border-radius: 5px;
-  margin-top: 6px;
+  padding: 4px 6px;
+  gap: 6px;
 }
+
+
+@media (max-width: 768px) {
+
+  .structural-indicators {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    background-color: #f1f1f0;
+    color: #6f6e69;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 4px 6px;
+    gap: 6px;
+  }
+  
+  .structural-indicators .card-icon.main {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.5;
+    display: block;
+  }
+  
+}
+
+.structural-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.structural-divider {
+  width: 1px;
+  height: 12px;
+  background-color: #d4d3cf;
+  display: inline-block;
+}
+
+.structural-indicators .card-icon.main {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+
+.structural-indicators p {
+  margin: 0;
+}
+
+
 
 @media (max-width: 768px) {
   .card-title {
@@ -151,8 +236,23 @@
 
   .label-entity.header{
     margin-right: 6px;
+    height: 30px;
+    width: 30px;
   }
 }
 
+.label-fork {
+  height: 20px;
+  width: 20px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(125, 125, 125);
+}
 
-
+.label-fork .card-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}

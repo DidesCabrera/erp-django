@@ -33,6 +33,8 @@ from notas.application.resolvers.meal_resolvers import resolve_meal_actions
 from notas.application.resolvers.meal_food_resolvers import resolve_meal_food_actions
 from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
 
+from notas.presentation.resolvers.title_resolvers import resolve_category_badge
+
 
 @dataclass
 class MealDetailPageData:
@@ -127,6 +129,7 @@ def build_meal_detail_content_data(
             "label": "Meal",
             "icon": content_icon_registry.get("meal"),
             "category": meal.category,
+            "category_badge": resolve_category_badge(meal.category),
         },
         "kpis": {
             "ppk": ppk["ppk"],
@@ -186,6 +189,7 @@ def build_meal_detail_content_data(
                     "label": "Food",
                     "icon": content_icon_registry.get("food"),
                     "category": getattr(food, "category", None),
+                    "category_badge": resolve_category_badge(meal.category),
                 },
                 "kpis": {
                     "ppk": 0,
@@ -263,6 +267,7 @@ def build_meal_list_content_data(meals, user, viewmode):
                     "label": "Meal",
                     "icon": CONTENT_ICON_REGISTRY.get("meal"),
                     "category": meal.category,
+                    "category_badge": resolve_category_badge(meal.category),
                     "foods_count": len(foods_aggregation),
                 },
                 "kpis": {

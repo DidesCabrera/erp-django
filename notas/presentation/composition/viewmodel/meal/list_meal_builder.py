@@ -13,6 +13,7 @@ def build_meal_list_vm(content_data):
                 label=child_data["title"]["label"],
                 icon=child_data["title"]["icon"],
                 category=child_data["title"]["category"],
+                category_badge=child_data["title"]["category_badge"],
                 structural_indicators=StructuralIndicatorsUI(
                     foods_count=child_data["title"]["foods_count"],
                 ),

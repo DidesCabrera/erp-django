@@ -1,0 +1,25 @@
+<div class="card-food-aggregation">
+
+  <div class="data-grid data-grid--foods-aggregation">
+
+      <div class="data-grid-header data-grid-header--foods-aggregation">
+          <div class="data-grid-col data-grid-col--foods">Foods</div>
+      </div>
+
+      {% if foods %}
+          <div class="data-grid-row data-grid-row--foods-aggregation">
+              <div class="data-grid-cell data-grid-cell--foods">
+                  {% for food in foods %}
+                      {{ food.food.name }}{% if not forloop.last %} · {% endif %}
+                  {% endfor %}
+              </div>
+          </div>
+      {% else %}
+          <div class="data-grid-empty">
+              No foods yet.
+          </div>
+      {% endif %}
+
+  </div>
+
+</div> 

@@ -96,7 +96,7 @@ def profile_detail(request):
             ProfileActionVM(
                 label="Ver Meals",
                 url=reverse("meal_list"),
-                icon="salad",
+                icon="utensils",
             ),
             ProfileActionVM(
                 label="Ver Foods",
