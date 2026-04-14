@@ -81,6 +81,7 @@ class MainCardUI:
     kpis: KPIUI
     table: dict
     metadata: MetadataUI
+    foods_aggregation: Optional[list] = None
 
 
 @dataclass

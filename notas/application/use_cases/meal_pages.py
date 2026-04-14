@@ -122,6 +122,8 @@ def build_meal_detail_content_data(
         for mf in meal_foods
     ]
 
+    foods_aggregation = build_meal_foods_aggregation(meal)
+
     main_card_data = {
         "main_id": meal.id,
         "title": {
@@ -130,6 +132,7 @@ def build_meal_detail_content_data(
             "icon": content_icon_registry.get("meal"),
             "category": meal.category,
             "category_badge": resolve_category_badge(meal.category),
+            "foods_count": len(foods_aggregation),
         },
         "kpis": {
             "ppk": ppk["ppk"],
@@ -144,6 +147,7 @@ def build_meal_detail_content_data(
             "alloc_carbs": meal_alloc["carbs"],
             "alloc_fat": meal_alloc["fat"],
         },
+        "foods_aggregation": foods_aggregation,
         "metadata": {
             "owner": str(meal.created_by),
             "author": str(meal.original_author),
@@ -189,7 +193,7 @@ def build_meal_detail_content_data(
                     "label": "Food",
                     "icon": content_icon_registry.get("food"),
                     "category": getattr(food, "category", None),
-                    "category_badge": resolve_category_badge(meal.category),
+                    "category_badge": resolve_category_badge(getattr(food, "category", None)),
                 },
                 "kpis": {
                     "ppk": 0,

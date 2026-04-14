@@ -31,19 +31,18 @@
         <!-- MEALS TABLE ========================================= -->    
         <div class="page-detail">
             <h3>Alimentos en esta Comida</h3>
-            <div class="card-table-meals">
-            {% include "components/grid_foods_edit.html" with items=main_card.table.items main_id=main_card.main_id %}
-            </div>
-        </div>
-
-        <!-- METADATA ========================================= -->
-        <div class="card-bottom main"> 
-            <div class="card-metadata">
-                {% include "components//card_child_metadata.html" with metadata=main_card.metadata %}
-            </div>
+        
+            {% with panel_id=main_card.main_id|default:"main-meal-edit" %}
+                <div class="card-detail-block">
+                    {% include "components/detail_tabs_foods.html" with panel_id=panel_id %}
+                    {% include "components/detail_panels_foods.html" with panel_id=panel_id foods=main_card.foods_aggregation items=main_card.table.items desktop_grid_template="components/grid_foods_edit.html" main_id=main_card.main_id %}
+                </div>
+            {% endwith %}
         </div>
         
     {% endif %}
 
+    <hr>
+    
 </div>
   

@@ -295,6 +295,8 @@ def build_dailyplan_detail_content_data(
         for dpm in dailyplan_meals
     ]
 
+    menu = build_dailyplan_menu(dailyplan_meals)
+    
     has_dpm = len(dailyplan_meals) > 0
 
     main_card_data = {
@@ -305,6 +307,8 @@ def build_dailyplan_detail_content_data(
             "category": dailyplan.category,
             "category_badge": resolve_category_badge(dailyplan.category),
             "icon": CONTENT_ICON_REGISTRY.get("dailyplan"),
+            "meals_count": len(dailyplan_meals),
+            "foods_count": structural_indicators["foods_count"],
         },
         "kpis": {
             "ppk": ppk_dailyplan["ppk"],
@@ -320,6 +324,7 @@ def build_dailyplan_detail_content_data(
             "alloc_fat": dp_alloc["fat"],
         },
         "table_items": dailyplan_meals_table_items,
+        "menu": menu,
         "metadata": {
             "owner": str(dailyplan.created_by),
             "author": str(dailyplan.original_author),

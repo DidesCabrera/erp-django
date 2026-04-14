@@ -24,6 +24,16 @@ CATEGORY_BADGE_MAP = {
         icon="calendar-range",
         css="en-plan",
     ),
+    "system": CategoryBadgeUI(
+        label="Base",
+        icon="database",
+        css="system",
+    ),
+    "user": CategoryBadgeUI(
+        label="Propio",
+        icon="user",
+        css="user",
+    ),
 }
 
 
@@ -39,9 +49,3 @@ def resolve_category_badge(category: str | None) -> CategoryBadgeUI | None:
             css="default",
         ),
     )
-
-
-
-
-
- 

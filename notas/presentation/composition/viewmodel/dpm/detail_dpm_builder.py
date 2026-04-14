@@ -44,7 +44,7 @@ def build_dpm_detail_vm(content_data):
             category=content_data.main_card_data["title"]["category"],
             category_badge=content_data.main_card_data["title"]["category_badge"],
             structural_indicators=StructuralIndicatorsUI(
-                foods_count=content_data.structural_indicators["foods_count"],
+                foods_count=content_data.main_card_data["title"]["foods_count"],
             ),
         ),
         kpis=KPIUI(
@@ -61,6 +61,7 @@ def build_dpm_detail_vm(content_data):
             alloc_fat=content_data.main_card_data["kpis"]["alloc_fat"],
         ),
         table={"items": content_data.main_card_data["table_items"]},
+        foods_aggregation=content_data.main_card_data["foods_aggregation"],
         metadata=MetadataUI(
             owner=content_data.main_card_data["metadata"]["owner"],
             author=content_data.main_card_data["metadata"]["author"],

@@ -3,7 +3,11 @@
 </div>
 
 <div id="card-grid-foods-{{ panel_id }}" class="card-table-foods">
-    {% include desktop_grid_template with items=items main_id=main_id %}
+    {% if main_id %}
+        {% include desktop_grid_template with items=items main_id=main_id %}
+    {% else %}
+        {% include desktop_grid_template with items=items %}
+    {% endif %}
 </div>
 
 <div id="card-grid-qty-{{ panel_id }}" class="card-table-foods-mobile">

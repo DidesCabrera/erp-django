@@ -64,7 +64,7 @@ class MainCardUI:
     kpis: KPIUI
     table: dict
     metadata: MetadataUI
-
+    foods_aggregation: Optional[list] = None
     # Presentation flags
     show_kpis: bool = False
     show_table: bool = False

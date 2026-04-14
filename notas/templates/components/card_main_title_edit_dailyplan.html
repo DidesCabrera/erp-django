@@ -1,8 +1,41 @@
 <div class="card-title-comp">
 
+  <div class="main-title">
+
+    <div class="block-title-card-edit">
+      <h1>{{ titulo.name }}</h1>
+      <a href="{% url 'dailyplan_rename' main_id %}?return_to={{ request.get_full_path }}">
+        <i data-lucide="pencil" class="edit-title-icon"></i>
+      </a>
+    </div>
+
+    <div class="label-class">
+      {% for class in titulo.classes %}
+        <span class="class-tag">{{ class }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="structural-indicators">
+      {% if titulo.structural_indicators.meals_count %}
+          <span class="structural-item">
+              <span class="structural-value">{{ titulo.structural_indicators.meals_count }}</span>
+              <i data-lucide="utensils" class="card-icon main"></i>
+          </span>
+  
+          <span class="structural-divider"></span>
+      {% endif %}
+  
+      <span class="structural-item">
+          <span class="structural-value">{{ titulo.structural_indicators.foods_count }}</span>
+          <i data-lucide="carrot" class="card-icon main"></i>
+      </span>
+    </div>
+  </div>
+
+
+  <div class="icons-title">
     <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
       <i data-lucide="clipboard-list" class="card-icon main"></i>
-      {{ titulo.label }}
     </div>
 
     {% if titulo.category_badge %}
@@ -15,18 +48,7 @@
         </div>
     {% endif %}
 
-    <div class="block-title-card-edit">
-        <h1>{{ titulo.name }}</h1>
-        <a href="{% url 'dailyplan_rename' main_id %}?return_to={{ request.get_full_path }}">
-          <i data-lucide="pencil" class="edit-title-icon"></i>
-        </a>
-    </div>
-
-    <div class="label-class">
-      {% for class in titulo.classes %}
-        <span class="class-tag">{{ class }}</span>
-      {% endfor %}
-    </div>
-  
   </div>
+
+</div>
   

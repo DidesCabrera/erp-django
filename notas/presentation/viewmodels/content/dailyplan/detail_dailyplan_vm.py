@@ -67,7 +67,7 @@ class MainCardUI:
     kpis: KPIUI
     table: dict
     metadata: MetadataUI
-
+    menu: Optional[dict] = None
     # Presentation flags
     show_kpis: bool = False
     show_table: bool = False

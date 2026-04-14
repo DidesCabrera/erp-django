@@ -31,22 +31,18 @@
     {% if main_card.items %}
     <div class="page-detail">
         <h3>Alimentos en esta Comida</h3>
-        <div class="card-table-meals">
-        {% include "components/table_dpm_foods_edit.html" with items=main_card.table.items main_id=main_card.main_id %}
-        </div>
+    
+        {% with panel_id=main_card.main_id|default:"main-dpm-edit" %}
+            <div class="card-detail-block">
+                {% include "components/detail_tabs_foods.html" with panel_id=panel_id %}
+                {% include "components/detail_panels_foods.html" with panel_id=panel_id foods=main_card.foods_aggregation items=main_card.table.items desktop_grid_template="components/table_dpm_foods_edit.html" main_id=main_card.main_id %}
+            </div>
+        {% endwith %}
     </div>
+
     {% endif %}
 
-
-
-
-    <!-- METADATA ========================================= -->
-    <div class="card-bottom main">
-        <h3>Creador de esta comida</h3>
-        <div class="card-metadata">
-            {% include "components//card_child_metadata.html" with metadata=main_card.metadata %}
-        </div>
-    </div>
+    <hr>
 
 
 </div>

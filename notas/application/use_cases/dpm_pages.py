@@ -30,6 +30,8 @@ from notas.application.resolvers.meal_food_resolvers import (
 from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
 
 from notas.presentation.resolvers.title_resolvers import resolve_category_badge
+from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import build_meal_foods_aggregation
+
 
 
 def _get_dpm_for_user(user, dailyplan_id: int, dpm_id: int):
@@ -308,6 +310,8 @@ def build_dpm_detail_content_data(
         for mf in meal_foods
     ]
 
+    foods_aggregation = build_meal_foods_aggregation(meal)
+
     structural_indicators = {
         "foods_count": len(meal_foods),
     }
@@ -318,7 +322,7 @@ def build_dpm_detail_content_data(
             "name": dailyplan.name,
             "label": "Daily Plan",
             "category": dailyplan.category,
-            "category_badge": resolve_category_badge(meal.category),
+            "category_badge": resolve_category_badge(dailyplan.category),
             "icon": CONTENT_ICON_REGISTRY.get("dailyplan"),
         },
         "rel_id": dpm.id,
@@ -353,6 +357,7 @@ def build_dpm_detail_content_data(
             "icon": CONTENT_ICON_REGISTRY.get("meal"),
             "category": meal.category,
             "category_badge": resolve_category_badge(meal.category),
+            "foods_count": len(foods_aggregation),
         },
         "kpis": {
             "ppk": meal_ppk["ppk"],
@@ -368,6 +373,7 @@ def build_dpm_detail_content_data(
             "alloc_fat": meal_alloc["fat"],
         },
         "table_items": meal_foods_table_items,
+        "foods_aggregation": foods_aggregation,
         "metadata": {
             "owner": str(meal.created_by),
             "author": str(meal.original_author),
@@ -395,7 +401,7 @@ def build_dpm_detail_content_data(
                     "name": food.name,
                     "label": "Food",
                     "icon": CONTENT_ICON_REGISTRY.get("food"),
-                    "category": getattr(food, "category", None),
+                    "category": food.category,
                     "category_badge": resolve_category_badge(food.category),
                 },
                 "kpis": {

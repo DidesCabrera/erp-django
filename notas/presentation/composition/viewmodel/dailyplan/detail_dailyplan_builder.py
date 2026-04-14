@@ -10,6 +10,10 @@ def build_dailyplan_detail_vm(content_data):
             category=content_data.main_card_data["title"]["category"],
             category_badge=content_data.main_card_data["title"]["category_badge"],
             icon=content_data.main_card_data["title"]["icon"],
+            structural_indicators=StructuralIndicatorsUI(
+                meals_count=content_data.main_card_data["title"]["meals_count"],
+                foods_count=content_data.main_card_data["title"]["foods_count"],
+            ),
         ),
         kpis=KPIUI(
             ppk=content_data.main_card_data["kpis"]["ppk"],
@@ -25,6 +29,7 @@ def build_dailyplan_detail_vm(content_data):
             alloc_fat=content_data.main_card_data["kpis"]["alloc_fat"],
         ),
         table={"items": content_data.main_card_data["table_items"]},
+        menu=content_data.main_card_data["menu"],
         metadata=MetadataUI(
             owner=content_data.main_card_data["metadata"]["owner"],
             author=content_data.main_card_data["metadata"]["author"],

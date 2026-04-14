@@ -127,6 +127,12 @@ class Food(models.Model):
             "fat": self.kcal_fat / self.total_kcal * 100,
         }
 
+    @property
+    def category(self):
+        if self.created_by_id is None:
+            return "system"
+        return "user"
+
 
 # ==================================================
 # MEAL + MEAL FOOD
