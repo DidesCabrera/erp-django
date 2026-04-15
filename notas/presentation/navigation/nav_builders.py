@@ -53,6 +53,10 @@ def iter_nav_items():
             for item in group.items:
                 yield section, group, item
 
+def iter_nav_groups():
+    for section in APP_NAVIGATION:
+        for group in section.groups:
+            yield section, group
 
 def find_active_nav_item(viewmode):
     current_nav_root = resolve_navigation_root(viewmode.entity)
@@ -64,10 +68,23 @@ def find_active_nav_item(viewmode):
                 "section": section,
                 "group": group,
                 "item": item,
+                "kind": "item",
+            }
+
+    for section, group in iter_nav_groups():
+        if (
+            group.is_link
+            and group.nav_root == current_nav_root
+            and group.scope == current_scope
+        ):
+            return {
+                "section": section,
+                "group": group,
+                "item": None,
+                "kind": "group",
             }
 
     return None
-
 
 def build_sidebar_vm(viewmode):
     active = find_active_nav_item(viewmode)
@@ -83,12 +100,21 @@ def build_sidebar_vm(viewmode):
         }
 
         for group in section.groups:
+            if not group.show_in_sidebar:
+                continue
+
             items_vm = []
             group_is_active = group.key == active_group_key
+            group_is_link = group.is_link
 
             for item in group.items:
+                if not item.show_in_sidebar:
+                    continue
+
                 is_active = (
                     active is not None
+                    and active["kind"] == "item"
+                    and active["item"] is not None
                     and item.key == active["item"].key
                 )
 
@@ -111,12 +137,23 @@ def build_sidebar_vm(viewmode):
                     "label": group.label,
                     "icon": group.icon,
                     "is_active": group_is_active,
-                    "is_open": group_is_active,
+                    "is_open": group_is_active and not group_is_link,
+                    "is_link": group_is_link,
+                    "url": safe_reverse(group.url_name) or "#",
+                    "url_name": group.url_name,
+                    "nav_root": group.nav_root,
+                    "scope": group.scope,
                     "items": items_vm,
+
+                    "action_url": safe_reverse(group.action_url_name) if group.action_url_name else None,
+                    "action_url_name": group.action_url_name,
+                    "action_icon": group.action_icon,
+                    "action_label": group.action_label,
                 }
             )
 
-        sections_vm.append(section_vm)
+        if section_vm["groups"]:
+            sections_vm.append(section_vm)
 
     return sections_vm
 
@@ -129,19 +166,26 @@ def build_breadcrumb_vm(viewmode, parents=None, instance=None):
         group = active["group"]
         item = active["item"]
 
-        breadcrumb.append(
-            BreadcrumbItem(
-                label=group.label,
-                url=None,
+        if item is not None:
+            breadcrumb.append(
+                BreadcrumbItem(
+                    label=group.label,
+                    url=None,
+                )
             )
-        )
-
-        breadcrumb.append(
-            BreadcrumbItem(
-                label=item.label,
-                url=safe_reverse(item.url_name),
+            breadcrumb.append(
+                BreadcrumbItem(
+                    label=item.label,
+                    url=safe_reverse(item.url_name),
+                )
             )
-        )
+        elif group.is_link:
+            breadcrumb.append(
+                BreadcrumbItem(
+                    label=group.label,
+                    url=safe_reverse(group.url_name),
+                )
+            )
 
     if parents:
         for parent in parents:
@@ -181,14 +225,25 @@ def build_navigation_meta(viewmode):
     group = active["group"]
     item = active["item"]
 
+    if item is not None:
+        return {
+            "nav_root": nav_root,
+            "icon": item.icon,
+            "page_icon": item.page_icon or item.icon,
+            "section_label": section.label,
+            "default_title": item.label,
+            "default_root": group.label,
+        }
+
     return {
         "nav_root": nav_root,
-        "icon": item.icon,
-        "page_icon": item.page_icon or item.icon,
+        "icon": group.icon,
+        "page_icon": group.page_icon or group.icon,
         "section_label": section.label,
-        "default_title": item.label,
-        "default_root": group.label,
+        "default_title": group.label,
+        "default_root": section.label,
     }
+
 
 
 def build_back_url(viewmode, parents=None, breadcrumb=None, back_config=None):
@@ -235,12 +290,23 @@ def build_back_url(viewmode, parents=None, breadcrumb=None, back_config=None):
     active = find_active_nav_item(viewmode)
     if active:
         item = active["item"]
-        item_url = safe_reverse(item.url_name)
 
-        if item_url:
-            return item_url
+        if item is not None:
+            item_url = safe_reverse(item.url_name)
+            if item_url:
+                return item_url
+
+        group = active["group"]
+        if group.is_link:
+            group_url = safe_reverse(group.url_name)
+            if group_url:
+                return group_url
 
     if breadcrumb and len(breadcrumb) >= 2:
         return breadcrumb[-2].url
 
     return None
+
+
+
+    

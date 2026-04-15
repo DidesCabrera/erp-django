@@ -11,6 +11,7 @@ class NavItemSpec:
     nav_root: str
     scope: Optional[str] = None
     page_icon: Optional[str] = None
+    show_in_sidebar: bool = True
 
 
 @dataclass(frozen=True)
@@ -19,6 +20,19 @@ class NavGroupSpec:
     label: str
     icon: str
     items: tuple[NavItemSpec, ...] = field(default_factory=tuple)
+    url_name: Optional[str] = None
+    nav_root: Optional[str] = None
+    scope: Optional[str] = None
+    page_icon: Optional[str] = None
+    show_in_sidebar: bool = True
+
+    action_url_name: Optional[str] = None
+    action_icon: Optional[str] = None
+    action_label: Optional[str] = None
+
+    @property
+    def is_link(self) -> bool:
+        return bool(self.url_name) and not self.items
 
 
 @dataclass(frozen=True)
@@ -31,39 +45,26 @@ class NavSectionSpec:
 APP_NAVIGATION = (
     NavSectionSpec(
         key="account",
-        label="Cuenta",
+        label="My Scoope",
         groups=(
             NavGroupSpec(
                 key="home",
                 label="Inicio",
                 icon="house",
-                items=(
-                    NavItemSpec(
-                        key="home_personal",
-                        label="Home",
-                        icon="house",
-                        page_icon="house",
-                        url_name="home_view",
-                        nav_root="home",
-                        scope="personal",
-                    ),
-                ),
+                page_icon="house",
+                url_name="home_view",
+                nav_root="home",
+                scope="personal",
             ),
             NavGroupSpec(
                 key="profile",
-                label="Perfil",
-                icon="circle-user-round",
-                items=(
-                    NavItemSpec(
-                        key="profile_detail",
-                        label="Mi Perfil",
-                        icon="circle-user-round",
-                        page_icon="circle-user-round",
-                        url_name="profile_detail",
-                        nav_root="profile",
-                        scope="personal",
-                    ),
-                ),
+                label="Mi Perfil",
+                icon="user",
+                url_name="profile",
+                nav_root="profile",
+                scope="personal",
+                page_icon="user",
+                show_in_sidebar=False,
             ),
         ),
     ),
@@ -72,32 +73,55 @@ APP_NAVIGATION = (
         label="Workspace",
         groups=(
             NavGroupSpec(
-                key="library",
-                label="Mi Librería",
-                icon="bookmark",
+                key="dailyplan",
+                label="Planes Diarios",
+                icon="clipboard-list",
+                action_url_name="dailyplan_create",
+                action_icon="plus",
+                action_label="Nuevo plan diario",
                 items=(
                     NavItemSpec(
                         key="dailyplan_personal",
-                        label="Mis Planes Diarios",
-                        icon="clipboard-list",
+                        label="Mi Librería",
+                        icon="bookmark",
                         page_icon="bookmark",
                         url_name="dailyplan_list",
                         nav_root="dailyplan",
                         scope="personal",
                     ),
+                ),
+            ),
+            NavGroupSpec(
+                key="meal",
+                label="Comidas",
+                icon="utensils",
+                action_url_name="meal_create",
+                action_icon="plus",
+                action_label="Nueva comida",
+                items=(
                     NavItemSpec(
                         key="meal_personal",
-                        label="Mis Comidas",
-                        icon="utensils",
+                        label="Mi Librería",
+                        icon="bookmark",
                         page_icon="bookmark",
                         url_name="meal_list",
                         nav_root="meal",
                         scope="personal",
                     ),
+                ),
+            ),
+            NavGroupSpec(
+                key="food",
+                label="Alimentos",
+                icon="carrot",
+                action_url_name="food_create",
+                action_icon="plus",
+                action_label="Nuevo alimento",
+                items=(
                     NavItemSpec(
                         key="food_personal",
-                        label="Mis Alimentos",
-                        icon="carrot",
+                        label="Mi Librería",
+                        icon="bookmark",
                         page_icon="bookmark",
                         url_name="food_list",
                         nav_root="food",
@@ -105,10 +129,12 @@ APP_NAVIGATION = (
                     ),
                 ),
             ),
+
             NavGroupSpec(
                 key="create",
                 label="Crear",
                 icon="circle-fading-plus",
+                show_in_sidebar=False,
                 items=(
                     NavItemSpec(
                         key="dailyplan_create",
@@ -148,31 +174,14 @@ APP_NAVIGATION = (
                     ),
                 ),
             ),
-            NavGroupSpec(
-                key="drafts",
-                label="Borradores",
-                icon="pencil",
-                items=(
-                    NavItemSpec(
-                        key="dailyplan_draft",
-                        label="Planes Diarios",
-                        icon="clipboard-list",
-                        page_icon="pencil",
-                        url_name="dailyplan_draft_list",
-                        nav_root="dailyplan",
-                        scope="draft",
-                    ),
-                    NavItemSpec(
-                        key="meal_draft",
-                        label="Comidas",
-                        icon="utensils",
-                        page_icon="pencil",
-                        url_name="meal_draft_list",
-                        nav_root="meal",
-                        scope="draft",
-                    ),
-                ),
-            ),
+        ),
+    ),
+
+
+    NavSectionSpec(
+        key="explore",
+        label="Explorar",
+        groups=(
             NavGroupSpec(
                 key="explore",
                 label="Explorar",
@@ -200,4 +209,7 @@ APP_NAVIGATION = (
             ),
         ),
     ),
+
 )
+
+

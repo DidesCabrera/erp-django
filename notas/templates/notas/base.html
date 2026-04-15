@@ -99,41 +99,119 @@
 
     </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    
-      const groups = document.querySelectorAll(".sidebar-group");
-    
-      groups.forEach((group, index) => {
-    
-        const toggle = group.querySelector(".sidebar-main");
-        const groupKey = "sidebar-group-" + index;
-    
-        // 🔥 Restaurar estado guardado
-        const savedState = localStorage.getItem(groupKey);
-        if (savedState === "open") {
-          group.classList.add("is-open");
-        }
-    
-        // 🔥 Click handler
-        toggle.addEventListener("click", function () {
-    
-          group.classList.toggle("is-open");
-    
-          // Guardar nuevo estado
-          if (group.classList.contains("is-open")) {
-            localStorage.setItem(groupKey, "open");
-          } else {
-            localStorage.setItem(groupKey, "closed");
-          }
-    
-        });
-    
-      });
-    
-    });
-</script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const collapsibleGroups = Array.from(
+                document.querySelectorAll(".sidebar-group:not(.sidebar-group--link)")
+            );
+            const linkGroups = document.querySelectorAll(
+                ".sidebar-group.sidebar-group--link .sidebar-main--link"
+            );
+            const itemTabs = document.querySelectorAll(".sidebar .nav-tab");
+            const currentGroup = document.querySelector(".sidebar-group.is-current");
+    
+            function groupKey(index) {
+                return "sidebar-group-" + index;
+            }
+    
+            function closeGroup(group) {
+                const index = collapsibleGroups.indexOf(group);
+                group.classList.remove("is-open");
+                if (index >= 0) {
+                    localStorage.setItem(groupKey(index), "closed");
+                }
+            }
+    
+            function openGroup(group) {
+                const index = collapsibleGroups.indexOf(group);
+                group.classList.add("is-open");
+                if (index >= 0) {
+                    localStorage.setItem(groupKey(index), "open");
+                }
+            }
+    
+            function ensureCurrentGroupOpen() {
+                if (currentGroup) {
+                    currentGroup.classList.add("is-open");
+                }
+            }
+    
+            function getExtraOpenGroup() {
+                return collapsibleGroups.find(
+                    (group) =>
+                        group.classList.contains("is-open") &&
+                        !group.classList.contains("is-current")
+                ) || null;
+            }
+    
+            function clearAllSavedGroups() {
+                collapsibleGroups.forEach((group, index) => {
+                    localStorage.setItem(groupKey(index), "closed");
+                });
+            }
+    
+            collapsibleGroups.forEach((group) => {
+                group.classList.remove("is-open");
+            });
+    
+            ensureCurrentGroupOpen();
+    
+            const savedExtraGroup = collapsibleGroups.find((group, index) => {
+                return (
+                    !group.classList.contains("is-current") &&
+                    localStorage.getItem(groupKey(index)) === "open"
+                );
+            });
+    
+            if (savedExtraGroup) {
+                openGroup(savedExtraGroup);
+            }
+    
+            collapsibleGroups.forEach((group) => {
+                const toggle = group.querySelector(".sidebar-main");
+    
+                toggle.addEventListener("click", function () {
+                    const isCurrent = group.classList.contains("is-current");
+                    const isOpen = group.classList.contains("is-open");
+    
+                    if (isCurrent) {
+                        ensureCurrentGroupOpen();
+                        return;
+                    }
+    
+                    if (isOpen) {
+                        closeGroup(group);
+                        ensureCurrentGroupOpen();
+                        return;
+                    }
+    
+                    const extraOpenGroup = getExtraOpenGroup();
+                    if (extraOpenGroup && extraOpenGroup !== group) {
+                        closeGroup(extraOpenGroup);
+                    }
+    
+                    openGroup(group);
+                    ensureCurrentGroupOpen();
+                });
+            });
+    
+            linkGroups.forEach((link) => {
+                link.addEventListener("click", function () {
+                    clearAllSavedGroups();
+                });
+            });
+    
+            itemTabs.forEach((tab) => {
+                tab.addEventListener("click", function () {
+                    clearAllSavedGroups();
+                });
+            });
+        });
+    </script>
+
+
+    
 <script>
 
     function toggleSidebar() {
@@ -160,9 +238,8 @@
 
 </script>
 
-<script>
-    lucide.createIcons();
-</script>
+<script> lucide.createIcons(); </script>
+
 <script>
     function openWeightModal() {
         const modal = document.getElementById("weightModal");

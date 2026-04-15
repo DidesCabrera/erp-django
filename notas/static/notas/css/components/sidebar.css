@@ -8,9 +8,9 @@
 
 
 .brand-logo{
-    width: 100px;
+    width: 110px;
     padding-top: 1px;
-    margin-left: 14px;
+    margin-left: 8px;
 }
 
 
@@ -49,7 +49,6 @@
 }
   
 .user-block{
-    margin-left: 6px;
     height: 100px;
     padding: 8px 10px;
     padding-bottom: 15px;
@@ -138,3 +137,132 @@
     color: black;
   }
   
+
+  .sidebar-group-head {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.sidebar-group-head .sidebar-main {
+    flex: 1;
+}
+
+.sidebar-group-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    min-width: 36px;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.sidebar-group-action-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.sidebar-group-action {
+    color: inherit;
+    background: transparent;
+    border: none;
+}
+
+.sidebar-group-action:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+
+.sidebar .nav-tab .sidebar-leading-icon,
+.sidebar .nav-tab .nav-text {
+  color: inherit;
+}
+
+.sidebar-main--link {
+    text-decoration: none;
+    color: rgb(176, 176, 176);
+    border-radius: 6px;
+    background-color: transparent;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-main--link:hover,
+.sidebar-main--link.is-active {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.sidebar-main--link .sidebar-main-icon,
+.sidebar-main--link .sidebar-icon,
+.sidebar-main--link .sidebar-label {
+    color: inherit;
+}
+
+.nav-text {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+}
+
+
+
+
+.sidebar .nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 12px;
+    border-radius: 6px;
+    color: rgb(176, 176, 176);
+    background-color: transparent;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-item-leading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 30px;
+}
+
+.nav-item-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    min-width: 6px;
+    min-height: 6px;
+    border-radius: 999px;
+    opacity: 0;
+    flex-shrink: 0;
+    background-color: transparent;
+}
+
+.nav-tab.is-active .nav-item-dot {
+    opacity: 1;
+}
+
+
+.nav-tab.is-active.nav-tab--dailyplan .nav-item-dot {
+    background-color: var(--color-dailyplan);
+}
+
+.nav-tab.is-active.nav-tab--meal .nav-item-dot {
+    background-color: var(--color-meal);
+}
+
+.nav-tab.is-active.nav-tab--food .nav-item-dot {
+    background-color: var(--color-food);
+}
+
+
+.sidebar-leading-icon {
+    width: 18px;
+    height: 18px;
+    color: inherit;
+    flex-shrink: 0;
+}
+
+.nav-text {
+    color: inherit;
+}
