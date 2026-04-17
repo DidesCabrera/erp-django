@@ -127,14 +127,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function resetPickerState() {
     selectedFood = null;
-
+  
     hiddenFoodId.value = "";
     hiddenQuantity.value = "";
-
+  
     input.value = "";
     quantityInput.value = "100";
-
+  
     preview.style.display = "none";
+  
+    if (btnCancelInline) {
+      btnCancelInline.style.display = "inline-block";
+    }
+  
     closeList();
   }
 
@@ -158,6 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
       li.addEventListener("click", () => {
         selectedFood = food;
         input.value = food.name;
+      
+        if (btnCancelInline) {
+          btnCancelInline.style.display = "none";
+        }
+      
         closeList();
         showPreview();
       });

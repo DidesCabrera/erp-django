@@ -47,3 +47,10 @@
     outline: 2px solid var(--color-primary, #3273cf);
     outline-offset: 2px;
 }
+
+@media (max-width: 768px) {
+    #food-form-title,
+    #meal-form-title {
+      display: none;
+    }
+  }

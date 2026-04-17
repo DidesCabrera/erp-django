@@ -69,6 +69,15 @@
     color: rgb(60, 60, 60);
   }
 
+  .search-icon-add-row-icon{
+    height: 18px;
+    width: 18px;
+    margin: 0px 4px;
+    stroke-width: 2;
+    flex-shrink: 0;
+    color: rgb(60, 60, 60);
+  }
+
   .dpm-icon{
     width: 14px;
     height: 14px;
@@ -258,6 +267,10 @@
     .action-card-icon{
         height: 22px;
         width: 22px;
+    }
+
+    .search-icon-add-row-icon{
+      display: none;
     }
 
 }

@@ -240,8 +240,8 @@ p.h3-table2{
     align-items: stretch;
     height: auto;
     gap:14px;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: 18px;
+    padding-bottom: 6px;
   }
 
   .add-row > *{
@@ -359,4 +359,28 @@ p.h3-table2{
     margin-bottom: 10px;
   }
 
+}
+
+.selector {
+  min-width: 0;
+}
+
+.selector input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .selector {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .selector input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
 }
