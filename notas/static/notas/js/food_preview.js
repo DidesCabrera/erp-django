@@ -25,9 +25,9 @@ export function renderBase(food) {
 
   const alloc = computeAlloc(base);
 
-  document.getElementById("base-protein").textContent = base.protein.toFixed(1);
-  document.getElementById("base-carbs").textContent   = base.carbs.toFixed(1);
-  document.getElementById("base-fat").textContent     = base.fat.toFixed(1);
+  document.getElementById("base-protein").textContent = base.protein.toFixed(0);
+  document.getElementById("base-carbs").textContent   = base.carbs.toFixed(0);
+  document.getElementById("base-fat").textContent     = base.fat.toFixed(0);
   document.getElementById("base-kcal").textContent    = base.total_kcal.toFixed(0);
 
   setAlloc("base-alloc-protein-cell", "base-alloc-protein-text", alloc.protein);
@@ -39,9 +39,9 @@ export function renderBase(food) {
 export function renderPortion(portion) {
   const alloc = computeAlloc(portion);
 
-  document.getElementById("qty-protein").textContent = portion.protein.toFixed(1);
-  document.getElementById("qty-carbs").textContent   = portion.carbs.toFixed(1);
-  document.getElementById("qty-fat").textContent     = portion.fat.toFixed(1);
+  document.getElementById("qty-protein").textContent = portion.protein.toFixed(0);
+  document.getElementById("qty-carbs").textContent   = portion.carbs.toFixed(0);
+  document.getElementById("qty-fat").textContent     = portion.fat.toFixed(0);
   document.getElementById("qty-kcal").textContent    = portion.total_kcal.toFixed(0);
 
 }
@@ -51,9 +51,9 @@ export function renderPreviewTotals(previewTotals) {
   const alloc = computeAlloc(previewTotals);
 
   document.getElementById("meal-prev-kcal").textContent    = previewTotals.total_kcal.toFixed(0);
-  document.getElementById("meal-prev-protein").textContent = previewTotals.protein.toFixed(1);
-  document.getElementById("meal-prev-carbs").textContent   = previewTotals.carbs.toFixed(1);
-  document.getElementById("meal-prev-fat").textContent     = previewTotals.fat.toFixed(1);
+  document.getElementById("meal-prev-protein").textContent = previewTotals.protein.toFixed(0);
+  document.getElementById("meal-prev-carbs").textContent   = previewTotals.carbs.toFixed(0);
+  document.getElementById("meal-prev-fat").textContent     = previewTotals.fat.toFixed(0);
 
   setAlloc("meal-prev-alloc-protein-cell", "meal-prev-alloc-protein-text", alloc.protein);
   setAlloc("meal-prev-alloc-carbs-cell",   "meal-prev-alloc-carbs-text",   alloc.carbs);
@@ -61,7 +61,7 @@ export function renderPreviewTotals(previewTotals) {
   const ppkNode = document.querySelector('[data-role="prev-ppk"]');
 
   if (ppkNode && previewTotals.ppk !== undefined) {
-      ppkNode.textContent = `${previewTotals.ppk.toFixed(1)} g/kg`;
+      ppkNode.textContent = `${previewTotals.ppk.toFixed(1)}g/kg`;
   }
 
 }

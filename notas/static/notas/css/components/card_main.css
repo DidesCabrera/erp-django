@@ -26,4 +26,24 @@
     align-items: center;
 }
 
-  
+.title-section-panels .add-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.title-section-panels .add-title:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.title-section-panels .add-title:focus-visible {
+    outline: 2px solid var(--color-primary, #3273cf);
+    outline-offset: 2px;
+}

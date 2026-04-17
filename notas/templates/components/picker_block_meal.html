@@ -5,11 +5,12 @@
 
   {% csrf_token %}
 
-  <div class="page-add">
+  <div id="dailyplan-picker-section" class="section_picker is-collapsed">
 
     <div class="add-row">
 
       <div id="meal-picker" class="selector">
+        <i data-lucide="search" class="action-card-icon"></i>
         <input
           type="text"
           id="meal-search"
@@ -18,16 +19,24 @@
         />
         <ul id="meal-list" class="selector-list"></ul>
       </div>
-      
+    
       <input type="hidden" id="dp-selected-meal-id" name="meal_id">
-      
+    
       <div class="btn-create-picker">
         <a href="{% url 'create_meal_for_dailyplan' main_id %}"
-        class="btn btn-sm btn-outline-primary">
-        o Crear nueva Comida
+           class="btn btn-sm btn-outline-primary">
+          o Crear nueva Comida
         </a>
       </div>
-
+    
+      <button
+        type="button"
+        id="btn-cancel-picker-inline-meal"
+        class="btn-cancel-picker btn-cancel-picker-inline"
+      >
+        Cancelar
+      </button>
+    
     </div>
 
     <!-- PREVIEW :::::::::::::::::::::::::::::::::::::::::::::::-->

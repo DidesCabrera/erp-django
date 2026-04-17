@@ -42,13 +42,13 @@ export function renderSelectedMeal(container, meal) {
       meal.total_kcal.toFixed(0);
 
   resolveScoped(container, "meal-preview", "meal-protein", "dp-meal-protein").textContent =
-      meal.protein.toFixed(1);
+      meal.protein.toFixed(0);
 
   resolveScoped(container, "meal-preview", "meal-carbs", "dp-meal-carbs").textContent =
-      meal.carbs.toFixed(1);
+      meal.carbs.toFixed(0);
 
   resolveScoped(container, "meal-preview", "meal-fat", "dp-meal-fat").textContent =
-      meal.fat.toFixed(1);
+      meal.fat.toFixed(0);
 
  
   const alloc = meal.alloc;
@@ -77,13 +77,13 @@ export function renderDayPreview(container, current, preview, meal) {
           .textContent = meal.total_kcal.toFixed(0);
   
       resolveScoped(container, "day-preview", "impact-meal-protein", "dp-meal-protein")
-          .textContent = meal.protein.toFixed(1);
+          .textContent = meal.protein.toFixed(0);
   
       resolveScoped(container, "day-preview", "impact-meal-carbs", "dp-meal-carbs")
-          .textContent = meal.carbs.toFixed(1);
+          .textContent = meal.carbs.toFixed(0);
   
       resolveScoped(container, "day-preview", "impact-meal-fat", "dp-meal-fat")
-          .textContent = meal.fat.toFixed(1);
+          .textContent = meal.fat.toFixed(0);
     }
   
     // PREVIEW
@@ -103,13 +103,13 @@ function renderBlock(container, scope, prefix, data) {
       .textContent = data.total_kcal.toFixed(0);
 
   resolveScoped(container, scope, `${prefix}-protein`, `${prefix === "cur" ? "dp-cur-protein" : "dp-prev-protein"}`)
-      .textContent = data.protein.toFixed(1);
+      .textContent = data.protein.toFixed(0);
 
   resolveScoped(container, scope, `${prefix}-carbs`, `${prefix === "cur" ? "dp-cur-carbs" : "dp-prev-carbs"}`)
-      .textContent = data.carbs.toFixed(1);
+      .textContent = data.carbs.toFixed(0);
 
   resolveScoped(container, scope, `${prefix}-fat`, `${prefix === "cur" ? "dp-cur-fat" : "dp-prev-fat"}`)
-      .textContent = data.fat.toFixed(1);
+      .textContent = data.fat.toFixed(0);
 
 
   // Allocations
@@ -146,7 +146,7 @@ function renderBlock(container, scope, prefix, data) {
   const ppkNode = resolveScoped(container, scope, `${prefix}-ppk`, null);
 
     if (ppkNode) {
-        ppkNode.textContent = `${data.ppk.toFixed(1)} g/kg`;
+        ppkNode.textContent = `${data.ppk.toFixed(1)}g/kg`;
     }
 
 }

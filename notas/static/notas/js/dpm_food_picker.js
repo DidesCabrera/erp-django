@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnAdd = document.getElementById("btn-add-food");
   const btnUpdate = document.getElementById("btn-update-food");
   const btnCancel = document.getElementById("btn-cancel-edit");
+  const btnCancelInline = document.getElementById("btn-cancel-picker-inline-dpm");
 
   const hiddenFoodId = document.getElementById("selected-food-id");
   const hiddenQuantity = document.getElementById("selected-food-quantity");
@@ -272,6 +273,10 @@ document.addEventListener("DOMContentLoaded", () => {
         originalQuantity: button.dataset.qty,
         updateUrl: button.dataset.updateUrl
       });
+
+      document.dispatchEvent(new CustomEvent("picker:open", {
+        detail: { sectionId: "dpm-picker-section" }
+      }));
   
       selectedFood = findFoodById(ctx.editing.food_id);
       if (!selectedFood) return;
@@ -287,7 +292,22 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCancel.addEventListener("click", () => {
     setAddMode();
     resetPickerState();
+
+    document.dispatchEvent(new CustomEvent("picker:close", {
+      detail: { sectionId: "dpm-picker-section" }
+    }));
   });
+
+  if (btnCancelInline) {
+    btnCancelInline.addEventListener("click", () => {
+      setAddMode();
+      resetPickerState();
+  
+      document.dispatchEvent(new CustomEvent("picker:close", {
+        detail: { sectionId: "dpm-picker-section" }
+      }));
+    });
+  }
 
   // ---------------------------
   // Init

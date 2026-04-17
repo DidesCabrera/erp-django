@@ -1,15 +1,24 @@
-<div class="page-add">
+<div id="dpm-picker-section" class="section_picker is-collapsed">
 
     <div class="add-row">
-        <div id="food-picker" class="selector">
-            <input
-            type="text"
-            id="food-search"
-            placeholder="Escribe el alimento…"
-            autocomplete="off"
-            />
-            <ul id="food-list" class="selector-list"></ul>
-        </div>
+      <div id="food-picker" class="selector">
+        <i data-lucide="search" class="action-card-icon"></i>
+        <input
+          type="text"
+          id="food-search"
+          placeholder="Escribe el alimento…"
+          autocomplete="off"
+        />
+        <ul id="food-list" class="selector-list"></ul>
+      </div>
+    
+      <button
+        type="button"
+        id="btn-cancel-picker-inline-dpm"
+        class="btn-cancel-picker btn-cancel-picker-inline"
+      >
+        Cancelar
+      </button>
     </div>
   
     <!-- PREVIEW + FORM -->
@@ -26,8 +35,6 @@
       <input type="hidden" name="quantity" id="selected-food-quantity">
       <input type="hidden" id="food-picker-mode" value="add">
       <input type="hidden" name="return_to" value="{{ request.path }}">
-
-
       <!-- Edit mode controls -->
       <input type="hidden" id="editing-mealfood-id">
       <input type="hidden" id="editing-original-quantity">
@@ -42,15 +49,6 @@
           <div class="picker-section picker-food-info">
       
             {% include "components/card_picker_food.html" %}
-      
-          </div>
-      
-      
-          <!-- RIGHT : IMPACT -->
-          <div class="picker-section picker-impact">
-      
-            <h3>Preview</h3>
-      
             <!-- QUANTITY -->
             <div class="qty-preview">
               <label>
@@ -65,7 +63,14 @@
               </label>
             </div>
       
+          </div>
       
+      
+          <!-- RIGHT : IMPACT -->
+          <div class="picker-section picker-impact">
+      
+            <h3>Preview</h3>
+
             <div class="preview-picker">
       
               <table class="table-foods table-preview-picker dpm">
@@ -224,24 +229,22 @@
           </div>
       
         </div>
-      
-      
+
         <!-- BUTTONS -->
         <div class="actions-row">
-            <button type="button" id="btn-cancel-edit" class="btn-cancel-picker">
-                Cancelar
-            </button>
+          <button type="button" id="btn-cancel-edit" class="btn-cancel-picker">
+              Cancelar
+          </button>
 
-            <button type="submit" id="btn-add-food" class="btn-add-picker">
-                Agregar Alimento
-            </button>
-      
-            <button type="submit" id="btn-update-food" style="display:none;" class="btn-update-picker">
-                Guardar Cambios
-            </button>
-      
+          <button type="submit" id="btn-add-food" class="btn-add-picker">
+              Agregar Alimento
+          </button>
+    
+          <button type="submit" id="btn-update-food" style="display:none;" class="btn-update-picker">
+              Guardar Cambios
+          </button>
         </div>
-      
+        
       </div>
     
     </form>

@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnAdd = document.getElementById("btn-add-meal");
   const btnUpdate = document.getElementById("btn-update-meal");
   const btnCancel = document.getElementById("btn-cancel-meal-edit");
+  const btnCancelInline = document.getElementById("btn-cancel-picker-inline-meal");
 
   const ADD_ACTION = form.action;
 
@@ -90,9 +91,13 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedMeal = null;
     hidden.value = "";
     input.value = "";
-
+  
     previewBox.style.display = "none";
     form.classList.remove("has-selection");
+  
+    if (btnCancelInline) {
+      btnCancelInline.style.display = "inline-block";
+    }
   }
 
   function applySelectedMeal(meal) {
@@ -156,6 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
         li.addEventListener("click", () => {
           applySelectedMeal(meal);
+        
+          if (btnCancelInline) {
+            btnCancelInline.style.display = "none";
+          }
+        
           closeList();
         });
   
@@ -285,6 +295,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       form.action = `/dailyplans/${ctx.dailyplan.id}/meals/${ctx.editing.dailyplanmeal_id}/update/`;
 
+      document.dispatchEvent(new CustomEvent("picker:open", {
+        detail: { sectionId: "dailyplan-picker-section" }
+      }));
+
       enterEditMode();
       applySelectedMeal(meal);
       closeList();
@@ -300,6 +314,22 @@ document.addEventListener("DOMContentLoaded", () => {
       clearSelection();
       enterAddMode();
       closeList();
+
+      document.dispatchEvent(new CustomEvent("picker:close", {
+        detail: { sectionId: "dailyplan-picker-section" }
+      }));
+    });
+  }
+
+  if (btnCancelInline) {
+    btnCancelInline.addEventListener("click", () => {
+      clearSelection();
+      enterAddMode();
+      closeList();
+  
+      document.dispatchEvent(new CustomEvent("picker:close", {
+        detail: { sectionId: "dailyplan-picker-section" }
+      }));
     });
   }
 

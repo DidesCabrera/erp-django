@@ -1,7 +1,8 @@
-<div class="page-add">
+<div id="meal-picker-section" class="section_picker is-collapsed">
   
     <div class="add-row">
       <div id="food-picker" class="selector">
+        <i data-lucide="search" class="action-card-icon"></i>
         <input
           type="text"
           id="food-search"
@@ -10,6 +11,14 @@
         />
         <ul id="food-list" class="selector-list"></ul>
       </div>
+    
+      <button
+        type="button"
+        id="btn-cancel-picker-inline-food"
+        class="btn-cancel-picker btn-cancel-picker-inline"
+      >
+        Cancelar
+      </button>
     </div>
   
     <!-- FORM -->
@@ -39,7 +48,18 @@
           <div class="picker-section picker-food-info">
   
             {% include "components/card_picker_food.html" %}
-
+            <!-- QUANTITY -->
+            <div class="qty-preview">
+              <label>
+                  Porción:
+                  <input
+                  type="number"
+                  id="food-quantity"
+                  value="100"
+                  min="0"
+                  >
+              </label>
+            </div>
   
           </div>
   
@@ -48,18 +68,6 @@
           <div class="picker-section picker-impact">
 
             <h3>Preview</h3>
-            <!-- QUANTITY -->
-            <div class="qty-preview">
-                <label>
-                    Porción:
-                    <input
-                    type="number"
-                    id="food-quantity"
-                    value="100"
-                    min="0"
-                    >
-                </label>
-            </div>
   
             <div class="preview-picker">
   
