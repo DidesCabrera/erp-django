@@ -25,7 +25,7 @@ class PickerPayloadTests(TestCase):
             password="12345678",
         )
 
-    def test_meal_edit_includes_picker_payload_keys(self):
+    def test_meal_detail_includes_picker_payload_keys(self):
         meal = Meal.objects.create(
             name="Editable meal",
             created_by=self.user,
@@ -41,7 +41,7 @@ class PickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("meal_edit", args=[meal.id])
+            reverse("meal_detail", args=[meal.id])
         )
 
         self.assertEqual(response.status_code, 200)
@@ -49,7 +49,7 @@ class PickerPayloadTests(TestCase):
         self.assertIn("food_picker_context", response.context)
         self.assertIn("show_return_to_dailyplan", response.context)
 
-    def test_meal_edit_picker_payloads_are_valid_json(self):
+    def test_meal_detail_picker_payloads_are_valid_json(self):
         meal = Meal.objects.create(
             name="Editable meal",
             created_by=self.user,
@@ -65,7 +65,7 @@ class PickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("meal_edit", args=[meal.id])
+            reverse("meal_detail", args=[meal.id])
         )
 
         foods_json = response.context["foods_json"]
@@ -77,7 +77,7 @@ class PickerPayloadTests(TestCase):
         self.assertIsInstance(foods_payload, list)
         self.assertIsInstance(picker_context, dict)
 
-    def test_meal_edit_foods_json_contains_available_foods(self):
+    def test_meal_detail_foods_json_contains_available_foods(self):
         meal = Meal.objects.create(
             name="Editable meal",
             created_by=self.user,
@@ -101,7 +101,7 @@ class PickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("meal_edit", args=[meal.id])
+            reverse("meal_detail", args=[meal.id])
         )
 
         foods_payload = json.loads(response.context["foods_json"])
@@ -114,7 +114,7 @@ class PickerPayloadTests(TestCase):
         self.assertIn("Egg", serialized)
         self.assertIn("Rice", serialized)
 
-    def test_meal_edit_show_return_to_dailyplan_is_false_without_pending_dailyplan(self):
+    def test_meal_detail_show_return_to_dailyplan_is_false_without_pending_dailyplan(self):
         meal = Meal.objects.create(
             name="Editable meal",
             created_by=self.user,
@@ -122,13 +122,13 @@ class PickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("meal_edit", args=[meal.id])
+            reverse("meal_detail", args=[meal.id])
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context["show_return_to_dailyplan"])
 
-    def test_meal_edit_show_return_to_dailyplan_is_true_with_pending_dailyplan_and_not_draft(self):
+    def test_meal_detail_show_return_to_dailyplan_is_true_with_pending_dailyplan_and_not_draft(self):
         dailyplan = DailyPlan.objects.create(
             name="Plan 1",
             created_by=self.user,
@@ -143,13 +143,13 @@ class PickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("meal_edit", args=[meal.id])
+            reverse("meal_detail", args=[meal.id])
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context["show_return_to_dailyplan"])
 
-    def test_meal_edit_show_return_to_dailyplan_is_false_when_meal_is_still_draft(self):
+    def test_meal_detail_show_return_to_dailyplan_is_false_when_meal_is_still_draft(self):
         dailyplan = DailyPlan.objects.create(
             name="Plan 1",
             created_by=self.user,
@@ -164,13 +164,13 @@ class PickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("meal_edit", args=[meal.id])
+            reverse("meal_detail", args=[meal.id])
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context["show_return_to_dailyplan"])
 
-    def test_meal_edit_with_edit_food_param_loads_picker_context_successfully(self):
+    def test_meal_detail_with_edit_food_param_loads_picker_context_successfully(self):
         meal = Meal.objects.create(
             name="Editable meal",
             created_by=self.user,
@@ -192,7 +192,7 @@ class PickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("meal_edit", args=[meal.id]) + f"?edit_food={meal_food.id}"
+            reverse("meal_detail", args=[meal.id]) + f"?edit_food={meal_food.id}"
         )
 
         self.assertEqual(response.status_code, 200)

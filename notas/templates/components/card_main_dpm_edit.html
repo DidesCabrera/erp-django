@@ -1,37 +1,37 @@
-
-
 <div data-page="dpm-detail">
  
     <div class="card-title main">
         {% include "components/card_main_title_edit_meal.html" with titulo=main_card.titulo main_id=main_card.main_id %}
     </div>  
     
+
     <!-- KPI ========================================= -->
     {% if main_card.items %}
-        <div class="page-kpi">
-
-            <h3>Información Nutricional</h3>
-            
-            <div class="card-kpi main">
-                {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
-            </div>
-
+    <div class="page-kpi">
+        <h3>Información Nutricional</h3>
+        <div class="card-kpi main">
+            {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
         </div>
-
-        <hr>
-
+    </div>
+    <hr>
     {% endif %}
 
-    <!-- ********** ADD MEALS ************** -->
-    {% include "components/picker_block_dpm_food.html" with main_id=main_card.main_id %}
+    
 
     <hr>
 
     <!-- MEALS TABLE ========================================= -->
     {% if main_card.items %}
     <div class="page-detail">
-        <h3>Alimentos en esta Comida</h3>
-    
+        <div class="title-section-panels">
+            <h3>Alimentos en esta Comida</h3>
+            <div class="add-title">
+                <i data-lucide="plus" class="add-row-icon"></i>
+                <i data-lucide="carrot" class="add-row-icon"></i>
+                <h4 id="food-form-title">Agrega un Alimento</h4>
+            </div>
+        </div>
+        {% include "components/picker_block_dpm_food.html" with main_id=main_card.main_id %}
         {% with panel_id=main_card.main_id|default:"main-dpm-edit" %}
             <div class="card-detail-block">
                 {% include "components/detail_tabs_foods.html" with panel_id=panel_id %}

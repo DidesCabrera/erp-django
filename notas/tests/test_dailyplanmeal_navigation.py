@@ -44,10 +44,10 @@ class DailyPlanMealNavigationTests(TestCase):
             order=1,
         )
 
-    def test_dailyplanmeal_deepedit_sets_back_url_to_dpm_detail(self):
+    def test_dailyplan_meal_detail_sets_back_url_to_dpm_detail(self):
         response = self.client.get(
             reverse(
-                "dailyplanmeal_deepedit",
+                "dailyplan_meal_detail",
                 args=[self.dailyplan.id, self.dpm.id],
             )
         )

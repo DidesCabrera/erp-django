@@ -59,7 +59,7 @@ class MealViewTests(TestCase):
         self.assertEqual(meal.pending_dailyplan, dailyplan)
         self.assertTrue(meal.is_draft)
 
-    def test_meal_edit_save_food_creates_mealfood(self):
+    def test_meal_detail_save_food_creates_mealfood(self):
         meal = Meal.objects.create(
             name="Editable meal",
             created_by=self.user,
@@ -75,7 +75,7 @@ class MealViewTests(TestCase):
         )
 
         response = self.client.post(
-            reverse("meal_edit", args=[meal.id]),
+            reverse("meal_detail", args=[meal.id]),
             data={
                 "save_food": "1",
                 "food_id": food.id,
@@ -95,7 +95,7 @@ class MealViewTests(TestCase):
 
         self.assertFalse(meal.is_draft)
 
-    def test_meal_edit_save_food_updates_existing_mealfood(self):
+    def test_meal_detail_save_food_updates_existing_mealfood(self):
         meal = Meal.objects.create(
             name="Editable meal",
             created_by=self.user,
@@ -117,7 +117,7 @@ class MealViewTests(TestCase):
         )
 
         response = self.client.post(
-            reverse("meal_edit", args=[meal.id]),
+            reverse("meal_detail", args=[meal.id]),
             data={
                 "save_food": "1",
                 "mealfood_id": meal_food.id,
@@ -131,7 +131,7 @@ class MealViewTests(TestCase):
         meal_food.refresh_from_db()
         self.assertEqual(meal_food.quantity, 150)
 
-    def test_meal_edit_finish_for_dailyplan_clears_pending_dailyplan(self):
+    def test_meal_detail_finish_for_dailyplan_clears_pending_dailyplan(self):
         dailyplan = DailyPlan.objects.create(
             name="Plan 1",
             created_by=self.user,
@@ -146,7 +146,7 @@ class MealViewTests(TestCase):
         )
 
         response = self.client.post(
-            reverse("meal_edit", args=[meal.id]),
+            reverse("meal_detail", args=[meal.id]),
             data={
                 "finish_for_dailyplan": "1",
             },

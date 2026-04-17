@@ -1,0 +1,29 @@
+.title-section-panels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+    flex-wrap: nowrap;
+}
+
+.title-section-panels h3 {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.title-section-panels .add-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.title-section-panels .add-title h4 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+  

@@ -12,14 +12,12 @@
                 {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
             </div>
         </div>
-        <hr><!-- HR #####################-->
-    
+        <hr>
 
 
     <!-- TABLE ========================================= -->
     <div class="page-detail">
         <h3>Comidas en este Plan</h3>
-    
         {% with panel_id=main_card.main_id|default:"main-dailyplan" %}
             <div class="card-detail-block">
                 {% include "components/detail_tabs_meals.html" with panel_id=panel_id %}

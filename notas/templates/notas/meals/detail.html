@@ -4,13 +4,14 @@ My Scoope
 {% endblock %}
 {% block content %}
 
+<div class="page page--detail {% if foods_json and foods_json != '[]' %}edit{% endif %}" data-page="meal-detail">
 
-
-<!-- ======== PAGE BODY ===================================== -->           
-<div class="page page--detail" data-page="meal-detail">
-
-{% include "components/card_main_meal.html" with main_card=vm.content.main_card %}
-    
+    {% if foods_json and foods_json != "[]" %}
+      {% include "components/card_main_meal_edit.html" with main_card=vm.content.main_card %}
+    {% else %}
+      {% include "components/card_main_meal.html" with main_card=vm.content.main_card %}
+    {% endif %}
+  
 </div>
 
 {% endblock %}

@@ -7,37 +7,47 @@
 
 {% block content %}
 
-<div class="page page--detail" data-page="dailyplan-detail">
-  
-  <!-- MAIN-CARD ======================================-->
-  {% include "components/card_main_dailyplan.html" with main_card=vm.content.main_card %}
-  
+<div class="page page--detail {% if meal_picker_data_json and meal_picker_data_json != '{}' %}edit{% endif %}" data-page="dailyplan-detail">
+
+  {% if meal_picker_data_json and meal_picker_data_json != "{}" %}
+    {% include "components/card_main_dailyplan_edit.html" with main_card=vm.content.main_card %}
+  {% else %}
+    {% include "components/card_main_dailyplan.html" with main_card=vm.content.main_card %}
+  {% endif %}
+
+
   <hr>
 
   <!-- MEALS LIST =========================== -->
-  <div class="page-list">
+  <div class="page-list dailyplan-detail__children-bleed">
     {% if vm.content.child_cards %}
-      <h3>Información de Comidas</h3>
-      <p class="structural_indicators">
-        {{ vm.content.structural_indicators.meals_count }} Comidas |
-        {{ vm.content.structural_indicators.foods_count }} Alimentos
-      </p>
+      <div class="dailyplan-detail__children-header">
+        <h3>Información de Comidas</h3>
+        <p class="structural_indicators">
+          {{ vm.content.structural_indicators.meals_count }} Comidas |
+          {{ vm.content.structural_indicators.foods_count }} Alimentos
+        </p>
+      </div>
       
-      <hr>
+      <hr class="dailyplan-detail__children-separator">
 
-      <div>
+      <div class="dailyplan-detail__foods-aggregation">
         {% include "components/grid_foods_aggregation.html" with foods=vm.content.foods_aggregation %}
       </div>
 
-      {% for child in vm.content.child_cards %}
-        <div class="dpm-mini-card-list">
-          {% include "components/card_mini_dpm.html" with child=child %}
-        </div>
+      <div class="dailyplan-detail__children-list">
+        {% for child in vm.content.child_cards %}
+          <div class="dpm-mini-card-list">
+            {% include "components/card_mini_dpm.html" with child=child %}
+          </div>
 
-        {% include "components/card_child_meal.html" with child_card=child dpm_meal="dpm_meal" %}
-      {% empty %}
-        <p>No meals added yet.</p>
-      {% endfor %}
+          <div class="dailyplan-detail__child-card">
+            {% include "components/card_child_meal.html" with child_card=child dpm_meal="dpm_meal" %}
+          </div>
+        {% empty %}
+          <p>No meals added yet.</p>
+        {% endfor %}
+      </div>
     {% endif %}
   </div>
 

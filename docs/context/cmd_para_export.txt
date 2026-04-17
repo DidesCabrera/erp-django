@@ -37,7 +37,7 @@ git ls-files | grep "notas/actions"
 git branch --show-current
 git status
 git add .
-git commit -m "refactor(domain): clean architecture boundaries and separate nutrition domain logic"
+git commit -m "Mejora significatiba sidebar"
 git push origin main
 git log --oneline -n 5 #ver ultimos commit
 git checkout -b feature/ux-improvements #crear nuevo branch
@@ -58,3 +58,4 @@ user.set_password("CabrerA1988")
 user.is_staff = True
 user.is_superuser = True
 user.save()
+

@@ -109,16 +109,6 @@ MEAL_ACTION_DEFINITIONS = {
         ),
     },
 
-    "edit": {
-        "label": "Editar",
-        "method": "post",
-        "group": "primary",
-        "icon": "pencil",
-        "order": 90,
-        "get_url": lambda meal, context=None: reverse(
-            "meal_edit", args=[meal.id]
-        ),
-    },
 
     "deep_edit": {
         "label": "Editar",
@@ -127,7 +117,7 @@ MEAL_ACTION_DEFINITIONS = {
         "icon": "pencil",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
-            "meal_edit", args=[meal.id]
+            "meal_detail", args=[meal.id]
         ),
     },
 
@@ -143,17 +133,6 @@ MEAL_ACTION_DEFINITIONS = {
         ),
     },
 
-    "back_edit": {
-        "label": "Cancelar",
-        "method": "post",
-        "group": "primary",
-        "icon": "chevron-left",
-        "order": 90,
-        "get_url": lambda meal, context=None: reverse(
-            "meal_edit", args=[meal.id]
-        ),
-    },
-
     "finish_for_dailyplan": {
         "label": "Guardar y volver",
         "method": "post",
@@ -161,7 +140,7 @@ MEAL_ACTION_DEFINITIONS = {
         "icon": "check",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
-            "meal_edit", args=[meal.id]
+            "meal_detail", args=[meal.id]
         ),
     },
 
@@ -256,11 +235,16 @@ MEAL_ACTIONS_BY_VIEWMODE = {
 
     MEAL_VIEWMODE_PERSONAL_DETAIL: [
         "back_to_list",
-        "edit",
+        "configure",
         "fork",
-        #"share",
         "add_to_dailyplan",
         "remove",
+    ],
+
+    MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN: [
+        "configure",
+        "remove",
+        "finish_for_dailyplan",
     ],
     
     MEAL_VIEWMODE_EXPLORE_DETAIL: [
@@ -269,19 +253,7 @@ MEAL_ACTIONS_BY_VIEWMODE = {
     ],
 
     MEAL_VIEWMODE_CONFIGURE:[
-        "back_edit",
-    ],
-
-    MEAL_VIEWMODE_PERSONAL_EDIT: [
         "back_detail",
-        "configure",
-        "remove",
-    ],
-
-    MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN: [
-        "configure",
-        "remove",
-        "finish_for_dailyplan",
     ],
 
     MEAL_VIEWMODE_CREATE: [

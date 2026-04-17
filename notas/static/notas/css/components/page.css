@@ -34,10 +34,6 @@
     background-color: white;
 }
 
-.page--detail.edit{
-    margin-top: 32px;
-}
-
 .page--detail.dpm_meal{
     border-radius: 0 0 14px 14px;
     margin-top: 0;

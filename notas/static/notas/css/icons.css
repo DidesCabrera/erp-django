@@ -106,9 +106,9 @@
   }
 
 .add-row-icon {
-    height: 18px;
-    width: 18px;
-    stroke-width: 2.5;
+    height: 16px;
+    width: 16px;
+    stroke-width: 2;
     color: rgb(27, 27, 27);
     flex-shrink: 0;
 }

@@ -27,7 +27,7 @@ MEAL_FOOD_VIEWMODE_DRAFT_DEEP_EDIT = vm("meal_food", "deep_edit", "draft")
 # MEAL ---------------------------------------------
 MEAL_VIEWMODE_PERSONAL_LIST = vm("meal", "list", "personal")
 MEAL_VIEWMODE_PERSONAL_DETAIL = vm("meal", "detail", "personal")
-MEAL_VIEWMODE_PERSONAL_EDIT = vm("meal", "edit", "personal")
+MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN = vm("meal", "edit_from_dailyplan", "personal")
 
 MEAL_VIEWMODE_EXPLORE_LIST = vm("meal", "list", "explore")
 MEAL_VIEWMODE_EXPLORE_DETAIL = vm("meal", "detail", "explore")
@@ -44,13 +44,12 @@ MEAL_VIEWMODE_CONFIGURE = vm("meal", "configure", "personal")
 
 MEAL_VIEWMODE_DAILYPLAN = vm("meal", "dailyplan")
 
-MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN = vm("meal", "edit_from_dailyplan", "personal")
+
 
 
 # DAILYPLAN ---------------------------------------------
 DAILYPLAN_VIEWMODE_PERSONAL_LIST = vm("dailyplan", "list", "personal")
 DAILYPLAN_VIEWMODE_PERSONAL_DETAIL = vm("dailyplan", "detail", "personal")
-DAILYPLAN_VIEWMODE_PERSONAL_EDIT = vm("dailyplan", "edit", "personal")
 
 DAILYPLAN_VIEWMODE_EXPLORE_LIST = vm("dailyplan", "list", "explore")
 DAILYPLAN_VIEWMODE_EXPLORE_DETAIL = vm("dailyplan", "detail", "explore")
@@ -70,7 +69,7 @@ DAILYPLAN_VIEWMODE_CONFIGURE = vm("dailyplan", "configure", "create")
 # DPM ---------------------------------------------
 DAILYPLAN_MEAL_VIEWMODE_LIST = vm("dailyplan_meal", "list", "personal")
 DAILYPLAN_MEAL_VIEWMODE_DETAIL = vm("dailyplan_meal", "detail", "personal")
-DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT = vm("dailyplan_meal", "deep_edit", "personal")
+DAILYPLAN_MEAL_VIEWMODE_EDIT = vm("dailyplan_meal", "edit", "personal")
 
 DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT = vm("dailyplan_meal", "deep_edit", "draft")
 

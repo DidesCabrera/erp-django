@@ -16,6 +16,7 @@ from notas.presentation.config.viewmodel_config import (
     MEAL_VIEWMODE_EXPLORE_LIST,
     MEAL_VIEWMODE_SHARED_LIST,
     MEAL_VIEWMODE_DRAFT_LIST,
+    MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN,
 )
 
 from notas.application.services.nutrition.nutrition_kpis import build_nutrition_kpis_from_meal
@@ -41,21 +42,94 @@ class MealDetailPageData:
     meal: Any
     meal_foods: List[Any]
     detail_content_data: Any
-    viewmode: Any
+    selected_food_id: Optional[str] = None
+    editing_mealfood_id: Optional[int] = None
+    foods_json: str = "[]"
+    food_picker_context_json: str = "{}"
+    show_return_to_dailyplan: bool = False
+    viewmode: Any = None
+
 
 def get_meal_detail_page_data(
     user,
     meal_id: int,
     viewmode,
+    request_get=None,
 ) -> MealDetailPageData:
 
-    meal = get_meal_for_user(user, meal_id)
+    request_get = request_get or {}
+
+    meal = (
+        Meal.objects
+        .prefetch_related("meal_food_set", "meal_food_set__food")
+        .get(pk=meal_id)
+    )
+
     meal_foods = list(meal.meal_food_set.all())
+
+    selected_food_id = None
+    editing_mealfood_id = None
+    foods_json = "[]"
+    food_picker_context_json = "{}"
+    show_return_to_dailyplan = False
+
+    effective_viewmode = viewmode
+
+    if viewmode == MEAL_VIEWMODE_PERSONAL_DETAIL and meal.created_by == user:
+        edit_mf_id = request_get.get("edit_food")
+        mealfood = None
+
+        if edit_mf_id:
+            mealfood = get_object_or_404(
+                MealFood,
+                pk=edit_mf_id,
+                meal=meal,
+            )
+
+        foods_payload = build_food_picker_foods_payload(
+            Food.objects.all()
+        )
+
+        nutrition_kpis = build_nutrition_kpis_from_meal(
+            meal,
+            user,
+        )
+
+        food_picker_ctx = build_food_picker_context_payload(
+            meal=meal,
+            nutrition_kpis=nutrition_kpis,
+            mealfood=mealfood,
+        )
+
+        foods_json = json.dumps(
+            foods_payload.as_list(),
+            cls=DjangoJSONEncoder,
+        )
+
+        food_picker_context_json = json.dumps(
+            food_picker_ctx.as_dict(),
+            cls=DjangoJSONEncoder,
+        )
+
+        selected_food_id = request_get.get("select_food")
+        editing_mealfood_id = int(edit_mf_id) if edit_mf_id else None
+        show_return_to_dailyplan = (
+            meal.pending_dailyplan is not None
+            and not meal.is_draft
+        )
+
+        if meal.pending_dailyplan:
+            effective_viewmode = MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN
+        else:
+            effective_viewmode = MEAL_VIEWMODE_PERSONAL_DETAIL
+
+    else:
+        meal = get_meal_for_user(user, meal_id)
 
     detail_content_data = build_meal_detail_content_data(
         meal=meal,
         user=user,
-        viewmode=viewmode,
+        viewmode=effective_viewmode,
         header_builder=build_meal_header,
         build_mealfood_table_item=build_mealfood_table_item,
         build_meal_foods_aggregation=build_meal_foods_aggregation,
@@ -67,8 +141,15 @@ def get_meal_detail_page_data(
         meal=meal,
         meal_foods=meal_foods,
         detail_content_data=detail_content_data,
-        viewmode=viewmode,
+        selected_food_id=selected_food_id,
+        editing_mealfood_id=editing_mealfood_id,
+        foods_json=foods_json,
+        food_picker_context_json=food_picker_context_json,
+        show_return_to_dailyplan=show_return_to_dailyplan,
+        viewmode=effective_viewmode,
     )
+
+
 
 
 @dataclass
@@ -416,111 +497,4 @@ def get_meal_draft_list_page_data(user) -> MealListPageData:
     )
 
 
-@dataclass
-class MealEditPageData:
-    meal: Any
-    meal_foods: List[Any]
-    detail_content_data: Any
-    selected_food_id: Optional[str]
-    editing_mealfood_id: Optional[int]
-    foods_json: str
-    food_picker_context_json: str
-    show_return_to_dailyplan: bool
-    viewmode: Any
 
-def get_meal_edit_page_data(
-    user,
-    meal_id: int,
-    request_get,
-    personal_edit_viewmode,
-    personal_edit_from_dailyplan_viewmode,
-) -> MealEditPageData:
-
-    # ==================================================
-    # Aggregate load
-    # ==================================================
-    meal = (
-        Meal.objects
-        .prefetch_related("meal_food_set", "meal_food_set__food")
-        .get(pk=meal_id, created_by=user)
-    )
-
-    meal_foods = list(meal.meal_food_set.all())
-
-    # ==================================================
-    # Edit state
-    # ==================================================
-    edit_mf_id = request_get.get("edit_food")
-    mealfood = None
-
-    if edit_mf_id:
-        mealfood = get_object_or_404(
-            MealFood,
-            pk=edit_mf_id,
-            meal=meal,
-        )
-
-    # ==================================================
-    # Food picker payload
-    # ==================================================
-    foods_payload = build_food_picker_foods_payload(
-        Food.objects.all()
-    )
-
-    nutrition_kpis = build_nutrition_kpis_from_meal(
-        meal,
-        user,
-    )
-
-    food_picker_ctx = build_food_picker_context_payload(
-        meal=meal,
-        nutrition_kpis=nutrition_kpis,
-        mealfood=mealfood,
-    )
-
-    # ==================================================
-    # Viewmode
-    # ==================================================
-    if meal.pending_dailyplan:
-        viewmode = personal_edit_from_dailyplan_viewmode
-    else:
-        viewmode = personal_edit_viewmode
-
-    # ==================================================
-    # Front payloads
-    # ==================================================
-    foods_json = json.dumps(
-        foods_payload.as_list(),
-        cls=DjangoJSONEncoder,
-    )
-
-    food_picker_context_json = json.dumps(
-        food_picker_ctx.as_dict(),
-        cls=DjangoJSONEncoder,
-    )
-
-    detail_content_data = build_meal_detail_content_data(
-        meal=meal,
-        user=user,
-        viewmode=viewmode,
-        header_builder=build_meal_header,
-        build_mealfood_table_item=build_mealfood_table_item,
-        build_meal_foods_aggregation=build_meal_foods_aggregation,
-        resolve_meal_actions=resolve_meal_actions,
-        content_icon_registry=CONTENT_ICON_REGISTRY,
-    )
-
-    return MealEditPageData(
-        meal=meal,
-        meal_foods=meal_foods,
-        selected_food_id=request_get.get("select_food"),
-        editing_mealfood_id=int(edit_mf_id) if edit_mf_id else None,
-        foods_json=foods_json,
-        food_picker_context_json=food_picker_context_json,
-        show_return_to_dailyplan=(
-            meal.pending_dailyplan is not None
-            and not meal.is_draft
-        ),
-        viewmode=viewmode,
-        detail_content_data=detail_content_data,
-    )

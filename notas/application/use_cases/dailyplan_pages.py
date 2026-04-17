@@ -15,12 +15,11 @@ from notas.presentation.composition.js.meal_picker_builder import (
     build_meal_picker_data_payload,
 )
 from notas.presentation.config.viewmodel_config import (
-    DAILYPLAN_VIEWMODE_PERSONAL_EDIT,
-    DAILYPLAN_VIEWMODE_DRAFT_EDIT,
     DAILYPLAN_VIEWMODE_PERSONAL_LIST,
     DAILYPLAN_VIEWMODE_EXPLORE_LIST,
     DAILYPLAN_VIEWMODE_SHARED_LIST,
     DAILYPLAN_VIEWMODE_DRAFT_LIST,
+    DAILYPLAN_VIEWMODE_PERSONAL_DETAIL,
 )
 
 from notas.application.services.access.access import get_dailyplan_for_user
@@ -49,16 +48,9 @@ from notas.presentation.composition.viewmodel.components.builder_menu import bui
 
 from notas.presentation.resolvers.title_resolvers import resolve_category_badge
 
-@dataclass
-class DailyPlanEditPageData:
-    dailyplan: Any
-    dailyplan_meals: List[Any]
-    detail_content_data: Any
-    selected_meal_id: Optional[str]
-    editing_dailyplanmeal_id: Optional[int]
-    meal_picker_data_json: str
-    meal_picker_context_json: str
-    viewmode: Any
+
+
+
 
 def _meal_cache_is_missing(meal: Meal) -> bool:
     return any(
@@ -74,7 +66,6 @@ def _meal_cache_is_missing(meal: Meal) -> bool:
             meal.foods_aggregation_cached,
         ]
     )
-
 
 def _ensure_cached_state(meals):
     """
@@ -93,150 +84,107 @@ def _ensure_cached_state(meals):
     return result
 
 
-def get_dailyplan_edit_page_data(
-    user,
-    dailyplan_id: int,
-    request_get,
-    is_draft: bool = False,
-) -> DailyPlanEditPageData:
-
-    # ==================================================
-    # 1. Aggregate real del edit
-    # ==================================================
-    dailyplan = get_dailyplan_for_edit(user, dailyplan_id)
-    dailyplan_meals = list(dailyplan.meals_with_foods())
-
-    # ==================================================
-    # 2. Estado edit
-    # ==================================================
-    edit_dpm_id = request_get.get("edit_meal")
-    selected_meal_id = request_get.get("select_meal")
-
-    dpm = None
-    if edit_dpm_id:
-        dpm = get_object_or_404(
-            DailyPlanMeal.objects.select_related("meal"),
-            pk=edit_dpm_id,
-            dailyplan=dailyplan,
-        )
-
-    # ==================================================
-    # 3. Browse meals = SOLO My Library
-    # ==================================================
-    browse_meals_qs = (
-        meals_with_kcal()
-        .filter(
-            created_by=user,
-            is_draft=False,
-            dailyplanmeal__isnull=True,
-        )
-        .order_by("-created_at")
-        .distinct()
-    )
-
-    # ==================================================
-    # 4. Existing meals = meals ya presentes en el plan
-    # ==================================================
-    existing_meals_qs = (
-        meals_with_kcal()
-        .filter(
-            dailyplanmeal__dailyplan=dailyplan,
-        )
-        .distinct()
-    )
-
-    # ==================================================
-    # 5. Rehidratar cache ANTES de serializar
-    # ==================================================
-    browse_meals = _ensure_cached_state(list(browse_meals_qs))
-    existing_meals = _ensure_cached_state(list(existing_meals_qs))
-
-    # ==================================================
-    # 6. Payload real del picker
-    # ==================================================
-    meal_picker_data = build_meal_picker_data_payload(
-        browse_meals_qs=browse_meals,
-        existing_meals_qs=existing_meals,
-    )
-
-    # ==================================================
-    # 7. Context real del picker
-    # ==================================================
-    dailyplan_kpis = build_nutrition_kpis_from_dailyplan(
-        dailyplan,
-        user,
-    )
-
-    meal_picker_context = build_meal_picker_context_payload(
-        dailyplan=dailyplan,
-        dailyplan_kpis=dailyplan_kpis,
-        dpm=dpm,
-    )
-
-    # ==================================================
-    # 8. Viewmode
-    # ==================================================
-    viewmode = (
-        DAILYPLAN_VIEWMODE_DRAFT_EDIT
-        if is_draft
-        else DAILYPLAN_VIEWMODE_PERSONAL_EDIT
-    )
-
-    # ==================================================
-    # 9. JSON final
-    # ==================================================
-    meal_picker_data_json = json.dumps(
-        meal_picker_data,
-        cls=DjangoJSONEncoder,
-    )
-
-    meal_picker_context_json = json.dumps(
-        meal_picker_context.as_dict(),
-        cls=DjangoJSONEncoder,
-    )
-
-    detail_content_data = build_dailyplan_detail_content_data(
-        dailyplan=dailyplan,
-        dailyplan_meals=dailyplan_meals,
-        user=user,
-        viewmode=viewmode,
-        header_builder=build_dailyplan_header,
-    )
-
-    return DailyPlanEditPageData(
-        dailyplan=dailyplan,
-        dailyplan_meals=dailyplan_meals,
-        selected_meal_id=selected_meal_id,
-        editing_dailyplanmeal_id=int(edit_dpm_id) if edit_dpm_id else None,
-        meal_picker_data_json=meal_picker_data_json,
-        meal_picker_context_json=meal_picker_context_json,
-        viewmode=viewmode,
-        detail_content_data=detail_content_data,
-    )
-
-
 @dataclass
 class DailyPlanDetailPageData:
     dailyplan: Any
     dailyplan_meals: List[Any]
     detail_content_data: Any
-    viewmode: Any
-
+    selected_meal_id: Optional[str] = None
+    editing_dailyplanmeal_id: Optional[int] = None
+    meal_picker_data_json: str = "{}"
+    meal_picker_context_json: str = "{}"
+    viewmode: Any = None
 
 def get_dailyplan_detail_page_data(
     user,
     dailyplan_id: int,
     viewmode,
+    request_get=None,
 ) -> DailyPlanDetailPageData:
 
-    dailyplan = get_dailyplan_for_user(user, dailyplan_id)
-    dailyplan_meals = list(dailyplan.meals_with_foods())
+    request_get = request_get or {}
+
+    selected_meal_id = None
+    editing_dailyplanmeal_id = None
+    meal_picker_data_json = "{}"
+    meal_picker_context_json = "{}"
+    effective_viewmode = viewmode
+
+    if viewmode == DAILYPLAN_VIEWMODE_PERSONAL_DETAIL:
+        dailyplan = get_dailyplan_for_edit(user, dailyplan_id)
+        dailyplan_meals = list(dailyplan.meals_with_foods())
+
+        edit_dpm_id = request_get.get("edit_meal")
+        selected_meal_id = request_get.get("select_meal")
+
+        dpm = None
+        if edit_dpm_id:
+            dpm = get_object_or_404(
+                DailyPlanMeal.objects.select_related("meal"),
+                pk=edit_dpm_id,
+                dailyplan=dailyplan,
+            )
+
+        browse_meals_qs = (
+            meals_with_kcal()
+            .filter(
+                created_by=user,
+                is_draft=False,
+                dailyplanmeal__isnull=True,
+            )
+            .order_by("-created_at")
+            .distinct()
+        )
+
+        existing_meals_qs = (
+            meals_with_kcal()
+            .filter(
+                dailyplanmeal__dailyplan=dailyplan,
+            )
+            .distinct()
+        )
+
+        browse_meals = _ensure_cached_state(list(browse_meals_qs))
+        existing_meals = _ensure_cached_state(list(existing_meals_qs))
+
+        meal_picker_data = build_meal_picker_data_payload(
+            browse_meals_qs=browse_meals,
+            existing_meals_qs=existing_meals,
+        )
+
+        dailyplan_kpis = build_nutrition_kpis_from_dailyplan(
+            dailyplan,
+            user,
+        )
+
+        meal_picker_context = build_meal_picker_context_payload(
+            dailyplan=dailyplan,
+            dailyplan_kpis=dailyplan_kpis,
+            dpm=dpm,
+        )
+
+        meal_picker_data_json = json.dumps(
+            meal_picker_data,
+            cls=DjangoJSONEncoder,
+        )
+
+        meal_picker_context_json = json.dumps(
+            meal_picker_context.as_dict(),
+            cls=DjangoJSONEncoder,
+        )
+
+        editing_dailyplanmeal_id = int(edit_dpm_id) if edit_dpm_id else None
+        effective_viewmode = DAILYPLAN_VIEWMODE_PERSONAL_DETAIL
+
+    else:
+        dailyplan = get_dailyplan_for_user(user, dailyplan_id)
+        dailyplan_meals = list(dailyplan.meals_with_foods())
 
     detail_content_data = build_dailyplan_detail_content_data(
         dailyplan=dailyplan,
         dailyplan_meals=dailyplan_meals,
         user=user,
-        viewmode=viewmode,
+        viewmode=effective_viewmode,
         header_builder=build_dailyplan_header,
     )
 
@@ -244,8 +192,13 @@ def get_dailyplan_detail_page_data(
         dailyplan=dailyplan,
         dailyplan_meals=dailyplan_meals,
         detail_content_data=detail_content_data,
-        viewmode=viewmode,
+        selected_meal_id=selected_meal_id,
+        editing_dailyplanmeal_id=editing_dailyplanmeal_id,
+        meal_picker_data_json=meal_picker_data_json,
+        meal_picker_context_json=meal_picker_context_json,
+        viewmode=effective_viewmode,
     )
+
 
 
 @dataclass
@@ -419,6 +372,8 @@ def build_dailyplan_detail_content_data(
         structural_indicators=structural_indicators,
     )
 
+
+
 @dataclass
 class DailyPlanListPageData:
     dailyplans: Any
@@ -526,13 +481,11 @@ def get_dailyplan_draft_list_page_data(user) -> DailyPlanListPageData:
 class DailyPlanListContentData:
     child_cards_data: list
 
-
 @dataclass
 class DailyPlanListPageData:
     dailyplans: Any
     list_content_data: Any
     viewmode: Any
-
 
 def build_dailyplan_list_content_data(dailyplans, user, viewmode):
 

@@ -46,7 +46,7 @@ class DPMFoodPickerPayloadTests(TestCase):
             order=1,
         )
 
-    def test_dailyplanmeal_deepedit_includes_food_picker_payload_keys(self):
+    def test_dailyplan_meal_detail_includes_food_picker_payload_keys(self):
         Food.objects.create(
             name="Egg",
             protein=10,
@@ -56,14 +56,14 @@ class DPMFoodPickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplanmeal_deepedit", args=[self.dailyplan.id, self.dpm.id])
+            reverse("dailyplan_meal_detail", args=[self.dailyplan.id, self.dpm.id])
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("foods_json", response.context)
         self.assertIn("food_picker_json", response.context)
 
-    def test_dailyplanmeal_deepedit_payloads_are_valid_json(self):
+    def test_dailyplan_meal_detail_payloads_are_valid_json(self):
         Food.objects.create(
             name="Egg",
             protein=10,
@@ -73,7 +73,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplanmeal_deepedit", args=[self.dailyplan.id, self.dpm.id])
+            reverse("dailyplan_meal_detail", args=[self.dailyplan.id, self.dpm.id])
         )
 
         foods_payload = json.loads(response.context["foods_json"])
@@ -82,7 +82,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         self.assertIsInstance(foods_payload, list)
         self.assertIsInstance(picker_context, dict)
 
-    def test_dailyplanmeal_deepedit_foods_json_contains_available_foods(self):
+    def test_dailyplan_meal_detail_foods_json_contains_available_foods(self):
         food_1 = Food.objects.create(
             name="Egg",
             protein=10,
@@ -99,7 +99,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplanmeal_deepedit", args=[self.dailyplan.id, self.dpm.id])
+            reverse("dailyplan_meal_detail", args=[self.dailyplan.id, self.dpm.id])
         )
 
         foods_payload = json.loads(response.context["foods_json"])
@@ -110,7 +110,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         self.assertIn("Egg", serialized)
         self.assertIn("Rice", serialized)
 
-    def test_dailyplanmeal_deepedit_picker_context_is_add_mode_without_edit_food(self):
+    def test_dailyplan_meal_detail_picker_context_is_add_mode_without_edit_food(self):
         Food.objects.create(
             name="Egg",
             protein=10,
@@ -120,7 +120,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplanmeal_deepedit", args=[self.dailyplan.id, self.dpm.id])
+            reverse("dailyplan_meal_detail", args=[self.dailyplan.id, self.dpm.id])
         )
 
         picker_context = json.loads(response.context["food_picker_json"])
@@ -128,7 +128,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         self.assertEqual(picker_context["mode"], "add")
         self.assertIsNone(picker_context["editing"])
 
-    def test_dailyplanmeal_deepedit_picker_context_is_edit_mode_with_edit_food(self):
+    def test_dailyplan_meal_detail_picker_context_is_edit_mode_with_edit_food(self):
         food = Food.objects.create(
             name="Egg",
             protein=10,
@@ -144,7 +144,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplanmeal_deepedit", args=[self.dailyplan.id, self.dpm.id])
+            reverse("dailyplan_meal_detail", args=[self.dailyplan.id, self.dpm.id])
             + f"?edit_food={meal_food.id}"
         )
 
@@ -157,7 +157,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         self.assertEqual(picker_context["editing"]["food_id"], food.id)
         self.assertEqual(picker_context["editing"]["original_quantity"], 120.0)
 
-    def test_dailyplanmeal_deepedit_post_save_food_creates_mealfood(self):
+    def test_dailyplan_meal_detail_post_save_food_creates_mealfood(self):
         food = Food.objects.create(
             name="Egg",
             protein=10,
@@ -167,7 +167,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         )
 
         response = self.client.post(
-            reverse("dailyplanmeal_deepedit", args=[self.dailyplan.id, self.dpm.id]),
+            reverse("dailyplan_meal_detail", args=[self.dailyplan.id, self.dpm.id]),
             data={
                 "save_food": "1",
                 "food_id": food.id,
@@ -182,7 +182,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         self.assertEqual(meal_food.food, food)
         self.assertEqual(meal_food.quantity, 100)
 
-    def test_dailyplanmeal_deepedit_post_save_food_updates_existing_mealfood(self):
+    def test_dailyplan_meal_detail_post_save_food_updates_existing_mealfood(self):
         food = Food.objects.create(
             name="Egg",
             protein=10,
@@ -198,7 +198,7 @@ class DPMFoodPickerPayloadTests(TestCase):
         )
 
         response = self.client.post(
-            reverse("dailyplanmeal_deepedit", args=[self.dailyplan.id, self.dpm.id]),
+            reverse("dailyplan_meal_detail", args=[self.dailyplan.id, self.dpm.id]),
             data={
                 "save_food": "1",
                 "mealfood_id": meal_food.id,

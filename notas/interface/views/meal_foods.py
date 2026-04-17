@@ -41,7 +41,7 @@ def mealfood_update(request, meal_id, mealfood_id):
         messages.error(request, "La cantidad debe ser mayor a 0.")
         if return_to:
             return redirect(return_to)
-        return redirect("meal_edit", meal.id)
+        return redirect("meal_detail", meal.id)
 
     mealfood.quantity = quantity
     
@@ -58,7 +58,7 @@ def mealfood_update(request, meal_id, mealfood_id):
     if return_to:
         return redirect(return_to)
 
-    return redirect("meal_edit", pk=meal.pk)
+    return redirect("meal_detail", pk=meal.pk)
 
 
 @login_required
@@ -85,7 +85,7 @@ def mealfood_remove(request, pk):
     if return_to:
         return redirect(return_to)
 
-    return redirect("meal_edit", pk=meal.pk)
+    return redirect("meal_detail", pk=meal.pk)
 
 
 @require_POST
@@ -108,7 +108,7 @@ def add_food_to_meal(request, pk):
         if return_to:
             return redirect(return_to)
 
-        return redirect("meal_edit", pk=meal.pk)
+        return redirect("meal_detail", pk=meal.pk)
 
     food = get_object_or_404(Food, pk=food_id)
 
@@ -125,6 +125,6 @@ def add_food_to_meal(request, pk):
     if return_to:
         return redirect(return_to)
 
-    return redirect("meal_edit", pk=meal.pk)
+    return redirect("meal_detail", pk=meal.pk)
 
 

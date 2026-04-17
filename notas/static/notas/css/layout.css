@@ -119,7 +119,7 @@ header {
 }
 
 .sidebar-group {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 
   .sidebar-main {
@@ -154,7 +154,7 @@ header {
   .sidebar-sub {
     display: none;
     flex-direction: column;
-    padding-left: 10px;
+    padding-left: 18px;
   }
 
   .sidebar-group.is-open .sidebar-sub {
@@ -191,7 +191,7 @@ header {
   gap: 6px;                 /* espacio entre icono y texto */
   text-decoration: none;
   padding: 6px 12px;
-  margin-top: 5px;
+  margin-top: 4px;
   color: inherit;
   cursor: pointer;
   user-select: none;

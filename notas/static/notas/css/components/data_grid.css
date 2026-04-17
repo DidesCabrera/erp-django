@@ -105,7 +105,7 @@
 
 .data-grid-cell--name {
     font-weight: 600;
-    padding: 8px 0;
+    padding: 8px 0 8px 4px;
 }
 
 .data-grid-cell--time,
@@ -113,6 +113,17 @@
 .data-grid-cell--kcal,
 .data-grid-cell--macro {
     white-space: nowrap;
+}
+
+.data-grid-col--time,
+.data-grid-col--qty,
+.data-grid-col--kcal,
+.data-grid-col--macro,
+.data-grid-cell--time,
+.data-grid-cell--qty,
+.data-grid-cell--kcal,
+.data-grid-cell--macro {
+    text-align: center;
 }
 
 .data-grid-cell--alloc {
@@ -138,12 +149,11 @@
     .data-grid-row--foods,
     .data-grid-row--meals {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 8px;
     }
 
     .data-grid-cell {
         display: flex;
-        align-items: center;
         gap: 8px;
     }
 }
@@ -414,7 +424,8 @@
 
 .data-grid--menu .data-grid-cell--meal{
     font-weight: 600;
-    padding: 8px 0;
+    padding: 8px 4px;
+
 }
 
 .data-grid--menu .data-grid-col--meal {
@@ -436,6 +447,10 @@
     line-height: 1.35;
 }
 
+.data-grid-cell--foods{
+    padding: 8px 0;
+}
+
 .data-grid--menu .data-grid-cell--meal {
     display: flex;
     flex-direction: column;
@@ -452,4 +467,25 @@
     line-height: 1.1;
     font-weight: 400;
     opacity: 0.75;
+}
+
+@media (max-width: 980px) {
+    .data-grid-header--mobile-macros .data-grid-col--kcal,
+    .data-grid-header--mobile-macros .data-grid-col--macro,
+    .data-grid-row--mobile-macros .data-grid-cell--kcal,
+    .data-grid-row--mobile-macros .data-grid-cell--macro,
+
+    .data-grid-header--mobile-foods-macros .data-grid-col--kcal,
+    .data-grid-header--mobile-foods-macros .data-grid-col--macro,
+    .data-grid-row--mobile-foods-macros .data-grid-cell--kcal,
+    .data-grid-row--mobile-foods-macros .data-grid-cell--macro,
+
+    .data-grid-header--mobile-foods-qty .data-grid-col--qty,
+    .data-grid-row--mobile-foods-qty .data-grid-cell--qty,
+
+    .data-grid-col--time,
+    .data-grid-cell--time {
+        text-align: center;
+        justify-content: center;
+    }
 }

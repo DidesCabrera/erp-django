@@ -6,7 +6,7 @@ from django.contrib import messages
 from notas.application.services.access.capabilities import get_capabilities
 from notas.domain.models import Meal, MealFood, DailyPlan, DailyPlanMeal, Food
 from notas.presentation.config.viewmodel_config import (
-    DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
+    DAILYPLAN_MEAL_VIEWMODE_EDIT,
     DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
     DAILYPLAN_MEAL_VIEWMODE_DETAIL,
 )
@@ -26,7 +26,6 @@ from django.urls import reverse
 from notas.application.use_cases.dpm_pages import (
     get_dpm_detail_page_data,
     get_dpm_edit_page_data,
-    get_dpm_deep_edit_page_data,
 )
 
 
@@ -41,7 +40,38 @@ def dailyplan_meal_detail(request, dailyplan_id, pk):
         dailyplan_id=dailyplan_id,
         dpm_id=pk,
         viewmode=DAILYPLAN_MEAL_VIEWMODE_DETAIL,
+        request_get=request.GET,
     )
+
+    caps = get_capabilities(request.user)
+    if request.method == "POST" and "save_food" in request.POST:
+        if not caps or not caps.can_edit_own_content():
+            return HttpResponseForbidden("You cannot edit this meal")
+
+        mf_id = request.POST.get("mealfood_id")
+
+        if mf_id:
+            mf = get_object_or_404(
+                MealFood,
+                pk=mf_id,
+                meal=page.meal,
+            )
+            mf.quantity = request.POST.get("quantity")
+            mf.save()
+        else:
+            MealFood.objects.create(
+                meal=page.meal,
+                food_id=request.POST.get("food_id"),
+                quantity=request.POST.get("quantity"),
+            )
+
+        page = get_dpm_detail_page_data(
+            user=request.user,
+            dailyplan_id=dailyplan_id,
+            dpm_id=pk,
+            viewmode=DAILYPLAN_MEAL_VIEWMODE_DETAIL,
+            request_get=request.GET,
+        )
 
     content_vm = build_dpm_detail_vm(
         page.detail_content_data,
@@ -58,11 +88,18 @@ def dailyplan_meal_detail(request, dailyplan_id, pk):
         content=content_vm,
     )
 
+    context = base_vm.as_context()
+    context["foods_json"] = page.foods_json
+    context["food_picker_json"] = page.food_picker_context_json
+    context["selected_food_id"] = page.selected_food_id
+    context["editing_mealfood_id"] = page.editing_mealfood_id
+
     return render(
         request,
         "notas/dailyplan_meals/detail.html",
-        base_vm.as_context(),
+        context,
     )
+
 
 
 # ---------- EDIT - DEEP EDIT ----------
@@ -74,14 +111,18 @@ def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
         user=request.user,
         dailyplan_id=dailyplan_id,
         dpm_id=dailyplanmeal_id,
-        viewmode=DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
+        viewmode=DAILYPLAN_MEAL_VIEWMODE_EDIT,
     )
 
     if request.method == "POST":
         page.dpm.hour = request.POST.get("hour") or None
         page.dpm.note = request.POST.get("note") or None
         page.dpm.save()
-        return redirect("dailyplan_edit", pk=page.dailyplan.id)
+        return redirect(
+            "dailyplan_meal_detail",
+            dailyplan_id=page.dailyplan.id,
+            pk=page.dpm.id,
+        )
 
     content_vm = build_dpm_detail_vm(
         page.detail_content_data,
@@ -105,83 +146,9 @@ def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
 
 
 @login_required
-def dailyplanmeal_deepedit(request, dailyplan_id, dailyplanmeal_id):
-
-    page = get_dpm_deep_edit_page_data(
-        user=request.user,
-        dailyplan_id=dailyplan_id,
-        dpm_id=dailyplanmeal_id,
-        request_get=request.GET,
-        viewmode=DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
-    )
-
-    caps = get_capabilities(request.user)
-    if not caps or not caps.can_edit_own_content():
-        return HttpResponseForbidden("You cannot edit this meal")
-
-    if request.method == "POST" and "save_food" in request.POST:
-        mf_id = request.POST.get("mealfood_id")
-
-        if mf_id:
-            mf = get_object_or_404(
-                MealFood,
-                pk=mf_id,
-                meal=page.meal,
-            )
-            mf.quantity = request.POST.get("quantity")
-            mf.save()
-        else:
-            MealFood.objects.create(
-                meal=page.meal,
-                food_id=request.POST.get("food_id"),
-                quantity=request.POST.get("quantity"),
-            )
-
-        page = get_dpm_deep_edit_page_data(
-            user=request.user,
-            dailyplan_id=dailyplan_id,
-            dpm_id=dailyplanmeal_id,
-            request_get=request.GET,
-            viewmode=DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT,
-        )
-
-    content_vm = build_dpm_detail_vm(
-        page.detail_content_data,
-    )
-
-    ui_vm = build_ui_vm(
-        page.viewmode,
-        parents=[page.dailyplan],
-        instance=page.meal,
-        back_config={
-            "type": "url",
-            "value": reverse(
-                "dailyplan_meal_detail",
-                args=[page.dailyplan.id, page.dpm.id],
-            ),
-        },
-    )
-
-    base_vm = BaseVM(
-        ui=ui_vm,
-        content=content_vm,
-    )
-
-    context = base_vm.as_context()
-    context["foods_json"] = page.foods_json
-    context["food_picker_json"] = page.food_picker_context_json
-
-    return render(
-        request,
-        "notas/dailyplan_meals/deep_edit.html",
-        context,
-    )
-
-
-@login_required
 def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
 
-    page = get_dpm_deep_edit_page_data(
+    page = get_dpm_detail_page_data(
         user=request.user,
         dailyplan_id=dailyplan_id,
         dpm_id=dailyplanmeal_id,
@@ -211,7 +178,7 @@ def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
                 quantity=request.POST.get("quantity"),
             )
 
-        page = get_dpm_deep_edit_page_data(
+        page = get_dpm_detail_page_data(
             user=request.user,
             dailyplan_id=dailyplan_id,
             dpm_id=dailyplanmeal_id,
@@ -264,7 +231,7 @@ def dailyplan_add_meal(request, pk=None):
 
     if not meal_id:
         messages.error(request, "Debes seleccionar una meal.")
-        return redirect("dailyplan_edit", dailyplan.pk)
+        return redirect("dailyplan_detail", dailyplan.pk)
 
     meal_original = get_object_or_404(
         Meal,
@@ -288,7 +255,7 @@ def dailyplan_add_meal(request, pk=None):
 
     messages.success(request, "Meal added to daily plan")
 
-    return redirect("dailyplan_edit", dailyplan.pk)
+    return redirect("dailyplan_detail", dailyplan.pk)
 
 
 @login_required
@@ -312,7 +279,7 @@ def dailyplanmeal_remove(request, dailyplan_id, dailyplanmeal_id):
 
     messages.success(request, "Meal eliminada del daily plan")
 
-    return redirect("dailyplan_edit", dailyplan.pk)
+    return redirect("dailyplan_detail", dailyplan.pk)
 
 
 @login_required
@@ -337,7 +304,7 @@ def dailyplanmeal_update(request, dailyplan_id, dailyplanmeal_id):
     meal_id = request.POST.get("meal_id")
     if not meal_id:
         messages.error(request, "Debes seleccionar una meal.")
-        return redirect("dailyplan_edit", dailyplan.pk)
+        return redirect("dailyplan_detail", dailyplan.pk)
 
     selected_meal = get_object_or_404(
         Meal,
@@ -373,7 +340,7 @@ def dailyplanmeal_update(request, dailyplan_id, dailyplanmeal_id):
 
     messages.success(request, "Meal actualizada correctamente.")
 
-    return redirect("dailyplan_edit", dailyplan.pk)
+    return redirect("dailyplan_detail", dailyplan.pk)
 
 # LEGACY: this flow links meals directly and does not respect snapshot isolation.
 # Keep temporarily until replacement flow is covered by tests and confirmed unused.
@@ -417,9 +384,9 @@ def dailyplanmeal_create_meal(request, dailyplan_id, dailyplanmeal_id):
     messages.success(request, "Nueva meal creada en este slot")
 
     return redirect(
-        "dailyplanmeal_deepedit",
+        "dailyplan_meal_detail",
         dailyplan_id=dailyplan_id,
-        dailyplanmeal_id=dpm.id
+        pk=dpm.id,
     )
 
 

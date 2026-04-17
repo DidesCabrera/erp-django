@@ -36,7 +36,7 @@ class DailyPlanMealPickerTests(TestCase):
             is_draft=False,
         )
 
-    def test_dailyplan_edit_picker_browse_meals_should_only_include_current_user_library_meals(self):
+    def test_dailyplan_detail_picker_browse_meals_should_only_include_current_user_library_meals(self):
         self.library_meal = Meal.objects.create(
             name="Library meal",
             created_by=self.user,
@@ -80,7 +80,7 @@ class DailyPlanMealPickerTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplan_edit", args=[self.dailyplan.id])
+            reverse("dailyplan_detail", args=[self.dailyplan.id])
         )
 
         self.assertEqual(response.status_code, 200)
@@ -95,7 +95,7 @@ class DailyPlanMealPickerTests(TestCase):
         self.assertNotIn("DPM meal", browse_names)
         self.assertNotIn("Other user meal", browse_names)
 
-    def test_dailyplan_edit_picker_payload_has_expected_shape(self):
+    def test_dailyplan_detail_picker_payload_has_expected_shape(self):
         Meal.objects.create(
             name="Library meal",
             created_by=self.user,
@@ -106,7 +106,7 @@ class DailyPlanMealPickerTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplan_edit", args=[self.dailyplan.id])
+            reverse("dailyplan_detail", args=[self.dailyplan.id])
         )
 
         self.assertEqual(response.status_code, 200)
@@ -120,7 +120,7 @@ class DailyPlanMealPickerTests(TestCase):
         self.assertIsInstance(payload["browse_meals"], list)
         self.assertIsInstance(payload["existing_meals"], list)
 
-    def test_dailyplan_edit_picker_includes_current_user_library_meal_id(self):
+    def test_dailyplan_detail_picker_includes_current_user_library_meal_id(self):
         self.library_meal = Meal.objects.create(
             name="Visible meal",
             created_by=self.user,
@@ -131,7 +131,7 @@ class DailyPlanMealPickerTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplan_edit", args=[self.dailyplan.id])
+            reverse("dailyplan_detail", args=[self.dailyplan.id])
         )
 
         self.assertEqual(response.status_code, 200)
@@ -145,7 +145,7 @@ class DailyPlanMealPickerTests(TestCase):
         self.assertIn(self.library_meal.id, browse_ids)
         self.assertIn("Visible meal", browse_names)
 
-    def test_dailyplan_edit_picker_existing_meals_includes_dailyplan_meals(self):
+    def test_dailyplan_detail_picker_existing_meals_includes_dailyplan_meals(self):
         self.dpm_meal = Meal.objects.create(
             name="DPM meal",
             created_by=self.user,
@@ -162,7 +162,7 @@ class DailyPlanMealPickerTests(TestCase):
         )
 
         response = self.client.get(
-            reverse("dailyplan_edit", args=[self.dailyplan.id])
+            reverse("dailyplan_detail", args=[self.dailyplan.id])
         )
 
         self.assertEqual(response.status_code, 200)

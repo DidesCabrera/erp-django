@@ -1,46 +1,42 @@
 <div data-page="dailyplan-detail">
  
-    <!-- HEADER CARD ========================================= -->
     <div class="card-title main">
         {% include "components/card_main_title_edit_dailyplan.html" with titulo=main_card.titulo main_id=main_card.main_id%}
     </div>  
     
 
-        
+    <!-- KPI ========================================= -->
     {% if main_card.show_kpis %}
-
-        <!-- KPI ========================================= -->
-        <div class="page-kpi">
-            <h3>Información Nutricional</h3>
-            <div class="card-kpi main">
-                {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
+    <div class="page-kpi">
+        <h3>Información Nutricional</h3>
+        <div class="card-kpi main">
+            {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
+        </div>
+    </div>
+    <hr>
+    {% endif %}
+    
+    <!-- COMIDAS EN PLAN ========================================= -->
+    <div class="page-detail">
+        <div class="title-section-panels">
+            <h3>Comidas en este Plan</h3>
+            <div class="add-title">
+                <i data-lucide="plus" class="add-row-icon"></i>
+                <i data-lucide="utensils" class="add-row-icon"></i>
+                <h4 id="meal-form-title">Agrega una Comida</h4>
             </div>
         </div>
-
-        <hr>
-    {% endif %}
-
-
-    <!-- PICKER ========================================= -->
-    {% include "components/picker_block_meal.html" with meals=meals main_id=main_card.main_id%}
-
-
-    {% if main_card.show_kpis %}
-    <hr>
-
-        <!-- TABLE ========================================= -->
-        <div class="page-detail">
-            <h3>Comidas en este Plan</h3>
+        {% include "components/picker_block_meal.html" with meals=meals main_id=main_card.main_id%}
         
-            {% with panel_id=main_card.main_id|default:"main-dailyplan-edit" %}
-                <div class="card-detail-block">
-                    {% include "components/detail_tabs_meals.html" with panel_id=panel_id %}
-                    {% include "components/detail_panels_meals.html" with panel_id=panel_id menu=main_card.menu items=main_card.table.items is_edit=True %}
-                </div>
-            {% endwith %}
-        </div>
+        {% with panel_id=main_card.main_id|default:"main-dailyplan-edit" %}
+            <div class="card-detail-block">
+                {% include "components/detail_tabs_meals.html" with panel_id=panel_id %}
+                {% include "components/detail_panels_meals.html" with panel_id=panel_id menu=main_card.menu items=main_card.table.items is_edit=True %}
+            </div>
+        {% endwith %}
+    </div>
 
-    {% endif %}
+    
 
     <hr>
 

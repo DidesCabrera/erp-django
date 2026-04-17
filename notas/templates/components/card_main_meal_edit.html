@@ -1,46 +1,43 @@
-
-
 <div data-page="meal-detail">
  
     <div class="card-title main">
         {% include "components/card_main_title_edit_meal.html" with titulo=main_card.titulo main_id=main_card.main_id %}
     </div>  
-    
-    
-    
-    {% if main_card.show_kpis %}
 
-        <!-- KPI ========================================= -->
-        <div class="page-kpi">        
-            <h3>Información Nutricional</h3>
-            <div class="card-kpi main">
-                {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
+    <!-- KPI ========================================= -->
+    {% if main_card.show_kpis %}
+    <div class="page-kpi">        
+        <h3>Información Nutricional</h3>
+        <div class="card-kpi main">
+            {% include "components/dash_kpi.html" with kpis=main_card.kpis %}
+        </div>
+    </div>
+    <hr>
+    {% endif %}
+
+    
+    <hr>
+    <!-- ALIMENTOS EN COMIDA ========================================= -->    
+    <div class="page-detail">
+        <div class="title-section-panels">
+            <h3>Alimentos en esta Comida</h3>
+            <div class="add-title">
+                <i data-lucide="plus" class="add-row-icon"></i>
+                <i data-lucide="carrot" class="add-row-icon"></i>
+                <h4 id="food-form-title">Agrega un Alimento</h4>
             </div>
         </div>
-
-        <hr>
-    {% endif %}
-
-    <!-- ********** ADD MEALS ************** -->
-    {% include "components/picker_block_food.html" with main_id=main_card.main_id %}
-
-
-    {% if main_card.show_kpis %}
-    <hr>
-
-        <!-- MEALS TABLE ========================================= -->    
-        <div class="page-detail">
-            <h3>Alimentos en esta Comida</h3>
+        {% include "components/picker_block_food.html" with main_id=main_card.main_id %}
         
-            {% with panel_id=main_card.main_id|default:"main-meal-edit" %}
-                <div class="card-detail-block">
-                    {% include "components/detail_tabs_foods.html" with panel_id=panel_id %}
-                    {% include "components/detail_panels_foods.html" with panel_id=panel_id foods=main_card.foods_aggregation items=main_card.table.items desktop_grid_template="components/grid_foods_edit.html" main_id=main_card.main_id %}
-                </div>
-            {% endwith %}
-        </div>
+        {% with panel_id=main_card.main_id|default:"main-meal-edit" %}
+            <div class="card-detail-block">
+                {% include "components/detail_tabs_foods.html" with panel_id=panel_id %}
+                {% include "components/detail_panels_foods.html" with panel_id=panel_id foods=main_card.foods_aggregation items=main_card.table.items desktop_grid_template="components/grid_foods_edit.html" main_id=main_card.main_id %}
+            </div>
+        {% endwith %}
+    </div>
         
-    {% endif %}
+
 
     <hr>
     

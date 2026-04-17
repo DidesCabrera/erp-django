@@ -72,16 +72,17 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         ),
     },
 
-    "deep_edit": {
-        "label": "Editar Alimentos",
+    "edit": {
+        "label": "Editar",
         "method": "get",
         "group": "primary",
-        "icon": "pencil",
+        "icon": "settings-2",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
-            "dailyplanmeal_deepedit",
+            "dailyplan_meal_edit",
             args=[dpm.dailyplan.id, dpm.id],
         ),
+        "capability": "can_edit_own_content",
     },
 }
 
@@ -100,13 +101,10 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     DAILYPLAN_MEAL_VIEWMODE_DETAIL: [
         "back_dp_detail",
         "replace",
-        "deep_edit",
-        "remove"
+        "edit",
+        "remove",
     ],
 
-    DAILYPLAN_MEAL_VIEWMODE_PERSONAL_DEEP_EDIT:[
-        "back_dpm_detail",
-    ],
 
     DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT:[
         "back_dpm_detail",
@@ -117,7 +115,6 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     # ===============================
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
-        "deep_edit",
         "remove",
         "detail",
     ],
@@ -125,13 +122,8 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     DAILYPLAN_VIEWMODE_EXPLORE_DETAIL: [],
     DAILYPLAN_VIEWMODE_SHARED_DETAIL: [],
     DAILYPLAN_VIEWMODE_DRAFT_DETAIL: [
-        "deep_edit",
         "remove",
-    ],
-    DAILYPLAN_VIEWMODE_PERSONAL_EDIT: [
-        "deep_edit",
-        "remove",
-    ],
+    ]
 }
 
 

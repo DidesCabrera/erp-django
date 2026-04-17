@@ -202,19 +202,6 @@ DAILYPLAN_ACTION_DEFINITIONS = {
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
-    # Proveniente de un configure o deep edit
-    "back_to_edit": {
-        "label": "Volver",
-        "method": "post",
-        "group": "primary",
-        "icon": "chevron-left",
-        "order": 90,
-        "is_back": True,
-        "get_url": lambda dp, context=None: reverse(
-            "dailyplan_edit", args=[dp.id]
-        ),
-    },
-
     # Proveniente de un detail
     "back_to_list": {
         "label": "Volver",
@@ -283,16 +270,9 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     ],
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
-        #"share",
         "back_to_list",
-        "edit",
-        "fork",
-        "remove",
-    ],
-
-    DAILYPLAN_VIEWMODE_PERSONAL_EDIT: [
-        "back_detail",
         "configure",
+        "fork",
         "remove",
     ],
 
@@ -337,7 +317,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
     ],
 
     DAILYPLAN_VIEWMODE_CONFIGURE: [
-        "back_to_edit",
+        "back_detail",
     ]
 
 }

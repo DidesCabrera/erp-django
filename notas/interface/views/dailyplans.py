@@ -28,7 +28,6 @@ from notas.presentation.viewmodels.base_vm import BaseVM
 from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
 from notas.application.use_cases.dailyplan_pages import (
-    get_dailyplan_edit_page_data,
     get_dailyplan_detail_page_data,
     get_dailyplan_list_page_data,
     get_dailyplan_explore_list_page_data,
@@ -235,6 +234,7 @@ def dailyplan_detail(request, pk):
         user=request.user,
         dailyplan_id=pk,
         viewmode=DAILYPLAN_VIEWMODE_PERSONAL_DETAIL,
+        request_get=request.GET,
     )
 
     content_vm = build_dailyplan_detail_vm(
@@ -251,11 +251,18 @@ def dailyplan_detail(request, pk):
         content=content_vm,
     )
 
+    context = base_vm.as_context()
+    context["meal_picker_data_json"] = page.meal_picker_data_json
+    context["meal_picker_context"] = page.meal_picker_context_json
+    context["selected_meal_id"] = page.selected_meal_id
+    context["editing_dailyplanmeal_id"] = page.editing_dailyplanmeal_id
+
     return render(
         request,
         "notas/dailyplans/detail.html",
-        base_vm.as_context(),
+        context,
     )
+
 
 @login_required
 def dailyplan_explore_detail(request, pk):
@@ -350,46 +357,9 @@ def dailyplan_draft_detail(request, pk):
 
 
 @login_required
-def dailyplan_edit(request, pk):
-
-    page = get_dailyplan_edit_page_data(
-        user=request.user,
-        dailyplan_id=pk,
-        request_get=request.GET,
-        is_draft=False,
-    )
-
-    content_vm = build_dailyplan_detail_vm(
-        page.detail_content_data,
-    )
-
-    ui_vm = build_ui_vm(
-        page.viewmode,
-        instance=page.dailyplan,
-    )
-
-    base_vm = BaseVM(
-        ui=ui_vm,
-        content=content_vm,
-    )
-
-    context = base_vm.as_context()
-    context["meal_picker_data_json"] = page.meal_picker_data_json
-    context["meal_picker_context"] = page.meal_picker_context_json
-    context["selected_meal_id"] = page.selected_meal_id
-    context["editing_dailyplanmeal_id"] = page.editing_dailyplanmeal_id
-
-    return render(
-        request,
-        "notas/dailyplans/edit.html",
-        context,
-    )
-
-
-@login_required
 def dailyplan_draft_edit(request, pk):
 
-    page = get_dailyplan_edit_page_data(
+    page = get_dailyplan_detail_page_data(
         user=request.user,
         dailyplan_id=pk,
         request_get=request.GET,
@@ -450,7 +420,7 @@ def dailyplan_create(request):
             name=name,
             created_by=request.user
         )
-        return redirect("dailyplan_edit", pk=dailyplan.pk)
+        return redirect("dailyplan_detail", pk=dailyplan.pk)
 
     return render(
         request,
@@ -478,7 +448,7 @@ def dailyplan_rename(request, pk):
         dailyplan.save()
 
         messages.success(request, "Nombre actualizado.")
-        return redirect("dailyplan_edit", pk=pk)
+        return redirect("dailyplan_detail", pk=pk)
 
     return render(
         request,
@@ -501,7 +471,7 @@ def dailyplan_configure(request, pk):
 
     if not caps or not caps.can_access_distribution_settings():
         messages.error(request, "Your plan cannot configure daily plan distribution.")
-        return redirect("dailyplan_edit", pk=pk)
+        return redirect("dailyplan_detail", pk=pk)
 
     # =====================
     # POST
@@ -529,7 +499,7 @@ def dailyplan_configure(request, pk):
 
         messages.success(request, "Configuración guardada")
 
-        return redirect("dailyplan_edit", pk=pk)
+        return redirect("dailyplan_detail", pk=pk)
 
     # =====================
     # VIEWMODEL
@@ -632,7 +602,7 @@ def create_meal_for_dailyplan(request, dailyplan_id):
             pending_dailyplan=dailyplan,
         )
 
-        return redirect("meal_edit", pk=meal.id)
+        return redirect("meal_detail", pk=meal.id)
 
     return render(
         request,

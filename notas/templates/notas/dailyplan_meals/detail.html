@@ -4,17 +4,18 @@ Meal – {{ vm.meal.name }}
 {% endblock %}
 {% block content %}
 
-<div class="page--minicard">
+<div class="page--minicard {% if foods_json and foods_json != '[]' %}edit{% endif %}">
   {% include "components/card_mini_dpm.html" with child=vm.content.father_card %}
 </div>
 
 <div class="page page--detail dpm dpm_meal" data-page="meal-detail">
-  
-    <!-- MAIN CARD ====-->  
-    {% include "components/card_main_dpm.html" with main_card=vm.content.main_card %}
-  
-</div>
 
-<!-- DEBO INCLUIR FOODS LIST -->
+  {% if foods_json and foods_json != "[]" %}
+    {% include "components/card_main_dpm_edit.html" with main_card=vm.content.main_card %}
+  {% else %}
+    {% include "components/card_main_dpm.html" with main_card=vm.content.main_card %}
+  {% endif %}
+
+</div>
 
 {% endblock %}

@@ -31,7 +31,6 @@ from notas.application.use_cases.meal_pages import (
     get_meal_explore_list_page_data,
     get_meal_shared_list_page_data,
     get_meal_draft_list_page_data,
-    get_meal_edit_page_data,
 )
 
 from notas.application.services.commands.meal_commands import (
@@ -245,7 +244,49 @@ def meal_detail(request, pk):
         user=request.user,
         meal_id=pk,
         viewmode=MEAL_VIEWMODE_PERSONAL_DETAIL,
+        request_get=request.GET,
     )
+
+    meal = page.meal
+
+    if request.method == "POST":
+
+        if "finish_for_dailyplan" in request.POST:
+            if meal.pending_dailyplan:
+                dailyplan_id = meal.pending_dailyplan.id
+
+                meal.pending_dailyplan = None
+                meal.save(update_fields=["pending_dailyplan"])
+
+                return redirect(
+                    reverse("dailyplan_detail", args=[dailyplan_id]) +
+                    f"?select_meal={meal.id}"
+                )
+
+        elif "save_food" in request.POST:
+            mf_id = request.POST.get("mealfood_id")
+            quantity = request.POST.get("quantity")
+            food_id = request.POST.get("food_id")
+
+            if mf_id:
+                mf = get_object_or_404(
+                    MealFood,
+                    pk=mf_id,
+                    meal=meal,
+                )
+                mf.quantity = quantity
+                mf.save()
+            else:
+                MealFood.objects.create(
+                    meal=meal,
+                    food_id=food_id,
+                    quantity=quantity,
+                )
+
+            meal = Meal.objects.get(pk=meal.pk)
+            meal.update_draft_status()
+
+            return redirect("meal_detail", pk=meal.id)
 
     content_vm = build_meal_detail_vm(
         page.detail_content_data,
@@ -261,11 +302,20 @@ def meal_detail(request, pk):
         content=content_vm,
     )
 
+    context = base_vm.as_context()
+
+    context["show_return_to_dailyplan"] = page.show_return_to_dailyplan
+    context["foods_json"] = page.foods_json
+    context["food_picker_context"] = page.food_picker_context_json
+    context["editing_mealfood_id"] = page.editing_mealfood_id
+    context["selected_food_id"] = page.selected_food_id
+
     return render(
         request,
         "notas/meals/detail.html",
-        base_vm.as_context(),
+        context,
     )
+
 
 
 @login_required
@@ -328,114 +378,6 @@ def meal_share_detail(request, pk, dailyplan_id=None):
     )
 
 
-#************ RENDER DE EDICION *********************
-
-# ---------- EDIT ----------
-
-@login_required
-def meal_edit(request, pk):
-
-    user = request.user
-
-    caps = get_capabilities(user)
-    if not caps or not caps.can_edit_own_content():
-        return HttpResponseForbidden("You cannot edit this meal")
-
-    # ==================================================
-    # Page data
-    # ==================================================
-    page = get_meal_edit_page_data(
-        user=user,
-        meal_id=pk,
-        request_get=request.GET,
-        personal_edit_viewmode=MEAL_VIEWMODE_PERSONAL_EDIT,
-        personal_edit_from_dailyplan_viewmode=MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN,
-    )
-
-    meal = page.meal
-
-    # ==================================================
-    # POST handling
-    # ==================================================
-    if request.method == "POST":
-
-        # ----------------------------------------------
-        # Finish meal (return to dailyplan)
-        # ----------------------------------------------
-        if "finish_for_dailyplan" in request.POST:
-
-            if meal.pending_dailyplan:
-                dailyplan_id = meal.pending_dailyplan.id
-
-                meal.pending_dailyplan = None
-                meal.save(update_fields=["pending_dailyplan"])
-
-                return redirect(
-                    reverse("dailyplan_edit", args=[dailyplan_id]) +
-                    f"?select_meal={meal.id}"
-                )
-
-        # ----------------------------------------------
-        # Save / update food
-        # ----------------------------------------------
-        elif "save_food" in request.POST:
-
-            mf_id = request.POST.get("mealfood_id")
-            quantity = request.POST.get("quantity")
-            food_id = request.POST.get("food_id")
-
-            if mf_id:
-                mf = get_object_or_404(
-                    MealFood,
-                    pk=mf_id,
-                    meal=meal,
-                )
-                mf.quantity = quantity
-                mf.save()
-
-            else:
-                MealFood.objects.create(
-                    meal=meal,
-                    food_id=food_id,
-                    quantity=quantity,
-                )
-
-            meal = Meal.objects.get(pk=meal.pk)
-            meal.update_draft_status()
-
-            return redirect("meal_edit", pk=meal.id)
-
-    # ==================================================
-    # ViewModel
-    # ==================================================
-    content_vm = build_meal_detail_vm(
-        page.detail_content_data,
-    )
-
-    ui_vm = build_ui_vm(
-        page.viewmode,
-        instance=page.meal,
-    )
-
-    base_vm = BaseVM(
-        ui=ui_vm,
-        content=content_vm,
-    )
-
-    context = base_vm.as_context()
-
-    context["show_return_to_dailyplan"] = page.show_return_to_dailyplan
-    context["foods_json"] = page.foods_json
-    context["food_picker_context"] = page.food_picker_context_json
-    context["editing_mealfood_id"] = page.editing_mealfood_id
-    context["selected_food_id"] = page.selected_food_id
-
-    return render(
-        request,
-        "notas/meals/edit.html",
-        context,
-    )
-
 #************ RENDER BÁSICOS *********************
 # ---------- CREATE - RENAME - CONFIGURE ----------
 
@@ -464,7 +406,7 @@ def meal_create(request):
             meal.save()
 
         # 3. Ir siempre al builder normal
-        return redirect("meal_edit", pk=meal.id)
+        return redirect("meal_detail", pk=meal.id)
 
     viewmode = MEAL_VIEWMODE_CREATE
 
@@ -497,7 +439,7 @@ def meal_rename(request, pk):
         meal.save()
 
         messages.success(request, "Nombre actualizado correctamente.")
-        return redirect("meal_edit", pk=pk)
+        return redirect("meal_detail", pk=pk)
 
     header = {"title": "Edit meal name"}
 
@@ -521,7 +463,7 @@ def meal_configure(request, pk):
 
     if not caps or not caps.can_access_distribution_settings():
         messages.error(request, "Your plan cannot configure meal distribution.")
-        return redirect("meal_edit", pk=pk)
+        return redirect("meal_detail", pk=pk)
 
     # =====================
     # POST
@@ -560,12 +502,12 @@ def meal_configure(request, pk):
             )
 
             return redirect(
-                "dailyplan_edit",
+                "dailyplan_detail",
                 pk=origin_dailyplan.id
             )
 
         messages.success(request, "Configuration saved")
-        return redirect("meal_edit", pk=pk)
+        return redirect("meal_detail", pk=pk)
 
     # =====================
     # VIEWMODEL

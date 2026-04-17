@@ -16,7 +16,6 @@ from notas.interface.views.meals import (
     meal_list, 
     meal_create,
     meal_configure,
-    meal_edit,
     meal_rename,
     meal_explore_list,
     meal_explore_detail,
@@ -45,7 +44,6 @@ from notas.interface.views.dailyplans import (
     dailyplan_create,
     add_meal_from_list,
     dailyplan_configure,
-    dailyplan_edit,
     dailyplan_rename,
     dailyplan_explore_list,
     dailyplan_explore_detail, 
@@ -75,7 +73,6 @@ from notas.interface.views.dailyplan_meals import (
     replace_meal,
     dailyplanmeal_remove,
     dailyplanmeal_update,
-    dailyplanmeal_deepedit,
     dailyplanmeal_create_meal,
 )
 
@@ -161,7 +158,6 @@ urlpatterns = [
     path("meals/explore/", meal_explore_list, name="meal_explore_list"),
     path("meals/<int:pk>/", meal_detail, name="meal_detail"),
     path("meals/explore/<int:pk>/", meal_explore_detail, name="meal_explore_detail"),
-    path("meals/<int:pk>/edit/", meal_edit, name="meal_edit"),
     path("meals/create/", meal_create, name="meal_create"),
     path("meals/<int:pk>/rename/", meal_rename, name="meal_rename"),
     path("meals/<int:pk>/configure/", meal_configure, name="meal_configure"),
@@ -194,7 +190,6 @@ urlpatterns = [
     path("dailyplans/<int:dailyplan_id>/attach-meal/<int:meal_id>/", attach_meal_to_dailyplan, name="attach_meal_to_dailyplan"),
     path('dailyplans/<int:dailyplan_id>/fork/', dailyplan_fork, name='dailyplan_fork'),
     path("dailyplans/<int:pk>/copy/", dailyplan_copy, name="dailyplan_copy"),
-    path("dailyplans/<int:pk>/edit/", dailyplan_edit, name="dailyplan_edit"),
     path("dailyplans/draft/<int:pk>/edit/", dailyplan_draft_edit, name="dailyplan_draft_edit"),
 
     
@@ -213,11 +208,6 @@ urlpatterns = [
         "dailyplans/<int:dailyplan_id>/meals/<int:pk>/",
         dailyplan_meal_detail,
         name="dailyplan_meal_detail"
-    ),
-    path(
-        "dailyplans/<int:dailyplan_id>/meals/<int:dailyplanmeal_id>/deepedit/",
-        dailyplanmeal_deepedit,
-        name="dailyplanmeal_deepedit"
     ),
     path(
         "dailyplans/<int:dailyplan_id>/meals/<int:dailyplanmeal_id>/update/",
