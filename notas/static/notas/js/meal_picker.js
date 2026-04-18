@@ -18,9 +18,7 @@ import {
 
 import { renderMealItem } from "./meal_item_list.js";
 
-
 document.addEventListener("DOMContentLoaded", () => {
-
   const ctx = window.MEAL_PICKER_CONTEXT;
   const pickerData = window.MEAL_PICKER_DATA || {};
 
@@ -91,10 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedMeal = null;
     hidden.value = "";
     input.value = "";
-  
+
     previewBox.style.display = "none";
     form.classList.remove("has-selection");
-  
+
     if (btnCancelInline) {
       btnCancelInline.style.display = "inline-block";
     }
@@ -139,36 +137,51 @@ document.addEventListener("DOMContentLoaded", () => {
     return mealById.get(Number(mealId)) || null;
   }
 
+  function expandPickerSection() {
+    const pickerSection = document.getElementById("dailyplan-picker-section");
+    const pickerToggle = document.querySelector(
+      '.js-picker-toggle[aria-controls="dailyplan-picker-section"]'
+    );
+
+    if (pickerSection) {
+      pickerSection.classList.remove("is-collapsed");
+    }
+
+    if (pickerToggle) {
+      pickerToggle.setAttribute("aria-expanded", "true");
+    }
+  }
+
   // ---------------------------
   // Meal list
   // ---------------------------
 
   function renderMealList(items) {
     list.innerHTML = "";
-  
+
     if (!Array.isArray(items) || !items.length) {
       list.innerHTML = `<li class="empty">No meals found</li>`;
       return;
     }
-  
+
     items.forEach(meal => {
       if (!meal || !meal.name) return;
-  
+
       try {
         const li = document.createElement("li");
         li.className = "food-item";
         li.innerHTML = renderMealItem(meal);
-  
+
         li.addEventListener("click", () => {
           applySelectedMeal(meal);
-        
+
           if (btnCancelInline) {
             btnCancelInline.style.display = "none";
           }
-        
+
           closeList();
         });
-  
+
         list.appendChild(li);
       } catch (error) {
         console.error("Error renderizando meal del selector:", meal, error);
@@ -301,6 +314,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       enterEditMode();
       applySelectedMeal(meal);
+
+      if (btnCancelInline) {
+        btnCancelInline.style.display = "none";
+      }
+
       closeList();
     });
   });
@@ -326,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearSelection();
       enterAddMode();
       closeList();
-  
+
       document.dispatchEvent(new CustomEvent("picker:close", {
         detail: { sectionId: "dailyplan-picker-section" }
       }));
@@ -343,12 +361,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const meal = findMealById(initialMealId);
 
     if (meal) {
+      expandPickerSection();
       applySelectedMeal(meal);
+
+      if (btnCancelInline) {
+        btnCancelInline.style.display = "none";
+      }
+
+      closeList();
 
       const url = new URL(window.location);
       url.searchParams.delete("select_meal");
       window.history.replaceState({}, "", url);
     }
   }
-
 });

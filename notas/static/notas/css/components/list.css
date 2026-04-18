@@ -7,7 +7,6 @@
 .dailyplan-detail__children-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
 }
 
 @media (max-width: 980px) {
@@ -21,10 +20,6 @@
     .dailyplan-detail__children-separator {
         margin-left: 16px;
         margin-right: 16px;
-    }
-
-    .dailyplan-detail__children-list {
-        gap: 0;
     }
 
     .dailyplan-detail__child-card {

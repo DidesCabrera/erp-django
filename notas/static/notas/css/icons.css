@@ -70,12 +70,17 @@
   }
 
   .search-icon-add-row-icon{
-    height: 18px;
-    width: 18px;
+    height: 20px;
+    width: 20px;
     margin: 0px 4px;
     stroke-width: 2;
     flex-shrink: 0;
-    color: rgb(60, 60, 60);
+    color: rgb(28, 28, 28);
+
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .dpm-icon{
@@ -267,10 +272,6 @@
     .action-card-icon{
         height: 22px;
         width: 22px;
-    }
-
-    .search-icon-add-row-icon{
-      display: none;
     }
 
 }

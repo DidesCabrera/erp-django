@@ -86,8 +86,8 @@
   
     /* Control de columnas */
     grid-template-columns:
-      55px    /* label */
-      55px    /* extra */
+      60px    /* label */
+      60px    /* extra */
       55px    /* grams */
       1fr;    /* alloc (flexible) */
   
@@ -156,7 +156,7 @@
     height: 24px; 
     background-color: var(--color-ppk); 
     border-radius: 5px;
-    margin-left: 10px;
+    width: 100%;
 
     display: flex;
     flex-direction: column;
