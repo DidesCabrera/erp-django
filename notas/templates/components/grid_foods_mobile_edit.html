@@ -1,0 +1,47 @@
+<div class="data-grid data-grid--mobile-foods-edit">
+
+    <div class="data-grid-header data-grid-header--mobile-foods-edit">
+        <div class="data-grid-col data-grid-col--name">Food</div>
+        <div class="data-grid-col data-grid-col--edit"></div>
+        <div class="data-grid-col data-grid-col--delete"></div>
+    </div>
+
+    {% for row in items %}
+        <div class="data-grid-row data-grid-row--mobile-foods-edit">
+
+            <div class="data-grid-cell data-grid-cell--name">
+                <div class="truncate">{{ row.rel.name }}</div>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--edit">
+                <button
+                    type="button"
+                    class="edit-food-btn"
+                    data-id="{{ row.rel.id }}"
+                    data-food-id="{{ row.child.id }}"
+                    data-name="{{ row.rel.name }}"
+                    data-qty="{{ row.rel.quantity|floatformat:0 }}"
+                    data-update-url="{% url 'mealfood_update' main_id row.rel.id %}"
+                >
+                    <i data-lucide="pencil" class="table-icon"></i>
+                </button>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--delete">
+                <form method="post" action="{% url 'mealfood_remove' row.rel.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="return_to" value="{{ request.path }}">
+                    <button type="submit">
+                        <i data-lucide="trash" class="table-icon"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="data-grid-empty">
+            No foods added yet.
+        </div>
+    {% endfor %}
+
+</div>

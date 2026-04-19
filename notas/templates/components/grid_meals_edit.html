@@ -12,7 +12,6 @@
         <div class="data-grid-col data-grid-col--alloc">F kcal%</div>
         <div class="data-grid-col data-grid-col--action"></div>
         <div class="data-grid-col data-grid-col--action"></div>
-        <div class="data-grid-col data-grid-col--action"></div>
     </div>
 
     {% for row in items %}
@@ -55,12 +54,6 @@
             </div>
 
             <div class="data-grid-cell data-grid-cell--action">
-                <button type="button">
-                    <i data-lucide="pencil" class="table-icon"></i>
-                </button>
-            </div>
-
-            <div class="data-grid-cell data-grid-cell--action">
                 <button
                     type="button"
                     class="edit-meal-btn"
@@ -81,6 +74,7 @@
             <div class="data-grid-cell data-grid-cell--action">
                 <form method="post" action="{% url 'dailyplanmeal_remove' row.child_id row.rel.id %}">
                     {% csrf_token %}
+                    <input type="hidden" name="return_to" value="{{ request.path }}?panel=edit">
                     <button type="submit">
                         <i data-lucide="trash" class="table-icon"></i>
                     </button>

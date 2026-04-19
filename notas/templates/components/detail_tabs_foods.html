@@ -1,11 +1,13 @@
 <div class="card-detail-tabs card-detail-tabs--desktop block-desplegar-tabla block-card-desplegar">
-    <div class="btn-desplegar is-active" data-target="#card-foods-aggregation-{{ panel_id }}">
+
+    <div class="btn-desplegar is-active" data-target="#card-menu-{{ panel_id }}">
         <p>Alimentos</p>
     </div>
 
     <div class="btn-desplegar" data-target="#card-grid-foods-{{ panel_id }}">
         <p>Tabla Nutricional</p>
     </div>
+
 </div>
 
 <div class="card-detail-tabs-mobile">
@@ -32,4 +34,14 @@
     >
         Alloc
     </button>
+
+    {% if show_mobile_edit_tab %}
+    <button
+        type="button"
+        class="btn-desplegar-mobile"
+        data-target="#card-grid-edit-mobile-{{ panel_id }}"
+    >
+        Editar
+    </button>
+    {% endif %}
 </div>

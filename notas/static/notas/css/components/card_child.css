@@ -93,7 +93,7 @@ BOTTOM
 @media (max-width: 768px) {
   
   .card {
-    padding: 15px 15px 15px 15px;;
+    padding: 15px 15px 20px 15px;;
   }
 
   .card-main {
@@ -192,7 +192,7 @@ BOTTOM
 
 @media (max-width: 980px) {
   .btn-desplegar-mobile {
-    padding: 6px 12px;
+    padding: 4px 12px;
     border-radius: 12px;
   }
   
@@ -279,6 +279,10 @@ BOTTOM
     .card-detail-tabs-mobile {
         display: flex;
     }
+
+    .card-bottom {
+      margin: 20px 0 0 0;
+    }
 }
 
 @media (max-width: 980px) {
@@ -300,3 +304,18 @@ BOTTOM
 }
 
 
+@media (max-width: 980px) {
+  .card-table-foods,
+  .card-table-meals {
+    display: none !important;
+    opacity: 0 !important;
+  }
+}
+
+@media (min-width: 981px) {
+  .card-table-foods-mobile,
+  .card-table-meals-mobile {
+    display: none !important;
+    opacity: 0 !important;
+  }
+}

@@ -21,7 +21,7 @@
         {% with panel_id=main_card.main_id|default:"main-dailyplan" %}
             <div class="card-detail-block">
                 {% include "components/detail_tabs_meals.html" with panel_id=panel_id %}
-                {% include "components/detail_panels_meals.html" with panel_id=panel_id menu=main_card.menu items=main_card.table.items is_edit=False %}
+                {% include "components/detail_panels_meals.html" with panel_id=panel_id menu=main_card.menu items=main_card.table.items %}
             </div>
         {% endwith %}
     </div>

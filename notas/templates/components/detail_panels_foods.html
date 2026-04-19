@@ -1,14 +1,28 @@
-<div id="card-foods-aggregation-{{ panel_id }}" class="card-foods-aggregation">
+<div id="card-menu-{{ panel_id }}" class="card-table-foods">
     {% include "components/grid_foods_aggregation.html" with foods=foods %}
 </div>
 
 <div id="card-grid-foods-{{ panel_id }}" class="card-table-foods">
-    {% if main_id %}
-        {% include desktop_grid_template with items=items main_id=main_id %}
+    {% if nutrition_grid_template %}
+        {% if main_id %}
+            {% include nutrition_grid_template with items=items main_id=main_id %}
+        {% else %}
+            {% include nutrition_grid_template with items=items %}
+        {% endif %}
     {% else %}
-        {% include desktop_grid_template with items=items %}
+        {% include "components/grid_foods.html" with items=items %}
     {% endif %}
 </div>
+
+{% if edit_grid_template %}
+<div id="card-grid-foods-edit-{{ panel_id }}" class="card-table-foods">
+    {% if main_id %}
+        {% include edit_grid_template with items=items main_id=main_id %}
+    {% else %}
+        {% include edit_grid_template with items=items %}
+    {% endif %}
+</div>
+{% endif %}
 
 <div id="card-grid-qty-{{ panel_id }}" class="card-table-foods-mobile">
     {% include "components/grid_foods_mobile_qty.html" with items=items %}
@@ -21,3 +35,9 @@
 <div id="card-grid-alloc-{{ panel_id }}" class="card-table-foods-mobile">
     {% include "components/grid_foods_mobile_alloc.html" with items=items %}
 </div>
+
+{% if show_mobile_edit_panel %}
+<div id="card-grid-edit-mobile-{{ panel_id }}" class="card-table-foods-mobile">
+    {% include "components/grid_foods_mobile_edit.html" with items=items main_id=main_id %}
+</div>
+{% endif %}

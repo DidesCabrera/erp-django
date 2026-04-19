@@ -38,7 +38,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "remove": {
         "label": "Quitar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
@@ -63,7 +63,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "back_dpm_detail": {
         "label": "Finalizar",
         "method": "get",
-        "group": "primary",
+        "group": "overflow",
         "icon": "check",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
@@ -75,7 +75,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "edit": {
         "label": "Editar",
         "method": "get",
-        "group": "primary",
+        "group": "overflow",
         "icon": "settings-2",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(

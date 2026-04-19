@@ -66,7 +66,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "fork": {
         "label": "Duplicar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "copy",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
@@ -116,7 +116,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "copy": {
         "label": "Copiar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
@@ -129,7 +129,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "delete": {
         "label": "Borrar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
@@ -141,7 +141,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "share": {
         "label": "Compartir",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "send",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
@@ -152,7 +152,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "remove": {
         "label": "Remover",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(
@@ -174,7 +174,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "edit": {
         "label": "Editar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "pencil",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(

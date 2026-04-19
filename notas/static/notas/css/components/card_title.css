@@ -192,6 +192,10 @@
     stroke-width: 2.5;
     display: block;
   }
+
+  .card-title-comp h3 {
+    margin-bottom: 0px;
+  }
   
 }
 
@@ -225,13 +229,14 @@
 @media (max-width: 768px) {
   .card-title {
     width: 100%;
-    margin-bottom: 6px;
+    margin-bottom: 14px;
   }
 
   .card-title.main {
     padding-top: 6px;
     padding-left: 8px;
     padding-right: 4px;
+    margin-bottom: 24px;
   }
 
   .label-entity.header{

@@ -94,7 +94,7 @@
     border:1px solid var(--color-border-1);
     border-radius:8px;
     padding:6px;
-    min-width:140px;
+    min-width:200px;
     z-index:20;
   }
   

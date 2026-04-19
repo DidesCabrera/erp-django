@@ -1,0 +1,50 @@
+<div class="data-grid data-grid--mobile-meals-edit">
+
+    <div class="data-grid-header data-grid-header--mobile-meals-edit">
+        <div class="data-grid-col data-grid-col--name">Comidas</div>
+        <div class="data-grid-col data-grid-col--replace"></div>
+        <div class="data-grid-col data-grid-col--delete"></div>
+    </div>
+
+    {% for row in items %}
+        <div class="data-grid-row data-grid-row--mobile-meals-edit">
+
+            <div class="data-grid-cell data-grid-cell--name">
+                <div class="truncate">{{ row.rel.name }}</div>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--replace">
+                <button
+                    type="button"
+                    class="edit-meal-btn"
+                    data-dpm-id="{{ row.rel.id }}"
+                    data-meal-id="{{ row.child_id }}"
+                    data-meal-name="{{ row.rel.name }}"
+                    data-protein="{{ row.rel.g_protein }}"
+                    data-carbs="{{ row.rel.g_carbs }}"
+                    data-fat="{{ row.rel.g_fat }}"
+                    data-kcal="{{ row.rel.total_kcal }}"
+                    data-hour="{{ row.rel.hour }}"
+                    data-note="{{ row.rel.note }}"
+                >
+                    <i data-lucide="refresh-cw" class="table-icon"></i>
+                </button>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--delete">
+                <form method="post" action="{% url 'dailyplanmeal_remove' row.child_id row.rel.id %}">
+                    {% csrf_token %}
+                    <button type="submit">
+                        <i data-lucide="trash" class="table-icon"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="data-grid-empty">
+            No meals added yet.
+        </div>
+    {% endfor %}
+
+</div>

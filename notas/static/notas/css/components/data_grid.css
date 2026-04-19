@@ -40,8 +40,8 @@
         minmax(90px, 1fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
-        32px
-        32px;
+        40px
+        40px;
 }
 
 .data-grid-header--meals,
@@ -70,9 +70,8 @@
         minmax(90px, 1fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
-        32px
-        32px
-        32px;
+        40px
+        40px;
 }
 
 @media (max-width: 980px) {
@@ -157,8 +156,6 @@
         gap: 8px;
     }
 }
-
-
 
 
 .data-grid-cell--action {
@@ -422,9 +419,13 @@
         minmax(220px, 2.1fr);
 }
 
+.data-grid-row--menu {
+    align-items: start;
+}
+
 .data-grid--menu .data-grid-cell--meal{
     font-weight: 600;
-    padding: 8px 4px;
+    padding: 9px 4px;
 
 }
 
@@ -488,4 +489,49 @@
         text-align: center;
         justify-content: center;
     }
+}
+
+.data-grid-header--mobile-foods-edit,
+.data-grid-row--mobile-foods-edit {
+    grid-template-columns:
+        minmax(160px, 1.8fr)
+        minmax(40px, 0.4fr)
+        minmax(40px, 0.4fr);
+}
+
+.data-grid-header--mobile-meals-edit,
+.data-grid-row--mobile-meals-edit {
+    grid-template-columns:
+        minmax(160px, 1.8fr)
+        minmax(40px, 0.4fr)
+        minmax(40px, 0.4fr);
+}
+
+.data-grid-cell--edit,
+.data-grid-cell--replace,
+.data-grid-cell--delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.data-grid-cell--edit form,
+.data-grid-cell--replace form,
+.data-grid-cell--delete form {
+    margin: 0;
+}
+
+.data-grid-cell--edit button,
+.data-grid-cell--replace button,
+.data-grid-cell--delete button,
+.data-grid-cell--edit form button,
+.data-grid-cell--replace form button,
+.data-grid-cell--delete form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    
 }

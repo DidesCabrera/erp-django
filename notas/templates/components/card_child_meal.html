@@ -13,7 +13,7 @@
 {% with panel_id=child_card.id|default:forloop.counter %}
     <div class="card-detail-block">
         {% include "components/detail_tabs_foods.html" with panel_id=panel_id %}
-        {% include "components/detail_panels_foods.html" with panel_id=panel_id foods=child_card.foods_aggregation items=child_card.table.items desktop_grid_template="components/grid_foods.html" %}
+        {% include "components/detail_panels_foods.html" with panel_id=panel_id foods=child_card.foods_aggregation items=child_card.table.items nutrition_grid_template="components/grid_foods.html" %}
     </div>
 {% endwith %}
 

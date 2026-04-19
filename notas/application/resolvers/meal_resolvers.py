@@ -42,7 +42,7 @@ MEAL_ACTION_DEFINITIONS = {
     "configure": {
         "label": "Configurar",
         "method": "get",
-        "group": "primary",
+        "group": "overflow",
         "icon": "settings",
         "order": 90,
         "get_url": lambda meal, context=None: meal_configure_url(meal),
@@ -52,7 +52,7 @@ MEAL_ACTION_DEFINITIONS = {
     "fork": {
         "label": "Duplicar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "copy",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
@@ -88,7 +88,7 @@ MEAL_ACTION_DEFINITIONS = {
     "add_to_dailyplan": {
         "label": "Agregar a Plan",
         "method": "get",
-        "group": "primary",
+        "group": "overflow",
         "icon": "clipboard-plus",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
@@ -101,7 +101,7 @@ MEAL_ACTION_DEFINITIONS = {
     "delete": {
         "label": "Eliminar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
@@ -147,7 +147,7 @@ MEAL_ACTION_DEFINITIONS = {
     "back_to_list": {
         "label": "Volver",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "chevron-left",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
@@ -169,7 +169,7 @@ MEAL_ACTION_DEFINITIONS = {
     "remove": {
         "label": "Eliminar",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
         "get_url": lambda meal, ctx=None: reverse(
@@ -191,7 +191,7 @@ MEAL_ACTION_DEFINITIONS = {
     "share": {
         "label": "Compartir",
         "method": "post",
-        "group": "primary",
+        "group": "overflow",
         "icon": "send",
         "order": 90,
         "get_url": lambda meal, context=None: reverse(
@@ -210,6 +210,15 @@ MEAL_ACTIONS_BY_VIEWMODE = {
         "add_to_dailyplan",
         "detail",
         #"share",
+    ],
+
+
+    MEAL_VIEWMODE_PERSONAL_DETAIL: [
+        "back_to_list",
+        "configure",
+        "fork",
+        "add_to_dailyplan",
+        "remove",
     ],
 
     MEAL_VIEWMODE_EXPLORE_LIST: [
@@ -233,13 +242,6 @@ MEAL_ACTIONS_BY_VIEWMODE = {
     ],
 
 
-    MEAL_VIEWMODE_PERSONAL_DETAIL: [
-        "back_to_list",
-        "configure",
-        "fork",
-        "add_to_dailyplan",
-        "remove",
-    ],
 
     MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN: [
         "configure",

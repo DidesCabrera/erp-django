@@ -1,12 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
   const FADE_OUT_DURATION = 100;
   const FADE_IN_DURATION = 180;
+  const MOBILE_BREAKPOINT = 980;
+
+  function isMobileViewport() {
+    return window.innerWidth <= MOBILE_BREAKPOINT;
+  }
 
   function getButtons(detailBlock) {
     return Array.from(
       detailBlock.querySelectorAll(
         ".card-detail-tabs--desktop [data-target], .card-detail-tabs-mobile [data-target]"
       )
+    );
+  }
+
+  function getButtonsForViewport(detailBlock) {
+    if (isMobileViewport()) {
+      return Array.from(
+        detailBlock.querySelectorAll(".card-detail-tabs-mobile [data-target]")
+      );
+    }
+
+    return Array.from(
+      detailBlock.querySelectorAll(".card-detail-tabs--desktop [data-target]")
     );
   }
 
@@ -106,6 +123,53 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function getRequestedSelector(detailBlock) {
+    const params = new URLSearchParams(window.location.search);
+    const requestedPanel = params.get("panel");
+
+    if (!requestedPanel) return null;
+
+    const buttons = getButtonsForViewport(detailBlock);
+
+    if (requestedPanel === "edit") {
+      const editButton = buttons.find((btn) =>
+        btn.dataset.target.includes("edit")
+      );
+      return editButton ? editButton.dataset.target : null;
+    }
+
+    if (requestedPanel === "nutrition") {
+      const nutritionButton = buttons.find((btn) =>
+        btn.dataset.target.includes("grid-foods") ||
+        btn.dataset.target.includes("grid-meals")
+      );
+      return nutritionButton ? nutritionButton.dataset.target : null;
+    }
+
+    if (requestedPanel === "menu") {
+      const menuButton = buttons.find((btn) =>
+        btn.dataset.target.includes("menu")
+      );
+      return menuButton ? menuButton.dataset.target : null;
+    }
+
+    return null;
+  }
+
+  function getDefaultSelector(detailBlock) {
+    const viewportButtons = getButtonsForViewport(detailBlock);
+    if (!viewportButtons.length) return null;
+
+    const requestedSelector = getRequestedSelector(detailBlock);
+    if (requestedSelector) return requestedSelector;
+
+    const activeButton =
+      viewportButtons.find((button) => button.classList.contains("is-active")) ||
+      viewportButtons[0];
+
+    return activeButton ? activeButton.dataset.target : null;
+  }
+
   function initDetailBlock(detailBlock) {
     const buttons = getButtons(detailBlock);
     if (!buttons.length) return;
@@ -114,12 +178,9 @@ document.addEventListener("DOMContentLoaded", function () {
       hideImmediately(panel);
     });
 
-    const defaultButton =
-      detailBlock.querySelector(".card-detail-tabs--desktop .is-active[data-target]") ||
-      detailBlock.querySelector(".card-detail-tabs-mobile .is-active[data-target]") ||
-      buttons[0];
+    const selector = getDefaultSelector(detailBlock);
+    if (!selector) return;
 
-    const selector = defaultButton.dataset.target;
     const defaultPanel = detailBlock.querySelector(selector);
 
     syncButtons(detailBlock, selector);
@@ -133,9 +194,13 @@ document.addEventListener("DOMContentLoaded", function () {
     detailBlock.dataset.switching = "false";
   }
 
-  document.querySelectorAll(".card-detail-block").forEach((detailBlock) => {
-    initDetailBlock(detailBlock);
-  });
+  function reinitAllDetailBlocks() {
+    document.querySelectorAll(".card-detail-block").forEach((detailBlock) => {
+      initDetailBlock(detailBlock);
+    });
+  }
+
+  reinitAllDetailBlocks();
 
   document.addEventListener("click", function (event) {
     const button = event.target.closest(
@@ -148,5 +213,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!detailBlock) return;
 
     activatePanel(detailBlock, button.dataset.target);
+  });
+
+  let lastIsMobile = isMobileViewport();
+
+  window.addEventListener("resize", function () {
+    const currentIsMobile = isMobileViewport();
+    if (currentIsMobile === lastIsMobile) return;
+
+    lastIsMobile = currentIsMobile;
+    reinitAllDetailBlocks();
   });
 });
