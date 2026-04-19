@@ -129,6 +129,7 @@
 
 .data-grid-cell--alloc {
     min-width: 0;
+    margin-right: 8px;
 }
 
 .alloc-cell--grid {
@@ -493,6 +494,10 @@
     .data-grid-cell--time {
         text-align: center;
         justify-content: center;
+    }
+
+    .data-grid-cell--alloc {
+        margin-right: 0px;
     }
 }
 

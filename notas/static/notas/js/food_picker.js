@@ -197,32 +197,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateQuantity() {
     if (!selectedFood) return;
-
-    const quantity = Number(quantityInput.value);
-    if (!quantity || quantity <= 0) return;
-
+  
+    const rawQuantity = Number(quantityInput.value);
+    const quantity = !rawQuantity || rawQuantity <= 0 ? 0 : rawQuantity;
+  
     hiddenQuantity.value = String(quantity);
-
+  
     const newPortion = portionFromFood(selectedFood, quantity);
     renderPortion(newPortion);
-
+  
     let baseMeal = ctx.meal.kpis;
-
+  
     if (isEdit()) {
       const oldPortion = portionFromFoodById(
         foods,
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
-
+  
       baseMeal = removePortionTotals(ctx.meal.kpis, oldPortion);
     }
-
+  
     const previewMeal = previewTotals(baseMeal, newPortion);
-
+  
     const weight = ctx.meal.kpis.weight;
     previewMeal.ppk = computePPK(previewMeal.protein, weight);
-
+  
     renderPreviewTotals(previewMeal);
   }
 

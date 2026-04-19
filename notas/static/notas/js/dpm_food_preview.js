@@ -25,27 +25,38 @@ export function renderBase(food) {
   const alloc = computeAlloc(food);
 
   setValue("base-kcal", food.total_kcal, 0);
-  setValue("base-protein", food.protein, 1);
-  setValue("base-carbs", food.carbs, 1);
-  setValue("base-fat", food.fat, 1);
+  setValue("base-protein", food.protein, 0);
+  setValue("base-carbs", food.carbs, 0);
+  setValue("base-fat", food.fat, 0);
 
   setAlloc("base-alloc-protein-cell", "base-alloc-protein-text", alloc.protein);
-  setAlloc("base-alloc-carbs-cell",   "base-alloc-carbs-text",   alloc.carbs);
-  setAlloc("base-alloc-fat-cell",     "base-alloc-fat-text",     alloc.fat);
+  setAlloc("base-alloc-carbs-cell", "base-alloc-carbs-text", alloc.carbs);
+  setAlloc("base-alloc-fat-cell", "base-alloc-fat-text", alloc.fat);
 }
 
 // -------- FOOD PORTION
 export function renderPortion(portion) {
   const alloc = computeAlloc(portion);
 
+  // Impacto / tabla preview
   setValue("qty-kcal", portion.total_kcal, 0);
-  setValue("qty-protein", portion.protein, 1);
-  setValue("qty-carbs", portion.carbs, 1);
-  setValue("qty-fat", portion.fat, 1);
+  setValue("qty-protein", portion.protein, 0);
+  setValue("qty-carbs", portion.carbs, 0);
+  setValue("qty-fat", portion.fat, 0);
 
   setAlloc("qty-alloc-protein-cell", "qty-alloc-protein-text", alloc.protein);
-  setAlloc("qty-alloc-carbs-cell",   "qty-alloc-carbs-text",   alloc.carbs);
-  setAlloc("qty-alloc-fat-cell",     "qty-alloc-fat-text",     alloc.fat);
+  setAlloc("qty-alloc-carbs-cell", "qty-alloc-carbs-text", alloc.carbs);
+  setAlloc("qty-alloc-fat-cell", "qty-alloc-fat-text", alloc.fat);
+
+  // KPI superior del picker
+  setValue("base-kcal", portion.total_kcal, 0);
+  setValue("base-protein", portion.protein, 0);
+  setValue("base-carbs", portion.carbs, 0);
+  setValue("base-fat", portion.fat, 0);
+
+  setAlloc("base-alloc-protein-cell", "base-alloc-protein-text", alloc.protein);
+  setAlloc("base-alloc-carbs-cell", "base-alloc-carbs-text", alloc.carbs);
+  setAlloc("base-alloc-fat-cell", "base-alloc-fat-text", alloc.fat);
 }
 
 // -------- MEAL PREVIEW
@@ -53,13 +64,13 @@ export function renderPreviewTotals(previewTotals) {
   const alloc = computeAlloc(previewTotals);
 
   setValue("meal-prev-kcal", previewTotals.total_kcal, 0);
-  setValue("meal-prev-protein", previewTotals.protein, 1);
-  setValue("meal-prev-carbs", previewTotals.carbs, 1);
-  setValue("meal-prev-fat", previewTotals.fat, 1);
+  setValue("meal-prev-protein", previewTotals.protein, 0);
+  setValue("meal-prev-carbs", previewTotals.carbs, 0);
+  setValue("meal-prev-fat", previewTotals.fat, 0);
 
   setAlloc("meal-prev-alloc-protein-cell", "meal-prev-alloc-protein-text", alloc.protein);
-  setAlloc("meal-prev-alloc-carbs-cell",   "meal-prev-alloc-carbs-text",   alloc.carbs);
-  setAlloc("meal-prev-alloc-fat-cell",     "meal-prev-alloc-fat-text",     alloc.fat);
+  setAlloc("meal-prev-alloc-carbs-cell", "meal-prev-alloc-carbs-text", alloc.carbs);
+  setAlloc("meal-prev-alloc-fat-cell", "meal-prev-alloc-fat-text", alloc.fat);
 }
 
 // -------- DAILYPLAN PREVIEW
@@ -67,13 +78,13 @@ export function renderDailyPlanPreview(dpTotals) {
   const alloc = computeAlloc(dpTotals);
 
   setValue("dailyplan-prev-kcal", dpTotals.total_kcal, 0);
-  setValue("dailyplan-prev-protein", dpTotals.protein, 1);
-  setValue("dailyplan-prev-carbs", dpTotals.carbs, 1);
-  setValue("dailyplan-prev-fat", dpTotals.fat, 1);
+  setValue("dailyplan-prev-protein", dpTotals.protein, 0);
+  setValue("dailyplan-prev-carbs", dpTotals.carbs, 0);
+  setValue("dailyplan-prev-fat", dpTotals.fat, 0);
 
   setAlloc("dailyplan-prev-alloc-protein-cell", "dailyplan-prev-alloc-protein-text", alloc.protein);
-  setAlloc("dailyplan-prev-alloc-carbs-cell",   "dailyplan-prev-alloc-carbs-text",   alloc.carbs);
-  setAlloc("dailyplan-prev-alloc-fat-cell",     "dailyplan-prev-alloc-fat-text",     alloc.fat);
+  setAlloc("dailyplan-prev-alloc-carbs-cell", "dailyplan-prev-alloc-carbs-text", alloc.carbs);
+  setAlloc("dailyplan-prev-alloc-fat-cell", "dailyplan-prev-alloc-fat-text", alloc.fat);
 }
 
 // -------- DPM ALLOC (Meal vs DailyPlan)
@@ -91,6 +102,6 @@ export function renderDpmAlloc(mealTotals, dailyplanTotals) {
   };
 
   setAlloc("dpm-alloc-protein-cell", "dpm-alloc-protein-text", alloc.protein);
-  setAlloc("dpm-alloc-carbs-cell",   "dpm-alloc-carbs-text",   alloc.carbs);
-  setAlloc("dpm-alloc-fat-cell",     "dpm-alloc-fat-text",     alloc.fat);
+  setAlloc("dpm-alloc-carbs-cell", "dpm-alloc-carbs-text", alloc.carbs);
+  setAlloc("dpm-alloc-fat-cell", "dpm-alloc-fat-text", alloc.fat);
 }

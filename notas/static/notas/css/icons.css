@@ -235,6 +235,17 @@
     right: 8px;
 }
 
+.preview-picker-icon{
+    background-color: var(--color-meal);
+    color: rgb(255, 255, 255);
+    height: 20px;
+    width: 20px;
+    flex-shrink: 0;
+    padding: 3px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
 .table-icon{
     color: rgb(24, 24, 24);
     stroke-width: 1.5;

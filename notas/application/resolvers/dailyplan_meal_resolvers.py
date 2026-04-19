@@ -13,7 +13,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "label": "Ver",
         "method": "get",
         "group": "primary",
-        "icon": "chevron-right",
+        "icon": "pencil",
         "order": 90,
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",

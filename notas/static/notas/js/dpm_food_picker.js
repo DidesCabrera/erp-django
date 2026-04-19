@@ -198,50 +198,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateQuantity() {
     if (!selectedFood) return;
-
-    const quantity = Number(quantityInput.value);
-    if (!quantity || quantity <= 0) return;
-
+  
+    const rawQuantity = Number(quantityInput.value);
+    const quantity = !rawQuantity || rawQuantity <= 0 ? 0 : rawQuantity;
+  
     hiddenQuantity.value = String(quantity);
-
+  
     // -------- FOOD PORTION --------
     const newPortion = portionFromFood(selectedFood, quantity);
     renderPortion(newPortion);
-
+  
     // -------- MEAL BASE --------
     let baseMeal = ctx.meal.kpis;
-
+  
     if (isEdit()) {
       const oldPortion = portionFromFoodById(
         foods,
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
-
+  
       baseMeal = removePortionTotals(ctx.meal.kpis, oldPortion);
     }
-
+  
     const previewMeal = previewTotals(baseMeal, newPortion);
     renderPreviewTotals(previewMeal);
-
+  
     // -------- DAILYPLAN BASE --------
     let baseDailyPlan = ctx.dailyplan.kpis;
-
+  
     if (isEdit()) {
       const oldPortion = portionFromFoodById(
         foods,
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
-
+  
       baseDailyPlan = removePortionTotals(
         ctx.dailyplan.kpis,
         oldPortion
       );
     }
-
+  
     const previewDailyPlan = previewTotals(baseDailyPlan, newPortion);
-
+  
     renderDailyPlanPreview(previewDailyPlan);
     renderDpmAlloc(previewMeal, previewDailyPlan);
   }

@@ -179,6 +179,10 @@
     height: 24px;
 }
 
+.kpi-alloc p{
+  padding: 0 4px;
+}
+
 .kpi-alloc.mini {
     height: 18px;
 }
@@ -187,5 +191,9 @@
 
   .dash-kpi-comp .tot {
     margin-left: 0px;
+  }
+
+  .macros {
+    margin-left: 6px;
   }
 }
