@@ -11,7 +11,7 @@ class CategoryBadgeUI:
 CATEGORY_BADGE_MAP = {
     "original": CategoryBadgeUI(
         label="Original",
-        icon="sparkles",
+        icon="user-round-pen",
         css="original",
     ),
     "duplicado": CategoryBadgeUI(
@@ -21,7 +21,7 @@ CATEGORY_BADGE_MAP = {
     ),
     "en plan": CategoryBadgeUI(
         label="En plan",
-        icon="calendar-range",
+        icon="calendar-fold",
         css="en-plan",
     ),
     "system": CategoryBadgeUI(
@@ -45,7 +45,7 @@ def resolve_category_badge(category: str | None) -> CategoryBadgeUI | None:
         category,
         CategoryBadgeUI(
             label=category.title(),
-            icon="circle",
+            icon="user-round-pen",
             css="default",
         ),
     )

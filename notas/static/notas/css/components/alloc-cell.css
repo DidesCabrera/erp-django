@@ -3,7 +3,7 @@
 
   .alloc-cell {
     position: relative;
-    padding: 6px 8px 6px 0px;
+    padding: 6px 0px 6px 0px;
     overflow: hidden;
     background-color: #f3f3f100;  
     font-variant-numeric: tabular-nums;
@@ -14,7 +14,7 @@
   .alloc-cell::before {
     content: "";
     position: absolute;
-    inset: 6px 6px; /* respeta el padding lateral */
+    inset: 6px 0px; /* respeta el padding lateral */
     height: 18px;
     background-color: white;
     z-index: 0;
@@ -43,7 +43,7 @@
 
   .alloc-text {
     font-size: 12px;
-    padding-right: 10px;
+    padding-right: 2px;
     position: absolute;
     inset: 0;                 /* ocupa toda la celda */
     display: flex;
@@ -51,7 +51,7 @@
     align-items: center;      /* centrar vertical */
     z-index: 2;               /* por encima de la barra */
     font-weight: 500;
-    color: #333;
+    color: rgb(39, 39, 39);
     pointer-events: none;     /* no bloquea clics */
   }
 

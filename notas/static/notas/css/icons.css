@@ -70,17 +70,22 @@
   }
 
   .search-icon-add-row-icon{
-    height: 20px;
     width: 20px;
-    margin: 0px 4px;
+    height: 20px;
+    margin: 0 4px;
     stroke-width: 2;
-    flex-shrink: 0;
     color: rgb(28, 28, 28);
-
     flex: 0 0 auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    flex-shrink: 0;
+    display: block;
+    align-self: center;
+  }
+
+  .search-icon-add-row-icon svg,
+  svg.search-icon-add-row-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
   }
 
   .dpm-icon{
@@ -99,12 +104,21 @@
   }
 
 .edit-title-icon{
-    color: #1d1d1d;
+    display: block;
+    color: #8d8d8d;
     height: 22px;
     width: 22px;
-    stroke-width: 2;
-    margin-left: 10px;
+    stroke-width: 1.5;
+    flex-shrink: 0;
   }
+
+.tab-icon{
+    color: #1d1d1d;
+    height: 16px;
+    width: 16px;
+    stroke-width: 2;
+    flex-shrink: 0;
+  } 
 
   .card-icon{
     width: 13px;
@@ -272,6 +286,11 @@
     .action-card-icon{
         height: 22px;
         width: 22px;
+    }
+
+    .table-icon{
+      height: 16px;
+      width: 16px;
     }
 
 }

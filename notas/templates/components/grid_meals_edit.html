@@ -1,8 +1,7 @@
 <div class="data-grid data-grid--meals data-grid--meals-edit">
 
     <div class="data-grid-header data-grid-header--meals-edit">
-        <div class="data-grid-col data-grid-col--name">Meal</div>
-        <div class="data-grid-col data-grid-col--time">Hour</div>
+        <div class="data-grid-col data-grid-col--name">Comidas</div>
         <div class="data-grid-col data-grid-col--kcal">Kcal</div>
         <div class="data-grid-col data-grid-col--macro">P</div>
         <div class="data-grid-col data-grid-col--macro">C</div>
@@ -19,10 +18,6 @@
 
             <div class="data-grid-cell data-grid-cell--name">
                 <div class="truncate">{{ row.rel.name }}</div>
-            </div>
-
-            <div class="data-grid-cell data-grid-cell--time">
-                {{ row.rel.hour|time:"H:i" }}
             </div>
 
             <div class="data-grid-cell data-grid-cell--kcal">

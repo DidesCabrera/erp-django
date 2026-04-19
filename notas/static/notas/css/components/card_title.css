@@ -146,15 +146,11 @@
 
 
 .block-title-card-edit {
-  display: flex;
+  display: inline-flex;
   align-items: center;        /* ← centra verticalmente */
-  justify-content: space-between; /* ← separa izquierda / derecha */
+  justify-content: center;
+  gap: 10px;
   /* width: 100%; */
-}
-
-.block-title-card-edit button{
-  height: 33px;
-  margin-left: 20px;
 }
 
 .structural-indicators {

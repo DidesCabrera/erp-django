@@ -178,17 +178,23 @@ BOTTOM
 
 .btn-desplegar,
 .btn-desplegar-mobile {
-  align-items: center;
-  padding: 0px 8px;
-  border-radius: 8px;
-  background-color: rgb(233, 233, 233);
-  gap: 2px;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
-  border: none;
-  color: black;
-}
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 8px;
+    border-radius: 8px;
+    background-color: rgb(233, 233, 233);
+    gap: 2px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    border: none;
+    color: black;
+  }
+
+.btn-desplegar-mobile.is-active .tab-icon {
+    color: white;
+  }
 
 @media (max-width: 980px) {
   .btn-desplegar-mobile {

@@ -18,11 +18,11 @@
 .data-grid-row--foods {
     grid-template-columns:
         minmax(180px, 1.8fr)
-        56px
-        56px
-        56px
-        56px
-        56px
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr);
@@ -31,12 +31,12 @@
 .data-grid-header--foods-edit,
 .data-grid-row--foods-edit {
     grid-template-columns:
-        minmax(180px, 1.8fr)
-        56px
-        56px
-        56px
-        56px
-        56px
+        minmax(160px, 1.8fr)
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
+        minmax(56px, 0.7fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
@@ -47,12 +47,11 @@
 .data-grid-header--meals,
 .data-grid-row--meals {
     grid-template-columns:
-        minmax(180px, 1.8fr)
-        60px
-        60px
-        60px
-        60px
-        60px
+        minmax(180px, 1.6fr)
+        minmax(60px, 0.65fr)
+        minmax(60px, 0.65fr)
+        minmax(60px, 0.65fr)
+        minmax(60px, 0.65fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr);
@@ -61,12 +60,11 @@
 .data-grid-header--meals-edit,
 .data-grid-row--meals-edit {
     grid-template-columns:
-        minmax(150px, 1.8fr)
-        60px
-        60px
-        56px
-        56px
-        56px
+        minmax(150px, 1.6fr)
+        minmax(60px, 0.65fr)
+        minmax(60px, 0.65fr)
+        minmax(60px, 0.65fr)
+        minmax(60px, 0.65fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
         minmax(90px, 1fr)
@@ -105,6 +103,10 @@
 .data-grid-cell--name {
     font-weight: 600;
     padding: 8px 0 8px 4px;
+}
+
+.data-grid-col--name {
+    padding: 0px 0 8px 4px;
 }
 
 .data-grid-cell--time,
@@ -369,20 +371,21 @@
 .data-grid-header--mobile-macros,
 .data-grid-row--mobile-macros {
     grid-template-columns:
-        minmax(150px, 1.8fr)
-        60px
-        60px
-        60px
-        60px;
+        minmax(140px, 1.8fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr);
 }
 
 .data-grid-header--mobile-alloc,
 .data-grid-row--mobile-alloc {
     grid-template-columns:
-        minmax(150px, 1.8fr)
-        minmax(80px, 1fr)
-        minmax(80px, 1fr)
-        minmax(80px, 1fr);
+        minmax(140px, 1.8fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr);
+    gap: 6px;
 }
 
 
@@ -390,33 +393,35 @@
 .data-grid-row--mobile-foods-qty {
     grid-template-columns:
         minmax(150px, 1.8fr)
-        64px;
+        40px;
 }
 
 .data-grid-header--mobile-foods-macros,
 .data-grid-row--mobile-foods-macros {
     grid-template-columns:
-        minmax(150px, 1.8fr)
-        60px
-        60px
-        60px
-        60px;
+        minmax(140px, 1.8fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
 }
 
 .data-grid-header--mobile-foods-alloc,
 .data-grid-row--mobile-foods-alloc {
     grid-template-columns:
-        minmax(150px, 1.8fr)
-        minmax(80px, 1fr)
-        minmax(80px, 1fr)
-        minmax(80px, 1fr);
+        minmax(140px, 1.8fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr);
+    gap: 6px;
 }
 
 .data-grid-header--menu,
 .data-grid-row--menu {
     grid-template-columns:
-        minmax(120px, 0.9fr)
+        minmax(120px, 0.7fr)
         minmax(220px, 2.1fr);
+    gap: 8px;
 }
 
 .data-grid-row--menu {
@@ -425,13 +430,13 @@
 
 .data-grid--menu .data-grid-cell--meal{
     font-weight: 600;
-    padding: 9px 4px;
+    padding: 9px 0px 9px 4px;
 
 }
 
 .data-grid--menu .data-grid-col--meal {
     font-weight: 600;
-    padding: 0 0 8px 0;
+    padding: 0 0px 9px 4px;
 }
 
 .data-grid--menu .data-grid-cell--foods {

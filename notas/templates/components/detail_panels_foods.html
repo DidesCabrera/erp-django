@@ -1,6 +1,8 @@
+{% if not foods_nutrition_only_desktop %}
 <div id="card-menu-{{ panel_id }}" class="card-table-foods">
     {% include "components/grid_foods_aggregation.html" with foods=foods %}
 </div>
+{% endif %}
 
 <div id="card-grid-foods-{{ panel_id }}" class="card-table-foods">
     {% if nutrition_grid_template %}
