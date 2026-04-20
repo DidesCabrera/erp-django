@@ -27,7 +27,6 @@
 .alloc-bar-bg.picker{
   border-radius: 0 6px 6px 0;
   background-color: white;
-  border:1px solid var(--color-border-2);
   border-left: none;
 }
 

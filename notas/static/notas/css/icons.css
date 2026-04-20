@@ -236,7 +236,6 @@
 }
 
 .preview-picker-icon{
-    background-color: var(--color-meal);
     color: rgb(255, 255, 255);
     height: 20px;
     width: 20px;
@@ -245,6 +244,13 @@
     border-radius: 4px;
     margin-right: 8px;
 }
+
+.preview-picker-icon.food{  background-color: var(--color-food); }
+.preview-picker-icon.meal{  background-color: var(--color-meal); }
+.preview-picker-icon.dailyplan{  background-color: var(--color-dailyplan); }
+
+
+
 
 .table-icon{
     color: rgb(24, 24, 24);
