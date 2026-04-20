@@ -249,7 +249,7 @@ p.h3-table2{
     align-items: stretch;
     height: auto;
     gap:10px;
-    padding: 10px;
+    padding: 12px;
     padding-bottom: 6px;
   }
 
@@ -347,6 +347,7 @@ p.h3-table2{
 }
 
 .picker-impact{
+  margin-top: 4px;
   margin-left: 18px;
   padding-left: 18px;
   border-left: 1px solid var(--color-border-1);
@@ -398,7 +399,7 @@ p.h3-table2{
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 6px;
   }
 
   .add-row--meal-picker #meal-picker.selector {
@@ -434,7 +435,8 @@ p.h3-table2{
 
   .add-row--meal-picker .btn-create-picker a {
     width: auto;
-    font-size: 13px;
+    font-size: 14px;
+    color: black;
     margin-right: 10px;
   }
 
@@ -449,7 +451,7 @@ p.h3-table2{
 
   .picker-layout{
     flex-direction:column;
-    padding: 18px 8px;
+    padding: 18px 10px;
   }
 
   .actions-row {
@@ -698,7 +700,7 @@ p.h3-table2{
   .picker-preview-kpi__row {
     grid-template-columns:
       15px
-      65px
+      75px
       60px
       minmax(40px, 1fr);
     gap: 4px;
@@ -712,7 +714,7 @@ p.h3-table2{
 
 
 .picker-preview-kpi__alloc {
-  min-width: 96px;
+  min-width: 75px;
   width: 100%;
 }
 
@@ -747,4 +749,20 @@ p.h3-table2{
     gap: 20px;
   }
 
+}
+
+.picker-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.picker-title-row.selected {
+  margin-bottom: 12px;
+}
+
+.picker-title-row h2,
+.picker-title-row h3 {
+  margin: 0;
 }

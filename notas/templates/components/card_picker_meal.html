@@ -1,10 +1,12 @@
 <div data-scope="meal-preview">
 
     <!-- TITULO =====================-->
-    <h2>
-        <i data-lucide="utensils" class="preview-picker-icon meal"></i>
-        <span  data-role="preview-name"></span>
-    </h2>
+    <div class="picker-title-row selected">
+      <i data-lucide="utensils" class="selected-picker-icon meal"></i>
+      <h2>
+        <span data-role="preview-name"></span>
+      </h2>
+    </div>
 
     <!-- KPI ======================== -->
 
@@ -28,7 +30,7 @@
               <span data-role="meal-protein"></span> g
             </div>
       
-            <div class="kpi-alloc">
+            <div class="kpi-alloc picker">
                 <div class="alloc-pct alloc-bar-fill--protein">
                     <p data-role="alloc-protein-text">%</p>
                 </div>
@@ -59,7 +61,7 @@
               <span data-role="meal-carbs"></span> g
             </div>
       
-            <div class="kpi-alloc">
+            <div class="kpi-alloc picker">
                 <div class="alloc-pct alloc-bar-fill--carbs">
                     <p data-role="alloc-carbs-text">%</p>
                 </div>
@@ -90,7 +92,7 @@
               <span data-role="meal-fat"></span> g
             </div>
       
-            <div class="kpi-alloc">
+            <div class="kpi-alloc picker">
                 <div class="alloc-pct alloc-bar-fill--fat">
                     <p data-role="alloc-fat-text">%</p>
                 </div>

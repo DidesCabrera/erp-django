@@ -235,19 +235,27 @@
     right: 8px;
 }
 
-.preview-picker-icon{
-    color: rgb(255, 255, 255);
-    height: 20px;
-    width: 20px;
-    flex-shrink: 0;
-    padding: 3px;
-    border-radius: 4px;
-    margin-right: 8px;
+.selected-picker-icon{
+  color: rgb(255, 255, 255);
+  height: 22px;
+  width: 22px;
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 6px;
 }
 
-.preview-picker-icon.food{  background-color: var(--color-food); }
-.preview-picker-icon.meal{  background-color: var(--color-meal); }
-.preview-picker-icon.dailyplan{  background-color: var(--color-dailyplan); }
+.preview-picker-icon{
+    color: rgb(255, 255, 255);
+    height: 18px;
+    width: 18px;
+    flex-shrink: 0;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+.preview-picker-icon.food, .selected-picker-icon.food {  background-color: var(--color-food); }
+.preview-picker-icon.meal, .selected-picker-icon.meal {  background-color: var(--color-meal); }
+.preview-picker-icon.dailyplan, .selected-picker-icon.dailyplan {  background-color: var(--color-dailyplan); }
 
 
 

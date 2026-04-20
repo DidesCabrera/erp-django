@@ -37,12 +37,14 @@
     gap: 2px;
 }
 
+
 .dash-kpi-comp.mini .tot {
   flex: 0 0 70px;
   padding: 6px;
 }
 
 .dash-kpi-comp.picker .tot{
+  flex: 0 0 85px;
   margin-left: 0;
 }
 
@@ -107,6 +109,10 @@
   1fr;    /* alloc (flexible) */
 }
 
+.dash-kpi-comp.picker .tot h2{
+  font-size: 26px;
+}
+
 
 .kpi-row.mini{
     /* Control de columnas */
@@ -126,7 +132,7 @@
 
 .kpi-label {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.95rem
 }
 
 .kpi-label.mini {
@@ -180,6 +186,10 @@
     height: 24px;
 }
 
+.kpi-alloc.picker {
+  height: 20px;
+}
+
 .kpi-alloc p{
   padding: 0 4px;
 }
@@ -197,4 +207,18 @@
   .macros {
     margin-left: 6px;
   }
+
+  .kpi-alloc.picker {
+    height: 22px;
+  }
+
+  .dash-kpi-comp.picker .tot{
+    flex: 0 0 92px;
+    gap: 0px;
+  }
+
+  .dash-kpi-comp.picker .tot h2{
+    font-size: 30px;
+  }
+
 }
