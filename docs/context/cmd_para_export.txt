@@ -16,11 +16,13 @@ rsync -av \
   ./ ../proyecto_django_export/
 cd ..
 zip -r proyecto_django_export.zip proyecto_django_export -x "*.DS_Store" "__MACOSX/*"
+cd proyecto_django
 
 1) Limpiar basura del proyecto original. Desde la raíz del proyecto:
 2) Crear export limpio. Desde la carpeta padre del proyecto:
 3) Exportar
 
+---
 
 cd desktop
 cd proyecto_django
@@ -37,7 +39,7 @@ git ls-files | grep "notas/actions"
 git branch --show-current
 git status
 git add .
-git commit -m "Mejora significatiba sidebar"
+git commit -m "Ajustes menores CSS picker - parte 4"
 git push origin main
 git log --oneline -n 5 #ver ultimos commit
 git checkout -b feature/ux-improvements #crear nuevo branch
