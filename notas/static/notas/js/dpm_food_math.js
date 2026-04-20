@@ -71,3 +71,8 @@ export function computeAlloc({ protein, carbs, fat, total_kcal, kcal }) {
     fat: ((fat * 9) / energy) * 100,
   };
 }
+
+export function computePPK(protein, weight) {
+  if (!weight || weight <= 0) return 0;
+  return protein / weight;
+}

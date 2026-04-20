@@ -247,8 +247,7 @@ p.h3-table2{
     align-items: stretch;
     height: auto;
     gap:14px;
-    padding-top: 18px;
-    padding-bottom: 6px;
+    padding: 18px 8px 6px 8px;
   }
 
   .add-row > *{
@@ -273,7 +272,9 @@ p.h3-table2{
 
 .ppk-inline {
   font-size: 0.75rem;
-  opacity: 0.7;
+  background-color: var(--color-ppk);
+  padding: 2px 4px;
+  border-radius: 4px;
 }
 
 .picker-layout{
@@ -284,6 +285,10 @@ p.h3-table2{
 .picker-section{
   flex:1;
   min-width:0;
+}
+
+.picker-section h3{
+  font-size: 16px;
 }
 
 /* mobile LEGACY */
@@ -373,7 +378,7 @@ p.h3-table2{
     min-width: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
   }
 
   .selector input {
@@ -439,7 +444,7 @@ p.h3-table2{
 
   .picker-layout{
     flex-direction:column;
-    padding: 18px 12px;
+    padding: 18px 8px;
   }
 
   .actions-row {
@@ -629,7 +634,7 @@ p.h3-table2{
   border-bottom: 1px solid var(--color-border-2);
   grid-template-columns: 
     15px
-    60px
+    75px
     60px
     minmax(40px, 1fr);
 }
@@ -704,4 +709,33 @@ p.h3-table2{
 .picker-preview-kpi__alloc {
   min-width: 96px;
   width: 100%;
+}
+
+.preview-picker--stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.picker-preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.picker-preview-section__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+
+  .picker-preview-section__title {
+    font-size: 18px;
+  }
+
+  .picker-section h3{
+    font-size: 18px;
+  }
 }

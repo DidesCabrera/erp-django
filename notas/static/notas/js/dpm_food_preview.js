@@ -71,10 +71,15 @@ export function renderPreviewTotals(previewTotals) {
   setAlloc("meal-prev-alloc-protein-cell", "meal-prev-alloc-protein-text", alloc.protein);
   setAlloc("meal-prev-alloc-carbs-cell", "meal-prev-alloc-carbs-text", alloc.carbs);
   setAlloc("meal-prev-alloc-fat-cell", "meal-prev-alloc-fat-text", alloc.fat);
+
+  const mealPpkNode = document.querySelector('[data-role="meal-prev-ppk"]');
+  if (mealPpkNode && previewTotals.ppk !== undefined) {
+    mealPpkNode.textContent = `${previewTotals.ppk.toFixed(1)}g/kg`;
+  }
 }
 
 // -------- DAILYPLAN PREVIEW
-export function renderDailyPlanPreview(dpTotals) {
+export function renderDailyPlanPreview(dpTotals, portion = null) {
   const alloc = computeAlloc(dpTotals);
 
   setValue("dailyplan-prev-kcal", dpTotals.total_kcal, 0);
@@ -85,6 +90,18 @@ export function renderDailyPlanPreview(dpTotals) {
   setAlloc("dailyplan-prev-alloc-protein-cell", "dailyplan-prev-alloc-protein-text", alloc.protein);
   setAlloc("dailyplan-prev-alloc-carbs-cell", "dailyplan-prev-alloc-carbs-text", alloc.carbs);
   setAlloc("dailyplan-prev-alloc-fat-cell", "dailyplan-prev-alloc-fat-text", alloc.fat);
+
+  if (portion) {
+    setValue("dailyplan-impact-kcal", portion.total_kcal, 0);
+    setValue("dailyplan-impact-protein", portion.protein, 0);
+    setValue("dailyplan-impact-carbs", portion.carbs, 0);
+    setValue("dailyplan-impact-fat", portion.fat, 0);
+  }
+
+  const dailyPlanPpkNode = document.querySelector('[data-role="dailyplan-prev-ppk"]');
+  if (dailyPlanPpkNode && dpTotals.ppk !== undefined) {
+    dailyPlanPpkNode.textContent = `${dpTotals.ppk.toFixed(1)}g/kg`;
+  }
 }
 
 // -------- DPM ALLOC (Meal vs DailyPlan)

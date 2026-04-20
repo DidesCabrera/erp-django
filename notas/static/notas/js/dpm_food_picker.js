@@ -7,7 +7,8 @@ import {
   portionFromFood,
   portionFromFoodById,
   previewTotals,
-  removePortionTotals
+  removePortionTotals,
+  computePPK
 } from "./dpm_food_math.js";
 
 import {
@@ -222,6 +223,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
     const previewMeal = previewTotals(baseMeal, newPortion);
+
+    const mealWeight = ctx.meal?.kpis?.weight;
+    previewMeal.ppk = computePPK(previewMeal.protein, mealWeight);
+
     renderPreviewTotals(previewMeal);
   
     // -------- DAILYPLAN BASE --------
@@ -241,8 +246,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
     const previewDailyPlan = previewTotals(baseDailyPlan, newPortion);
-  
-    renderDailyPlanPreview(previewDailyPlan);
+
+    const dailyPlanWeight = ctx.dailyplan?.kpis?.weight;
+    previewDailyPlan.ppk = computePPK(previewDailyPlan.protein, dailyPlanWeight);
+    
+    renderDailyPlanPreview(previewDailyPlan, newPortion);
     renderDpmAlloc(previewMeal, previewDailyPlan);
   }
 
