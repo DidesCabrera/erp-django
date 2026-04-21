@@ -17,7 +17,11 @@
   .home-hero-copy {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 18px;
+  }
+
+  .home-hero-copy h1{
+    margin-bottom: 24px;
   }
   
   .home-eyebrow {
@@ -49,8 +53,8 @@
   .home-stat-card {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 18px;
+    gap: 10px;
+    padding: 18px 14px 12px 18px;
     border-radius: 14px;
     background: #fff;
   }
@@ -64,39 +68,38 @@
   .home-stat-top {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  
-  .home-stat-icon {
-    opacity: 0.75;
+    gap: 6px;
   }
   
   .home-stat-label {
-    font-size: 14px;
-    opacity: 0.75;
+    font-size: 16px;
+    font-weight: 600;
   }
   
   .home-stat-value-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 2px;
   }
   
   .home-stat-kpi-icon {
-    opacity: 0.55;
+    width: 22px;
+    height: 22px;
+    stroke-width: 2;
+    flex-shrink: 0;
   }
   
   .home-stat-value {
-    font-size: 32px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 600;
     line-height: 1;
   }
   
   .home-stat-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: right;
+    gap: 4px;
     flex-wrap: wrap;
   }
   
@@ -126,12 +129,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
-    padding: 0 14px;
+    padding: 6px 12px 6px 8px;
     border-radius: 10px;
     text-decoration: none;
     color: inherit;
     background: #fff;
+    font-size: 13px;
   }
   
   .home-cta--primary {
@@ -184,6 +187,23 @@
     opacity: 0.8;
     white-space: nowrap;
   }
+
+  .home-hero.card-father{
+    padding: 36px 20px 36px 20px;
+  }
+
+  .home-stat-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .home-stat-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    width: fit-content;
+  }
   
   @media (max-width: 900px) {
     .home-hero {
@@ -200,12 +220,43 @@
       align-items: flex-start;
     }
   
+    .home-stat-bottom {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+  
+    .home-stat-card-link {
+      flex: 0 0 auto;
+    }
+  
+    .home-stat-value-row {
+      white-space: nowrap;
+    }
+  
     .home-stat-actions {
-      width: 100%;
+      width: auto;
+      flex: 0 0 auto;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
     }
   
     .home-food-row {
       flex-direction: column;
       align-items: flex-start;
+    }
+  
+    .home-stat-label {
+      font-size: 20px;
+    }
+  
+    .home-cta {
+      font-size: 14px;
+    }
+  
+    .home-stat-card {
+      padding: 18px;
+      gap: 16px;
     }
   }

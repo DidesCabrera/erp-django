@@ -81,6 +81,19 @@
     align-self: center;
   }
 
+  .btn-card-home-icon{
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+    flex-shrink: 0;
+    margin-right: 3px;
+  }
+  .btn-card-home-icon.black { color:rgb(0, 0, 0);}
+  .btn-card-home-icon.white { color:rgb(255, 255, 255);}
+
+
+
+
   .search-icon-add-row-icon svg,
   svg.search-icon-add-row-icon {
     width: 20px;
@@ -253,9 +266,32 @@
     border-radius: 5px;
 }
 
-.preview-picker-icon.food, .selected-picker-icon.food {  background-color: var(--color-food); }
-.preview-picker-icon.meal, .selected-picker-icon.meal {  background-color: var(--color-meal); }
-.preview-picker-icon.dailyplan, .selected-picker-icon.dailyplan {  background-color: var(--color-dailyplan); }
+.home-stat-icon{
+  color: rgb(255, 255, 255);
+  height: 18px;
+  width: 18px;
+  flex-shrink: 0;
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.preview-picker-icon.food,
+.selected-picker-icon.food,
+.home-stat-icon.food { 
+  background-color: var(--color-food);
+}
+.preview-picker-icon.meal, 
+.selected-picker-icon.meal,
+.home-stat-icon.meal {  
+  background-color: var(--color-meal); 
+}
+
+.preview-picker-icon.dailyplan, 
+.selected-picker-icon.dailyplan,
+.home-stat-icon.dailyplan {  
+  background-color: var(--color-dailyplan); 
+}
+
 
 
 
@@ -280,43 +316,50 @@
 
 @media (max-width: 768px) {
 
-    .sidebar-leading-icon {
-      width: 20px;
-      height: 20px;
-    }
+  .sidebar-leading-icon {
+    width: 20px;
+    height: 20px;
+  }
 
-    .sidebar-icon{
-      width: 18px;
-      height: 18px;
-    }
+  .sidebar-icon{
+    width: 18px;
+    height: 18px;
+  }
 
-    .back-header-icon{
-        display: flex;
-        align-items: center;
-        padding-right: 2px;
-    }
-    
-    .more-horizontal-icon,
-    .header-action-icon {
-        height: 22px;
-        width: 22px;
-    }
+  .back-header-icon{
+      display: flex;
+      align-items: center;
+      padding-right: 2px;
+  }
+  
+  .more-horizontal-icon,
+  .header-action-icon {
+      height: 22px;
+      width: 22px;
+  }
 
-    .enter-user-icon{
-        height: 22px;
-        width: 22px;
-    
-    }
+  .enter-user-icon{
+      height: 22px;
+      width: 22px;
+  
+  }
 
-    .action-card-icon{
-        height: 22px;
-        width: 22px;
-    }
+  .action-card-icon{
+      height: 22px;
+      width: 22px;
+  }
 
-    .table-icon{
-      height: 16px;
-      width: 16px;
-    }
+  .table-icon{
+    height: 16px;
+    width: 16px;
+  }
+
+  .home-stat-icon{
+    height: 22px;
+    width: 22px;
+    padding: 4px;
+    border-radius: 6px;
+  }
 
 }
     

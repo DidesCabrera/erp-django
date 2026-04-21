@@ -9,7 +9,6 @@
   <!-- HERO ================================================== -->
   <section class="home-hero card-father">
     <div class="home-hero-copy">
-      <p class="home-eyebrow">Workspace</p>
       <h1>{{ vm.content.hero.title }}</h1>
       <p class="home-hero-subtitle">
         {{ vm.content.hero.subtitle }}
@@ -19,74 +18,83 @@
 
   <!-- STATS ================================================= -->
   <section class="home-stats">
+
     <div class="home-stat-card">
-      <a href="{% url 'dailyplan_list' %}" class="home-stat-card-link">
-        <div class="home-stat-top">
-          <i data-lucide="clipboard-list" class="home-stat-icon"></i>
-          <span class="home-stat-label">Planes Diarios</span>
-        </div>
+      <div class="home-stat-top">
+        <i data-lucide="clipboard-list" class="home-stat-icon dailyplan"></i>
+        <span class="home-stat-label">Planes Diarios</span>
+      </div>
 
-        <div class="home-stat-value-row">
-          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
-          <div class="home-stat-value">{{ vm.content.stats.0.value }}</div>
-        </div>
-      </a>
+      <div class="home-stat-bottom">
+        <a href="{% url 'dailyplan_list' %}" class="home-stat-card-link">
+          <div class="home-stat-value-row">
+            <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+            <div class="home-stat-value">{{ vm.content.stats.0.value }}</div>
+          </div>
+        </a>
 
-      <div class="home-stat-actions">
-        <a href="{% url 'dailyplan_create' %}" class="home-cta home-cta--primary">
-          Crear nuevo
-        </a>
-        <a href="{% url 'dailyplan_explore_list' %}" class="home-cta">
-          Explorar
-        </a>
+        <div class="home-stat-actions">
+          <a href="{% url 'dailyplan_explore_list' %}" class="home-cta">
+            <i data-lucide="search" class="btn-card-home-icon black"></i>Explorar
+          </a>
+          <a href="{% url 'dailyplan_create' %}" class="home-cta home-cta--primary">
+            <i data-lucide="plus" class="btn-card-home-icon white"></i>Crear
+          </a>
+        </div>
       </div>
     </div>
 
     <div class="home-stat-card">
-      <a href="{% url 'meal_list' %}" class="home-stat-card-link">
-        <div class="home-stat-top">
-          <i data-lucide="utensils" class="home-stat-icon"></i>
-          <span class="home-stat-label">Comidas</span>
-        </div>
-
-        <div class="home-stat-value-row">
-          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
-          <div class="home-stat-value">{{ vm.content.stats.1.value }}</div>
-        </div>
-      </a>
-
-      <div class="home-stat-actions">
-        <a href="{% url 'meal_create' %}" class="home-cta home-cta--primary">
-          Crear nuevo
+      <div class="home-stat-top">
+        <i data-lucide="utensils" class="home-stat-icon meal"></i>
+        <span class="home-stat-label">Comidas</span>
+      </div>
+    
+      <div class="home-stat-bottom">
+        <a href="{% url 'meal_list' %}" class="home-stat-card-link">
+          <div class="home-stat-value-row">
+            <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+            <div class="home-stat-value">{{ vm.content.stats.1.value }}</div>
+          </div>
         </a>
-        <a href="{% url 'meal_explore_list' %}" class="home-cta">
-          Explorar
-        </a>
+    
+        <div class="home-stat-actions">
+          <a href="{% url 'meal_explore_list' %}" class="home-cta">
+            <i data-lucide="search" class="btn-card-home-icon black"></i>Explorar
+          </a>
+          <a href="{% url 'meal_create' %}" class="home-cta home-cta--primary">
+            <i data-lucide="plus" class="btn-card-home-icon white"></i>Crear
+          </a>
+        </div>
       </div>
     </div>
 
     <div class="home-stat-card">
-      <a href="{% url 'food_list' %}" class="home-stat-card-link">
-        <div class="home-stat-top">
-          <i data-lucide="carrot" class="home-stat-icon"></i>
-          <span class="home-stat-label">Alimentos</span>
-        </div>
-
-        <div class="home-stat-value-row">
-          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
-          <div class="home-stat-value">{{ vm.content.stats.2.value }}</div>
-        </div>
-      </a>
-
-      <div class="home-stat-actions">
-        <a href="{% url 'food_create' %}" class="home-cta home-cta--primary">
-          Crear nuevo
+      <div class="home-stat-top">
+        <i data-lucide="carrot" class="home-stat-icon food"></i>
+        <span class="home-stat-label">Alimentos</span>
+      </div>
+    
+      <div class="home-stat-bottom">
+        <a href="{% url 'food_list' %}" class="home-stat-card-link">
+          <div class="home-stat-value-row">
+            <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+            <div class="home-stat-value">{{ vm.content.stats.2.value }}</div>
+          </div>
         </a>
-        <a href="{% url 'food_list' %}" class="home-cta">
-          Explorar
-        </a>
+    
+        <div class="home-stat-actions">
+          <a href="{% url 'food_list' %}" class="home-cta">
+            <i data-lucide="search" class="btn-card-home-icon black"></i>Explorar
+          </a>
+          <a href="{% url 'food_create' %}" class="home-cta home-cta--primary">
+            <i data-lucide="plus" class="btn-card-home-icon white"></i>Crear
+          </a>
+        </div>
       </div>
     </div>
+
+
   </section>
 
   <!-- DAILYPLANS =========================================== -->
