@@ -43,6 +43,42 @@ class NavSectionSpec:
 
 
 APP_NAVIGATION = (
+        NavSectionSpec(
+        key="admin",
+        label="Admin Workspace",
+        groups=(     
+            NavGroupSpec(
+                key="admin",
+                label="Admin",
+                icon="shield",
+                show_in_sidebar=True,
+                items=(
+                    NavItemSpec(
+                        key="admin_home",
+                        label="Admin Home",
+                        icon="shield",
+                        page_icon="shield",
+                        url_name="admin_home",
+                        nav_root="admin",
+                        scope="admin",
+                        show_in_sidebar=True,
+                    ),
+                    NavItemSpec(
+                        key="admin_food_catalog",
+                        label="Foods Catalog",
+                        icon="database",
+                        page_icon="database",
+                        url_name="admin_food_catalog",
+                        nav_root="admin",
+                        scope="foods",
+                        show_in_sidebar=True,
+                    ),
+                ),
+            ),
+        ),
+    ),
+ 
+
     NavSectionSpec(
         key="account",
         label="My Scoope",
@@ -60,14 +96,43 @@ APP_NAVIGATION = (
                 key="profile",
                 label="Mi Perfil",
                 icon="user",
-                url_name="profile",
+                url_name="profile_detail",
                 nav_root="profile",
                 scope="personal",
                 page_icon="user",
                 show_in_sidebar=False,
             ),
+            NavGroupSpec(
+                key="admin",
+                label="Admin",
+                icon="shield",
+                show_in_sidebar=True,
+                items=(
+                    NavItemSpec(
+                        key="admin_home",
+                        label="Admin Home",
+                        icon="shield",
+                        page_icon="shield",
+                        url_name="admin_home",
+                        nav_root="admin",
+                        scope="admin",
+                        show_in_sidebar=True,
+                    ),
+                    NavItemSpec(
+                        key="admin_food_catalog",
+                        label="Foods Catalog",
+                        icon="database",
+                        page_icon="database",
+                        url_name="admin_food_catalog",
+                        nav_root="admin",
+                        scope="foods",
+                        show_in_sidebar=True,
+                    ),
+                ),
+            ),
         ),
     ),
+    
     NavSectionSpec(
         key="workspace",
         label="Workspace",

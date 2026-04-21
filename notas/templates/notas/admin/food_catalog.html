@@ -1,0 +1,28 @@
+{% extends "notas/base.html" %}
+{% block title %}Foods Catalog{% endblock %}
+{% block content %}
+<div class="page">
+  <h2>{{ vm.content.title }}</h2>
+  <p>{{ vm.content.subtitle }}</p>
+
+  <div style="display:flex; gap:12px; margin:16px 0; flex-wrap:wrap;">
+    <a href="{% url vm.content.download_url %}" class="btn btn-primary">
+      Descargar catálogo actual
+    </a>
+    <a href="{% url vm.content.template_url %}" class="btn btn-secondary">
+      Descargar template
+    </a>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="file" accept=".csv,.xlsx" required>
+    <button type="submit">Cargar cambios</button>
+  </form>
+
+  <div style="margin-top:20px;">
+    <p><strong>Formato esperado:</strong> id, name, protein, carbs, fat</p>
+    <p>El sistema actualizará registros existentes usando el <strong>id</strong>.</p>
+  </div>
+</div>
+{% endblock %}

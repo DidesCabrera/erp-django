@@ -77,3 +77,6 @@ DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT = vm("dailyplan_meal", "deep_edit", "dra
 # DPM OTRO (PARA DEJAR PORCENTAJE DE ALLOC FUERA O DENTRO---------------------------------------------
 ALLOC_PCT_OUTSIDE_THRESHOLD = 10
 
+
+ADMIN_HOME_VIEWMODE = vm("admin", "list", "admin")
+ADMIN_FOOD_CATALOG_VIEWMODE = vm("admin", "list", "foods")

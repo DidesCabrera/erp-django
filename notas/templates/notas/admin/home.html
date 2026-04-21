@@ -1,0 +1,22 @@
+{% extends "notas/base.html" %}
+{% block title %}Admin Workspace{% endblock %}
+{% block content %}
+<div class="page">
+  <h2>{{ vm.content.title }}</h2>
+  <p>{{ vm.content.subtitle }}</p>
+
+  <div class="home-stats">
+    {% for card in vm.content.cards %}
+      <a href="{% url card.url %}" class="home-stat-card-link">
+        <div class="home-stat-card">
+          <div class="home-stat-top">
+            <i data-lucide="{{ card.icon }}" class="home-stat-icon"></i>
+            <span class="home-stat-label">{{ card.title }}</span>
+          </div>
+          <p>{{ card.description }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

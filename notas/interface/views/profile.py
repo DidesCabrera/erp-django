@@ -5,11 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
 
-from notas.domain.models import DailyPlan, Meal, Food, WeightLog
 from notas.presentation.config.viewmodel_config import PROFILE_VIEWMODE
 from notas.presentation.viewmodels.base_vm import BaseVM
 from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 from notas.application.services.nutrition.weight import get_current_weight
+from notas.application.services.access.capabilities import get_capabilities
 
 
 @dataclass
@@ -52,6 +52,36 @@ def profile_detail(request):
     weight_logs = list(user.weight_logs.all()[:5])
     last_weight_log = weight_logs[0] if weight_logs else None
 
+    capabilities = get_capabilities(user)
+    is_admin = bool(user.is_superuser or (capabilities and capabilities.is_admin()))
+
+    actions = [
+        ProfileActionVM(
+            label="Ver DailyPlans",
+            url=reverse("dailyplan_list"),
+            icon="clipboard-list",
+        ),
+        ProfileActionVM(
+            label="Ver Meals",
+            url=reverse("meal_list"),
+            icon="utensils",
+        ),
+        ProfileActionVM(
+            label="Ver Foods",
+            url=reverse("food_list"),
+            icon="carrot",
+        ),
+    ]
+
+    if is_admin:
+        actions.append(
+            ProfileActionVM(
+                label="Admin Workspace",
+                url=reverse("admin_home"),
+                icon="shield",
+            )
+        )
+
     content = ProfileContentVM(
         title=f"{user.username}",
         subtitle=(
@@ -87,23 +117,7 @@ def profile_detail(request):
             )
             for log in weight_logs
         ],
-        actions=[
-            ProfileActionVM(
-                label="Ver DailyPlans",
-                url=reverse("dailyplan_list"),
-                icon="clipboard-list",
-            ),
-            ProfileActionVM(
-                label="Ver Meals",
-                url=reverse("meal_list"),
-                icon="utensils",
-            ),
-            ProfileActionVM(
-                label="Ver Foods",
-                url=reverse("food_list"),
-                icon="carrot",
-            ),
-        ],
+        actions=actions,
     )
 
     ui = build_ui_vm(PROFILE_VIEWMODE)
