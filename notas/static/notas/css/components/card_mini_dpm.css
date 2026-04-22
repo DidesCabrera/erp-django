@@ -67,7 +67,7 @@
       flex-direction: column;
       align-items: stretch;
       height: auto;
-      padding: 4px 10px;
+      padding: 2px 10px;
     }
   
     .card-mini-dpm > *{
@@ -76,8 +76,8 @@
 
     .title-dpm-mini-card{
         height: 14px;
-        margin-top: 3px;
-        margin-bottom: 2px;
+        margin-top: 4px;
+        margin-bottom: 4px;
         justify-content: center;
     }
 

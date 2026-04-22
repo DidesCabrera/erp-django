@@ -10,9 +10,7 @@
   height: 40px;
 
   padding: 0 40px 0 20px;
-
-  background: #ffffff;
-
+/* ancho actual del sidebar */
   display: flex;
   justify-content: space-between;
   align-items: center;

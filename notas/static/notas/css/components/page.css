@@ -22,14 +22,14 @@
     width: 100%;
     max-width: 840px;
     margin: 0 auto;
-    margin-top: 14px;
+    margin-top: 18px;
     padding: 0px;
-    border-radius: 14px;
+    border-radius: 18px;
 }
 
 .page--detail{
     max-width: 900px;
-    margin-top: 14px;
+    margin-top: 18px;
     padding: 20px 40px;
     background-color: white;
 }
@@ -82,6 +82,18 @@
 
     .list-page-title{
         display: none;
+    }
+
+    .page {
+    /*    max-width: 882px;
+        margin: 0 auto; */
+        padding: 0 10px;
+        margin-top: 14px;
+    }
+
+    .page--detail{
+        padding: 14px 16px;
+        margin-top: 14px;
     }
   
   }

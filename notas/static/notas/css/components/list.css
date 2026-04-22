@@ -12,8 +12,8 @@
 
 @media (max-width: 980px) {
     .dailyplan-detail__children-bleed {
-        margin-left: -16px;
-        margin-right: -16px;
+        margin-left: -12px;
+        margin-right: -12px;
     }
 
     .dailyplan-detail__children-header,

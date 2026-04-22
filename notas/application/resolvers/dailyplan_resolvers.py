@@ -66,7 +66,7 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "fork": {
         "label": "Duplicar",
         "method": "post",
-        "group": "overflow",
+        "group": "primary",
         "icon": "copy",
         "order": 90,
         "get_url": lambda dp, context=None: reverse(

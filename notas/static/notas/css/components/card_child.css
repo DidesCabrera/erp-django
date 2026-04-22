@@ -3,7 +3,7 @@
 
 .card {
   background: var(--color-bg);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 17px 22px 14px 22px;
   margin-bottom: 24px;
 }
@@ -93,7 +93,7 @@ BOTTOM
 @media (max-width: 768px) {
   
   .card {
-    padding: 15px 15px 20px 15px;;
+    padding: 15px 12px 20px 12px;;
   }
 
   .card-main {
@@ -241,7 +241,7 @@ BOTTOM
 .card-detail-tabs-mobile {
     display: none;
     padding: 10px;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
 }
 
@@ -305,7 +305,7 @@ BOTTOM
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: nowrap;
 }
 

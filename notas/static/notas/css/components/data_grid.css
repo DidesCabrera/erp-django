@@ -420,8 +420,8 @@
 .data-grid-header--menu,
 .data-grid-row--menu {
     grid-template-columns:
-        minmax(120px, 0.7fr)
-        minmax(220px, 2.1fr);
+        minmax(110px, 0.7fr)
+        minmax(180px, 2.1fr);
     gap: 8px;
 }
 
