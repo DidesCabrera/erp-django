@@ -19,6 +19,7 @@ from notas.application.use_cases.meal_pages import build_meal_list_content_data
 from notas.presentation.composition.viewmodel.dailyplan.list_dailyplan_builder import build_dailyplan_list_vm
 from notas.presentation.composition.viewmodel.meal.list_meal_builder import build_meal_list_vm
 from notas.presentation.composition.viewmodel.food.list_foods_builder import build_food_list_vm
+from notas.presentation.viewmodels.components.header_vm import HeaderVM, HeaderActionVM
 
 
 @dataclass
@@ -47,6 +48,7 @@ class HomeSectionVM:
 
 @dataclass
 class HomeContentVM:
+    header: HeaderVM
     hero: HomeHeroVM
     stats: List[HomeStatVM]
     dailyplans: HomeSectionVM
@@ -91,6 +93,20 @@ def home_view(request):
     )
 
     content_vm = HomeContentVM(
+        header=HeaderVM(
+            title="",
+            actions=[
+                HeaderActionVM(
+                    key="profile",
+                    label="Perfil",
+                    url=reverse("profile_detail"),
+                    method="get",
+                    group="primary",
+                    icon="circle-user-round",
+                    order=10,
+                )
+            ],
+        ),
         hero=HomeHeroVM(
             title=f"Bienvenido a My Scoope, {user.username}",
             subtitle=(

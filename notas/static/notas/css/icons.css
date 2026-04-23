@@ -275,17 +275,37 @@
   border-radius: 5px;
 }
 
+.home-section-header-icon{
+  color: rgb(255, 255, 255);
+  height: 22px;
+  width: 22px;
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.welcome-icon{
+  color: rgb(21, 21, 21);
+  height: 18px;
+  width: 18px;
+  flex-shrink: 0;
+}
+
+
+.home-section-header-icon.food,
 .preview-picker-icon.food,
 .selected-picker-icon.food,
 .home-stat-icon.food { 
   background-color: var(--color-food);
 }
+.home-section-header-icon.meal,
 .preview-picker-icon.meal, 
 .selected-picker-icon.meal,
 .home-stat-icon.meal {  
   background-color: var(--color-meal); 
 }
 
+.home-section-header-icon.dailyplan,
 .preview-picker-icon.dailyplan, 
 .selected-picker-icon.dailyplan,
 .home-stat-icon.dailyplan {  
