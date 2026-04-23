@@ -25,21 +25,22 @@ from notas.application.services.commands.food_commands import create_food
 from notas.presentation.viewmodels.base_vm import BaseVM
 from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
+from notas.application.use_cases.food_pages import get_food_list_page_data
+
 #************ RENDER COMPLEJOS *********************
-# ---------- LIST - DETAIL ----------
 @login_required
 def food_list(request):
+    page = get_food_list_page_data(
+        user=request.user,
+    )
 
-    foods = Food.objects.filter(created_by=request.user).order_by("name")
-
-    viewmode = FOOD_VIEWMODE_PERSONAL_LIST
-
-    ui_vm = build_ui_vm(viewmode)
+    ui_vm = build_ui_vm(page.viewmode)
 
     content_vm = build_food_list_vm(
-        foods,
+        page.foods,
         request.user,
-        viewmode,
+        page.viewmode,
+        page_actions=page.page_actions,
     )
 
     base_vm = BaseVM(
@@ -52,7 +53,6 @@ def food_list(request):
         "notas/foods/list.html",
         base_vm.as_context(),
     )
-
 
 
 def food_detail(request, pk):

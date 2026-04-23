@@ -21,6 +21,8 @@ from notas.presentation.composition.viewmodel.meal.list_meal_builder import buil
 from notas.presentation.composition.viewmodel.food.list_foods_builder import build_food_list_vm
 from notas.presentation.viewmodels.components.header_vm import HeaderVM, HeaderActionVM
 
+from notas.presentation.composition.viewmodel.components.builder_headers import build_page_header
+
 
 @dataclass
 class HomeHeroVM:
@@ -93,22 +95,23 @@ def home_view(request):
     )
 
     content_vm = HomeContentVM(
-        header=HeaderVM(
+        header=build_page_header(
             title="",
             actions=[
-                HeaderActionVM(
-                    key="profile",
-                    label="Perfil",
-                    url=reverse("profile_detail"),
-                    method="get",
-                    group="primary",
-                    icon="circle-user-round",
-                    order=10,
-                )
+                {
+                    "key": "profile",
+                    "label": "Perfil",
+                    "url": reverse("profile_detail"),
+                    "method": "get",
+                    "icon": "circle-user-round",
+                    "order": 10,
+                    "desktop_position": "inline",
+                    "mobile_position": "inline",
+                }
             ],
         ),
         hero=HomeHeroVM(
-            title=f"Bienvenido a My Scoope, {user.username}",
+            title=f"Bienvenido {user.username}!",
             subtitle=(
                 "Organiza planes diarios, comidas y alimentos en un solo lugar. "
                 "Este es tu resumen de trabajo actual."

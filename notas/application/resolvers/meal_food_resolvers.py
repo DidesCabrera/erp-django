@@ -11,33 +11,35 @@ from notas.presentation.config.viewmodel_config import (
 
 
 # ==================================================
-# 1. DEFINICIÓN DECLARATIVA DE ACCIONES
-# (qué es cada acción, NO cuándo aparece)
+# 1. ENTITY ACTION DEFINITIONS
 # ==================================================
 
 MEAL_FOOD_ACTION_DEFINITIONS = {
     "detail": {
         "label": "View",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda food: food_url(food),
     },
     "cancel": {
         "label": "Cancel",
         "method": "get",
-        "group": "primary",
         "icon": "x",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda food: food_list_url(),
     },
     "delete": {
         "label": "Delete",
         "method": "post",
-        "group": "primary",
         "icon": "trash-2",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda food: reverse(
             "food_delete",
             args=[food.id],
@@ -46,9 +48,10 @@ MEAL_FOOD_ACTION_DEFINITIONS = {
     "edit": {
         "label": "Edit",
         "method": "get",
-        "group": "primary",
         "icon": "pencil",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda food: reverse(
             "food_edit",
             args=[food.id],
@@ -57,9 +60,10 @@ MEAL_FOOD_ACTION_DEFINITIONS = {
     "save": {
         "label": "Save",
         "method": "post",
-        "group": "primary",
         "icon": "check",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda food: reverse(
             "food_detail",
             args=[food.id],
@@ -69,7 +73,7 @@ MEAL_FOOD_ACTION_DEFINITIONS = {
 
 
 # ==================================================
-# 2. ACCIONES PERMITIDAS POR VIEWMODE
+# 2. ACTIONS BY VIEWMODE
 # ==================================================
 
 MEAL_FOOD_ACTIONS_BY_VIEWMODE = {
@@ -93,23 +97,20 @@ MEAL_FOOD_ACTIONS_BY_VIEWMODE = {
 
 
 # ==================================================
-# 3. RESOLVER PRINCIPAL
+# 3. INTERNAL BUILDER
 # ==================================================
 
-def resolve_meal_food_actions(food, user, viewmode):
-    """
-    Devuelve una lista de acciones disponibles para un food
-    renderizado en el contexto meal_food, según viewmode
-    + capabilities del usuario.
-    """
-
-    caps = get_capabilities(user)
+def _build_actions_from_definitions(
+    *,
+    definitions,
+    allowed_keys,
+    subject,
+    caps=None,
+):
     actions = []
 
-    allowed_keys = MEAL_FOOD_ACTIONS_BY_VIEWMODE.get(viewmode, [])
-
     for key in allowed_keys:
-        definition = MEAL_FOOD_ACTION_DEFINITIONS.get(key)
+        definition = definitions.get(key)
         if not definition:
             continue
 
@@ -121,7 +122,7 @@ def resolve_meal_food_actions(food, user, viewmode):
                 continue
 
         try:
-            url = definition["get_url"](food)
+            url = definition["get_url"](subject)
         except NoReverseMatch:
             continue
 
@@ -131,11 +132,33 @@ def resolve_meal_food_actions(food, user, viewmode):
                 "label": definition["label"],
                 "url": url,
                 "method": definition["method"],
-                "group": definition.get("group", "primary"),
                 "icon": definition.get("icon"),
                 "order": definition.get("order", 100),
                 "is_back": definition.get("is_back", False),
+                "desktop_position": definition.get("desktop_position", "inline"),
+                "mobile_position": definition.get("mobile_position", "inline"),
             }
         )
 
     return actions
+
+
+# ==================================================
+# 4. RESOLVER PRINCIPAL
+# ==================================================
+
+def resolve_meal_food_actions(food, user, viewmode):
+    """
+    Devuelve una lista de acciones disponibles para un food
+    renderizado en el contexto meal_food, según viewmode
+    + capabilities del usuario.
+    """
+    caps = get_capabilities(user)
+    allowed_keys = MEAL_FOOD_ACTIONS_BY_VIEWMODE.get(viewmode, [])
+
+    return _build_actions_from_definitions(
+        definitions=MEAL_FOOD_ACTION_DEFINITIONS,
+        allowed_keys=allowed_keys,
+        subject=food,
+        caps=caps,
+    )

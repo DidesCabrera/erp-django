@@ -4,27 +4,29 @@ from notas.application.services.access.capabilities import get_capabilities
 from notas.interface.routing.meal import meal_url, meal_configure_url, meal_list_url
 from notas.presentation.config.viewmodel_config import *
 
+
 # ==================================================
-# 1. DEFINICIÓN DECLARATIVA DE ACCIONES
-# (qué es cada acción, NO cuándo aparece)
+# 1. ENTITY ACTION DEFINITIONS
 # ==================================================
 
-MEAL_ACTION_DEFINITIONS = {
+MEAL_ENTITY_ACTION_DEFINITIONS = {
     "detail": {
         "label": "Ver",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: meal_url(meal),
     },
 
     "explore_detail": {
         "label": "Ver",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: reverse(
             "meal_explore_detail", args=[meal.id]
         ),
@@ -33,18 +35,20 @@ MEAL_ACTION_DEFINITIONS = {
     "cancel": {
         "label": "Cancelar",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: meal_list_url(),
     },
 
     "configure": {
         "label": "Configurar",
         "method": "get",
-        "group": "overflow",
         "icon": "settings",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: meal_configure_url(meal),
         "capability": "can_access_distribution_settings",
     },
@@ -52,9 +56,10 @@ MEAL_ACTION_DEFINITIONS = {
     "fork": {
         "label": "Duplicar",
         "method": "post",
-        "group": "overflow",
         "icon": "copy",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: reverse(
             "meal_fork", args=[meal.id]
         ),
@@ -64,9 +69,10 @@ MEAL_ACTION_DEFINITIONS = {
     "fork_explore": {
         "label": "Guardar en Personal",
         "method": "post",
-        "group": "primary",
         "icon": "bookmark",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: reverse(
             "meal_fork", args=[meal.id]
         ),
@@ -76,9 +82,10 @@ MEAL_ACTION_DEFINITIONS = {
     "copy": {
         "label": "Copy",
         "method": "post",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_copy", args=[meal.id]
         ),
@@ -88,46 +95,46 @@ MEAL_ACTION_DEFINITIONS = {
     "add_to_dailyplan": {
         "label": "Agregar a Plan",
         "method": "get",
-        "group": "overflow",
         "icon": "clipboard-plus",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: reverse(
             "add_meal_from_list", args=[meal.id]
         ),
     },
 
-    # ---- FUTURAS (safe no-op si no se usan) ----
-
     "delete": {
         "label": "Eliminar",
         "method": "post",
-        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_delete", args=[meal.id]
         ),
     },
 
-
     "deep_edit": {
         "label": "Editar",
         "method": "post",
-        "group": "primary",
         "icon": "pencil",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_detail", args=[meal.id]
         ),
     },
 
-    #se refiere a volver desde una edicion. reemplaza a save/cancel
     "back_detail": {
         "label": "Finalizar",
         "method": "post",
-        "group": "primary",
         "icon": "check",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: reverse(
             "meal_detail", args=[meal.id]
         ),
@@ -136,9 +143,10 @@ MEAL_ACTION_DEFINITIONS = {
     "finish_for_dailyplan": {
         "label": "Guardar y volver",
         "method": "post",
-        "group": "primary",
         "icon": "check",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda meal, context=None: reverse(
             "meal_detail", args=[meal.id]
         ),
@@ -147,32 +155,33 @@ MEAL_ACTION_DEFINITIONS = {
     "back_to_list": {
         "label": "Volver",
         "method": "post",
-        "group": "overflow",
         "icon": "chevron-left",
         "order": 90,
-        "get_url": lambda meal, context=None: reverse(
-            "meal_list"
-        ),
+        "is_back": True,
+        "desktop_position": "inline",
+        "mobile_position": "hidden",
+        "get_url": lambda meal, context=None: reverse("meal_list"),
     },
 
     "back_to_explore_list": {
         "label": "Volver",
         "method": "post",
-        "group": "primary",
         "icon": "chevron-left",
         "order": 90,
-        "get_url": lambda meal, context=None: reverse(
-            "meal_explore_list"
-        ),
+        "is_back": True,
+        "desktop_position": "inline",
+        "mobile_position": "hidden",
+        "get_url": lambda meal, context=None: reverse("meal_explore_list"),
     },
 
     "remove": {
         "label": "Eliminar",
         "method": "post",
-        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
-        "get_url": lambda meal, ctx=None: reverse(
+        "desktop_position": "menu",
+        "mobile_position": "menu",
+        "get_url": lambda meal, context=None: reverse(
             "meal_remove", args=[meal.id]
         ),
     },
@@ -180,10 +189,11 @@ MEAL_ACTION_DEFINITIONS = {
     "delete_draft": {
         "label": "Eliminar",
         "method": "post",
-        "group": "primary",
         "icon": "trash-2",
         "order": 90,
-        "get_url": lambda meal, ctx=None: reverse(
+        "desktop_position": "menu",
+        "mobile_position": "menu",
+        "get_url": lambda meal, context=None: reverse(
             "meal_draft_delete", args=[meal.id]
         ),
     },
@@ -191,27 +201,27 @@ MEAL_ACTION_DEFINITIONS = {
     "share": {
         "label": "Compartir",
         "method": "post",
-        "group": "overflow",
         "icon": "send",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_share", args=[meal.id]
         ),
-    }
-
+    },
 }
 
+
 # ==================================================
-# 2. ACCIONES PERMITIDAS POR CONTEXTO
+# 2. ENTITY ACTIONS BY VIEWMODE
 # ==================================================
 
-MEAL_ACTIONS_BY_VIEWMODE = {
+MEAL_ENTITY_ACTIONS_BY_VIEWMODE = {
     MEAL_VIEWMODE_PERSONAL_LIST: [
         "add_to_dailyplan",
         "detail",
-        #"share",
+        # "share",
     ],
-
 
     MEAL_VIEWMODE_PERSONAL_DETAIL: [
         "back_to_list",
@@ -227,60 +237,87 @@ MEAL_ACTIONS_BY_VIEWMODE = {
     ],
 
     MEAL_VIEWMODE_SHARED_LIST: [
-        "save_my_list",
         "detail",
     ],
 
     MEAL_VIEWMODE_DRAFT_LIST: [
         "delete_draft",
-        "edit",
     ],
 
     MEAL_VIEWMODE_SHARED_DETAIL: [
-        "save_my_list",
-        "unshare",
     ],
-
-
 
     MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN: [
         "configure",
         "remove",
         "finish_for_dailyplan",
     ],
-    
+
     MEAL_VIEWMODE_EXPLORE_DETAIL: [
         "back_to_explore_list",
         "fork",
     ],
 
-    MEAL_VIEWMODE_CONFIGURE:[
+    MEAL_VIEWMODE_CONFIGURE: [
         "back_detail",
     ],
 
     MEAL_VIEWMODE_CREATE: [
-        "continue",
         "cancel",
     ],
 
     MEAL_VIEWMODE_DAILYPLAN: [
-        # dentro de un dailyplan
         "detail",
     ],
 }
 
+
 # ==================================================
-# 3. RESOLVER PRINCIPAL
+# 3. PAGE ACTION DEFINITIONS
 # ==================================================
 
-def resolve_meal_actions(meal, user, viewmode):
-    caps = get_capabilities(user)
+MEAL_PAGE_ACTION_DEFINITIONS = {
+    "create": {
+        "label": "Crear",
+        "method": "get",
+        "icon": "plus",
+        "order": 10,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
+        "get_url": lambda user, context=None: reverse("meal_create"),
+    },
+}
+
+
+# ==================================================
+# 4. PAGE ACTIONS BY VIEWMODE
+# ==================================================
+
+MEAL_PAGE_ACTIONS_BY_VIEWMODE = {
+    MEAL_VIEWMODE_PERSONAL_LIST: [
+        "create",
+    ],
+    MEAL_VIEWMODE_EXPLORE_LIST: [],
+    MEAL_VIEWMODE_SHARED_LIST: [],
+    MEAL_VIEWMODE_DRAFT_LIST: [],
+}
+
+
+# ==================================================
+# 5. INTERNAL BUILDERS
+# ==================================================
+
+def _build_actions_from_definitions(
+    *,
+    definitions,
+    allowed_keys,
+    subject,
+    caps=None,
+):
     actions = []
 
-    allowed_keys = MEAL_ACTIONS_BY_VIEWMODE.get(viewmode, [])
-
     for key in allowed_keys:
-        definition = MEAL_ACTION_DEFINITIONS.get(key)
+        definition = definitions.get(key)
         if not definition:
             continue
 
@@ -295,9 +332,9 @@ def resolve_meal_actions(meal, user, viewmode):
             get_url = definition["get_url"]
 
             try:
-                url = get_url(meal, None)
+                url = get_url(subject, None)
             except TypeError:
-                url = get_url(meal)
+                url = get_url(subject)
 
         except NoReverseMatch:
             continue
@@ -308,69 +345,51 @@ def resolve_meal_actions(meal, user, viewmode):
                 "label": definition["label"],
                 "url": url,
                 "method": definition["method"],
-                "group": definition.get("group", "primary"),
                 "icon": definition.get("icon"),
                 "order": definition.get("order", 100),
                 "is_back": definition.get("is_back", False),
+                "desktop_position": definition.get("desktop_position", "inline"),
+                "mobile_position": definition.get("mobile_position", "inline"),
             }
         )
 
     return actions
-    """
-    Devuelve una lista de acciones disponibles para una Meal
-    según viewmode + capabilities.
-    """
+
+
+# ==================================================
+# 6. ENTITY RESOLVER
+# ==================================================
+
+def resolve_meal_entity_actions(meal, user, viewmode):
     caps = get_capabilities(user)
-    actions = []
+    allowed_keys = MEAL_ENTITY_ACTIONS_BY_VIEWMODE.get(viewmode, [])
 
-    allowed_keys = MEAL_ACTIONS_BY_VIEWMODE.get(viewmode, [])
+    return _build_actions_from_definitions(
+        definitions=MEAL_ENTITY_ACTION_DEFINITIONS,
+        allowed_keys=allowed_keys,
+        subject=meal,
+        caps=caps,
+    )
 
-    for key in allowed_keys:
 
-        definition = MEAL_ACTION_DEFINITIONS.get(key)
-        if not definition:
-            continue
+# ==================================================
+# 7. PAGE RESOLVER
+# ==================================================
 
-        # ------------------------------
-        # capability check
-        # ------------------------------
+def resolve_meal_page_actions(user, viewmode):
+    allowed_keys = MEAL_PAGE_ACTIONS_BY_VIEWMODE.get(viewmode, [])
 
-        capability_name = definition.get("capability")
+    return _build_actions_from_definitions(
+        definitions=MEAL_PAGE_ACTION_DEFINITIONS,
+        allowed_keys=allowed_keys,
+        subject=user,
+        caps=None,
+    )
 
-        if capability_name:
-            if not caps or not hasattr(caps, capability_name):
-                continue
 
-            if not getattr(caps, capability_name)():
-                continue
+# ==================================================
+# 8. COMPATIBILITY ALIAS
+# ==================================================
 
-        method = definition.get("method", "get")
-
-        # ------------------------------
-        # resolve URL (optional)
-        # ------------------------------
-
-        url = None
-        get_url = definition.get("get_url")
-
-        if get_url:
-            try:
-                url = get_url(meal, context)
-            except NoReverseMatch:
-                continue
-
-        # ------------------------------
-        # build action object
-        # ------------------------------
-
-        actions.append({
-            "key": key,
-            "label": definition["label"],
-            "method": method,
-            "url": url,
-            "group": definition.get("group", "primary"),
-            "icon": definition.get("icon"),
-            "order": definition.get("order", 100),
-        })
-
-    return actions
+def resolve_meal_actions(meal, user, viewmode):
+    return resolve_meal_entity_actions(meal, user, viewmode)

@@ -39,10 +39,26 @@ git ls-files | grep "notas/actions"
 git branch --show-current
 git status
 git add .
-git commit -m "Ajustes menores CSS picker - parte 4"
+git commit -m "Commit estable antes del cambio"
 git push origin main
 git log --oneline -n 5 #ver ultimos commit
 git checkout -b feature/ux-improvements #crear nuevo branch
+
+
+git switch -c refactor-header-actions-2 (crea y cambia de branch)
+
+
+
+
+#LOCAL
+python manage.py export_foods --output foods_export.csv
+#PROD
+python manage.py export_foods --output /tmp/foods_export.csv
+
+#LOCAL
+python manage.py export_foods_full --output foods_full_export.csv
+#PROD
+python manage.py export_foods_full --output /tmp/foods_full_export.csv
 
 
 

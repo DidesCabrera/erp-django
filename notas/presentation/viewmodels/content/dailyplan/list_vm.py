@@ -1,11 +1,13 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from typing import List, Dict, Any, Optional
+
 from notas.presentation.resolvers.title_resolvers import CategoryBadgeUI
+from notas.presentation.viewmodels.components.header_vm import HeaderVM
+
 
 # =========================
 # UI ATOMS
 # =========================
-
 
 @dataclass
 class FoodsAggregationUI:
@@ -23,12 +25,10 @@ class MenuUI:
     meals: List[MenuMealUI]
 
 
-# notas/viewmodels/list_vm.py (o donde tengas los UI models)
 @dataclass
 class StructuralIndicatorsUI:
     meals_count: Optional[int] = None
     foods_count: Optional[int] = None
-    
 
 
 @dataclass
@@ -58,12 +58,9 @@ class KPIUI:
     alloc_carbs: float
     alloc_fat: float
 
-    # ✅ UI flags (presentation logic)
     pct_outside_protein: bool = False
     pct_outside_carbs: bool = False
     pct_outside_fat: bool = False
-
-
 
 
 @dataclass
@@ -78,13 +75,14 @@ class IfShared:
     child_id: int
     share_id: Optional[int] = None
 
+
 # =========================
 # CARDS
 # =========================
 
 @dataclass
 class ChildCardUI:
-    child_id:float
+    child_id: float
     titulo: TitleUI
     kpis: KPIUI
     table: dict
@@ -101,7 +99,8 @@ class ChildCardUI:
 
 @dataclass
 class ListVM:
-    child_cards: List[ChildCardUI]
+    header: HeaderVM = field(default_factory=HeaderVM)
+    child_cards: List[ChildCardUI] = field(default_factory=list)
 
     def as_context(self):
         return {

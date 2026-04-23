@@ -1,13 +1,12 @@
 from notas.presentation.viewmodels.content.dailyplan.list_vm import *
 from notas.presentation.config.viewmodel_config import ALLOC_PCT_OUTSIDE_THRESHOLD
+from notas.presentation.composition.viewmodel.components.builder_headers import build_page_header
 
 
-def build_dailyplan_list_vm(content_data):
-
+def build_dailyplan_list_vm(content_data, page_actions=None):
     children = []
 
     for child_data in content_data.child_cards_data:
-
         child = ChildCardUI(
             child_id=child_data["child_id"],
 
@@ -20,7 +19,7 @@ def build_dailyplan_list_vm(content_data):
                 structural_indicators=StructuralIndicatorsUI(
                     meals_count=child_data["title"]["meals_count"],
                     foods_count=child_data["title"]["foods_count"],
-                )
+                ),
             ),
 
             kpis=KPIUI(
@@ -73,5 +72,6 @@ def build_dailyplan_list_vm(content_data):
         children.append(child)
 
     return ListVM(
+        header=build_page_header(actions=page_actions or []),
         child_cards=children,
     )

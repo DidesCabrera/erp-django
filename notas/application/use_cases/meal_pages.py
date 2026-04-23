@@ -18,22 +18,31 @@ from notas.presentation.config.viewmodel_config import (
     MEAL_VIEWMODE_DRAFT_LIST,
     MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN,
 )
-
-from notas.application.services.nutrition.nutrition_kpis import build_nutrition_kpis_from_meal
+from notas.application.services.nutrition.nutrition_kpis import (
+    build_nutrition_kpis_from_meal,
+    get_ppk_meal,
+)
 from notas.presentation.composition.js.food_picker_builder import (
     build_food_picker_context_payload,
     build_food_picker_foods_payload,
 )
-
-
-from notas.application.services.nutrition.nutrition_kpis import get_ppk_meal
-from notas.presentation.composition.viewmodel.components.builder_headers import build_meal_header
-from notas.presentation.composition.viewmodel.components.builder_table_items import build_mealfood_table_item
-from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import build_meal_foods_aggregation
-from notas.application.resolvers.meal_resolvers import resolve_meal_actions
-from notas.application.resolvers.meal_food_resolvers import resolve_meal_food_actions
+from notas.presentation.composition.viewmodel.components.builder_headers import (
+    build_meal_header,
+)
+from notas.presentation.composition.viewmodel.components.builder_table_items import (
+    build_mealfood_table_item,
+)
+from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import (
+    build_meal_foods_aggregation,
+)
+from notas.application.resolvers.meal_resolvers import (
+    resolve_meal_entity_actions,
+    resolve_meal_page_actions,
+)
+from notas.application.resolvers.meal_food_resolvers import (
+    resolve_meal_food_actions,
+)
 from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
-
 from notas.presentation.resolvers.title_resolvers import resolve_category_badge
 
 
@@ -50,13 +59,34 @@ class MealDetailPageData:
     viewmode: Any = None
 
 
+@dataclass
+class MealDetailContentData:
+    header: Any
+    main_card_data: dict
+    structural_indicators: dict
+    table_items: list
+    child_cards_data: list
+
+
+@dataclass
+class MealListContentData:
+    child_cards_data: list
+
+
+@dataclass
+class MealListPageData:
+    meals: Any
+    list_content_data: Any
+    page_actions: list
+    viewmode: Any
+
+
 def get_meal_detail_page_data(
     user,
     meal_id: int,
     viewmode,
     request_get=None,
 ) -> MealDetailPageData:
-
     request_get = request_get or {}
 
     meal = (
@@ -133,7 +163,7 @@ def get_meal_detail_page_data(
         header_builder=build_meal_header,
         build_mealfood_table_item=build_mealfood_table_item,
         build_meal_foods_aggregation=build_meal_foods_aggregation,
-        resolve_meal_actions=resolve_meal_actions,
+        resolve_meal_entity_actions=resolve_meal_entity_actions,
         content_icon_registry=CONTENT_ICON_REGISTRY,
     )
 
@@ -150,17 +180,6 @@ def get_meal_detail_page_data(
     )
 
 
-
-
-@dataclass
-class MealDetailContentData:
-    header: Any
-    main_card_data: dict
-    structural_indicators: dict
-    table_items: list
-    child_cards_data: list
-
-
 def build_meal_detail_content_data(
     meal,
     user,
@@ -168,21 +187,15 @@ def build_meal_detail_content_data(
     header_builder,
     build_mealfood_table_item,
     build_meal_foods_aggregation,
-    resolve_meal_actions,
+    resolve_meal_entity_actions,
     content_icon_registry,
 ):
-    # ==================================================
-    # HEADER
-    # ==================================================
     header = header_builder(
         meal=meal,
         user=user,
         viewmode=viewmode,
     )
 
-    # ==================================================
-    # MAIN AGGREGATES
-    # ==================================================
     meal_total_kcal = meal.total_kcal_cached or meal.total_kcal
     meal_protein = meal.protein_cached or meal.protein
     meal_carbs = meal.carbs_cached or meal.carbs
@@ -242,9 +255,6 @@ def build_meal_detail_content_data(
         "foods_count": len(meal_foods),
     }
 
-    # ==================================================
-    # CHILD CARDS = MEALFOODS
-    # ==================================================
     child_cards_data = []
 
     for mf in meal_foods:
@@ -274,7 +284,9 @@ def build_meal_detail_content_data(
                     "label": "Food",
                     "icon": content_icon_registry.get("food"),
                     "category": getattr(food, "category", None),
-                    "category_badge": resolve_category_badge(getattr(food, "category", None)),
+                    "category_badge": resolve_category_badge(
+                        getattr(food, "category", None)
+                    ),
                 },
                 "kpis": {
                     "ppk": 0,
@@ -306,13 +318,7 @@ def build_meal_detail_content_data(
     )
 
 
-
-@dataclass
-class MealListContentData:
-    child_cards_data: list
-
 def build_meal_list_content_data(meals, user, viewmode):
-
     child_cards_data = []
 
     for meal in meals:
@@ -338,7 +344,7 @@ def build_meal_list_content_data(meals, user, viewmode):
 
         foods_aggregation = build_meal_foods_aggregation(meal)
 
-        actions = resolve_meal_actions(
+        actions = resolve_meal_entity_actions(
             meal,
             user,
             viewmode,
@@ -384,13 +390,6 @@ def build_meal_list_content_data(meals, user, viewmode):
     )
 
 
-
-@dataclass
-class MealListPageData:
-    meals: Any
-    list_content_data: Any
-    viewmode: Any
-
 def get_meal_list_page_data(user) -> MealListPageData:
     meals = (
         Meal.objects
@@ -411,11 +410,18 @@ def get_meal_list_page_data(user) -> MealListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_meal_page_actions(
+        user,
+        viewmode,
+    )
+
     return MealListPageData(
         meals=meals,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
+
 
 def get_meal_explore_list_page_data(user) -> MealListPageData:
     meals = (
@@ -437,11 +443,18 @@ def get_meal_explore_list_page_data(user) -> MealListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_meal_page_actions(
+        user,
+        viewmode,
+    )
+
     return MealListPageData(
         meals=meals,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
+
 
 def get_meal_shared_list_page_data(user) -> MealListPageData:
     meals = (
@@ -464,11 +477,18 @@ def get_meal_shared_list_page_data(user) -> MealListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_meal_page_actions(
+        user,
+        viewmode,
+    )
+
     return MealListPageData(
         meals=meals,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
+
 
 def get_meal_draft_list_page_data(user) -> MealListPageData:
     meals = (
@@ -490,11 +510,14 @@ def get_meal_draft_list_page_data(user) -> MealListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_meal_page_actions(
+        user,
+        viewmode,
+    )
+
     return MealListPageData(
         meals=meals,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
-
-
-

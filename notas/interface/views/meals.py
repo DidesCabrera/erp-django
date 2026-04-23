@@ -137,13 +137,13 @@ def meal_unshare(request, share_id):
 
 @login_required
 def meal_list(request):
-
     page = get_meal_list_page_data(
         user=request.user,
     )
 
     content_vm = build_meal_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -158,17 +158,17 @@ def meal_list(request):
         "notas/meals/list.html",
         base_vm.as_context(),
     )
-    
+
 
 @login_required
 def meal_explore_list(request):
-
     page = get_meal_explore_list_page_data(
         user=request.user,
     )
 
     content_vm = build_meal_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -187,13 +187,13 @@ def meal_explore_list(request):
 
 @login_required
 def meal_shared_list(request):
-
     page = get_meal_shared_list_page_data(
         user=request.user,
     )
 
     content_vm = build_meal_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -212,13 +212,13 @@ def meal_shared_list(request):
 
 @login_required
 def meal_draft_list(request):
-
     page = get_meal_draft_list_page_data(
         user=request.user,
     )
 
     content_vm = build_meal_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -233,6 +233,9 @@ def meal_draft_list(request):
         "notas/meals/list.html",
         base_vm.as_context(),
     )
+
+
+
 
 
 # DETAIL VIEWS ···················

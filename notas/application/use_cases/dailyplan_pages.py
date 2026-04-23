@@ -6,9 +6,16 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import get_object_or_404
 
 from notas.domain.models import DailyPlanMeal, Meal
-from notas.application.services.queries.dailyplan_queries import get_dailyplan_for_edit
+from notas.application.services.queries.dailyplan_queries import (
+    get_dailyplan_for_edit,
+    dailyplans_with_kcal,
+)
 from notas.application.services.queries.meal_queries import meals_with_kcal
-from notas.application.services.nutrition.nutrition_kpis import build_nutrition_kpis_from_dailyplan
+from notas.application.services.nutrition.nutrition_kpis import (
+    build_nutrition_kpis_from_dailyplan,
+    get_ppk_meal,
+    get_ppk_dailyplan,
+)
 from notas.application.services.nutrition.meal_nutrition import rebuild_meal_cached_state
 from notas.presentation.composition.js.meal_picker_builder import (
     build_meal_picker_context_payload,
@@ -21,10 +28,7 @@ from notas.presentation.config.viewmodel_config import (
     DAILYPLAN_VIEWMODE_DRAFT_LIST,
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL,
 )
-
 from notas.application.services.access.access import get_dailyplan_for_user
-
-from notas.application.services.nutrition.nutrition_kpis import get_ppk_meal, get_ppk_dailyplan
 from notas.presentation.composition.viewmodel.components.builder_table_items import (
     build_dailyplanmeal_table_item,
     build_mealfood_table_item,
@@ -37,19 +41,18 @@ from notas.application.resolvers.dailyplan_meal_resolvers import (
     resolve_dailyplan_meal_actions,
 )
 from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
-
-from notas.presentation.composition.viewmodel.components.builder_headers import build_dailyplan_header
-
-from notas.application.services.queries.dailyplan_queries import dailyplans_with_kcal
-
-from notas.application.resolvers.dailyplan_resolvers import resolve_dailyplan_actions
+from notas.presentation.composition.viewmodel.components.builder_headers import (
+    build_dailyplan_header,
+)
 from notas.application.resolvers.share_resolvers import resolve_share_actions
-from notas.presentation.composition.viewmodel.components.builder_menu import build_dailyplan_menu
-
+from notas.presentation.composition.viewmodel.components.builder_menu import (
+    build_dailyplan_menu,
+)
 from notas.presentation.resolvers.title_resolvers import resolve_category_badge
-
-
-
+from notas.application.resolvers.dailyplan_resolvers import (
+    resolve_dailyplan_entity_actions,
+    resolve_dailyplan_page_actions,
+)
 
 
 def _meal_cache_is_missing(meal: Meal) -> bool:
@@ -66,6 +69,7 @@ def _meal_cache_is_missing(meal: Meal) -> bool:
             meal.foods_aggregation_cached,
         ]
     )
+
 
 def _ensure_cached_state(meals):
     """
@@ -95,13 +99,35 @@ class DailyPlanDetailPageData:
     meal_picker_context_json: str = "{}"
     viewmode: Any = None
 
+
+@dataclass
+class DailyPlanDetailContentData:
+    header: Any
+    main_card_data: dict
+    child_cards_data: list
+    foods_aggregation: Any
+    structural_indicators: dict
+
+
+@dataclass
+class DailyPlanListContentData:
+    child_cards_data: list
+
+
+@dataclass
+class DailyPlanListPageData:
+    dailyplans: Any
+    list_content_data: Any
+    page_actions: list
+    viewmode: Any
+
+
 def get_dailyplan_detail_page_data(
     user,
     dailyplan_id: int,
     viewmode,
     request_get=None,
 ) -> DailyPlanDetailPageData:
-
     request_get = request_get or {}
 
     selected_meal_id = None
@@ -200,15 +226,6 @@ def get_dailyplan_detail_page_data(
     )
 
 
-
-@dataclass
-class DailyPlanDetailContentData:
-    header: Any
-    main_card_data: dict
-    child_cards_data: list
-    foods_aggregation: Any
-    structural_indicators: dict
-
 def build_dailyplan_detail_content_data(
     dailyplan,
     dailyplan_meals,
@@ -216,18 +233,12 @@ def build_dailyplan_detail_content_data(
     viewmode,
     header_builder,
 ):
-    # ==================================================
-    # HEADER
-    # ==================================================
     header = header_builder(
         dailyplan=dailyplan,
         user=user,
         viewmode=viewmode,
     )
 
-    # ==================================================
-    # DAILYPLAN AGGREGATES
-    # ==================================================
     dp_total_kcal = dailyplan.total_kcal
     dp_protein = dailyplan.protein
     dp_carbs = dailyplan.carbs
@@ -249,7 +260,6 @@ def build_dailyplan_detail_content_data(
     ]
 
     menu = build_dailyplan_menu(dailyplan_meals)
-    
     has_dpm = len(dailyplan_meals) > 0
 
     main_card_data = {
@@ -287,9 +297,6 @@ def build_dailyplan_detail_content_data(
         "show_table": has_dpm,
     }
 
-    # ==================================================
-    # CHILD CARDS DATA
-    # ==================================================
     child_cards_data = []
 
     for dpm in dailyplan_meals:
@@ -373,12 +380,6 @@ def build_dailyplan_detail_content_data(
     )
 
 
-
-@dataclass
-class DailyPlanListPageData:
-    dailyplans: Any
-    viewmode: Any
-
 def get_dailyplan_list_page_data(user) -> DailyPlanListPageData:
     dailyplans = (
         dailyplans_with_kcal()
@@ -397,11 +398,18 @@ def get_dailyplan_list_page_data(user) -> DailyPlanListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_dailyplan_page_actions(
+        user,
+        viewmode,
+    )
+
     return DailyPlanListPageData(
         dailyplans=dailyplans,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
+
 
 def get_dailyplan_explore_list_page_data(user) -> DailyPlanListPageData:
     dailyplans = (
@@ -421,11 +429,18 @@ def get_dailyplan_explore_list_page_data(user) -> DailyPlanListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_dailyplan_page_actions(
+        user,
+        viewmode,
+    )
+
     return DailyPlanListPageData(
         dailyplans=dailyplans,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
+
 
 def get_dailyplan_shared_list_page_data(user) -> DailyPlanListPageData:
     dailyplans = (
@@ -447,11 +462,18 @@ def get_dailyplan_shared_list_page_data(user) -> DailyPlanListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_dailyplan_page_actions(
+        user,
+        viewmode,
+    )
+
     return DailyPlanListPageData(
         dailyplans=dailyplans,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
+
 
 def get_dailyplan_draft_list_page_data(user) -> DailyPlanListPageData:
     dailyplans = (
@@ -471,28 +493,23 @@ def get_dailyplan_draft_list_page_data(user) -> DailyPlanListPageData:
         viewmode=viewmode,
     )
 
+    page_actions = resolve_dailyplan_page_actions(
+        user,
+        viewmode,
+    )
+
     return DailyPlanListPageData(
         dailyplans=dailyplans,
         list_content_data=list_content_data,
+        page_actions=page_actions,
         viewmode=viewmode,
     )
 
-@dataclass
-class DailyPlanListContentData:
-    child_cards_data: list
-
-@dataclass
-class DailyPlanListPageData:
-    dailyplans: Any
-    list_content_data: Any
-    viewmode: Any
 
 def build_dailyplan_list_content_data(dailyplans, user, viewmode):
-
     child_cards_data = []
 
     for dailyplan in dailyplans:
-
         dp_total_kcal = dailyplan.total_kcal
         dp_protein = dailyplan.protein
         dp_carbs = dailyplan.carbs
@@ -527,7 +544,7 @@ def build_dailyplan_list_content_data(dailyplans, user, viewmode):
         actions = []
 
         actions.extend(
-            resolve_dailyplan_actions(
+            resolve_dailyplan_entity_actions(
                 dailyplan,
                 user,
                 viewmode,
@@ -587,4 +604,3 @@ def build_dailyplan_list_content_data(dailyplans, user, viewmode):
     return DailyPlanListContentData(
         child_cards_data=child_cards_data,
     )
-

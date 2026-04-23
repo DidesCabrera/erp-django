@@ -4,37 +4,41 @@ from notas.application.services.access.capabilities import get_capabilities
 from notas.interface.routing.dailyplan import dailyplan_url, dailyplan_configure_url
 from notas.presentation.config.viewmodel_config import *
 
+
 # ==================================================
-# 1. DEFINICIÓN DECLARATIVA DE ACCIONES
+# 1. ENTITY ACTION DEFINITIONS
 # ==================================================
 
-DAILYPLAN_ACTION_DEFINITIONS = {
+DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
     "detail": {
         "label": "Ver",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
     "shared_detail": {
         "label": "Ver",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_shared_detail", args=[dp.id]
         ),
     },
-    
+
     "draft_detail": {
         "label": "Ver Draft",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_draft_detail", args=[dp.id]
         ),
@@ -43,9 +47,10 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "explore_detail": {
         "label": "Ver",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-right",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_explore_detail", args=[dp.id]
         ),
@@ -54,21 +59,21 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "configure": {
         "label": "Configurar",
         "method": "get",
-        "group": "overflow",
         "icon": "settings",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: dailyplan_configure_url(dp),
         "capability": "can_access_distribution_settings",
     },
 
-# FORK FAMILY ===================================
-
     "fork": {
         "label": "Duplicar",
         "method": "post",
-        "group": "primary",
         "icon": "copy",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
@@ -78,22 +83,24 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "fork_explore": {
         "label": "Guardar en Personal",
         "method": "post",
-        "group": "primary",
         "icon": "bookmark",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
         "capability": "can_fork",
     },
 
-     "save": {
+    "save": {
         "label": "Guardar",
         "method": "post",
-        "group": "primary",
         "icon": "bookmark",
         "order": 90,
-        "get_url": lambda dp, ctx=None: reverse(
+        "desktop_position": "inline",
+        "mobile_position": "inline",
+        "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
         "capability": "can_fork",
@@ -102,36 +109,36 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "save_my_list": {
         "label": "Guardar en Personal",
         "method": "post",
-        "group": "primary",
         "icon": "bookmark",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
         "capability": "can_fork",
     },
 
-#____________________________________________
-
     "copy": {
         "label": "Copiar",
         "method": "post",
-        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_copy", args=[dp.id]
         ),
         "capability": "can_copy",
     },
 
-
     "delete": {
         "label": "Borrar",
         "method": "post",
-        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_delete", args=[dp.id]
         ),
@@ -141,9 +148,10 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "share": {
         "label": "Compartir",
         "method": "post",
-        "group": "overflow",
         "icon": "send",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_share", args=[dp.id]
         ),
@@ -152,9 +160,10 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "remove": {
         "label": "Remover",
         "method": "post",
-        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_remove", args=[dp.id]
         ),
@@ -163,9 +172,10 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "unshare": {
         "label": "Quitar",
         "method": "post",
-        "group": "primary",
         "icon": "trash-2",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda share_id, context=None: reverse(
             "dailyplan_unshare", args=[share_id]
         ),
@@ -174,9 +184,10 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "edit": {
         "label": "Editar",
         "method": "post",
-        "group": "overflow",
         "icon": "pencil",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_edit", args=[dp.id]
         ),
@@ -185,88 +196,80 @@ DAILYPLAN_ACTION_DEFINITIONS = {
     "draft_edit": {
         "label": "Retomar",
         "method": "post",
-        "group": "primary",
         "icon": "pencil",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_draft_edit", args=[dp.id]
         ),
     },
-    # Proveniente de un edit
+
     "back_detail": {
         "label": "Finalizar",
         "method": "get",
-        "group": "primary",
         "icon": "check",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dp, context=None: dailyplan_url(dp),
     },
 
-    # Proveniente de un detail
     "back_to_list": {
         "label": "Volver",
         "method": "post",
-        "group": "primary",
         "icon": "chevron-left",
         "order": 90,
         "is_back": True,
-        "get_url": lambda meal, context=None: reverse(
-            "dailyplan_list"
-        ),
+        "desktop_position": "inline",
+        "mobile_position": "hidden",
+        "get_url": lambda dp, context=None: reverse("dailyplan_list"),
     },
 
-    # Proveniente de un detail
     "back_to_explore_list": {
         "label": "Salir",
         "method": "post",
-        "group": "primary",
         "icon": "chevron-left",
         "order": 90,
         "is_back": True,
-        "get_url": lambda meal, context=None: reverse(
-            "dailyplan_explore_list"
-        ),
+        "desktop_position": "inline",
+        "mobile_position": "hidden",
+        "get_url": lambda dp, context=None: reverse("dailyplan_explore_list"),
     },
 
-    # Proveniente de un detail
     "back_to_shared_list": {
         "label": "Salir",
         "method": "post",
-        "group": "primary",
         "icon": "chevron-left",
         "order": 90,
         "is_back": True,
-        "get_url": lambda meal, context=None: reverse(
-            "dailyplan_shared_list"
-        ),
+        "desktop_position": "inline",
+        "mobile_position": "hidden",
+        "get_url": lambda dp, context=None: reverse("dailyplan_shared_list"),
     },
 
-    # Proveniente de un detail
     "back_to_draft_list": {
         "label": "Salir",
         "method": "post",
-        "group": "primary",
         "icon": "chevron-left",
         "order": 90,
         "is_back": True,
-        "get_url": lambda meal, context=None: reverse(
-            "dailyplan_draft_list"
-        ),
+        "desktop_position": "inline",
+        "mobile_position": "hidden",
+        "get_url": lambda dp, context=None: reverse("dailyplan_draft_list"),
     },
-
 }
 
+
 # ==================================================
-# 2. ACCIONES PERMITIDAS POR CONTEXTO
+# 2. ENTITY ACTIONS BY VIEWMODE
 # ==================================================
 
-DAILYPLAN_ACTIONS_BY_VIEWMODE = {
-    
-    # PERSONAL
+DAILYPLAN_ENTITY_ACTIONS_BY_VIEWMODE = {
     DAILYPLAN_VIEWMODE_PERSONAL_LIST: [
         "fork",
         "detail",
-        #"share",
+        # "share",
     ],
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
@@ -276,7 +279,6 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
         "remove",
     ],
 
-    # EXPLORE
     DAILYPLAN_VIEWMODE_EXPLORE_LIST: [
         "save",
         "explore_detail",
@@ -287,7 +289,6 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
         "fork_explore",
     ],
 
-    # SHARE
     DAILYPLAN_VIEWMODE_SHARED_LIST: [
         "save_my_list",
         "shared_detail",
@@ -299,7 +300,6 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
         "back_to_shared_list",
     ],
 
-    # DRAFT
     DAILYPLAN_VIEWMODE_DRAFT_LIST: [
         "draft_edit",
         "remove",
@@ -309,7 +309,7 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
         "draft_edit",
         "remove",
         "back_to_draft_list",
-    ],  
+    ],
 
     DAILYPLAN_VIEWMODE_DRAFT_EDIT: [
         "configure",
@@ -318,31 +318,56 @@ DAILYPLAN_ACTIONS_BY_VIEWMODE = {
 
     DAILYPLAN_VIEWMODE_CONFIGURE: [
         "back_detail",
-    ]
-
+    ],
 }
 
 
+# ==================================================
+# 3. PAGE ACTION DEFINITIONS
+# ==================================================
 
+DAILYPLAN_PAGE_ACTION_DEFINITIONS = {
+    "create": {
+        "label": "Crear",
+        "method": "get",
+        "icon": "plus",
+        "order": 10,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
+        "get_url": lambda user, context=None: reverse("dailyplan_create"),
+    },
+}
 
 
 # ==================================================
-# 3. RESOLVER PRINCIPAL
+# 4. PAGE ACTIONS BY VIEWMODE
 # ==================================================
 
-def resolve_dailyplan_actions(dailyplan, user, viewmode):
-    """
-    Devuelve una lista de acciones disponibles para un DailyPlan,
-    según viewmode + capabilities del usuario.
-    """
+DAILYPLAN_PAGE_ACTIONS_BY_VIEWMODE = {
+    DAILYPLAN_VIEWMODE_PERSONAL_LIST: [
+        "create",
+    ],
+    DAILYPLAN_VIEWMODE_EXPLORE_LIST: [],
+    DAILYPLAN_VIEWMODE_SHARED_LIST: [],
+    DAILYPLAN_VIEWMODE_DRAFT_LIST: [],
+}
 
-    caps = get_capabilities(user)
+
+# ==================================================
+# 5. INTERNAL BUILDERS
+# ==================================================
+
+def _build_actions_from_definitions(
+    *,
+    definitions,
+    allowed_keys,
+    subject,
+    caps=None,
+):
     actions = []
 
-    allowed_keys = DAILYPLAN_ACTIONS_BY_VIEWMODE.get(viewmode, [])
-
     for key in allowed_keys:
-        definition = DAILYPLAN_ACTION_DEFINITIONS.get(key)
+        definition = definitions.get(key)
         if not definition:
             continue
 
@@ -357,9 +382,9 @@ def resolve_dailyplan_actions(dailyplan, user, viewmode):
             get_url = definition["get_url"]
 
             try:
-                url = get_url(dailyplan, None)
+                url = get_url(subject, None)
             except TypeError:
-                url = get_url(dailyplan)
+                url = get_url(subject)
 
         except NoReverseMatch:
             continue
@@ -370,11 +395,51 @@ def resolve_dailyplan_actions(dailyplan, user, viewmode):
                 "label": definition["label"],
                 "url": url,
                 "method": definition["method"],
-                "group": definition.get("group", "primary"),
                 "icon": definition.get("icon"),
                 "order": definition.get("order", 100),
                 "is_back": definition.get("is_back", False),
+                "desktop_position": definition.get("desktop_position", "inline"),
+                "mobile_position": definition.get("mobile_position", "inline"),
             }
         )
 
     return actions
+
+
+# ==================================================
+# 6. ENTITY RESOLVER
+# ==================================================
+
+def resolve_dailyplan_entity_actions(dailyplan, user, viewmode):
+    caps = get_capabilities(user)
+    allowed_keys = DAILYPLAN_ENTITY_ACTIONS_BY_VIEWMODE.get(viewmode, [])
+
+    return _build_actions_from_definitions(
+        definitions=DAILYPLAN_ENTITY_ACTION_DEFINITIONS,
+        allowed_keys=allowed_keys,
+        subject=dailyplan,
+        caps=caps,
+    )
+
+
+# ==================================================
+# 7. PAGE RESOLVER
+# ==================================================
+
+def resolve_dailyplan_page_actions(user, viewmode):
+    allowed_keys = DAILYPLAN_PAGE_ACTIONS_BY_VIEWMODE.get(viewmode, [])
+
+    return _build_actions_from_definitions(
+        definitions=DAILYPLAN_PAGE_ACTION_DEFINITIONS,
+        allowed_keys=allowed_keys,
+        subject=user,
+        caps=None,
+    )
+
+
+# ==================================================
+# 8. COMPATIBILITY ALIAS
+# ==================================================
+
+def resolve_dailyplan_actions(dailyplan, user, viewmode):
+    return resolve_dailyplan_entity_actions(dailyplan, user, viewmode)

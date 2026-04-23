@@ -1,7 +1,9 @@
 from notas.presentation.viewmodels.content.meal.list_meal_vm import *
+from notas.presentation.config.viewmodel_config import ALLOC_PCT_OUTSIDE_THRESHOLD
+from notas.presentation.composition.viewmodel.components.builder_headers import build_page_header
 
-def build_meal_list_vm(content_data):
 
+def build_meal_list_vm(content_data, page_actions=None):
     children = []
 
     for child_data in content_data.child_cards_data:
@@ -31,6 +33,15 @@ def build_meal_list_vm(content_data):
                 alloc_protein=child_data["kpis"]["alloc_protein"],
                 alloc_carbs=child_data["kpis"]["alloc_carbs"],
                 alloc_fat=child_data["kpis"]["alloc_fat"],
+                pct_outside_protein=(
+                    child_data["kpis"]["alloc_protein"] < ALLOC_PCT_OUTSIDE_THRESHOLD
+                ),
+                pct_outside_carbs=(
+                    child_data["kpis"]["alloc_carbs"] < ALLOC_PCT_OUTSIDE_THRESHOLD
+                ),
+                pct_outside_fat=(
+                    child_data["kpis"]["alloc_fat"] < ALLOC_PCT_OUTSIDE_THRESHOLD
+                ),
             ),
 
             table={"items": child_data["table_items"]},
@@ -49,5 +60,6 @@ def build_meal_list_vm(content_data):
         children.append(child)
 
     return ListVM(
+        header=build_page_header(actions=page_actions or []),
         child_cards=children,
     )

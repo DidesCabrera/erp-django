@@ -29,7 +29,7 @@
 
     <div class="page-header-right">
         {% if header.actions %}
-            {% include "components/header_actions.html" with actions=header.actions %}
+            {% include "components/header_actions.html" with header=header %}
         {% else %}
             <div class="btn-list-header">
             </div>

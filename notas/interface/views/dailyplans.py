@@ -41,6 +41,7 @@ from notas.application.services.commands.dailyplan_commands import (
     save_dailyplan,
 )
 
+
 #************ VIEW DE INBOX *********************
 
 @login_required
@@ -127,16 +128,15 @@ def dailyplan_unshare(request, share_id):
 
 #************ RENDER COMPLEJOS *********************
 
-# LIST VIEWS ···················
 @login_required
 def dailyplan_list(request):
-
     page = get_dailyplan_list_page_data(
         user=request.user,
     )
 
     content_vm = build_dailyplan_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -152,15 +152,16 @@ def dailyplan_list(request):
         base_vm.as_context(),
     )
 
+
 @login_required
 def dailyplan_explore_list(request):
-
     page = get_dailyplan_explore_list_page_data(
         user=request.user,
     )
 
     content_vm = build_dailyplan_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -176,15 +177,16 @@ def dailyplan_explore_list(request):
         base_vm.as_context(),
     )
 
+
 @login_required
 def dailyplan_shared_list(request):
-
     page = get_dailyplan_shared_list_page_data(
         user=request.user,
     )
 
     content_vm = build_dailyplan_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -200,15 +202,16 @@ def dailyplan_shared_list(request):
         base_vm.as_context(),
     )
 
+
 @login_required
 def dailyplan_draft_list(request):
-
     page = get_dailyplan_draft_list_page_data(
         user=request.user,
     )
 
     content_vm = build_dailyplan_list_vm(
         page.list_content_data,
+        page_actions=page.page_actions,
     )
 
     ui_vm = build_ui_vm(page.viewmode)
@@ -223,7 +226,6 @@ def dailyplan_draft_list(request):
         "notas/dailyplans/list.html",
         base_vm.as_context(),
     )
-
 
 # DETAIL VIEWS ···················
 

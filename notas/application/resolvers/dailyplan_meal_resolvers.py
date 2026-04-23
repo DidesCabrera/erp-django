@@ -4,17 +4,17 @@ from notas.application.services.access.capabilities import get_capabilities
 from notas.presentation.config.viewmodel_config import *
 
 # ==================================================
-# 1. DEFINICIÓN DECLARATIVA DE ACCIONES
-# (qué es cada acción, NO cuándo aparece)
+# 1. ENTITY ACTION DEFINITIONS
 # ==================================================
 
 DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "detail": {
         "label": "Ver",
         "method": "get",
-        "group": "primary",
         "icon": "pencil",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",
             args=[dpm.dailyplan.id, dpm.id],
@@ -24,23 +24,24 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "replace": {
         "label": "Cambiar",
         "method": "get",
-        "group": "primary",
         "icon": "repeat",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dpm, context=None: reverse(
             "replace_dailyplan_meal",
             args=[dpm.dailyplan.id, dpm.id],
         ),
-        # capability futura (safe no-op hoy)
         "capability": "can_edit_own_content",
     },
 
     "remove": {
         "label": "Quitar",
         "method": "post",
-        "group": "overflow",
         "icon": "trash-2",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda dpm, context=None: reverse(
             "remove_meal",
             args=[dpm.dailyplan.id, dpm.id],
@@ -51,9 +52,11 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "back_dp_detail": {
         "label": "Volver",
         "method": "get",
-        "group": "primary",
         "icon": "chevron-left",
         "order": 90,
+        "is_back": True,
+        "desktop_position": "inline",
+        "mobile_position": "hidden",
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_detail",
             args=[dpm.dailyplan.id],
@@ -63,9 +66,10 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "back_dpm_detail": {
         "label": "Finalizar",
         "method": "get",
-        "group": "overflow",
         "icon": "check",
         "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_detail",
             args=[dpm.dailyplan.id, dpm.id],
@@ -75,9 +79,10 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
     "edit": {
         "label": "Editar",
         "method": "get",
-        "group": "overflow",
         "icon": "settings-2",
         "order": 90,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
         "get_url": lambda dpm, context=None: reverse(
             "dailyplan_meal_edit",
             args=[dpm.dailyplan.id, dpm.id],
@@ -87,17 +92,15 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
 }
 
 # ==================================================
-# 2. ACCIONES PERMITIDAS POR CONTEXTO
+# 2. ACTIONS BY VIEWMODE
 # ==================================================
 
 DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
-    # Card dentro del DailyPlan
     DAILYPLAN_MEAL_VIEWMODE_LIST: [
         "replace",
         "detail",
     ],
 
-    # Vista detail del DailyPlanMeal
     DAILYPLAN_MEAL_VIEWMODE_DETAIL: [
         "back_dp_detail",
         "replace",
@@ -105,14 +108,9 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
         "remove",
     ],
 
-
-    DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT:[
+    DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT: [
         "back_dpm_detail",
     ],
-    
-    # ===============================
-    # ===== DAILYPLAN VIEWMODE ======
-    # ===============================
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
         "remove",
@@ -123,27 +121,24 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     DAILYPLAN_VIEWMODE_SHARED_DETAIL: [],
     DAILYPLAN_VIEWMODE_DRAFT_DETAIL: [
         "remove",
-    ]
+    ],
 }
 
-
 # ==================================================
-# 3. RESOLVER PRINCIPAL
+# 3. INTERNAL BUILDER
 # ==================================================
 
-def resolve_dailyplan_meal_actions(dpm, user, viewmode):
-    """
-    Devuelve una lista de acciones disponibles para un DailyPlanMeal,
-    según viewmode + capabilities del usuario.
-    """
-
-    caps = get_capabilities(user)
+def _build_actions_from_definitions(
+    *,
+    definitions,
+    allowed_keys,
+    subject,
+    caps=None,
+):
     actions = []
 
-    allowed_keys = DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE.get(viewmode, [])
-
     for key in allowed_keys:
-        definition = DAILYPLAN_MEAL_ACTION_DEFINITIONS.get(key)
+        definition = definitions.get(key)
         if not definition:
             continue
 
@@ -158,9 +153,9 @@ def resolve_dailyplan_meal_actions(dpm, user, viewmode):
             get_url = definition["get_url"]
 
             try:
-                url = get_url(dpm, None)
+                url = get_url(subject, None)
             except TypeError:
-                url = get_url(dpm)
+                url = get_url(subject)
 
         except NoReverseMatch:
             continue
@@ -171,11 +166,31 @@ def resolve_dailyplan_meal_actions(dpm, user, viewmode):
                 "label": definition["label"],
                 "url": url,
                 "method": definition["method"],
-                "group": definition.get("group", "primary"),
                 "icon": definition.get("icon"),
                 "order": definition.get("order", 100),
                 "is_back": definition.get("is_back", False),
+                "desktop_position": definition.get("desktop_position", "inline"),
+                "mobile_position": definition.get("mobile_position", "inline"),
             }
         )
 
     return actions
+
+# ==================================================
+# 4. RESOLVER PRINCIPAL
+# ==================================================
+
+def resolve_dailyplan_meal_actions(dpm, user, viewmode):
+    """
+    Devuelve una lista de acciones disponibles para un DailyPlanMeal,
+    según viewmode + capabilities del usuario.
+    """
+    caps = get_capabilities(user)
+    allowed_keys = DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE.get(viewmode, [])
+
+    return _build_actions_from_definitions(
+        definitions=DAILYPLAN_MEAL_ACTION_DEFINITIONS,
+        allowed_keys=allowed_keys,
+        subject=dpm,
+        caps=caps,
+    )

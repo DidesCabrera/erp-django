@@ -1,83 +1,138 @@
 <div class="actions-comp">
 
-    {% if actions %}
-    <div class="actions">
-    
-        <!-- PRIMARY ACTIONS -->
-        {% for action in actions %}
-            {% if action.group != "overflow" %}
-    
-                {% if action.method == "get" %}
-                    <a href="{{ action.url }}" class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}" title="{{ action.label }}">
-                        <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
-                    </a>
-    
-                {% elif action.method == "post" %}
-                    <form action="{{ action.url }}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button
-                            type="submit"
-                            name="{{ action.key }}"
-                            value="1"
-                            class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}"
-                            title="{{ action.label }}">
-    
-                            <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
-    
-                        </button>
-                    </form>
-                {% endif %}
-    
-            {% endif %}
-        {% endfor %}
-    
-        <!-- OVERFLOW MENU -->
-        <div class="overflow-menu">
-    
-            <button class="overflow-btn">
-                <i data-lucide="more-horizontal" class="more-horizontal-icon"></i>
-            </button>
-    
-            <div class="overflow-dropdown">
-    
-                {% for action in actions %}
-                    {% if action.group == "overflow" %}
-    
-                        {% if action.method == "get" %}
-                            <a href="{{ action.url }}" class="overflow-action">
-    
-                                <i data-lucide="{{ action.icon }}"></i>
-                                <span>{{ action.label }}</span>
-    
-                            </a>
-    
-                        {% elif action.method == "post" %}
-                            <form action="{{ action.url }}" method="post">
-                                {% csrf_token %}
-    
-                                <button
-                                    type="submit"
-                                    name="{{ action.key }}"
-                                    value="1"
-                                    class="overflow-action">
-    
-                                    <i data-lucide="{{ action.icon }}"></i>
-                                    <span>{{ action.label }}</span>
-    
-                                </button>
-    
-                            </form>
-    
-                        {% endif %}
-    
-                    {% endif %}
-                {% endfor %}
-    
-            </div>
-    
-        </div>
-    
-    </div>
-    {% endif %}
-    
+  {# DESKTOP #}
+  <div class="actions actions-desktop">
+
+      {% for action in header.desktop_inline_actions %}
+          {% if action.method == "get" %}
+              <a
+                  href="{{ action.url }}"
+                  class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}"
+                  title="{{ action.label }}"
+                  aria-label="{{ action.label }}"
+              >
+                  <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
+              </a>
+
+          {% elif action.method == "post" %}
+              <form action="{{ action.url }}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button
+                      type="submit"
+                      name="{{ action.key }}"
+                      value="1"
+                      class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}"
+                      title="{{ action.label }}"
+                      aria-label="{{ action.label }}"
+                  >
+                      <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
+                  </button>
+              </form>
+          {% endif %}
+      {% endfor %}
+
+      {% if header.desktop_menu_actions %}
+          <div class="overflow-menu overflow-menu-desktop">
+
+              <button class="overflow-btn" type="button" aria-label="Más acciones" title="Más acciones">
+                  <i data-lucide="more-horizontal" class="more-horizontal-icon"></i>
+              </button>
+
+              <div class="overflow-dropdown">
+                  {% for action in header.desktop_menu_actions %}
+                      {% if action.method == "get" %}
+                          <a href="{{ action.url }}" class="overflow-action">
+                              <i data-lucide="{{ action.icon }}"></i>
+                              <span>{{ action.label }}</span>
+                          </a>
+                      {% elif action.method == "post" %}
+                          <form action="{{ action.url }}" method="post">
+                              {% csrf_token %}
+                              <button
+                                  type="submit"
+                                  name="{{ action.key }}"
+                                  value="1"
+                                  class="overflow-action"
+                              >
+                                  <i data-lucide="{{ action.icon }}"></i>
+                                  <span>{{ action.label }}</span>
+                              </button>
+                          </form>
+                      {% endif %}
+                  {% endfor %}
+              </div>
+
+          </div>
+      {% endif %}
+
+  </div>
+
+
+  {# MOBILE #}
+  <div class="actions actions-mobile">
+
+      {% for action in header.mobile_inline_actions %}
+          {% if action.method == "get" %}
+              <a
+                  href="{{ action.url }}"
+                  class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}"
+                  title="{{ action.label }}"
+                  aria-label="{{ action.label }}"
+              >
+                  <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
+              </a>
+
+          {% elif action.method == "post" %}
+              <form action="{{ action.url }}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button
+                      type="submit"
+                      name="{{ action.key }}"
+                      value="1"
+                      class="action-icon-btn primary-action {% if action.is_back %}action-back{% endif %}"
+                      title="{{ action.label }}"
+                      aria-label="{{ action.label }}"
+                  >
+                      <i data-lucide="{{ action.icon }}" class="header-action-icon"></i>
+                  </button>
+              </form>
+          {% endif %}
+      {% endfor %}
+
+      {% if header.mobile_menu_actions %}
+          <div class="overflow-menu overflow-menu-mobile">
+
+              <button class="overflow-btn" type="button" aria-label="Más acciones" title="Más acciones">
+                  <i data-lucide="more-horizontal" class="more-horizontal-icon"></i>
+              </button>
+
+              <div class="overflow-dropdown">
+                  {% for action in header.mobile_menu_actions %}
+                      {% if action.method == "get" %}
+                          <a href="{{ action.url }}" class="overflow-action">
+                              <i data-lucide="{{ action.icon }}"></i>
+                              <span>{{ action.label }}</span>
+                          </a>
+                      {% elif action.method == "post" %}
+                          <form action="{{ action.url }}" method="post">
+                              {% csrf_token %}
+                              <button
+                                  type="submit"
+                                  name="{{ action.key }}"
+                                  value="1"
+                                  class="overflow-action"
+                              >
+                                  <i data-lucide="{{ action.icon }}"></i>
+                                  <span>{{ action.label }}</span>
+                              </button>
+                          </form>
+                      {% endif %}
+                  {% endfor %}
+              </div>
+
+          </div>
+      {% endif %}
+
+  </div>
+
 </div>
