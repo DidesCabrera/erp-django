@@ -9,16 +9,91 @@
     <i data-lucide="thumbs-up" class="welcome-icon"></i>
     <h1 class="welcome-title">{{ vm.content.hero.title }}</h1>
   </div>
-  <!-- HERO ================================================== -->
   <section class="home-hero main">
     <div class="home-hero-copy">
-      <h1>My Scoope</h1>
-      <div class="home-banner">
-
+      <div class="home-banner-carousel js-home-banner-carousel">
+        <div class="home-banner-track">
+  
+          <div class="home-banner-slide is-active">
+            <img
+              src="{% static 'notas/img/home-banner-1.jpg' %}"
+              alt="Banner 1"
+              class="home-banner-image"
+            >
+            <div class="home-banner-overlay">
+              <img
+                src="{% static 'notas/img/logo-white.png' %}"
+                alt="My Scoope"
+                class="home-banner-logo"
+              >
+              <h1 class="home-banner-title">Organiza tu nutrición</h1>
+              <p class="home-banner-text">
+                Crea planes diarios, estructura comidas y mantén una visión clara de tu alimentación.
+              </p>
+            </div>
+          </div>
+  
+          <div class="home-banner-slide">
+            <img
+              src="{% static 'notas/img/home-banner-2.jpg' %}"
+              alt="Banner 2"
+              class="home-banner-image"
+            >
+            <div class="home-banner-overlay">
+              <h1 class="home-banner-title">Construye comidas con precisión</h1>
+              <p class="home-banner-text">
+                Ajusta macros, alimentos y porciones de forma simple y visual.
+              </p>
+            </div>
+          </div>
+  
+          <div class="home-banner-slide">
+            <img
+              src="{% static 'notas/img/home-banner-3.jpg' %}"
+              alt="Banner 3"
+              class="home-banner-image"
+            >
+            <div class="home-banner-overlay">
+              <img
+                src="{% static 'notas/img/logo-white.png' %}"
+                alt="My Scoope"
+                class="home-banner-logo"
+              >
+              <h1 class="home-banner-title">Explora y crea mejor</h1>
+              <p class="home-banner-text">
+                Gestiona tu librería personal y trabaja con una experiencia más clara y ordenada.
+              </p>
+            </div>
+          </div>
+  
+        </div>
       </div>
-      <p class="home-hero-subtitle">
-        {{ vm.content.hero.subtitle }}
-      </p>
+  
+      <div class="home-banner-controls">
+        <div class="home-banner-controls-group">
+          <button
+            type="button"
+            class="home-banner-nav home-banner-nav--prev js-home-banner-prev"
+            aria-label="Banner anterior"
+          >
+            <i data-lucide="chevron-left" class="home-banner-nav-icon"></i>
+          </button>
+      
+          <div class="home-banner-dots">
+            <button type="button" class="home-banner-dot is-active js-home-banner-dot" data-slide="0" aria-label="Ir a banner 1"></button>
+            <button type="button" class="home-banner-dot js-home-banner-dot" data-slide="1" aria-label="Ir a banner 2"></button>
+            <button type="button" class="home-banner-dot js-home-banner-dot" data-slide="2" aria-label="Ir a banner 3"></button>
+          </div>
+      
+          <button
+            type="button"
+            class="home-banner-nav home-banner-nav--next js-home-banner-next"
+            aria-label="Siguiente banner"
+          >
+            <i data-lucide="chevron-right" class="home-banner-nav-icon"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -211,4 +286,6 @@
 </div>
 
 <script src="{% static 'notas/js/collapse_cards.js' %}"></script>
+<script src="{% static 'notas/js/home_banner_carousel.js' %}"></script>
+
 {% endblock %}
