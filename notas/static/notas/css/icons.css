@@ -286,9 +286,10 @@
 
 .welcome-icon{
   color: rgb(21, 21, 21);
-  height: 18px;
-  width: 18px;
+  height: 16px;
+  width: 16px;
   flex-shrink: 0;
+  stroke-width: 2.5;
 }
 
 
@@ -298,6 +299,7 @@
 .home-stat-icon.food { 
   background-color: var(--color-food);
 }
+
 .home-section-header-icon.meal,
 .preview-picker-icon.meal, 
 .selected-picker-icon.meal,
@@ -312,7 +314,10 @@
   background-color: var(--color-dailyplan); 
 }
 
-
+.home-stat-icon.weight { 
+  padding: 0;
+  color: black;
+}
 
 
 
@@ -375,10 +380,10 @@
   }
 
   .home-stat-icon{
-    height: 22px;
-    width: 22px;
-    padding: 4px;
-    border-radius: 6px;
+    height: 18px;
+    width: 18px;
+    padding: 3px;
+    border-radius: 5px;
   }
 
 }

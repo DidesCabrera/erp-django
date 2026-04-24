@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="page home-page">
-  <div class="home-stat-top">
+  <div class="home-stat-top welcome">
     <i data-lucide="thumbs-up" class="welcome-icon"></i>
     <h1 class="welcome-title">{{ vm.content.hero.title }}</h1>
   </div>
@@ -31,7 +31,6 @@
         <span class="home-stat-label">Planes Diarios</span>
       </div>
 
-      <div class="home-stat-bottom">
         <a href="{% url 'dailyplan_list' %}" class="home-stat-card-link">
           <div class="home-stat-value-row">
             <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
@@ -41,13 +40,15 @@
 
         <div class="home-stat-actions">
           <a href="{% url 'dailyplan_explore_list' %}" class="home-cta">
-            <i data-lucide="search" class="btn-card-home-icon black"></i>Explorar
+            <i data-lucide="search" class="btn-card-home-icon black"></i>
+            <span class="home-cta-text">Explorar</span>
           </a>
           <a href="{% url 'dailyplan_create' %}" class="home-cta home-cta--primary">
-            <i data-lucide="plus" class="btn-card-home-icon white"></i>Crear
+            <i data-lucide="plus" class="btn-card-home-icon white"></i>
+            <span class="home-cta-text">Crear</span>
           </a>
         </div>
-      </div>
+
     </div>
 
     <div class="home-stat-card">
@@ -56,23 +57,25 @@
         <span class="home-stat-label">Comidas</span>
       </div>
     
-      <div class="home-stat-bottom">
-        <a href="{% url 'meal_list' %}" class="home-stat-card-link">
-          <div class="home-stat-value-row">
-            <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
-            <div class="home-stat-value">{{ vm.content.stats.1.value }}</div>
-          </div>
-        </a>
-    
-        <div class="home-stat-actions">
-          <a href="{% url 'meal_explore_list' %}" class="home-cta">
-            <i data-lucide="search" class="btn-card-home-icon black"></i>Explorar
-          </a>
-          <a href="{% url 'meal_create' %}" class="home-cta home-cta--primary">
-            <i data-lucide="plus" class="btn-card-home-icon white"></i>Crear
-          </a>
+      
+      <a href="{% url 'meal_list' %}" class="home-stat-card-link">
+        <div class="home-stat-value-row">
+          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+          <div class="home-stat-value">{{ vm.content.stats.1.value }}</div>
         </div>
+      </a>
+  
+      <div class="home-stat-actions">
+        <a href="{% url 'meal_explore_list' %}" class="home-cta">
+          <i data-lucide="search" class="btn-card-home-icon black"></i>
+          <span class="home-cta-text">Explorar</span>
+        </a>
+        <a href="{% url 'meal_create' %}" class="home-cta home-cta--primary">
+          <i data-lucide="plus" class="btn-card-home-icon white"></i>
+          <span class="home-cta-text">Crear</span>
+        </a>
       </div>
+    
     </div>
 
     <div class="home-stat-card">
@@ -81,22 +84,43 @@
         <span class="home-stat-label">Alimentos</span>
       </div>
     
-      <div class="home-stat-bottom">
-        <a href="{% url 'food_list' %}" class="home-stat-card-link">
-          <div class="home-stat-value-row">
-            <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
-            <div class="home-stat-value">{{ vm.content.stats.2.value }}</div>
-          </div>
-        </a>
-    
-        <div class="home-stat-actions">
-          <a href="{% url 'food_list' %}" class="home-cta">
-            <i data-lucide="search" class="btn-card-home-icon black"></i>Explorar
-          </a>
-          <a href="{% url 'food_create' %}" class="home-cta home-cta--primary">
-            <i data-lucide="plus" class="btn-card-home-icon white"></i>Crear
-          </a>
+      <a href="{% url 'food_list' %}" class="home-stat-card-link">
+        <div class="home-stat-value-row">
+          <i data-lucide="bookmark" class="home-stat-kpi-icon"></i>
+          <div class="home-stat-value">{{ vm.content.stats.2.value }}</div>
         </div>
+      </a>
+  
+      <div class="home-stat-actions">
+        <a href="{% url 'food_list' %}" class="home-cta">
+          <i data-lucide="search" class="btn-card-home-icon black"></i>
+          <span class="home-cta-text">Explorar</span>
+        </a>
+        <a href="{% url 'food_create' %}" class="home-cta home-cta--primary">
+          <i data-lucide="plus" class="btn-card-home-icon white"></i>
+          <span class="home-cta-text">Crear</span>
+        </a>
+      </div>
+  
+    </div>
+
+    <div class="home-stat-card hidden">
+      <div class="home-stat-top">
+        <i data-lucide="scale" class="home-stat-icon weight"></i>
+        <span class="home-stat-label">Peso Corporal</span>
+      </div>
+
+      <a class="home-stat-card-link">
+        <div class="home-stat-value-row">
+          <div class="home-stat-value weight">84 kg</div>
+        </div>
+      </a>
+    
+      <div class="home-stat-actions">
+        <a href="{% url 'food_create' %}" class="home-cta home-cta--primary">
+          <i data-lucide="plus" class="btn-card-home-icon white"></i>
+          <span class="home-cta-text">Registrar</span>
+        </a>
       </div>
     </div>
 

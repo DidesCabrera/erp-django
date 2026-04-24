@@ -299,6 +299,10 @@ BOTTOM
   .card-detail-tabs-mobile {
     display: flex !important;
   }
+
+  .card-detail-tabs-mobile button{
+    font-size: 14px;
+  }
 }
 
 .card-detail-tabs.card-detail-tabs--desktop {
