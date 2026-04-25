@@ -9,24 +9,17 @@
 
   <div class="wrap-page-modal">
 
-    <div class="label-entity label-entity--meal page-modal }}">
-      Meal
-    </div>
-
-    <div class="label-fork">#variante</div>
-
-
-    <!-- INIT =============================================-->
-
-    <h2 class="title-create">Crea una nueva Comida</h2>
-
     <form method="post">
       {% csrf_token %}
-      <p>
-        <label class="name-create">Nombre</label><br>
+      <div class="main-modal">
+        <i data-lucide="utensils" class="main-modal-icon meal"></i>
+        <h2 class="title-create">Crea una nueva Comida</h2>
+    
+        <label class="name-create">Elige un Nombre</label>
         <input type="text" name="name" placeholder="Según ingredientes, propósito, otro..." class="input-create">
-      </p>
-      <hr>
+      
+      </div>
+
       <div class="btn-block">
         <button type="submit"  class="btn-continue">Continuar</button>
       </div>
@@ -35,6 +28,5 @@
   </div>
   
 </div>
-<!-- FIN ============================================== -->
 
 {% endblock %}

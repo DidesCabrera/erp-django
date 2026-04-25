@@ -285,6 +285,35 @@
   border-radius: 6px;
 }
 
+.main-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.main-modal p {
+  width: 100%;
+  max-width: 420px;
+  margin: 0;
+}
+
+.input-create {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.main-modal-icon{
+  color: rgb(255, 255, 255);
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+  padding: 7px;
+  border-radius: 10px;
+  stroke-width: 1.5;
+}
+
 .view-list-icon{
   color: rgb(49, 49, 49);
   height: 18px;
@@ -301,6 +330,7 @@
 }
 
 
+.main-modal-icon.food,
 .home-section-header-icon.food,
 .preview-picker-icon.food,
 .selected-picker-icon.food,
@@ -308,6 +338,7 @@
   background-color: var(--color-food);
 }
 
+.main-modal-icon.meal,
 .home-section-header-icon.meal,
 .preview-picker-icon.meal, 
 .selected-picker-icon.meal,
@@ -315,6 +346,7 @@
   background-color: var(--color-meal); 
 }
 
+.main-modal-icon.dailyplan,
 .home-section-header-icon.dailyplan,
 .preview-picker-icon.dailyplan, 
 .selected-picker-icon.dailyplan,

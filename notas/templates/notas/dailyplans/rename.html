@@ -2,35 +2,23 @@
 {% block title %}Create DailyPlan{% endblock %}
 {% block content %}
 
-
-<div class="header-mini-edit">
-  <p>Editando</p>
-</div>
-
 <div class="page page--detail page-modal">
 
   <div class="wrap-page-modal">
 
-    <div class="label-entity label-entity--dailyplan }}">
-      Dailyplan
-    </div>
-
-    <div class="label-fork">#variante</div>
-
-
-    <!-- INIT =============================================-->
-
-    <h2 class="title-create">Renombra tu Plan Diario</h2>
 
     <form method="post">
       {% csrf_token %}
-
-      <p>
-        <label>Nombre</label><br>
+      <div class="main-modal">
+        <i data-lucide="utensils" class="main-modal-icon dailyplan"></i>
+        <h2 class="title-create">Renombra tu Plan Diario</h2>
+        <label>Elige un nuevo Nombre</label>
         <input type="text" name="name" value="{{ dailyplan.name }}"  class="input-create">
-      </p>
+      </div>
 
-      <button type="submit" class="btn-continue">Guardar</button>
+      <div class="btn-block">
+        <button type="submit"  class="btn-continue">Guardar</button>
+      </div>
     </form>
 
   </div>
