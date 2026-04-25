@@ -6,7 +6,8 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 12px;
+    gap:12px;
+    margin-right: 4px;
   }
   
   /* =========================
@@ -69,12 +70,6 @@
 
 
 
-  .actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  
   .overflow-menu{
     position:relative;
   }
@@ -112,8 +107,3 @@
     cursor:pointer;
   }
 
-  .actions{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }

@@ -214,11 +214,11 @@
 
 .metadata-icon{
     padding: 0;
-    height: 18px;
-    width: 18px;
-    stroke-width: 2;
+    height: 16px;
+    width: 16px;
+    stroke-width: 1.8;
     flex-shrink: 0;
-    color: rgb(60, 60, 60);
+    color: rgb(67, 67, 67);
   }
 
 .page-icon{
@@ -425,6 +425,10 @@
     padding: 3px;
     border-radius: 5px;
   }
-
+  
+  .metadata-icon{
+    height: 18px;
+    width: 18px;
+  }
 }
     
