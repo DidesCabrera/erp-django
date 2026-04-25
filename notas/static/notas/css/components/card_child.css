@@ -59,11 +59,7 @@ BOTTOM
   CARD TABLE COLLAPSE EFFECT
   ============================ */
 
-.card-detail-block {
-  background: var(--color-bg-3);
-  border-radius: 10px;
-  margin-top: 10px;
-}
+
 
 /**/
 
@@ -178,23 +174,24 @@ BOTTOM
 
 .btn-desplegar,
 .btn-desplegar-mobile {
+    height: 22px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 0px 8px;
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: rgb(233, 233, 233);
     gap: 2px;
     cursor: pointer;
     user-select: none;
     transition: background-color 0.2s ease, opacity 0.2s ease;
     border: none;
-    color: black;
   }
 
-.btn-desplegar-mobile.is-active .tab-icon {
+.btn-desplegar-mobile.is-active .tab-icon-hide,
+.btn-desplegar-mobile.is-active .tab-icon-edit {
     color: white;
-  }
+}
 
 @media (max-width: 980px) {
   .btn-desplegar-mobile {
@@ -209,7 +206,7 @@ BOTTOM
 .btn-desplegar p,
 .btn-desplegar-mobile p {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: #565656;
   font-weight: 450;
 }
@@ -226,12 +223,10 @@ BOTTOM
 }
 
 
-
-
 .card-detail-block {
-    background: var(--color-bg-3);
-    border-radius: 10px;
-    margin-top: 10px;
+  background: var(--color-bg-3);
+  border-radius: 14px;
+  margin-top: 10px;
 }
 
 .card-detail-tabs {

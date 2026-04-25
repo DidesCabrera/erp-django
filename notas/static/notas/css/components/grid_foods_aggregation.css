@@ -38,3 +38,24 @@
     font-weight: 600;
     color: rgb(129, 129, 129);
 } 
+
+.btn-desplegar--hide,
+.btn-desplegar-mobile--hide {
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-desplegar--hide {
+  min-width: 36px;
+  padding-inline: 8px;
+}
+
+.btn-desplegar-mobile--hide {
+  min-width: 36px;
+}
+
+.tab-icon-hide {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}

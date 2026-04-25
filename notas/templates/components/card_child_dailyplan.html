@@ -15,7 +15,7 @@
   <!-- BLOCK DETAIL ======================================== -->
   {% with panel_id=child_card.id|default:forloop.counter %}
     <div class="card-detail-block">
-      {% include "components/detail_tabs_meals.html" with panel_id=panel_id %}
+      {% include "components/detail_tabs_meals.html" with panel_id=panel_id show_hide_tab=True %}
       {% include "components/detail_panels_meals.html" with panel_id=panel_id menu=child_card.menu items=child_card.table.items %}
     </div>
   {% endwith %}

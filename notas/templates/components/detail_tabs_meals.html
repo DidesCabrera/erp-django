@@ -1,6 +1,16 @@
 <div class="card-detail-tabs card-detail-tabs--desktop block-desplegar-tabla block-card-desplegar">
 
-    <div class="btn-desplegar is-active" data-target="#card-menu-{{ panel_id }}">
+    {% if show_hide_tab %}
+    <div
+        class="btn-desplegar btn-desplegar--hide is-active"
+        data-panel-action="hide"
+        aria-label="Ocultar panel"
+    >
+        <i data-lucide="chevron-right" class="tab-icon tab-icon-hide"></i>
+    </div>
+    {% endif %}
+
+    <div class="btn-desplegar {% if not show_hide_tab %}is-active{% endif %}" data-target="#card-menu-{{ panel_id }}">
         <p>Menú</p>
     </div>
 
@@ -17,9 +27,21 @@
 </div>
 
 <div class="card-detail-tabs-mobile">
+
+    {% if show_hide_tab %}
     <button
         type="button"
-        class="btn-desplegar-mobile is-active"
+        class="btn-desplegar-mobile btn-desplegar-mobile--hide is-active"
+        data-panel-action="hide"
+        aria-label="Ocultar panel"
+    >
+        <i data-lucide="chevron-right" class="tab-icon tab-icon-hide"></i>
+    </button>
+    {% endif %}
+
+    <button
+        type="button"
+        class="btn-desplegar-mobile {% if not show_hide_tab %}is-active{% endif %}"
         data-target="#card-menu-{{ panel_id }}"
     >
         Menú
@@ -47,7 +69,7 @@
         class="btn-desplegar-mobile"
         data-target="#card-grid-edit-mobile-{{ panel_id }}"
     >
-        <i data-lucide="pencil" class="tab-icon"></i>
+        <i data-lucide="pencil" class="tab-icon-edit"></i>
     </button>
     {% endif %}
 </div>
