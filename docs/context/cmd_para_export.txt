@@ -39,12 +39,13 @@ git ls-files | grep "notas/actions"
 git branch --show-current
 git status
 git add .
-git commit -m "Commit estable antes del cambio"
+git commit -m "Ajustes 2"
 git push origin main
 git log --oneline -n 5 #ver ultimos commit
 git checkout -b feature/ux-improvements #crear nuevo branch
 
-
+git push origin refactor-header-actions-2
+git merge refactor-header-actions-2
 git switch -c refactor-header-actions-2 (crea y cambia de branch)
 
 
