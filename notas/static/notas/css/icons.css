@@ -128,7 +128,7 @@
 .tab-icon-hide,
 .tab-icon-edit {
     color: #000000;
-    height: 1.6;
+    height: 16px;
     width: 16px;
     stroke-width: 2;
     flex-shrink: 0;
@@ -283,6 +283,13 @@
   flex-shrink: 0;
   padding: 4px;
   border-radius: 6px;
+}
+
+.view-list-icon{
+  color: rgb(49, 49, 49);
+  height: 18px;
+  width: 18px;
+  flex-shrink: 0;
 }
 
 .welcome-icon{

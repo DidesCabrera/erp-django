@@ -127,14 +127,14 @@
   .home-section {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
   }
   
   .home-section-header {
     padding: 18px 18px 0 18px;
     display: flex;
     justify-content: space-between;
-    align-items: end;
+    align-items: flex-start;
     gap: 16px;
   }
   
@@ -242,21 +242,69 @@
     font-size: 16px;
     font-weight: 600;
   }
+
+  .home-link-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  
+    min-height: 32px;
+    padding: 6px 10px;
+  
+    border-radius: 10px;
+    background-color: transparent;
+  
+    color: rgb(28, 28, 28);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+  
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+  }
+  
+  .home-link-button:hover {
+    background-color: rgb(230, 230, 230);
+  }
+  
+  .home-link-button .view-list-icon {
+    color: rgb(49, 49, 49);
+    height: 18px;
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  .home-link-button-text {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  @media (max-width: 768px) {
+    .home-link-button {
+      width: 32px;
+      height: 28px;
+      padding: 0;
+      border-radius: 999px;
+    }
+  
+    .home-link-button-text {
+      display: none;
+    }
+  }
   
   @media (max-width: 900px) {
     .home-hero {
       flex-direction: column;
       align-items: flex-start;
     }
+
+    .home-link{
+      display: hidden;
+    }
   
     .home-stats {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-    }
-  
-    .home-section-header {
-      flex-direction: column;
-      align-items: flex-start;
     }
   
     .home-stat-card-link {
@@ -298,7 +346,7 @@
     }
 
     .home-section-header {
-      padding: 20px 10px 0 10px;
+      padding: 20px 6px 0 10px;
     }
 
     .home-cta-text {

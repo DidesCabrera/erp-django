@@ -152,7 +152,6 @@ BOTTOM
 .block-desplegar-tabla {
   gap: 6px;           /* espacio entre botones */
   width: fit-content;
-  color: #0c61ff;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -179,19 +178,22 @@ BOTTOM
     align-items: center;
     justify-content: center;
     padding: 0px 8px;
-    border-radius: 10px;
+    border-radius: 12px;
     background-color: rgb(233, 233, 233);
     gap: 2px;
     cursor: pointer;
     user-select: none;
     transition: background-color 0.2s ease, opacity 0.2s ease;
     border: none;
+    color: black;
   }
 
-.btn-desplegar-mobile.is-active .tab-icon-hide,
-.btn-desplegar-mobile.is-active .tab-icon-edit {
+  .btn-desplegar.is-active .tab-icon-hide,
+  .btn-desplegar-mobile.is-active .tab-icon-hide,
+  .btn-desplegar.is-active .tab-icon-edit,
+  .btn-desplegar-mobile.is-active .tab-icon-edit {
     color: white;
-}
+  }
 
 @media (max-width: 980px) {
   .btn-desplegar-mobile {
