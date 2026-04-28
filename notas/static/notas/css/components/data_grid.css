@@ -60,7 +60,8 @@
 .data-grid-header--meals-edit,
 .data-grid-row--meals-edit {
     grid-template-columns:
-        minmax(150px, 1.6fr)
+        34px
+        minmax(140px, 1.6fr)
         minmax(60px, 0.65fr)
         minmax(60px, 0.65fr)
         minmax(60px, 0.65fr)
@@ -69,14 +70,8 @@
         minmax(90px, 1fr)
         minmax(90px, 1fr)
         40px
+        40px
         40px;
-}
-
-@media (max-width: 980px) {
-    .data-grid-row--meals-edit {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
 }
 
 .data-grid-col {
@@ -145,94 +140,84 @@
     color: rgb(70, 70, 70);
 }
 
-@media (max-width: 980px) {
-
-
-    .data-grid-row--foods,
-    .data-grid-row--meals {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-
-    .data-grid-cell {
-        display: flex;
-        gap: 8px;
-    }
+.data-grid-desktop-cells {
+    display: contents;
 }
 
+/* =========================================================
+   Grid actions / edit buttons
+   ========================================================= */
 
-.data-grid-cell--action {
+.data-grid-cell--action,
+.data-grid-cell--drag,
+.data-grid-cell--detail,
+.data-grid-cell--replace,
+.data-grid-cell--delete,
+.data-grid-cell--edit {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.data-grid-cell--action button {
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-
-.data-grid-cell--action form {
+.data-grid-cell--action form,
+.data-grid-cell--detail form,
+.data-grid-cell--replace form,
+.data-grid-cell--delete form,
+.data-grid-cell--edit form {
     margin: 0;
 }
 
-@media (max-width: 980px) {
-    .data-grid-row--foods-edit {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .data-grid-cell--action {
-        justify-content: flex-start;
-    }
+.data-grid-cell--action button,
+.data-grid-cell--detail button,
+.data-grid-cell--replace button,
+.data-grid-cell--delete button,
+.data-grid-cell--edit button,
+.data-grid-cell--action form button,
+.data-grid-cell--detail form button,
+.data-grid-cell--replace form button,
+.data-grid-cell--delete form button,
+.data-grid-cell--edit form button,
+.drag-handle,
+.table-action-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-
-
-
-
-
-
-.data-grid-desktop-cells {
-    display: contents;
+.drag-handle {
+    cursor: grab;
 }
 
-
-@media (max-width: 980px) {
-
-
-    .data-grid-mobile-chip {
-        font-size: 12px;
-        font-weight: 500;
-        color: rgb(60, 60, 60);
-    }
-
-    .data-grid-mobile-macro {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        color: rgb(60, 60, 60);
-    }
-
-    .data-grid-mobile-macro span {
-        font-weight: 500;
-        color: rgb(95, 95, 95);
-    }
-
-    .data-grid-mobile-macro strong {
-        font-weight: 500;
-    }
-
-    .alloc-cell--grid {
-        width: 100%;
-        min-width: 0;
-    }
+.drag-handle:active {
+    cursor: grabbing;
 }
 
+.table-action-link:hover,
+.drag-handle:hover,
+.data-grid-cell--action button:hover,
+.data-grid-cell--replace button:hover,
+.data-grid-cell--delete button:hover,
+.data-grid-cell--detail button:hover {
+    opacity: 0.75;
+}
 
+.js-dpm-sortable-row.is-dragging {
+    opacity: 0.45;
+}
 
+.js-dpm-sortable-row.is-drop-target {
+    background: rgba(0, 0, 0, 0.035);
+}
+
+/* =========================================================
+   Meals mobile tabs / rows
+   ========================================================= */
 
 .meal-row-desktop {
     display: contents;
@@ -247,6 +232,22 @@
 }
 
 @media (max-width: 980px) {
+    .data-grid-row--foods,
+    .data-grid-row--meals {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .data-grid-cell {
+        display: flex;
+        gap: 8px;
+    }
+
+    .data-grid-row--foods-edit {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
     .data-grid-header--meals {
         display: none;
     }
@@ -366,117 +367,35 @@
         width: 100%;
         min-width: 0;
     }
-}
 
+    .data-grid-mobile-chip {
+        font-size: 12px;
+        font-weight: 500;
+        color: rgb(60, 60, 60);
+    }
 
-.data-grid-header--mobile-macros,
-.data-grid-row--mobile-macros {
-    grid-template-columns:
-        minmax(140px, 1.8fr)
-        minmax(30px, 1fr)
-        minmax(30px, 1fr)
-        minmax(30px, 1fr)
-        minmax(30px, 1fr);
-}
+    .data-grid-mobile-macro {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: rgb(60, 60, 60);
+    }
 
-.data-grid-header--mobile-alloc,
-.data-grid-row--mobile-alloc {
-    grid-template-columns:
-        minmax(140px, 1.8fr)
-        minmax(40px, 1fr)
-        minmax(40px, 1fr)
-        minmax(40px, 1fr);
-    gap: 6px;
-}
+    .data-grid-mobile-macro span {
+        font-weight: 500;
+        color: rgb(95, 95, 95);
+    }
 
+    .data-grid-mobile-macro strong {
+        font-weight: 500;
+    }
 
-.data-grid-header--mobile-foods-qty,
-.data-grid-row--mobile-foods-qty {
-    grid-template-columns:
-        minmax(150px, 1.8fr)
-        40px;
-}
+    .alloc-cell--grid {
+        width: 100%;
+        min-width: 0;
+    }
 
-.data-grid-header--mobile-foods-macros,
-.data-grid-row--mobile-foods-macros {
-    grid-template-columns:
-        minmax(140px, 1.8fr)
-        minmax(30px, 1fr)
-        minmax(30px, 1fr)
-        minmax(30px, 1fr)
-        minmax(30px, 1fr)
-}
-
-.data-grid-header--mobile-foods-alloc,
-.data-grid-row--mobile-foods-alloc {
-    grid-template-columns:
-        minmax(140px, 1.8fr)
-        minmax(40px, 1fr)
-        minmax(40px, 1fr)
-        minmax(40px, 1fr);
-    gap: 6px;
-}
-
-.data-grid-header--menu,
-.data-grid-row--menu {
-    grid-template-columns:
-        minmax(110px, 0.7fr)
-        minmax(180px, 2.1fr);
-    gap: 8px;
-}
-
-.data-grid-row--menu {
-    align-items: start;
-}
-
-.data-grid--menu .data-grid-cell--meal{
-    font-weight: 600;
-    padding: 9px 0px 9px 4px;
-
-}
-
-.data-grid--menu .data-grid-col--meal {
-    font-weight: 600;
-    padding: 0 0px 9px 4px;
-}
-
-.data-grid--menu .data-grid-cell--foods {
-    line-height: 1.35;
-}
-
-
-.data-grid-header--foods-aggregation,
-.data-grid-row--foods-aggregation {
-    grid-template-columns: 1fr;
-}
-
-.data-grid--foods-aggregation .data-grid-cell--foods {
-    line-height: 1.35;
-}
-
-.data-grid-cell--foods{
-    padding: 8px 0;
-}
-
-.data-grid--menu .data-grid-cell--meal {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.data-grid--menu .data-grid-meal-name {
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-.data-grid--menu .data-grid-meal-hour {
-    font-size: 12px;
-    line-height: 1.1;
-    font-weight: 400;
-    opacity: 0.75;
-}
-
-@media (max-width: 980px) {
     .data-grid-header--mobile-macros .data-grid-col--kcal,
     .data-grid-header--mobile-macros .data-grid-col--macro,
     .data-grid-row--mobile-macros .data-grid-cell--kcal,
@@ -501,6 +420,61 @@
     }
 }
 
+/* =========================================================
+   Mobile nutrition grids
+   ========================================================= */
+
+.data-grid-header--mobile-macros,
+.data-grid-row--mobile-macros {
+    grid-template-columns:
+        minmax(140px, 1.8fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr);
+}
+
+.data-grid-header--mobile-alloc,
+.data-grid-row--mobile-alloc {
+    grid-template-columns:
+        minmax(140px, 1.8fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr);
+    gap: 6px;
+}
+
+.data-grid-header--mobile-foods-qty,
+.data-grid-row--mobile-foods-qty {
+    grid-template-columns:
+        minmax(150px, 1.8fr)
+        40px;
+}
+
+.data-grid-header--mobile-foods-macros,
+.data-grid-row--mobile-foods-macros {
+    grid-template-columns:
+        minmax(140px, 1.8fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr)
+        minmax(30px, 1fr);
+}
+
+.data-grid-header--mobile-foods-alloc,
+.data-grid-row--mobile-foods-alloc {
+    grid-template-columns:
+        minmax(140px, 1.8fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr)
+        minmax(40px, 1fr);
+    gap: 6px;
+}
+
+/* =========================================================
+   Mobile edit grids
+   ========================================================= */
+
 .data-grid-header--mobile-foods-edit,
 .data-grid-row--mobile-foods-edit {
     grid-template-columns:
@@ -512,36 +486,70 @@
 .data-grid-header--mobile-meals-edit,
 .data-grid-row--mobile-meals-edit {
     grid-template-columns:
-        minmax(160px, 1.8fr)
-        minmax(40px, 0.4fr)
-        minmax(40px, 0.4fr);
+        34px
+        minmax(120px, 1.8fr)
+        36px
+        36px
+        36px;
 }
 
-.data-grid-cell--edit,
-.data-grid-cell--replace,
-.data-grid-cell--delete {
+/* =========================================================
+   Menu / foods aggregation grids
+   ========================================================= */
+
+.data-grid-header--menu,
+.data-grid-row--menu {
+    grid-template-columns:
+        minmax(110px, 0.7fr)
+        minmax(180px, 2.1fr);
+    gap: 8px;
+}
+
+.data-grid-row--menu {
+    align-items: start;
+}
+
+.data-grid--menu .data-grid-cell--meal {
+    font-weight: 600;
+    padding: 9px 0px 9px 4px;
+}
+
+.data-grid--menu .data-grid-col--meal {
+    font-weight: 600;
+    padding: 0 0px 9px 4px;
+}
+
+.data-grid--menu .data-grid-cell--foods {
+    line-height: 1.35;
+}
+
+.data-grid-header--foods-aggregation,
+.data-grid-row--foods-aggregation {
+    grid-template-columns: 1fr;
+}
+
+.data-grid--foods-aggregation .data-grid-cell--foods {
+    line-height: 1.35;
+}
+
+.data-grid-cell--foods {
+    padding: 8px 0;
+}
+
+.data-grid--menu .data-grid-cell--meal {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.data-grid-cell--edit form,
-.data-grid-cell--replace form,
-.data-grid-cell--delete form {
-    margin: 0;
+.data-grid--menu .data-grid-meal-name {
+    font-weight: 600;
+    line-height: 1.2;
 }
 
-.data-grid-cell--edit button,
-.data-grid-cell--replace button,
-.data-grid-cell--delete button,
-.data-grid-cell--edit form button,
-.data-grid-cell--replace form button,
-.data-grid-cell--delete form button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    padding: 0;
-    
+.data-grid--menu .data-grid-meal-hour {
+    font-size: 12px;
+    line-height: 1.1;
+    font-weight: 400;
+    opacity: 0.75;
 }

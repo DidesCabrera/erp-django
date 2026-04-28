@@ -511,7 +511,7 @@ class DailyPlanMeal(models.Model):
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ["hour", "order"]
+        ordering = ["order", "id"]
 
     def __str__(self):
         return f"{self.dailyplan.name} ({self.meal.name})"

@@ -1,16 +1,45 @@
-<div class="data-grid data-grid--mobile-meals-edit">
+<div
+    class="data-grid data-grid--mobile-meals-edit js-dpm-sortable"
+    data-reorder-url="{% url 'dailyplanmeal_reorder' items.0.main_id %}"
+>
 
     <div class="data-grid-header data-grid-header--mobile-meals-edit">
+        <div class="data-grid-col data-grid-col--drag"></div>
         <div class="data-grid-col data-grid-col--name">Comidas</div>
+        <div class="data-grid-col data-grid-col--detail"></div>
         <div class="data-grid-col data-grid-col--replace"></div>
         <div class="data-grid-col data-grid-col--delete"></div>
     </div>
 
     {% for row in items %}
-        <div class="data-grid-row data-grid-row--mobile-meals-edit">
+        <div
+            class="data-grid-row data-grid-row--mobile-meals-edit js-dpm-sortable-row"
+            data-dpm-id="{{ row.rel.id }}"
+            draggable="true"
+        >
+
+            <div class="data-grid-cell data-grid-cell--drag">
+                <button
+                    type="button"
+                    class="drag-handle"
+                    aria-label="Reordenar comida"
+                >
+                    <i data-lucide="grip-vertical" class="table-icon"></i>
+                </button>
+            </div>
 
             <div class="data-grid-cell data-grid-cell--name">
                 <div class="truncate">{{ row.rel.name }}</div>
+            </div>
+
+            <div class="data-grid-cell data-grid-cell--detail">
+                <a
+                    href="{% url 'dailyplan_meal_detail' row.main_id row.rel.id %}"
+                    class="table-action-link"
+                    aria-label="Ver detalle de comida"
+                >
+                    <i data-lucide="pencil" class="table-icon"></i>
+                </a>
             </div>
 
             <div class="data-grid-cell data-grid-cell--replace">
@@ -26,15 +55,17 @@
                     data-kcal="{{ row.rel.total_kcal }}"
                     data-hour="{{ row.rel.hour }}"
                     data-note="{{ row.rel.note }}"
+                    aria-label="Reemplazar comida"
                 >
                     <i data-lucide="refresh-cw" class="table-icon"></i>
                 </button>
             </div>
 
             <div class="data-grid-cell data-grid-cell--delete">
-                <form method="post" action="{% url 'dailyplanmeal_remove' row.child_id row.rel.id %}">
+                <form method="post" action="{% url 'dailyplanmeal_remove' row.main_id row.rel.id %}">
                     {% csrf_token %}
-                    <button type="submit">
+                    <input type="hidden" name="return_to" value="{{ request.path }}?panel=edit">
+                    <button type="submit" aria-label="Eliminar comida">
                         <i data-lucide="trash" class="table-icon"></i>
                     </button>
                 </form>

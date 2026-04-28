@@ -28,7 +28,45 @@ from notas.application.use_cases.dpm_pages import (
     get_dpm_edit_page_data,
 )
 
+from django.http import HttpResponseForbidden, JsonResponse
+from django.db import transaction
 
+
+@login_required
+@require_POST
+@transaction.atomic
+def dailyplanmeal_reorder(request, dailyplan_id):
+    dailyplan = get_object_or_404(
+        DailyPlan,
+        id=dailyplan_id,
+        created_by=request.user,
+    )
+
+    ordered_ids = request.POST.getlist("dpm_order[]")
+
+    if not ordered_ids:
+        return JsonResponse({"ok": False, "error": "Missing order payload"}, status=400)
+
+    dpms = list(
+        DailyPlanMeal.objects.filter(
+            dailyplan=dailyplan,
+            id__in=ordered_ids,
+        )
+    )
+
+    dpm_by_id = {str(dpm.id): dpm for dpm in dpms}
+
+    if len(dpm_by_id) != len(ordered_ids):
+        return JsonResponse({"ok": False, "error": "Invalid DPM ids"}, status=400)
+
+    for index, dpm_id in enumerate(ordered_ids, start=1):
+        dpm = dpm_by_id[str(dpm_id)]
+        dpm.order = index
+        dpm.save(update_fields=["order"])
+
+    return JsonResponse({"ok": True})
+
+    
 #************ RENDER COMPLEJOS *********************
 # ---------- DETAIL (NO HAY LIST)  ----------
 
@@ -244,11 +282,14 @@ def dailyplan_add_meal(request, pk=None):
     hour = request.POST.get("hour") or None
     note = (request.POST.get("note") or "").strip() or None
 
+    next_order = dailyplan.dailyplan_meals.count() + 1
+
     DailyPlanMeal.objects.create(
         dailyplan=dailyplan,
         meal=meal,
         hour=hour,
         note=note,
+        order=next_order,
     )
 
     dailyplan.update_draft_status()

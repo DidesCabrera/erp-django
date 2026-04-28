@@ -629,11 +629,14 @@ def attach_meal_to_dailyplan(request, dailyplan_id, meal_id):
         hour = request.POST.get("hour") or None
         note = request.POST.get("note") or None
 
+        next_order = dailyplan.dailyplan_meals.count() + 1
+
         DailyPlanMeal.objects.create(
             dailyplan=dailyplan,
             meal=meal,
             hour=hour,
             note=note,
+            order=next_order,
         )
         dailyplan.update_draft_status()
 

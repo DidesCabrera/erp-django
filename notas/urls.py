@@ -74,6 +74,7 @@ from notas.interface.views.dailyplan_meals import (
     dailyplanmeal_remove,
     dailyplanmeal_update,
     dailyplanmeal_create_meal,
+    dailyplanmeal_reorder,
 )
 
 from notas.interface.views.programs import (
@@ -252,6 +253,12 @@ urlpatterns = [
         "dailyplans/<int:dailyplan_id>/meals/<int:dailyplanmeal_id>/create/",
         dailyplanmeal_create_meal,
         name="dailyplanmeal_create_meal"
+    ),
+
+    path(
+        "dailyplans/<int:dailyplan_id>/meals/reorder/",
+        dailyplanmeal_reorder,
+        name="dailyplanmeal_reorder",
     ),
 
 
