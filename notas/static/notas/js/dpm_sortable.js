@@ -89,15 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
         const afterElement = getRowAfterPointer(grid, event.clientY, draggingRow);
   
-        getRows(grid).forEach((row) => {
-          row.classList.remove("is-drop-target");
-        });
-  
         if (afterElement == null) {
-          grid.appendChild(draggingRow);
+            grid.appendChild(draggingRow);
         } else {
-          afterElement.classList.add("is-drop-target");
-          grid.insertBefore(draggingRow, afterElement);
+            grid.insertBefore(draggingRow, afterElement);
         }
   
         event.preventDefault();
