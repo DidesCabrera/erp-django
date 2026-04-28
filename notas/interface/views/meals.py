@@ -39,6 +39,21 @@ from notas.application.services.commands.meal_commands import (
     save_meal,
 )
 
+from django.utils.http import url_has_allowed_host_and_scheme
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class BreadcrumbParent:
+    label: str
+    url: str
+
+    def __str__(self):
+        return self.label
+
+    def get_absolute_url(self):
+        return self.url
 
 
 #************ VIEW DE INBOX *********************
@@ -429,28 +444,49 @@ def meal_create(request):
 
 @login_required
 def meal_rename(request, pk):
-    meal = get_object_or_404(Meal, pk=pk)
+    meal = get_object_or_404(
+        Meal,
+        pk=pk,
+        created_by=request.user,
+    )
+
+    return_to = (
+        request.POST.get("return_to")
+        or request.GET.get("return_to")
+        or ""
+    )
+
+    fallback_url = reverse("meal_detail", kwargs={"pk": meal.pk})
+
+    if return_to and not url_has_allowed_host_and_scheme(
+        url=return_to,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return_to = ""
+
+    redirect_url = return_to or fallback_url
 
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
 
         if not name:
             messages.error(request, "El nombre no puede estar vacío.")
-            return redirect("meal_rename", pk=meal.pk)
+            return redirect(f"{reverse('meal_rename', kwargs={'pk': meal.pk})}?return_to={return_to}")
 
         meal.name = name
-        meal.save()
+        meal.save(update_fields=["name"])
 
         messages.success(request, "Nombre actualizado correctamente.")
-        return redirect("meal_detail", pk=pk)
+        return redirect(redirect_url)
 
     header = {"title": "Edit meal name"}
 
     return render(request, "notas/meals/rename.html", {
         "meal": meal,
         "header": header,
+        "return_to": return_to,
     })
-
 
 @login_required
 def meal_configure(request, pk):

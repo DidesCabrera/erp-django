@@ -34,6 +34,7 @@ from notas.interface.views.meal_foods import (
     mealfood_remove,
     mealfood_update,
     add_food_to_meal,
+    mealfood_reorder,
 )
 
 from notas.interface.views.dailyplans import (
@@ -178,8 +179,11 @@ urlpatterns = [
     path("meal-foods/<int:pk>/remove/", mealfood_remove, name="mealfood_remove"), 
     path("meals/<int:meal_id>/mealfoods/<int:mealfood_id>/update/", mealfood_update, name="mealfood_update"),
     path("meals/<int:meal_id>/add-to-dailyplan/", add_meal_from_list, name="add_meal_from_list"),
-
-
+    path(
+        "meals/<int:meal_id>/foods/reorder/",
+        mealfood_reorder,
+        name="mealfood_reorder",
+    ),
 
 
 

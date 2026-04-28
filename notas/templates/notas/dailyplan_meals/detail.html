@@ -1,4 +1,6 @@
 {% extends "notas/base.html" %}
+{% load static %}
+
 {% block title %}
 Meal – {{ vm.meal.name }}
 {% endblock %}
@@ -17,5 +19,7 @@ Meal – {{ vm.meal.name }}
   {% endif %}
 
 </div>
+
+<script src="{% static 'notas/js/mealfood_sortable.js' %}"></script>
 
 {% endblock %}

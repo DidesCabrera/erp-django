@@ -301,9 +301,16 @@ class MealFood(models.Model):
         on_delete=models.CASCADE,
         related_name="meal_food_set")
     
-    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    food = models.ForeignKey(
+        Food, 
+        on_delete=models.CASCADE)
 
     quantity = models.FloatField(help_text="grams")
+
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
 
     def __str__(self):
         return f"{self.food} in {self.meal}"

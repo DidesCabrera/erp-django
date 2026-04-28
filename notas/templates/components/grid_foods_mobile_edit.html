@@ -1,13 +1,30 @@
-<div class="data-grid data-grid--mobile-foods-edit">
+<div
+    class="data-grid data-grid--mobile-foods-edit js-mealfood-sortable"
+    data-reorder-url="{% url 'mealfood_reorder' main_id %}"
+>
 
     <div class="data-grid-header data-grid-header--mobile-foods-edit">
+        <div class="data-grid-col data-grid-col--drag"></div>
         <div class="data-grid-col data-grid-col--name">Alimentos</div>
         <div class="data-grid-col data-grid-col--edit"></div>
         <div class="data-grid-col data-grid-col--delete"></div>
     </div>
 
     {% for row in items %}
-        <div class="data-grid-row data-grid-row--mobile-foods-edit">
+        <div
+            class="data-grid-row data-grid-row--mobile-foods-edit js-mealfood-sortable-row"
+            data-mealfood-id="{{ row.rel.id }}"
+        >
+
+            <div class="data-grid-cell data-grid-cell--drag">
+                <button
+                    type="button"
+                    class="mealfood-drag-handle"
+                    aria-label="Reordenar alimento"
+                >
+                    <i data-lucide="grip-vertical" class="table-icon"></i>
+                </button>
+            </div>
 
             <div class="data-grid-cell data-grid-cell--name">
                 <div class="truncate">{{ row.rel.name }}</div>
@@ -22,6 +39,7 @@
                     data-name="{{ row.rel.name }}"
                     data-qty="{{ row.rel.quantity|floatformat:0 }}"
                     data-update-url="{% url 'mealfood_update' main_id row.rel.id %}"
+                    aria-label="Editar alimento"
                 >
                     <i data-lucide="pencil" class="table-icon"></i>
                 </button>
@@ -31,7 +49,7 @@
                 <form method="post" action="{% url 'mealfood_remove' row.rel.id %}">
                     {% csrf_token %}
                     <input type="hidden" name="return_to" value="{{ request.path }}">
-                    <button type="submit">
+                    <button type="submit" aria-label="Eliminar alimento">
                         <i data-lucide="trash" class="table-icon"></i>
                     </button>
                 </form>

@@ -1,4 +1,6 @@
 {% extends "notas/base.html" %}
+{% load static %}
+
 {% block title %}
 My Scoope
 {% endblock %}
@@ -13,5 +15,7 @@ My Scoope
     {% endif %}
   
 </div>
+
+<script src="{% static 'notas/js/mealfood_sortable.js' %}"></script>
 
 {% endblock %}

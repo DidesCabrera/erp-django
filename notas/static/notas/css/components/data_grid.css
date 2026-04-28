@@ -14,6 +14,10 @@
     border-bottom: none;
 }
 
+/* =========================================================
+   Desktop grids
+   ========================================================= */
+
 .data-grid-header--foods,
 .data-grid-row--foods {
     grid-template-columns:
@@ -31,7 +35,8 @@
 .data-grid-header--foods-edit,
 .data-grid-row--foods-edit {
     grid-template-columns:
-        minmax(160px, 1.8fr)
+        34px
+        minmax(150px, 1.8fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
@@ -74,6 +79,10 @@
         40px;
 }
 
+/* =========================================================
+   Base grid typography / cells
+   ========================================================= */
+
 .data-grid-col {
     font-size: 11px;
     font-weight: 600;
@@ -90,7 +99,7 @@
 
 .data-grid-cell {
     min-width: 0;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     color: rgb(27, 27, 27);
 }
@@ -145,7 +154,7 @@
 }
 
 /* =========================================================
-   Grid actions / edit buttons
+   Grid actions / buttons
    ========================================================= */
 
 .data-grid-cell--action,
@@ -178,6 +187,7 @@
 .data-grid-cell--delete form button,
 .data-grid-cell--edit form button,
 .drag-handle,
+.mealfood-drag-handle,
 .table-action-link {
     display: inline-flex;
     align-items: center;
@@ -190,23 +200,42 @@
     text-decoration: none;
 }
 
-.drag-handle {
-    cursor: grab;
-}
-
-.drag-handle:active {
-    cursor: grabbing;
-}
-
 .table-action-link:hover,
 .drag-handle:hover,
+.mealfood-drag-handle:hover,
 .data-grid-cell--action button:hover,
 .data-grid-cell--replace button:hover,
 .data-grid-cell--delete button:hover,
-.data-grid-cell--detail button:hover {
+.data-grid-cell--detail button:hover,
+.data-grid-cell--edit button:hover {
     opacity: 0.75;
 }
 
+/* =========================================================
+   DPM sortable
+   ========================================================= */
+
+.drag-handle,
+.drag-handle *,
+.js-dpm-sortable-row,
+.js-dpm-sortable-row * {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.drag-handle {
+    cursor: grab;
+    touch-action: none;
+}
+
+.drag-handle:active,
+body.is-dpm-sorting,
+body.is-dpm-sorting *,
+body.is-dpm-sorting .drag-handle,
+body.is-dpm-sorting .js-dpm-sortable-row {
+    cursor: grabbing !important;
+}
 
 .js-dpm-sortable-row.is-dragging {
     opacity: 1;
@@ -215,6 +244,37 @@
 
 .js-dpm-sortable-row.is-drop-target {
     background: transparent;
+}
+
+/* =========================================================
+   MealFood sortable
+   ========================================================= */
+
+.mealfood-drag-handle,
+.mealfood-drag-handle *,
+.js-mealfood-sortable-row,
+.js-mealfood-sortable-row * {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.mealfood-drag-handle {
+    cursor: grab;
+    touch-action: none;
+}
+
+.mealfood-drag-handle:active,
+body.is-mealfood-sorting,
+body.is-mealfood-sorting *,
+body.is-mealfood-sorting .mealfood-drag-handle,
+body.is-mealfood-sorting .js-mealfood-sortable-row {
+    cursor: grabbing !important;
+}
+
+.js-mealfood-sortable-row.is-dragging {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.065);
 }
 
 /* =========================================================
@@ -245,9 +305,9 @@
         gap: 8px;
     }
 
-    .data-grid-row--foods-edit {
+    .data-grid-row--meals {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 0;
     }
 
     .data-grid-header--meals {
@@ -273,11 +333,6 @@
 
     .btn-mobile-grid-tab.is-active {
         background: var(--color-bg-3);
-    }
-
-    .data-grid-row--meals {
-        grid-template-columns: 1fr;
-        gap: 0;
     }
 
     .meal-row-desktop {
@@ -420,6 +475,19 @@
     .data-grid-cell--alloc {
         margin-right: 0px;
     }
+
+    .data-grid-cell--name {
+        padding: 12px 0 12px 4px;
+    }
+
+    .data-grid {
+        padding: 6px 0px;
+    }
+    
+    .data-grid-header,
+    .data-grid-row {
+        padding: 0 8px;
+    }
 }
 
 /* =========================================================
@@ -434,6 +502,7 @@
         minmax(30px, 1fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr);
+    padding: 0 0 0 8px;
 }
 
 .data-grid-header--mobile-alloc,
@@ -450,7 +519,7 @@
 .data-grid-row--mobile-foods-qty {
     grid-template-columns:
         minmax(150px, 1.8fr)
-        40px;
+        44px;
 }
 
 .data-grid-header--mobile-foods-macros,
@@ -461,6 +530,7 @@
         minmax(30px, 1fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr);
+    padding: 0 0 0 8px;
 }
 
 .data-grid-header--mobile-foods-alloc,
@@ -480,19 +550,22 @@
 .data-grid-header--mobile-foods-edit,
 .data-grid-row--mobile-foods-edit {
     grid-template-columns:
-        minmax(160px, 1.8fr)
-        minmax(40px, 0.4fr)
-        minmax(40px, 0.4fr);
+        44px
+        minmax(120px, 1.8fr)
+        44px
+        44px;
+    padding: 0;
 }
 
 .data-grid-header--mobile-meals-edit,
 .data-grid-row--mobile-meals-edit {
     grid-template-columns:
-        34px
+        40px
         minmax(120px, 1.8fr)
-        36px
-        36px
-        36px;
+        44px
+        44px
+        44px;
+    padding: 0px;
 }
 
 /* =========================================================
@@ -554,38 +627,4 @@
     line-height: 1.1;
     font-weight: 400;
     opacity: 0.75;
-}
-
-.drag-handle,
-.drag-handle *,
-.js-dpm-sortable-row,
-.js-dpm-sortable-row * {
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-}
-
-.drag-handle {
-    touch-action: none;
-}
-
-.js-dpm-sortable-row.is-dragging {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.065);
-}
-
-.js-dpm-sortable-row.is-drop-target {
-    background: transparent;
-}
-
-.drag-handle {
-    cursor: grab;
-}
-
-.drag-handle:active,
-body.is-dpm-sorting,
-body.is-dpm-sorting *,
-body.is-dpm-sorting .drag-handle,
-body.is-dpm-sorting .js-dpm-sortable-row {
-    cursor: grabbing !important;
 }

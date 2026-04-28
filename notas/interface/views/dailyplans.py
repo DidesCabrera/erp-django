@@ -41,6 +41,19 @@ from notas.application.services.commands.dailyplan_commands import (
     save_dailyplan,
 )
 
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class BreadcrumbParent:
+    label: str
+    url: str
+
+    def __str__(self):
+        return self.label
+
+    def get_absolute_url(self):
+        return self.url
 
 #************ VIEW DE INBOX *********************
 

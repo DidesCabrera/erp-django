@@ -1,14 +1,18 @@
 {% extends "notas/base.html" %}
-{% block title %}Create Meal{% endblock %}
+{% block title %}Rename Meal{% endblock %}
 {% block content %}
 
 <div class="page page--detail page-modal">
-
 
   <div class="wrap-page-modal">
 
     <form method="post">
       {% csrf_token %}
+
+      {% if return_to %}
+        <input type="hidden" name="return_to" value="{{ return_to }}">
+      {% endif %}
+
       <div class="main-modal">
         <i data-lucide="utensils" class="main-modal-icon meal"></i>
         <h2 class="title-create">Renombra tu Comida</h2>
@@ -17,7 +21,7 @@
       </div>
 
       <div class="btn-block">
-        <button type="submit"  class="btn-continue">Guardar</button>
+        <button type="submit" class="btn-continue">Guardar</button>
       </div>
     </form>  
 

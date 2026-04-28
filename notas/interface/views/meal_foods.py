@@ -2,9 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.db import transaction
+
 from notas.domain.models import MealFood, Meal, Food
-
-
 
 
 
@@ -112,10 +113,13 @@ def add_food_to_meal(request, pk):
 
     food = get_object_or_404(Food, pk=food_id)
 
+    next_order = meal.meal_food_set.count() + 1
+
     MealFood.objects.create(
         meal=meal,
         food=food,
         quantity=quantity,
+        order=next_order,
     )
     meal.update_draft_status()
 
@@ -127,4 +131,45 @@ def add_food_to_meal(request, pk):
 
     return redirect("meal_detail", pk=meal.pk)
 
+@login_required
+@require_POST
+@transaction.atomic
+def mealfood_reorder(request, meal_id):
+    meal = get_object_or_404(
+        Meal,
+        id=meal_id,
+        created_by=request.user,
+    )
 
+    ordered_ids = request.POST.getlist("mealfood_order[]")
+
+    if not ordered_ids:
+        return JsonResponse(
+            {"ok": False, "error": "Missing order payload"},
+            status=400,
+        )
+
+    meal_foods = list(
+        MealFood.objects.filter(
+            meal=meal,
+            id__in=ordered_ids,
+        )
+    )
+
+    meal_food_by_id = {
+        str(meal_food.id): meal_food
+        for meal_food in meal_foods
+    }
+
+    if len(meal_food_by_id) != len(ordered_ids):
+        return JsonResponse(
+            {"ok": False, "error": "Invalid MealFood ids"},
+            status=400,
+        )
+
+    for index, mealfood_id in enumerate(ordered_ids, start=1):
+        meal_food = meal_food_by_id[str(mealfood_id)]
+        meal_food.order = index
+        meal_food.save(update_fields=["order"])
+
+    return JsonResponse({"ok": True})

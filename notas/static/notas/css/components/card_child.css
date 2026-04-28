@@ -198,7 +198,8 @@ BOTTOM
 @media (max-width: 980px) {
   .btn-desplegar-mobile {
     padding: 4px 12px;
-    border-radius: 12px;
+    border-radius: 13px;
+    height: 24px;
   }
   
 }
