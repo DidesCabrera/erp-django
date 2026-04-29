@@ -36,6 +36,7 @@ from django.db import transaction
 
 from notas.application.services.commands.dailyplan_commands import (
     add_existing_meal_to_dailyplan,
+    create_empty_meal_for_dailyplan_meal,
     remove_dailyplan_meal,
     reorder_dailyplan_meals,
     update_dailyplan_meal,
@@ -215,7 +216,7 @@ def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
             request_get=request.GET,
             viewmode=DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
         )
-        
+
     content_vm = build_dpm_detail_vm(
         page.detail_content_data,
     )
@@ -348,34 +349,26 @@ def replace_meal(request, dailyplan_meal_id, new_meal_id):
 @login_required
 @require_POST
 def dailyplanmeal_create_meal(request, dailyplan_id, dailyplanmeal_id):
-
     dpm = get_object_or_404(
-        DailyPlanMeal,
+        DailyPlanMeal.objects.select_related("dailyplan", "meal"),
         pk=dailyplanmeal_id,
         dailyplan__id=dailyplan_id,
         dailyplan__created_by=request.user,
     )
 
-    # Crear meal nueva vacía (contextual)
-    new_meal = Meal.objects.create(
+    result = create_empty_meal_for_dailyplan_meal(
+        dailyplan_meal=dpm,
+        user=request.user,
         name="New Meal",
-        created_by=request.user,
-        is_draft=True,
-        is_public=False,
     )
-
-    # Asignar al slot del DPM
-    dpm.meal = new_meal
-    dpm.save()
 
     messages.success(request, "Nueva meal creada en este slot")
 
     return redirect(
         "dailyplan_meal_detail",
-        dailyplan_id=dailyplan_id,
-        pk=dpm.id,
+        dailyplan_id=result.dailyplan.id,
+        pk=result.dailyplan_meal.id,
     )
-
 
 
 @login_required

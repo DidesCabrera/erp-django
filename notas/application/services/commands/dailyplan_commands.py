@@ -31,6 +31,35 @@ class DailyPlanMealDeleteResult:
     dailyplan_meal_id: int
     meal_id: int
 
+@dataclass(frozen=True)
+class DailyPlanMealUpdateResult:
+    dailyplan_meal: DailyPlanMeal
+    dailyplan: DailyPlan
+    replaced_meal: bool = False
+    old_meal_id: int | None = None
+    new_meal_id: int | None = None
+
+
+@dataclass(frozen=True)
+class DailyPlanMealReorderResult:
+    dailyplan: DailyPlan
+    updated_count: int
+
+
+@dataclass(frozen=True)
+class DailyPlanMealSnapshotReplaceResult:
+    dailyplan_meal: DailyPlanMeal
+    dailyplan: DailyPlan
+    replaced_meal: bool
+    old_meal_id: int | None = None
+    new_meal_id: int | None = None
+
+@dataclass(frozen=True)
+class DailyPlanMealCreateEmptyMealResult:
+    dailyplan_meal: DailyPlanMeal
+    dailyplan: DailyPlan
+    meal: Meal
+    old_meal_id: int | None = None
 
 # ==================================================
 # DAILYPLAN HELPERS
@@ -250,4 +279,154 @@ def remove_dailyplan_meal(
         dailyplan=dailyplan,
         dailyplan_meal_id=dailyplan_meal_id,
         meal_id=meal_id,
+    )
+
+
+# ==================================================
+
+@transaction.atomic
+def update_dailyplan_meal(
+    *,
+    dailyplan_meal: DailyPlanMeal,
+    user,
+    meal_id=None,
+    hour=None,
+    note=None,
+) -> DailyPlanMealUpdateResult:
+    clean_note = (note or "").strip() or None
+
+    old_meal_id = dailyplan_meal.meal_id
+    replaced_meal = False
+    new_meal_id = old_meal_id
+
+    dailyplan_meal.hour = hour or None
+    dailyplan_meal.note = clean_note
+    dailyplan_meal.save(update_fields=["hour", "note"])
+
+    selected_meal_id = int(meal_id) if meal_id else None
+
+    if selected_meal_id and selected_meal_id != old_meal_id:
+        source_meal = Meal.objects.get(
+            pk=selected_meal_id,
+            created_by=user,
+        )
+
+        replace_result = replace_dailyplan_meal_snapshot(
+            dailyplan_meal=dailyplan_meal,
+            source_meal=source_meal,
+            user=user,
+        )
+
+        replaced_meal = replace_result.replaced_meal
+        new_meal_id = replace_result.new_meal_id
+
+    dailyplan = dailyplan_meal.dailyplan
+    dailyplan.update_draft_status()
+
+    return DailyPlanMealUpdateResult(
+        dailyplan_meal=dailyplan_meal,
+        dailyplan=dailyplan,
+        replaced_meal=replaced_meal,
+        old_meal_id=old_meal_id,
+        new_meal_id=new_meal_id,
+    )
+
+
+@transaction.atomic
+def reorder_dailyplan_meals(
+    *,
+    dailyplan: DailyPlan,
+    ordered_ids,
+) -> DailyPlanMealReorderResult:
+    updated_count = 0
+
+    for index, dailyplan_meal_id in enumerate(ordered_ids, start=1):
+        updated = DailyPlanMeal.objects.filter(
+            id=dailyplan_meal_id,
+            dailyplan=dailyplan,
+        ).update(order=index)
+
+        updated_count += updated
+
+    return DailyPlanMealReorderResult(
+        dailyplan=dailyplan,
+        updated_count=updated_count,
+    )
+
+
+@transaction.atomic
+def replace_dailyplan_meal_snapshot(
+    *,
+    dailyplan_meal: DailyPlanMeal,
+    source_meal: Meal,
+    user,
+) -> DailyPlanMealSnapshotReplaceResult:
+    from notas.application.services.commands.meal_commands import (
+        fork_meal_for_dailyplan,
+    )
+
+    old_meal = dailyplan_meal.meal
+    old_meal_id = old_meal.id
+
+    if source_meal.id == old_meal_id:
+        dailyplan = dailyplan_meal.dailyplan
+        dailyplan.update_draft_status()
+
+        return DailyPlanMealSnapshotReplaceResult(
+            dailyplan_meal=dailyplan_meal,
+            dailyplan=dailyplan,
+            replaced_meal=False,
+            old_meal_id=old_meal_id,
+            new_meal_id=old_meal_id,
+        )
+
+    forked_meal = fork_meal_for_dailyplan(
+        source_meal,
+        user,
+    )
+
+    dailyplan_meal.meal = forked_meal
+    dailyplan_meal.save(update_fields=["meal"])
+
+    old_meal.delete()
+
+    dailyplan = dailyplan_meal.dailyplan
+    dailyplan.update_draft_status()
+
+    return DailyPlanMealSnapshotReplaceResult(
+        dailyplan_meal=dailyplan_meal,
+        dailyplan=dailyplan,
+        replaced_meal=True,
+        old_meal_id=old_meal_id,
+        new_meal_id=forked_meal.id,
+    )
+
+@transaction.atomic
+def create_empty_meal_for_dailyplan_meal(
+    *,
+    dailyplan_meal: DailyPlanMeal,
+    user,
+    name: str = "New Meal",
+) -> DailyPlanMealCreateEmptyMealResult:
+    old_meal = dailyplan_meal.meal
+    old_meal_id = old_meal.id if old_meal else None
+
+    new_meal = Meal.objects.create(
+        name=name,
+        created_by=user,
+        is_draft=True,
+        is_public=False,
+    )
+
+    dailyplan_meal.meal = new_meal
+    dailyplan_meal.save(update_fields=["meal"])
+
+    dailyplan = dailyplan_meal.dailyplan
+    dailyplan.update_draft_status()
+
+    return DailyPlanMealCreateEmptyMealResult(
+        dailyplan_meal=dailyplan_meal,
+        dailyplan=dailyplan,
+        meal=new_meal,
+        old_meal_id=old_meal_id,
     )
