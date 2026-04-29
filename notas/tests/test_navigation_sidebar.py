@@ -59,33 +59,8 @@ class SidebarBuilderTests(TestCase):
         self.assertEqual(active_items[0]["nav_root"], "dailyplan")
         self.assertEqual(active_items[0]["scope"], "personal")
 
-    def test_build_sidebar_vm_includes_profile_item(self):
-        sidebar = build_sidebar_vm(PROFILE_VIEWMODE)
 
-        all_keys = []
-
-        for section in sidebar:
-            for group in section["groups"]:
-                for item in group["items"]:
-                    all_keys.append(item["key"])
-
-        self.assertIn("profile_detail", all_keys)
-
-    def test_build_sidebar_vm_marks_profile_as_active(self):
-        sidebar = build_sidebar_vm(PROFILE_VIEWMODE)
-
-        active_items = []
-
-        for section in sidebar:
-            for group in section["groups"]:
-                for item in group["items"]:
-                    if item["is_active"]:
-                        active_items.append(item)
-
-        self.assertEqual(len(active_items), 1)
-        self.assertEqual(active_items[0]["key"], "profile_detail")
-        self.assertEqual(active_items[0]["nav_root"], "profile")
-        self.assertEqual(active_items[0]["scope"], "personal")
+  
 
     def test_build_sidebar_vm_contains_account_section(self):
         sidebar = build_sidebar_vm(PROFILE_VIEWMODE)
@@ -94,18 +69,7 @@ class SidebarBuilderTests(TestCase):
 
         self.assertIn("account", section_keys)
 
-    def test_build_sidebar_vm_marks_profile_group_as_active(self):
-        sidebar = build_sidebar_vm(PROFILE_VIEWMODE)
-
-        active_groups = []
-
-        for section in sidebar:
-            for group in section["groups"]:
-                if group["is_active"]:
-                    active_groups.append(group["key"])
-
-        self.assertEqual(active_groups, ["profile"])
-
+ 
     def test_build_ui_vm_for_profile_populates_navigation_metadata(self):
         ui = build_ui_vm(PROFILE_VIEWMODE)
 
@@ -115,7 +79,24 @@ class SidebarBuilderTests(TestCase):
         self.assertEqual(ui.page_icon, "circle-user-round")
 
 
+    def test_build_sidebar_vm_does_not_include_profile_group(self):
+        sidebar = build_sidebar_vm(PROFILE_VIEWMODE)
 
+        group_keys = []
+
+        for section in sidebar:
+            for group in section["groups"]:
+                group_keys.append(group["key"])
+
+        self.assertNotIn("profile", group_keys)
+    
+    def test_build_ui_vm_for_profile_populates_navigation_metadata(self):
+        ui = build_ui_vm(PROFILE_VIEWMODE)
+
+        self.assertEqual(ui.nav_root, "profile")
+        self.assertEqual(ui.icon, "circle-user-round")
+        self.assertEqual(ui.section_label, "Cuenta")
+        self.assertEqual(ui.page_icon, "circle-user-round")
 
 
 

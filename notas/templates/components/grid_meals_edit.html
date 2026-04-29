@@ -1,6 +1,8 @@
 <div
     class="data-grid data-grid--meals data-grid--meals-edit js-dpm-sortable"
-    data-reorder-url="{% url 'dailyplanmeal_reorder' items.0.main_id %}"
+    {% if dailyplan_id %}
+        data-reorder-url="{% url 'dailyplanmeal_reorder' dailyplan_id %}"
+    {% endif %}
 >
 
     <div class="data-grid-header data-grid-header--meals-edit">

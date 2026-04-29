@@ -14,8 +14,15 @@ from notas.presentation.config.viewmodel_config import (
     MEAL_VIEWMODE_PERSONAL_LIST,
     FOOD_VIEWMODE_PERSONAL_LIST,
 )
-from notas.application.use_cases.dailyplan_pages import build_dailyplan_list_content_data
-from notas.application.use_cases.meal_pages import build_meal_list_content_data
+
+from notas.presentation.composition.viewmodel.dailyplan.dailyplan_content import (
+    build_dailyplan_list_content_data,
+)
+
+from notas.presentation.composition.viewmodel.meal.meal_content import (
+    build_meal_list_content_data,
+)
+
 from notas.presentation.composition.viewmodel.dailyplan.list_dailyplan_builder import build_dailyplan_list_vm
 from notas.presentation.composition.viewmodel.meal.list_meal_builder import build_meal_list_vm
 from notas.presentation.composition.viewmodel.food.list_foods_builder import build_food_list_vm

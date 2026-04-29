@@ -119,6 +119,13 @@ def dailyplan_meal_detail(request, dailyplan_id, pk):
         page.viewmode,
         parents=[page.dailyplan],
         instance=page.meal,
+        back_config={
+            "type": "url",
+            "value": reverse(
+                "dailyplan_meal_detail",
+                args=[page.dailyplan.id, page.dpm.id],
+            ),
+        },
     )
 
     base_vm = BaseVM(

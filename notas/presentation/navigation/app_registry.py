@@ -81,7 +81,7 @@ APP_NAVIGATION = (
 
     NavSectionSpec(
         key="account",
-        label="My Scoope",
+        label="Cuenta",
         groups=(
             NavGroupSpec(
                 key="home",
@@ -95,11 +95,11 @@ APP_NAVIGATION = (
             NavGroupSpec(
                 key="profile",
                 label="Mi Perfil",
-                icon="user",
+                icon="circle-user-round",
                 url_name="profile_detail",
                 nav_root="profile",
                 scope="personal",
-                page_icon="user",
+                page_icon="circle-user-round",
                 show_in_sidebar=False,
             ),
         ),

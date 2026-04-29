@@ -1,5 +1,5 @@
 from notas.domain.services.nutrition import compute_meal_nutrition
-from notas.presentation.composition.viewmodel.components.builder_foods_aggregation import (
+from notas.application.services.nutrition.food_aggregation import (
     build_meal_foods_projection,
 )
 

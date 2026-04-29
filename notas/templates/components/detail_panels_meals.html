@@ -8,7 +8,7 @@
 
 {% if show_desktop_edit_panel %}
 <div id="card-grid-meals-edit-{{ panel_id }}" class="card-table-meals">
-    {% include "components/grid_meals_edit.html" with items=items %}
+    {% include "components/grid_meals_edit.html" with items=items dailyplan_id=dailyplan_id %}
 </div>
 {% endif %}
 
@@ -22,6 +22,6 @@
 
 {% if show_mobile_edit_panel %}
 <div id="card-grid-edit-mobile-{{ panel_id }}" class="card-table-meals-mobile">
-    {% include "components/grid_meals_mobile_edit.html" with items=items %}
+    {% include "components/grid_meals_mobile_edit.html" with items=items dailyplan_id=dailyplan_id %}
 </div>
 {% endif %}
