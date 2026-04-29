@@ -34,8 +34,12 @@ from notas.application.use_cases.meal_pages import (
 )
 
 from notas.application.services.commands.meal_commands import (
-    fork_meal_for_library,
     copy_meal,
+    create_draft_meal,
+    delete_draft_meal,
+    delete_meal,
+    fork_meal_for_library,
+    rename_meal,
     save_meal,
 )
 
@@ -401,30 +405,22 @@ def meal_share_detail(request, pk, dailyplan_id=None):
 
 @login_required
 def meal_create(request):
-
     from_dailyplan = request.GET.get("from_dailyplan")
 
     if request.method == "POST":
         name = request.POST.get("name")
 
-        if not name:
+        try:
+            result = create_draft_meal(
+                user=request.user,
+                name=name,
+                pending_dailyplan_id=from_dailyplan,
+            )
+        except ValueError:
             messages.error(request, "El nombre es obligatorio")
             return redirect("meal_create")
 
-        # 1. Crear meal draft
-        meal = Meal.objects.create(
-            name=name,
-            created_by=request.user,
-            is_draft=True
-        )
-
-        # 2. Guardar contexto en el modelo (solo si aplica)
-        if from_dailyplan:
-            meal.pending_dailyplan_id = from_dailyplan
-            meal.save()
-
-        # 3. Ir siempre al builder normal
-        return redirect("meal_detail", pk=meal.id)
+        return redirect("meal_detail", pk=result.meal.id)
 
     viewmode = MEAL_VIEWMODE_CREATE
 
@@ -437,10 +433,10 @@ def meal_create(request):
 
     return render(
         request,
-         "notas/meals/create.html",
-         base_vm.as_context(),
-
+        "notas/meals/create.html",
+        base_vm.as_context(),
     )
+
 
 @login_required
 def meal_rename(request, pk):
@@ -468,14 +464,18 @@ def meal_rename(request, pk):
     redirect_url = return_to or fallback_url
 
     if request.method == "POST":
-        name = request.POST.get("name", "").strip()
+        name = request.POST.get("name", "")
 
-        if not name:
+        try:
+            rename_meal(
+                meal=meal,
+                name=name,
+            )
+        except ValueError:
             messages.error(request, "El nombre no puede estar vacío.")
-            return redirect(f"{reverse('meal_rename', kwargs={'pk': meal.pk})}?return_to={return_to}")
-
-        meal.name = name
-        meal.save(update_fields=["name"])
+            return redirect(
+                f"{reverse('meal_rename', kwargs={'pk': meal.pk})}?return_to={return_to}"
+            )
 
         messages.success(request, "Nombre actualizado correctamente.")
         return redirect(redirect_url)
@@ -615,14 +615,13 @@ def meal_copy(request, pk):
 @login_required
 @require_POST
 def meal_remove(request, pk):
-
     meal = get_object_or_404(
         Meal,
         pk=pk,
-        created_by=request.user
+        created_by=request.user,
     )
 
-    meal.delete()
+    delete_meal(meal=meal)
 
     messages.success(request, "Meal removida de tu lista.")
     return redirect("meal_list")
@@ -631,17 +630,14 @@ def meal_remove(request, pk):
 @login_required
 @require_POST
 def meal_draft_delete(request, pk):
-
     meal = get_object_or_404(
         Meal,
         pk=pk,
         created_by=request.user,
-        is_draft=True
+        is_draft=True,
     )
 
-    meal.delete()
+    delete_draft_meal(meal=meal)
 
     messages.success(request, "Draft eliminado definitivamente.")
     return redirect("meal_draft_list")
-
-

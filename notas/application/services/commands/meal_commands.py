@@ -1,4 +1,8 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from django.db import transaction
+
 from notas.domain.models import Meal, MealFood
 
 # ==================================================
@@ -25,6 +29,93 @@ def clone_meal_foods(source: Meal, target: Meal) -> None:
         )
         for mf in source.meal_food_set.all()
     ])
+
+
+
+# ==================================================
+
+@dataclass(frozen=True)
+class MealCreateResult:
+    meal: Meal
+
+
+@dataclass(frozen=True)
+class MealRenameResult:
+    meal: Meal
+
+
+@dataclass(frozen=True)
+class MealDeleteResult:
+    meal_id: int
+
+
+@transaction.atomic
+def create_draft_meal(
+    *,
+    user,
+    name: str,
+    pending_dailyplan_id: Optional[int] = None,
+) -> MealCreateResult:
+    clean_name = (name or "").strip()
+
+    if not clean_name:
+        raise ValueError("meal_name_required")
+
+    meal = Meal.objects.create(
+        name=clean_name,
+        created_by=user,
+        is_draft=True,
+    )
+
+    if pending_dailyplan_id:
+        meal.pending_dailyplan_id = pending_dailyplan_id
+        meal.save(update_fields=["pending_dailyplan"])
+
+    return MealCreateResult(meal=meal)
+
+
+@transaction.atomic
+def rename_meal(
+    *,
+    meal: Meal,
+    name: str,
+) -> MealRenameResult:
+    clean_name = (name or "").strip()
+
+    if not clean_name:
+        raise ValueError("meal_name_required")
+
+    meal.name = clean_name
+    meal.save(update_fields=["name"])
+
+    return MealRenameResult(meal=meal)
+
+
+@transaction.atomic
+def delete_meal(
+    *,
+    meal: Meal,
+) -> MealDeleteResult:
+    meal_id = meal.id
+    meal.delete()
+
+    return MealDeleteResult(meal_id=meal_id)
+
+
+@transaction.atomic
+def delete_draft_meal(
+    *,
+    meal: Meal,
+) -> MealDeleteResult:
+    if not meal.is_draft:
+        raise ValueError("meal_is_not_draft")
+
+    meal_id = meal.id
+    meal.delete()
+
+    return MealDeleteResult(meal_id=meal_id)
+
+
 
 
 # ==================================================
@@ -133,3 +224,5 @@ def save_meal(original: Meal, user) -> Meal:
     Explore UX: Guardar = Fork
     """
     return fork_meal(original, user)
+
+
