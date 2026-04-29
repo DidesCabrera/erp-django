@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from django.db import transaction
 
-from notas.domain.models import DailyPlan, DailyPlanMeal
+from notas.domain.models import DailyPlan, DailyPlanMeal, Meal
 
 @dataclass(frozen=True)
 class DailyPlanCreateResult:
@@ -17,6 +17,19 @@ class DailyPlanRenameResult:
 @dataclass(frozen=True)
 class DailyPlanDeleteResult:
     dailyplan_id: int
+
+@dataclass(frozen=True)
+class DailyPlanMealCreateResult:
+    dailyplan: DailyPlan
+    dailyplan_meal: DailyPlanMeal
+    meal: Meal
+
+
+@dataclass(frozen=True)
+class DailyPlanMealDeleteResult:
+    dailyplan: DailyPlan
+    dailyplan_meal_id: int
+    meal_id: int
 
 
 # ==================================================
@@ -113,7 +126,7 @@ def delete_dailyplan(
         dailyplan_id=dailyplan_id,
     )
 
-    
+
 @transaction.atomic
 def fork_dailyplan(original: DailyPlan, user) -> DailyPlan:
     """
@@ -178,3 +191,63 @@ def save_dailyplan(original: DailyPlan, user) -> DailyPlan:
     pero internamente siempre sea fork.
     """
     return fork_dailyplan(original, user)
+
+
+@transaction.atomic
+def add_existing_meal_to_dailyplan(
+    *,
+    dailyplan: DailyPlan,
+    meal: Meal,
+    user,
+    hour=None,
+    note=None,
+) -> DailyPlanMealCreateResult:
+    from notas.application.services.commands.meal_commands import (
+        fork_meal_for_dailyplan,
+    )
+
+    clean_note = (note or "").strip() or None
+
+    forked_meal = fork_meal_for_dailyplan(
+        meal,
+        user,
+    )
+
+    next_order = dailyplan.dailyplan_meals.count() + 1
+
+    dailyplan_meal = DailyPlanMeal.objects.create(
+        dailyplan=dailyplan,
+        meal=forked_meal,
+        hour=hour or None,
+        note=clean_note,
+        order=next_order,
+    )
+
+    dailyplan.update_draft_status()
+
+    return DailyPlanMealCreateResult(
+        dailyplan=dailyplan,
+        dailyplan_meal=dailyplan_meal,
+        meal=forked_meal,
+    )
+
+
+@transaction.atomic
+def remove_dailyplan_meal(
+    *,
+    dailyplan_meal: DailyPlanMeal,
+) -> DailyPlanMealDeleteResult:
+    dailyplan = dailyplan_meal.dailyplan
+    meal = dailyplan_meal.meal
+
+    dailyplan_meal_id = dailyplan_meal.id
+    meal_id = meal.id
+
+    dailyplan_meal.delete()
+    meal.delete()
+
+    return DailyPlanMealDeleteResult(
+        dailyplan=dailyplan,
+        dailyplan_meal_id=dailyplan_meal_id,
+        meal_id=meal_id,
+    )

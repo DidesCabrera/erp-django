@@ -31,6 +31,11 @@ from notas.application.use_cases.dpm_pages import (
 from django.http import HttpResponseForbidden, JsonResponse
 from django.db import transaction
 
+from notas.application.services.commands.dailyplan_commands import (
+    add_existing_meal_to_dailyplan,
+    remove_dailyplan_meal,
+)
+
 
 @login_required
 @require_POST
@@ -263,7 +268,6 @@ def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
 @require_POST
 @login_required
 def dailyplan_add_meal(request, pk=None):
-
     dailyplan_id = request.POST.get("dailyplan_id") or pk
 
     dailyplan = get_object_or_404(
@@ -281,53 +285,43 @@ def dailyplan_add_meal(request, pk=None):
     meal_original = get_object_or_404(
         Meal,
         pk=meal_id,
-        created_by=request.user
+        created_by=request.user,
     )
-
-    meal = fork_meal_for_dailyplan(meal_original, request.user)
 
     hour = request.POST.get("hour") or None
-    note = (request.POST.get("note") or "").strip() or None
+    note = request.POST.get("note")
 
-    next_order = dailyplan.dailyplan_meals.count() + 1
-
-    DailyPlanMeal.objects.create(
+    add_existing_meal_to_dailyplan(
         dailyplan=dailyplan,
-        meal=meal,
+        meal=meal_original,
+        user=request.user,
         hour=hour,
         note=note,
-        order=next_order,
     )
-
-    dailyplan.update_draft_status()
 
     messages.success(request, "Meal added to daily plan")
 
     return redirect("dailyplan_detail", dailyplan.pk)
 
 
+
 @login_required
 @require_POST
 def dailyplanmeal_remove(request, dailyplan_id, dailyplanmeal_id):
-
     dpm = get_object_or_404(
         DailyPlanMeal.objects.select_related("dailyplan", "meal"),
         pk=dailyplanmeal_id,
+        dailyplan_id=dailyplan_id,
         dailyplan__created_by=request.user,
     )
 
-    dailyplan = dpm.dailyplan
-    meal = dpm.meal   # 👈 guardar referencia
-
-    # eliminar relación
-    dpm.delete()
-
-    # eliminar meal instance
-    meal.delete()
+    result = remove_dailyplan_meal(
+        dailyplan_meal=dpm,
+    )
 
     messages.success(request, "Meal eliminada del daily plan")
 
-    return redirect("dailyplan_detail", dailyplan.pk)
+    return redirect("dailyplan_detail", result.dailyplan.pk)
 
 
 @login_required
