@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.contrib import messages
 from notas.application.services.access.capabilities import get_capabilities
 from notas.domain.models import Meal, MealFood, DailyPlan, DailyPlanMeal, Food
@@ -19,7 +19,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from notas.presentation.viewmodels.base_vm import BaseVM
 from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
-from notas.application.services.commands.meal_commands import fork_meal_for_dailyplan
+from notas.application.services.commands.meal_commands import (
+    fork_meal_for_dailyplan,
+    save_food_in_meal,
+)
 
 from django.urls import reverse
 
@@ -34,43 +37,33 @@ from django.db import transaction
 from notas.application.services.commands.dailyplan_commands import (
     add_existing_meal_to_dailyplan,
     remove_dailyplan_meal,
+    reorder_dailyplan_meals,
+    update_dailyplan_meal,
 )
 
 
 @login_required
 @require_POST
-@transaction.atomic
 def dailyplanmeal_reorder(request, dailyplan_id):
     dailyplan = get_object_or_404(
         DailyPlan,
-        id=dailyplan_id,
+        pk=dailyplan_id,
         created_by=request.user,
     )
 
-    ordered_ids = request.POST.getlist("dpm_order[]")
+    ordered_ids = request.POST.getlist("order[]")
 
-    if not ordered_ids:
-        return JsonResponse({"ok": False, "error": "Missing order payload"}, status=400)
-
-    dpms = list(
-        DailyPlanMeal.objects.filter(
-            dailyplan=dailyplan,
-            id__in=ordered_ids,
-        )
+    result = reorder_dailyplan_meals(
+        dailyplan=dailyplan,
+        ordered_ids=ordered_ids,
     )
 
-    dpm_by_id = {str(dpm.id): dpm for dpm in dpms}
-
-    if len(dpm_by_id) != len(ordered_ids):
-        return JsonResponse({"ok": False, "error": "Invalid DPM ids"}, status=400)
-
-    for index, dpm_id in enumerate(ordered_ids, start=1):
-        dpm = dpm_by_id[str(dpm_id)]
-        dpm.order = index
-        dpm.save(update_fields=["order"])
-
-    return JsonResponse({"ok": True})
-
+    return JsonResponse(
+        {
+            "ok": True,
+            "updated_count": result.updated_count,
+        }
+    )
     
 #************ RENDER COMPLEJOS *********************
 # ---------- DETAIL (NO HAY LIST)  ----------
@@ -87,26 +80,20 @@ def dailyplan_meal_detail(request, dailyplan_id, pk):
     )
 
     caps = get_capabilities(request.user)
+
     if request.method == "POST" and "save_food" in request.POST:
         if not caps or not caps.can_edit_own_content():
             return HttpResponseForbidden("You cannot edit this meal")
 
-        mf_id = request.POST.get("mealfood_id")
-
-        if mf_id:
-            mf = get_object_or_404(
-                MealFood,
-                pk=mf_id,
+        try:
+            save_food_in_meal(
                 meal=page.meal,
-            )
-            mf.quantity = request.POST.get("quantity")
-            mf.save()
-        else:
-            MealFood.objects.create(
-                meal=page.meal,
+                mealfood_id=request.POST.get("mealfood_id"),
                 food_id=request.POST.get("food_id"),
                 quantity=request.POST.get("quantity"),
             )
+        except MealFood.DoesNotExist:
+            raise Http404("MealFood not found")
 
         page = get_dpm_detail_page_data(
             user=request.user,
@@ -211,22 +198,15 @@ def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
         return HttpResponseForbidden("You cannot edit this meal")
 
     if request.method == "POST" and "save_food" in request.POST:
-        mf_id = request.POST.get("mealfood_id")
-
-        if mf_id:
-            mf = get_object_or_404(
-                MealFood,
-                pk=mf_id,
+        try:
+            save_food_in_meal(
                 meal=page.meal,
-            )
-            mf.quantity = request.POST.get("quantity")
-            mf.save()
-        else:
-            MealFood.objects.create(
-                meal=page.meal,
+                mealfood_id=request.POST.get("mealfood_id"),
                 food_id=request.POST.get("food_id"),
                 quantity=request.POST.get("quantity"),
             )
+        except MealFood.DoesNotExist:
+            raise Http404("MealFood not found")
 
         page = get_dpm_detail_page_data(
             user=request.user,
@@ -235,7 +215,7 @@ def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
             request_get=request.GET,
             viewmode=DAILYPLAN_MEAL_VIEWMODE_DRAFT_DEEP_EDIT,
         )
-
+        
     content_vm = build_dpm_detail_vm(
         page.detail_content_data,
     )
@@ -327,62 +307,27 @@ def dailyplanmeal_remove(request, dailyplan_id, dailyplanmeal_id):
 @login_required
 @require_POST
 def dailyplanmeal_update(request, dailyplan_id, dailyplanmeal_id):
-
-    dailyplan = get_object_or_404(
-        DailyPlan,
-        id=dailyplan_id,
-        created_by=request.user,
-    )
-
     dpm = get_object_or_404(
-        DailyPlanMeal.objects.select_related("dailyplan"),
-        id=dailyplanmeal_id,
-        dailyplan=dailyplan,
+        DailyPlanMeal.objects.select_related("dailyplan", "meal"),
+        pk=dailyplanmeal_id,
+        dailyplan_id=dailyplan_id,
+        dailyplan__created_by=request.user,
     )
 
-    # ---------------------------
-    # Meal (obligatoria)
-    # ---------------------------
-    meal_id = request.POST.get("meal_id")
-    if not meal_id:
-        messages.error(request, "Debes seleccionar una meal.")
-        return redirect("dailyplan_detail", dailyplan.pk)
-
-    selected_meal = get_object_or_404(
-        Meal,
-        id=meal_id,
-        created_by=request.user,
+    result = update_dailyplan_meal(
+        dailyplan_meal=dpm,
+        user=request.user,
+        meal_id=request.POST.get("meal_id"),
+        hour=request.POST.get("hour"),
+        note=request.POST.get("note"),
     )
 
-    if dpm.meal_id != selected_meal.id:
-        replacement = fork_meal_for_dailyplan(selected_meal, request.user)
-        old_meal = dpm.meal
-        dpm.meal = replacement
-        dpm.hour = request.POST.get("hour") or None
-        dpm.note = (request.POST.get("note") or "").strip() or None
-        dpm.save()
+    messages.success(request, "Meal actualizada.")
 
-        if old_meal and old_meal.dailyplanmeal_set.count() == 0:
-            old_meal.delete()
-    else:
-        dpm.hour = request.POST.get("hour") or None
-        dpm.note = (request.POST.get("note") or "").strip() or None
-        dpm.save()
+    return redirect("dailyplan_detail", result.dailyplan.pk)
 
-    # ---------------------------
-    # Campos propios de DailyPlanMeal
-    # ---------------------------
-    dpm.hour = request.POST.get("hour") or None
-    dpm.note = (request.POST.get("note") or "").strip() or None
 
-    # ---------------------------
-    # Persistencia
-    # ---------------------------
-    dpm.save()
 
-    messages.success(request, "Meal actualizada correctamente.")
-
-    return redirect("dailyplan_detail", dailyplan.pk)
 
 # LEGACY: this flow links meals directly and does not respect snapshot isolation.
 # Keep temporarily until replacement flow is covered by tests and confirmed unused.
