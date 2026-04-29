@@ -36,8 +36,11 @@ from notas.application.use_cases.dailyplan_pages import (
 )
 
 from notas.application.services.commands.dailyplan_commands import (
-    fork_dailyplan,
     copy_dailyplan,
+    create_draft_dailyplan,
+    delete_dailyplan,
+    fork_dailyplan,
+    rename_dailyplan,
     save_dailyplan,
 )
 
@@ -414,7 +417,6 @@ def dailyplan_draft_edit(request, pk):
 
 @login_required
 def dailyplan_create(request):
-
     viewmode = DAILYPLAN_VIEWMODE_CREATE
 
     ui_vm = build_ui_vm(viewmode)
@@ -427,21 +429,21 @@ def dailyplan_create(request):
     if request.method == "POST":
         name = request.POST.get("name")
 
-        if not name:
+        try:
+            result = create_draft_dailyplan(
+                user=request.user,
+                name=name,
+            )
+        except ValueError:
             messages.error(request, "El nombre es obligatorio")
             return redirect("dailyplan_create")
 
-        dailyplan = DailyPlan.objects.create(
-            name=name,
-            created_by=request.user
-        )
-        return redirect("dailyplan_detail", pk=dailyplan.pk)
+        return redirect("dailyplan_detail", pk=result.dailyplan.pk)
 
     return render(
         request,
-         "notas/dailyplans/create.html",
-         base_vm.as_context(),
-
+        "notas/dailyplans/create.html",
+        base_vm.as_context(),
     )
 
 @login_required
@@ -453,14 +455,16 @@ def dailyplan_rename(request, pk):
     )
 
     if request.method == "POST":
-        name = request.POST.get("name", "").strip()
+        name = request.POST.get("name", "")
 
-        if not name:
+        try:
+            rename_dailyplan(
+                dailyplan=dailyplan,
+                name=name,
+            )
+        except ValueError:
             messages.error(request, "El nombre no puede estar vacío.")
             return redirect("dailyplan_rename", pk=pk)
-
-        dailyplan.name = name
-        dailyplan.save()
 
         messages.success(request, "Nombre actualizado.")
         return redirect("dailyplan_detail", pk=pk)
@@ -700,20 +704,21 @@ def dailyplan_remove(request, pk):
     dailyplan = get_object_or_404(
         DailyPlan,
         pk=pk,
-        created_by=request.user
+        created_by=request.user,
     )
 
-    # 🔒 reglas de seguridad
-    if dailyplan.is_public:
+    try:
+        delete_dailyplan(
+            dailyplan=dailyplan,
+        )
+    except ValueError:
         return HttpResponseForbidden(
             "No puedes eliminar un plan público."
         )
 
-    dailyplan.delete()
     messages.success(request, "Plan eliminado definitivamente.")
 
     return redirect("dailyplan_list")
-
 
 
 

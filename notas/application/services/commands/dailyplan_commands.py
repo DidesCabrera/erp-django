@@ -1,5 +1,22 @@
+from dataclasses import dataclass
+
 from django.db import transaction
+
 from notas.domain.models import DailyPlan, DailyPlanMeal
+
+@dataclass(frozen=True)
+class DailyPlanCreateResult:
+    dailyplan: DailyPlan
+
+
+@dataclass(frozen=True)
+class DailyPlanRenameResult:
+    dailyplan: DailyPlan
+
+
+@dataclass(frozen=True)
+class DailyPlanDeleteResult:
+    dailyplan_id: int
 
 
 # ==================================================
@@ -39,6 +56,64 @@ def clone_dailyplan_meals(source: DailyPlan, target: DailyPlan) -> None:
 # DAILYPLAN ACTIONS
 # ==================================================
 
+
+@transaction.atomic
+def create_draft_dailyplan(
+    *,
+    user,
+    name: str,
+) -> DailyPlanCreateResult:
+    clean_name = (name or "").strip()
+
+    if not clean_name:
+        raise ValueError("dailyplan_name_required")
+
+    dailyplan = DailyPlan.objects.create(
+        name=clean_name,
+        created_by=user,
+        is_draft=True,
+    )
+
+    return DailyPlanCreateResult(
+        dailyplan=dailyplan,
+    )
+
+
+@transaction.atomic
+def rename_dailyplan(
+    *,
+    dailyplan: DailyPlan,
+    name: str,
+) -> DailyPlanRenameResult:
+    clean_name = (name or "").strip()
+
+    if not clean_name:
+        raise ValueError("dailyplan_name_required")
+
+    dailyplan.name = clean_name
+    dailyplan.save(update_fields=["name"])
+
+    return DailyPlanRenameResult(
+        dailyplan=dailyplan,
+    )
+
+
+@transaction.atomic
+def delete_dailyplan(
+    *,
+    dailyplan: DailyPlan,
+) -> DailyPlanDeleteResult:
+    if dailyplan.is_public:
+        raise ValueError("dailyplan_is_public")
+
+    dailyplan_id = dailyplan.id
+    dailyplan.delete()
+
+    return DailyPlanDeleteResult(
+        dailyplan_id=dailyplan_id,
+    )
+
+    
 @transaction.atomic
 def fork_dailyplan(original: DailyPlan, user) -> DailyPlan:
     """
