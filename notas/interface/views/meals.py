@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden
 from django.contrib import messages
 from notas.application.services.access.capabilities import get_capabilities
 from notas.domain.models import Meal, MealFood, Food, MealShare
@@ -38,8 +38,10 @@ from notas.application.services.commands.meal_commands import (
     create_draft_meal,
     delete_draft_meal,
     delete_meal,
+    finish_meal_for_pending_dailyplan,
     fork_meal_for_library,
     rename_meal,
+    save_food_in_meal,
     save_meal,
 )
 
@@ -274,41 +276,33 @@ def meal_detail(request, pk):
     if request.method == "POST":
 
         if "finish_for_dailyplan" in request.POST:
-            if meal.pending_dailyplan:
-                dailyplan_id = meal.pending_dailyplan.id
+            result = finish_meal_for_pending_dailyplan(
+                meal=meal,
+            )
 
-                meal.pending_dailyplan = None
-                meal.save(update_fields=["pending_dailyplan"])
-
+            if result.completed:
                 return redirect(
-                    reverse("dailyplan_detail", args=[dailyplan_id]) +
-                    f"?select_meal={meal.id}"
+                    reverse("dailyplan_detail", args=[result.dailyplan_id]) +
+                    f"?select_meal={result.meal.id}"
                 )
 
         elif "save_food" in request.POST:
-            mf_id = request.POST.get("mealfood_id")
+            mealfood_id = request.POST.get("mealfood_id")
             quantity = request.POST.get("quantity")
             food_id = request.POST.get("food_id")
 
-            if mf_id:
-                mf = get_object_or_404(
-                    MealFood,
-                    pk=mf_id,
+            try:
+                result = save_food_in_meal(
                     meal=meal,
-                )
-                mf.quantity = quantity
-                mf.save()
-            else:
-                MealFood.objects.create(
-                    meal=meal,
+                    mealfood_id=mealfood_id,
                     food_id=food_id,
                     quantity=quantity,
                 )
+            except MealFood.DoesNotExist:
+                raise Http404("MealFood not found")
 
-            meal = Meal.objects.get(pk=meal.pk)
-            meal.update_draft_status()
+            return redirect("meal_detail", pk=result.meal.id)
 
-            return redirect("meal_detail", pk=meal.id)
 
     content_vm = build_meal_detail_vm(
         page.detail_content_data,

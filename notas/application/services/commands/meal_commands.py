@@ -226,3 +226,79 @@ def save_meal(original: Meal, user) -> Meal:
     return fork_meal(original, user)
 
 
+
+
+@dataclass(frozen=True)
+class FinishMealForDailyPlanResult:
+    meal: Meal
+    dailyplan_id: int | None
+    completed: bool
+
+
+@dataclass(frozen=True)
+class SaveFoodInMealResult:
+    meal: Meal
+    meal_food: MealFood
+    created: bool
+
+
+@transaction.atomic
+def finish_meal_for_pending_dailyplan(
+    *,
+    meal: Meal,
+) -> FinishMealForDailyPlanResult:
+    pending_dailyplan = meal.pending_dailyplan
+
+    if not pending_dailyplan:
+        return FinishMealForDailyPlanResult(
+            meal=meal,
+            dailyplan_id=None,
+            completed=False,
+        )
+
+    dailyplan_id = pending_dailyplan.id
+
+    meal.pending_dailyplan = None
+    meal.save(update_fields=["pending_dailyplan"])
+
+    return FinishMealForDailyPlanResult(
+        meal=meal,
+        dailyplan_id=dailyplan_id,
+        completed=True,
+    )
+
+
+@transaction.atomic
+def save_food_in_meal(
+    *,
+    meal: Meal,
+    mealfood_id,
+    food_id,
+    quantity,
+) -> SaveFoodInMealResult:
+    if mealfood_id:
+        meal_food = MealFood.objects.get(
+            pk=mealfood_id,
+            meal=meal,
+        )
+        meal_food.quantity = quantity
+        meal_food.save(update_fields=["quantity"])
+
+        created = False
+    else:
+        meal_food = MealFood.objects.create(
+            meal=meal,
+            food_id=food_id,
+            quantity=quantity,
+        )
+
+        created = True
+
+    meal = Meal.objects.get(pk=meal.pk)
+    meal.update_draft_status()
+
+    return SaveFoodInMealResult(
+        meal=meal,
+        meal_food=meal_food,
+        created=created,
+    )
