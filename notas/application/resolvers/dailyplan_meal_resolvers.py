@@ -28,9 +28,12 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "order": 90,
         "desktop_position": "inline",
         "mobile_position": "inline",
-        "get_url": lambda dpm, context=None: reverse(
-            "replace_dailyplan_meal",
-            args=[dpm.dailyplan.id, dpm.id],
+        "get_url": lambda dpm, context=None: (
+            reverse(
+                "dailyplan_detail",
+                args=[dpm.dailyplan.id],
+            )
+            + f"?edit_meal={dpm.id}&select_meal={dpm.meal.id}"
         ),
         "capability": "can_edit_own_content",
     },
@@ -97,7 +100,6 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
 
 DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
     DAILYPLAN_MEAL_VIEWMODE_LIST: [
-        "replace",
         "detail",
     ],
 

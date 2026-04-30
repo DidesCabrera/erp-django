@@ -332,23 +332,6 @@ def dailyplanmeal_update(request, dailyplan_id, dailyplanmeal_id):
 
 
 
-
-# LEGACY: this flow links meals directly and does not respect snapshot isolation.
-# Keep temporarily until replacement flow is covered by tests and confirmed unused.
-@login_required
-def replace_meal(request, dailyplan_meal_id, new_meal_id):
-    dailyplan_meal = get_object_or_404(DailyPlanMeal, id=dailyplan_meal_id)
-    new_meal = get_object_or_404(Meal, id=new_meal_id)
-
-    if dailyplan_meal.dailyplan.created_by != request.user:
-        return redirect("dailyplan_detail", dailyplan_meal.dailyplan.id)
-
-    dailyplan_meal.meal = new_meal
-    dailyplan_meal.save()
-
-    return redirect("dailyplan_detail", dailyplan_meal.dailyplan.id)
-
-
 @login_required
 @require_POST
 def dailyplanmeal_create_meal(request, dailyplan_id, dailyplanmeal_id):
@@ -374,89 +357,4 @@ def dailyplanmeal_create_meal(request, dailyplan_id, dailyplanmeal_id):
     )
 
 
-@login_required
-def replace_dailyplan_meal(request, dailyplan_id, dailyplanmeal_id):
-    
-    dailyplan = get_object_or_404(
-        DailyPlan,
-        id=dailyplan_id,
-        created_by=request.user,
-    )
 
-    dpm = get_object_or_404(
-        DailyPlanMeal.objects.select_related("meal", "dailyplan"),
-        id=dailyplanmeal_id,
-        dailyplan=dailyplan,
-    )
-
-    original_meal = dpm.meal
-
-    # Meal editable (draft nueva)
-    replacement_meal = Meal.objects.create(
-        name=f"{original_meal.name} (replacement)",
-        created_by=request.user,
-        is_draft=True,
-        original_author=original_meal.created_by,
-        forked_from=original_meal,
-    )
-
-    context = {
-        "dailyplan_meal": dpm,
-        "original_meal": original_meal,
-        "replacement_meal": replacement_meal,
-        "target_kpis": {
-            "kcal": original_meal.total_kcal,
-            "protein": original_meal.protein,
-            "carbs": original_meal.carbs,
-            "fat": original_meal.fat,
-        },
-    }
-
-    return render(
-        request,
-        "notas/dailyplans/replace_meal.html",
-        context,
-    )
-
-
-@require_POST
-@login_required
-def confirm_replace_meal(request, dpm_id, meal_id):
-    dpm = get_object_or_404(
-        DailyPlanMeal,
-        pk=dpm_id,
-        dailyplan__created_by=request.user,
-    )
-
-    new_meal = get_object_or_404(Meal, pk=meal_id)
-
-    dpm.meal = new_meal
-    dpm.save()
-
-    messages.success(request, "Meal replaced successfully")
-
-    return redirect("dailyplan_detail", pk=dpm.dailyplan.id)
-
-
-
-
-
-# LEGACY: this flow links meals directly and does not respect snapshot isolation.
-# Keep temporarily until replacement flow is covered by tests and confirmed unused.
-@login_required
-def attach_meal_to_existing_dpm(request, dpm_id, meal_id):
-
-    dpm = get_object_or_404(
-        DailyPlanMeal,
-        pk=dpm_id,
-        dailyplan__created_by=request.user
-    )
-
-    meal = get_object_or_404(Meal, pk=meal_id)
-
-    # Copiar contexto del slot
-    dpm.meal = meal
-    dpm.save()
-
-    # Saltar paso hora/note → ya existen
-    return redirect("meal_configure", pk=meal.id)

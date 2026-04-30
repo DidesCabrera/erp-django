@@ -69,9 +69,6 @@ from notas.interface.views.dailyplan_meals import (
     dailyplan_meal_detail, 
     dailyplan_meal_edit, 
     dailyplan_add_meal,
-    replace_dailyplan_meal,
-    confirm_replace_meal,
-    replace_meal,
     dailyplanmeal_remove,
     dailyplanmeal_update,
     dailyplanmeal_create_meal,
@@ -236,21 +233,6 @@ urlpatterns = [
         "dailyplans/<int:dailyplan_id>/meals/<int:dailyplanmeal_id>/remove/", 
         dailyplanmeal_remove, 
         name="dailyplanmeal_remove"
-    ),
-    path(
-        "dailyplans/<int:dailyplan_id>/meals/<int:dailyplanmeal_id>/replace/",
-        replace_dailyplan_meal, 
-        name="replace_dailyplan_meal"
-    ),
-    path(
-        "dailyplans/<int:dailyplan_id>/meals/<int:dailyplanmeal_id>/replace/<int:new_meal_id>/", 
-        replace_meal, 
-        name='replace_meal'
-    ),
-    path(
-        "dailyplans/<int:dailyplan_id>/meals/<int:dailyplanmeal_id>/replace/<int:meal_id>/confirm/",
-        confirm_replace_meal,
-        name="confirm_replace_meal"
     ),
 
     path(
