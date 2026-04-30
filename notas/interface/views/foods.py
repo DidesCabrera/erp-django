@@ -19,13 +19,18 @@ from notas.presentation.composition.viewmodel.food.detail_food_builder import bu
 from notas.presentation.composition.viewmodel.food.edit_food_builder import build_edit_food_vm
 from notas.interface.forms.forms import FoodEditForm
 
-from notas.application.services.commands.food_commands import create_food
+from notas.application.services.commands.food_commands import (
+    bulk_create_foods,
+    create_food,
+    update_food,
+)
 
 
 from notas.presentation.viewmodels.base_vm import BaseVM
 from notas.presentation.composition.viewmodel.ui_builder import build_ui_vm
 
 from notas.application.use_cases.food_pages import get_food_list_page_data
+
 
 #************ RENDER COMPLEJOS *********************
 @login_required
@@ -95,8 +100,15 @@ def food_edit(request, pk):
         form = FoodEditForm(request.POST, instance=food)
 
         if form.is_valid():
-            form.save()
-            return redirect("food_detail", pk=food.pk)
+            result = update_food(
+                food=food,
+                name=form.cleaned_data["name"],
+                protein=form.cleaned_data["protein"],
+                carbs=form.cleaned_data["carbs"],
+                fat=form.cleaned_data["fat"],
+            )
+
+            return redirect("food_detail", pk=result.food.pk)
 
     else:
         form = FoodEditForm(instance=food)
@@ -114,8 +126,8 @@ def food_edit(request, pk):
             **base_vm.as_context(),
             "form": form,
         }
-    )
-    
+    )   
+
 
 #************ RENDER BÁSICOS *********************
 # ---------- CREATE - *FALTA_RENAME - CONFIGURE ----------
@@ -142,7 +154,7 @@ def food_create(request):
             name=name,
             protein=protein,
             carbs=carbs,
-            fat=fat
+            fat=fat,
         )
 
         return redirect("food_list")
@@ -158,7 +170,7 @@ def food_create(request):
 def import_foods(request):
 
     viewmode = FOOD_VIEWMODE_IMPORT
-    
+
     ui_vm = build_ui_vm(viewmode)
 
     base_vm = BaseVM(
@@ -176,6 +188,7 @@ def import_foods(request):
             df = pd.read_excel(file)
 
             required_columns = {"name", "protein", "carbs", "fat"}
+
             if not required_columns.issubset(df.columns):
                 messages.error(
                     request,
@@ -183,19 +196,27 @@ def import_foods(request):
                 )
                 return redirect("import_foods")
 
-            created = 0
+            rows_to_create = []
 
             for _, row in df.iterrows():
-                Food.objects.create(
-                    name=row["name"],
-                    protein=row["protein"],
-                    carbs=row["carbs"],
-                    fat=row["fat"],
-                    created_by=request.user
+                rows_to_create.append(
+                    {
+                        "name": row["name"],
+                        "protein": row["protein"],
+                        "carbs": row["carbs"],
+                        "fat": row["fat"],
+                    }
                 )
-                created += 1
 
-            messages.success(request, f"{created} foods imported successfully.")
+            result = bulk_create_foods(
+                user=request.user,
+                rows=rows_to_create,
+            )
+
+            messages.success(
+                request,
+                f"{result.created_count} foods imported successfully."
+            )
 
         except Exception as e:
             messages.error(request, f"Import failed: {e}")
@@ -207,6 +228,7 @@ def import_foods(request):
         "notas/foods/import.html",
         base_vm.as_context(),
     )
+
 
 
 @login_required

@@ -53,6 +53,7 @@ from notas.application.services.commands.share_commands import (
     remove_meal_share,
 )
 
+from notas.application.services.access.access import get_meal_for_user
 
 from django.utils.http import url_has_allowed_host_and_scheme
 
@@ -599,6 +600,22 @@ def meal_fork(request, meal_id):
 
     messages.success(request, "Meal guardada en tu biblioteca")
     return redirect("meal_detail", pk=forked.pk)
+
+
+@login_required
+@require_POST
+def meal_save(request, meal_id):
+
+    original = get_meal_for_user(request.user, meal_id)
+
+    if not original.is_forkable:
+        return HttpResponseForbidden("No puedes guardar esta meal")
+
+    saved = save_meal(original, request.user)
+
+    messages.success(request, "Meal guardada en tu biblioteca")
+    return redirect("meal_detail", pk=saved.pk)
+
 
 
 @login_required

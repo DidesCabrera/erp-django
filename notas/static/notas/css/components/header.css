@@ -4,7 +4,7 @@
 .page-header {
   position: fixed;
   top: 0;
-  left: 240px;        /* ancho actual del sidebar */
+  left: 260px;        /* ancho actual del sidebar */
   right: 0;
 
   height: 40px;
@@ -66,7 +66,7 @@
 .header-mini-edit {
   position: fixed;
   display: flex;
-  left: 240px;
+  left: 260px;
   right: 0;
   height: 18px;
   background: #ffff94;

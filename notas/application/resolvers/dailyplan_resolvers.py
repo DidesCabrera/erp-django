@@ -137,7 +137,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "method": "post",
         "icon": "trash-2",
         "order": 90,
-        "desktop_position": "menu",
+        "desktop_position": "inline",
         "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_delete", args=[dp.id]
@@ -162,7 +162,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "method": "post",
         "icon": "trash-2",
         "order": 90,
-        "desktop_position": "menu",
+        "desktop_position": "inline",
         "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_remove", args=[dp.id]

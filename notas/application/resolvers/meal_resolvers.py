@@ -50,7 +50,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "desktop_position": "inline",
         "mobile_position": "menu",
         "get_url": lambda meal, context=None: meal_configure_url(meal),
-        "capability": "can_access_distribution_settings",
+        #"capability": "can_access_distribution_settings",
     },
 
     "fork": {
@@ -66,6 +66,19 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "capability": "can_fork",
     },
 
+    "save": {
+        "label": "Guardar",
+        "method": "post",
+        "icon": "bookmark",
+        "order": 90,
+        "desktop_position": "inline",
+        "mobile_position": "inline",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_save", args=[meal.id]
+        ),
+        "capability": "can_fork",
+    },
+
     "fork_explore": {
         "label": "Guardar en Personal",
         "method": "post",
@@ -74,7 +87,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "desktop_position": "inline",
         "mobile_position": "inline",
         "get_url": lambda meal, context=None: reverse(
-            "meal_fork", args=[meal.id]
+            "meal_save", args=[meal.id]
         ),
         "capability": "can_fork",
     },
@@ -109,7 +122,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "method": "post",
         "icon": "trash-2",
         "order": 90,
-        "desktop_position": "menu",
+        "desktop_position": "inline",
         "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_delete", args=[meal.id]
@@ -179,7 +192,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "method": "post",
         "icon": "trash-2",
         "order": 90,
-        "desktop_position": "menu",
+        "desktop_position": "inline",
         "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_remove", args=[meal.id]
@@ -232,8 +245,13 @@ MEAL_ENTITY_ACTIONS_BY_VIEWMODE = {
     ],
 
     MEAL_VIEWMODE_EXPLORE_LIST: [
-        "fork",
+        "save",
         "explore_detail",
+    ],
+
+    MEAL_VIEWMODE_EXPLORE_DETAIL: [
+        "back_to_explore_list",
+        "save",
     ],
 
     MEAL_VIEWMODE_SHARED_LIST: [
@@ -253,10 +271,6 @@ MEAL_ENTITY_ACTIONS_BY_VIEWMODE = {
         "finish_for_dailyplan",
     ],
 
-    MEAL_VIEWMODE_EXPLORE_DETAIL: [
-        "back_to_explore_list",
-        "fork",
-    ],
 
     MEAL_VIEWMODE_CONFIGURE: [
         "back_detail",

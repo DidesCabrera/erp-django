@@ -10,10 +10,11 @@ from notas.interface.views.foods import (
 )
 
 from notas.interface.views.meals import (
-    meal_fork,  
-    meal_copy, 
-    meal_detail, 
-    meal_list, 
+    meal_fork,
+    meal_save,
+    meal_copy,
+    meal_detail,
+    meal_list,
     meal_create,
     meal_configure,
     meal_rename,
@@ -169,6 +170,7 @@ urlpatterns = [
     path("meals/<int:pk>/configure/", meal_configure, name="meal_configure"),
 
     path('meals/<int:meal_id>/fork/', meal_fork, name='meal_fork'),
+    path("meals/<int:meal_id>/save/", meal_save, name="meal_save"),
     path("meals/<int:pk>/copy/", meal_copy, name="meal_copy"),
     path("meals/<int:pk>/add-food/", add_food_to_meal, name="add_food_to_meal"),
 

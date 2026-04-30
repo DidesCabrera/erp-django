@@ -52,7 +52,7 @@ FOOD_ENTITY_ACTION_DEFINITIONS = {
         "method": "post",
         "icon": "pencil",
         "order": 90,
-        "desktop_position": "menu",
+        "desktop_position": "inline",
         "mobile_position": "menu",
         "get_url": lambda food, context=None: reverse(
             "food_edit", args=[food.id]
