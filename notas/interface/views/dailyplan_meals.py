@@ -153,13 +153,17 @@ def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
     )
 
     if request.method == "POST":
-        page.dpm.hour = request.POST.get("hour") or None
-        page.dpm.note = request.POST.get("note") or None
-        page.dpm.save()
+        result = update_dailyplan_meal(
+            dailyplan_meal=page.dpm,
+            user=request.user,
+            hour=request.POST.get("hour"),
+            note=request.POST.get("note"),
+        )
+
         return redirect(
             "dailyplan_meal_detail",
-            dailyplan_id=page.dailyplan.id,
-            pk=page.dpm.id,
+            dailyplan_id=result.dailyplan.id,
+            pk=result.dailyplan_meal.id,
         )
 
     content_vm = build_dpm_detail_vm(
@@ -181,7 +185,6 @@ def dailyplan_meal_edit(request, dailyplan_id, dailyplanmeal_id):
         "notas/dailyplan_meals/edit.html",
         base_vm.as_context(),
     )
-
 
 @login_required
 def dailyplanmeal_draft_deepedit(request, dailyplan_id, dailyplanmeal_id):
