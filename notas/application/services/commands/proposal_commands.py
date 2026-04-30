@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from notas.domain.models import DailyPlan, NutritionProposal
 
+from notas.application.queries.validation_queries import compare_dailyplan_to_targets
 
 @dataclass(frozen=True)
 class NutritionProposalCreateResult:
@@ -91,6 +92,16 @@ def _ensure_not_final(
 ) -> None:
     if proposal.is_final:
         raise ValueError("proposal_is_final")
+
+
+def _build_current_snapshot_from_validation(
+    validation_data: dict,
+) -> dict:
+    return {
+        "dailyplan_id": validation_data["dailyplan_id"],
+        "dailyplan_name": validation_data["dailyplan_name"],
+        "actual": validation_data["actual"],
+    }
 
 
 @transaction.atomic
@@ -254,4 +265,58 @@ def approve_proposal(
 
     return NutritionProposalStatusResult(
         proposal=proposal,
+    )
+
+@transaction.atomic
+def create_validated_dailyplan_proposal(
+    *,
+    user,
+    dailyplan_id: int,
+    title: str,
+    summary: str = "",
+    source: str = NutritionProposal.SOURCE_AI,
+    status: str = NutritionProposal.STATUS_PENDING_REVIEW,
+    targets: dict,
+    tolerances: dict | None = None,
+    proposed_payload: dict | None = None,
+) -> NutritionProposalCreateResult:
+    """
+    Crea una propuesta nutricional con validación calculada automáticamente.
+
+    Importante:
+    este comando NO aplica cambios al DailyPlan final.
+    Solo persiste una propuesta revisable con snapshot y validation_summary.
+    """
+    targets = targets or {}
+
+    if not targets:
+        raise ValueError("proposal_targets_required")
+
+    validation_summary = compare_dailyplan_to_targets(
+        user=user,
+        dailyplan_id=dailyplan_id,
+        targets=targets,
+        tolerances=tolerances,
+    ).as_dict()
+
+    current_snapshot = _build_current_snapshot_from_validation(
+        validation_summary,
+    )
+
+    payload = proposed_payload or {
+        "intent": "adjust_dailyplan_to_targets",
+        "suggested_changes": [],
+    }
+
+    return create_dailyplan_proposal(
+        user=user,
+        dailyplan_id=dailyplan_id,
+        title=title,
+        summary=summary,
+        source=source,
+        status=status,
+        targets=targets,
+        current_snapshot=current_snapshot,
+        proposed_payload=payload,
+        validation_summary=validation_summary,
     )
