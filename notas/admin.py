@@ -8,6 +8,7 @@ from .domain.models import (
     MealFood,
     DailyPlan,
     DailyPlanMeal,
+    NutritionProposal,
     Program,
     ProgramDay,
     WeightLog,
@@ -23,6 +24,35 @@ admin.site.register(Program)
 admin.site.register(ProgramDay)
 admin.site.register(WeightLog)
 
+@admin.register(NutritionProposal)
+class NutritionProposalAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "dailyplan",
+        "status",
+        "source",
+        "created_by",
+        "reviewed_by",
+        "created_at",
+        "reviewed_at",
+    )
+    list_filter = (
+        "status",
+        "source",
+        "created_at",
+        "reviewed_at",
+    )
+    search_fields = (
+        "title",
+        "summary",
+        "dailyplan__name",
+        "created_by__username",
+        "reviewed_by__username",
+    )
+    readonly_fields = (
+        "created_at",
+        "reviewed_at",
+    )
 
 
 

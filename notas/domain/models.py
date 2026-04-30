@@ -574,7 +574,98 @@ class DailyPlanMeal(models.Model):
         }
 
 
+# ==================================================
+# NUTRITION PROPOSALS
+# ==================================================
 
+class NutritionProposal(models.Model):
+    STATUS_DRAFT = "draft"
+    STATUS_PENDING_REVIEW = "pending_review"
+    STATUS_APPROVED = "approved"
+    STATUS_REJECTED = "rejected"
+    STATUS_CANCELLED = "cancelled"
+
+    STATUS_CHOICES = (
+        (STATUS_DRAFT, "Draft"),
+        (STATUS_PENDING_REVIEW, "Pending review"),
+        (STATUS_APPROVED, "Approved"),
+        (STATUS_REJECTED, "Rejected"),
+        (STATUS_CANCELLED, "Cancelled"),
+    )
+
+    SOURCE_MANUAL = "manual"
+    SOURCE_AI = "ai"
+    SOURCE_SYSTEM = "system"
+    SOURCE_MCP = "mcp"
+
+    SOURCE_CHOICES = (
+        (SOURCE_MANUAL, "Manual"),
+        (SOURCE_AI, "AI"),
+        (SOURCE_SYSTEM, "System"),
+        (SOURCE_MCP, "MCP"),
+    )
+
+    dailyplan = models.ForeignKey(
+        DailyPlan,
+        on_delete=models.CASCADE,
+        related_name="nutrition_proposals",
+    )
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="nutrition_proposals_created",
+    )
+
+    reviewed_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="nutrition_proposals_reviewed",
+    )
+
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS_CHOICES,
+        default=STATUS_PENDING_REVIEW,
+    )
+
+    source = models.CharField(
+        max_length=20,
+        choices=SOURCE_CHOICES,
+        default=SOURCE_MANUAL,
+    )
+
+    title = models.CharField(max_length=160)
+    summary = models.TextField(blank=True)
+
+    targets = models.JSONField(default=dict, blank=True)
+    current_snapshot = models.JSONField(default=dict, blank=True)
+    proposed_payload = models.JSONField(default=dict, blank=True)
+    validation_summary = models.JSONField(default=dict, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+
+    def __str__(self):
+        return f"{self.title} ({self.status})"
+
+    @property
+    def is_reviewable(self):
+        return self.status == self.STATUS_PENDING_REVIEW
+
+    @property
+    def is_final(self):
+        return self.status in {
+            self.STATUS_APPROVED,
+            self.STATUS_REJECTED,
+            self.STATUS_CANCELLED,
+        }
+    
 
 class Program(models.Model):
     name = models.CharField(max_length=100)
