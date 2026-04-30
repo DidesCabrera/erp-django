@@ -39,6 +39,7 @@ from notas.application.services.commands.dailyplan_commands import (
     configure_dailyplan,
     copy_dailyplan,
     create_draft_dailyplan,
+    create_pending_meal_for_dailyplan,
     delete_dailyplan,
     fork_dailyplan,
     rename_dailyplan,
@@ -631,62 +632,22 @@ def create_meal_for_dailyplan(request, dailyplan_id):
     if request.method == "POST":
         name = request.POST.get("name")
 
-        if not name:
+        try:
+            result = create_pending_meal_for_dailyplan(
+                dailyplan=dailyplan,
+                user=request.user,
+                name=name,
+            )
+        except ValueError:
             messages.error(request, "Name is required")
             return redirect("create_meal_for_dailyplan", dailyplan_id=dailyplan.id)
 
-        meal = Meal.objects.create(
-            name=name,
-            created_by=request.user,
-            is_draft=True,
-            pending_dailyplan=dailyplan,
-        )
-
-        return redirect("meal_detail", pk=meal.id)
+        return redirect("meal_detail", pk=result.meal.id)
 
     return render(
         request,
         "notas/meals/create.html",
         {"dailyplan": dailyplan},
-    )
-
-
-#CREATE DPM AFTER SET HOUE NOTE (STEP 3 FLOW)
-@login_required
-def attach_meal_to_dailyplan(request, dailyplan_id, meal_id):
-
-    dailyplan = get_object_or_404(
-        DailyPlan,
-        pk=dailyplan_id,
-        created_by=request.user,
-    )
-
-    meal = get_object_or_404(Meal, pk=meal_id, created_by=request.user)
-
-    if request.method == "POST":
-        hour = request.POST.get("hour") or None
-        note = request.POST.get("note") or None
-
-        next_order = dailyplan.dailyplan_meals.count() + 1
-
-        DailyPlanMeal.objects.create(
-            dailyplan=dailyplan,
-            meal=meal,
-            hour=hour,
-            note=note,
-            order=next_order,
-        )
-        dailyplan.update_draft_status()
-
-        return redirect("meal_configure", pk=meal.id)
-
-    return render(
-        request,
-        "notas/dailyplans/attach_meal.html",
-        {
-            "dailyplan": dailyplan,
-            "meal": meal,
-        }
     )
 
 
