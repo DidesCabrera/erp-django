@@ -221,10 +221,14 @@ def copy_meal(original: Meal, user) -> Meal:
 
 def save_meal(original: Meal, user) -> Meal:
     """
-    Explore UX: Guardar = Fork
-    """
-    return fork_meal(original, user)
+    UX Alias:
+    Explore / Shared → Guardar = fork para biblioteca personal.
 
+    Mantiene un nombre semántico propio para que la UI, API o MCP
+    puedan expresar la intención "guardar en mi biblioteca" sin acoplarse
+    al concepto interno de fork.
+    """
+    return fork_meal_for_library(original, user)
 
 
 
@@ -240,6 +244,31 @@ class SaveFoodInMealResult:
     meal: Meal
     meal_food: MealFood
     created: bool
+
+
+@dataclass(frozen=True)
+class MealFoodUpdateResult:
+    meal: Meal
+    meal_food: MealFood
+
+
+@dataclass(frozen=True)
+class MealFoodDeleteResult:
+    meal: Meal
+    meal_food_id: int
+
+
+@dataclass(frozen=True)
+class MealFoodCreateResult:
+    meal: Meal
+    meal_food: MealFood
+
+
+@dataclass(frozen=True)
+class MealFoodReorderResult:
+    meal: Meal
+    updated_count: int
+
 
 
 @dataclass(frozen=True)
@@ -344,4 +373,105 @@ def configure_meal(
         meal=meal,
         origin_dailyplan_id=origin_dailyplan_id,
         completed_from_pending_dailyplan=completed_from_pending_dailyplan,
+    )
+
+@transaction.atomic
+def update_meal_food(
+    *,
+    meal_food: MealFood,
+    quantity,
+    food_id=None,
+) -> MealFoodUpdateResult:
+    meal_food.quantity = quantity
+
+    update_fields = ["quantity"]
+
+    if food_id:
+        meal_food.food_id = int(food_id)
+        update_fields.append("food")
+
+    meal_food.save(update_fields=update_fields)
+
+    meal = meal_food.meal
+    meal.update_draft_status()
+
+    return MealFoodUpdateResult(
+        meal=meal,
+        meal_food=meal_food,
+    )
+
+
+@transaction.atomic
+def delete_meal_food(
+    *,
+    meal_food: MealFood,
+) -> MealFoodDeleteResult:
+    meal = meal_food.meal
+    meal_food_id = meal_food.id
+
+    meal_food.delete()
+    meal.update_draft_status()
+
+    return MealFoodDeleteResult(
+        meal=meal,
+        meal_food_id=meal_food_id,
+    )
+
+
+@transaction.atomic
+def create_meal_food(
+    *,
+    meal: Meal,
+    food,
+    quantity,
+) -> MealFoodCreateResult:
+    next_order = meal.meal_food_set.count() + 1
+
+    meal_food = MealFood.objects.create(
+        meal=meal,
+        food=food,
+        quantity=quantity,
+        order=next_order,
+    )
+
+    meal.update_draft_status()
+
+    return MealFoodCreateResult(
+        meal=meal,
+        meal_food=meal_food,
+    )
+
+
+@transaction.atomic
+def reorder_meal_foods(
+    *,
+    meal: Meal,
+    ordered_ids,
+) -> MealFoodReorderResult:
+    meal_foods = list(
+        MealFood.objects.filter(
+            meal=meal,
+            id__in=ordered_ids,
+        )
+    )
+
+    meal_food_by_id = {
+        str(meal_food.id): meal_food
+        for meal_food in meal_foods
+    }
+
+    if len(meal_food_by_id) != len(ordered_ids):
+        raise ValueError("invalid_mealfood_ids")
+
+    updated_count = 0
+
+    for index, mealfood_id in enumerate(ordered_ids, start=1):
+        meal_food = meal_food_by_id[str(mealfood_id)]
+        meal_food.order = index
+        meal_food.save(update_fields=["order"])
+        updated_count += 1
+
+    return MealFoodReorderResult(
+        meal=meal,
+        updated_count=updated_count,
     )

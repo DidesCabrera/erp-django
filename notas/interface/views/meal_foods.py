@@ -3,9 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from django.db import transaction
 
 from notas.domain.models import MealFood, Meal, Food
+from notas.application.services.commands.meal_commands import (
+    create_meal_food,
+    delete_meal_food,
+    reorder_meal_foods,
+    update_meal_food,
+)
 
 
 
@@ -44,15 +49,11 @@ def mealfood_update(request, meal_id, mealfood_id):
             return redirect(return_to)
         return redirect("meal_detail", meal.id)
 
-    mealfood.quantity = quantity
-    
-    food_id = request.POST.get("food_id")
-
-    if food_id:
-        mealfood.food_id = int(food_id)
-
-
-    mealfood.save()
+    update_meal_food(
+        meal_food=mealfood,
+        quantity=quantity,
+        food_id=request.POST.get("food_id"),
+    )
 
     messages.success(request, "Alimento actualizado correctamente.")
 
@@ -80,7 +81,9 @@ def mealfood_remove(request, pk):
         or request.GET.get("return_to")
     )
 
-    mf.delete()
+    delete_meal_food(
+        meal_food=mf,
+    )
 
     # 👉 prioridad absoluta: return_to
     if return_to:
@@ -113,15 +116,11 @@ def add_food_to_meal(request, pk):
 
     food = get_object_or_404(Food, pk=food_id)
 
-    next_order = meal.meal_food_set.count() + 1
-
-    MealFood.objects.create(
+    create_meal_food(
         meal=meal,
         food=food,
         quantity=quantity,
-        order=next_order,
     )
-    meal.update_draft_status()
 
     messages.success(request, "Food agregado a la meal")
 
@@ -133,7 +132,6 @@ def add_food_to_meal(request, pk):
 
 @login_required
 @require_POST
-@transaction.atomic
 def mealfood_reorder(request, meal_id):
     meal = get_object_or_404(
         Meal,
@@ -149,27 +147,20 @@ def mealfood_reorder(request, meal_id):
             status=400,
         )
 
-    meal_foods = list(
-        MealFood.objects.filter(
+    try:
+        result = reorder_meal_foods(
             meal=meal,
-            id__in=ordered_ids,
+            ordered_ids=ordered_ids,
         )
-    )
-
-    meal_food_by_id = {
-        str(meal_food.id): meal_food
-        for meal_food in meal_foods
-    }
-
-    if len(meal_food_by_id) != len(ordered_ids):
+    except ValueError:
         return JsonResponse(
             {"ok": False, "error": "Invalid MealFood ids"},
             status=400,
         )
 
-    for index, mealfood_id in enumerate(ordered_ids, start=1):
-        meal_food = meal_food_by_id[str(mealfood_id)]
-        meal_food.order = index
-        meal_food.save(update_fields=["order"])
-
-    return JsonResponse({"ok": True})
+    return JsonResponse(
+        {
+            "ok": True,
+            "updated_count": result.updated_count,
+        }
+    )
