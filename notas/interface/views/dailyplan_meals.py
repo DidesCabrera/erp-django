@@ -355,6 +355,3 @@ def dailyplanmeal_create_meal(request, dailyplan_id, dailyplanmeal_id):
         dailyplan_id=result.dailyplan.id,
         pk=result.dailyplan_meal.id,
     )
-
-
-

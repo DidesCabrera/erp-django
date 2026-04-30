@@ -45,6 +45,13 @@ from notas.application.services.commands.dailyplan_commands import (
     save_dailyplan,
 )
 
+from notas.application.services.commands.share_commands import (
+    accept_dailyplan_share,
+    create_dailyplan_share,
+    dismiss_dailyplan_share,
+    remove_dailyplan_share,
+)
+
 from dataclasses import dataclass
 
 
@@ -79,11 +86,13 @@ def dailyplan_share(request, pk):
     if request.method == "POST" and form.is_valid():
         email = form.cleaned_data["recipient_email"]
 
-        share, created = DailyPlanShare.objects.get_or_create(
+        result = create_dailyplan_share(
             sender=request.user,
             recipient_email=email,
             dailyplan=dailyplan,
         )
+
+        share = result.share
 
         link = request.build_absolute_uri(
             reverse("dailyplan_share_accept", args=[share.token])
@@ -104,29 +113,37 @@ def dailyplan_share(request, pk):
         {"dailyplan": dailyplan, "form": form},
     )
 
+
 @login_required
 def dailyplan_share_accept(request, token):
-    share = get_object_or_404(DailyPlanShare, token=token)
+    share = get_object_or_404(
+        DailyPlanShare,
+        token=token,
+    )
 
-    # Marcar como aceptado
-    share.accepted_by = request.user
-    share.save()
+    accept_dailyplan_share(
+        share=share,
+        user=request.user,
+    )
 
-    return redirect("inbox")
+    return redirect("inbox_list")
+
 
 @login_required
 def dailyplan_share_dismiss(request, share_id):
     share = get_object_or_404(
         DailyPlanShare,
         id=share_id,
-        accepted_by=request.user
+        accepted_by=request.user,
     )
 
     if request.method == "POST":
-        share.dismissed = True
-        share.save()
+        dismiss_dailyplan_share(
+            share=share,
+        )
 
-    return redirect("dailyplans_shared_with_me")
+    return redirect("dailyplan_shared_list")
+
 
 @login_required
 @require_POST
@@ -134,13 +151,15 @@ def dailyplan_unshare(request, share_id):
     share = get_object_or_404(
         DailyPlanShare,
         id=share_id,
-        accepted_by=request.user
+        accepted_by=request.user,
     )
 
-    share.removed = True
-    share.save()
+    remove_dailyplan_share(
+        share=share,
+    )
 
     return redirect("dailyplan_shared_list")
+
 
 
 #************ RENDER COMPLEJOS *********************
