@@ -9,9 +9,7 @@
 }
 
 .card.dpm_meal{
-  border-radius: 0 0 14px 14px;
-  border-width: 0 1px 1px 1px;
-  border: 1px solid  rgb(225, 225, 225);
+  padding: 2px 10px 14px 10px;
 }
 
 /* =========================
