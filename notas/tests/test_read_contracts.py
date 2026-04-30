@@ -35,6 +35,14 @@ from notas.domain.models import (
     Meal,
     MealFood,
     WeightLog,
+    NutritionProposal,
+)
+
+from notas.application.queries.proposal_queries import (
+    get_proposal_detail,
+    list_dailyplan_proposals,
+    list_user_proposals,
+    search_proposals,
 )
 
 
@@ -92,6 +100,28 @@ class ReadContractTests(TestCase):
             dailyplan=self.dailyplan,
             meal=self.meal,
             order=1,
+        )
+
+        self.proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Adjust DailyPlan",
+            summary="Adjust plan to match protein target.",
+            targets={
+                "protein": 190,
+            },
+            current_snapshot={
+                "dailyplan_id": self.dailyplan.id,
+                "protein": 170,
+            },
+            proposed_payload={
+                "intent": "adjust_dailyplan_to_targets",
+                "suggested_changes": [],
+            },
+            validation_summary={
+                "within_tolerance": False,
+            },
         )
 
     def test_food_detail_contract_is_json_serializable(self):
@@ -473,3 +503,87 @@ class ReadContractTests(TestCase):
             )
 
         assert_json_serializable(self, data)
+
+    def test_nutrition_proposal_contracts_are_json_serializable(self):
+        detail = get_proposal_detail(
+            self.user,
+            self.proposal.id,
+        )
+
+        detail_data = detail.as_dict()
+
+        self.assertEqual(
+            set(detail_data.keys()),
+            {
+                "id",
+                "dailyplan_id",
+                "dailyplan_name",
+                "created_by_id",
+                "created_by_username",
+                "reviewed_by_id",
+                "reviewed_by_username",
+                "status",
+                "source",
+                "title",
+                "summary",
+                "targets",
+                "current_snapshot",
+                "proposed_payload",
+                "validation_summary",
+                "is_reviewable",
+                "is_final",
+                "created_at",
+                "reviewed_at",
+            },
+        )
+
+        self.assertIsInstance(detail_data["targets"], dict)
+        self.assertIsInstance(detail_data["current_snapshot"], dict)
+        self.assertIsInstance(detail_data["proposed_payload"], dict)
+        self.assertIsInstance(detail_data["validation_summary"], dict)
+
+        assert_json_serializable(self, detail_data)
+
+        query_results = [
+            list_user_proposals(self.user),
+            list_dailyplan_proposals(
+                self.user,
+                self.dailyplan.id,
+            ),
+            search_proposals(
+                self.user,
+                "adjust",
+            ),
+        ]
+
+        for result in query_results:
+            data = [
+                item.as_dict()
+                for item in result
+            ]
+
+            self.assertGreaterEqual(len(data), 1)
+
+            for item in data:
+                self.assertEqual(
+                    set(item.keys()),
+                    {
+                        "id",
+                        "dailyplan_id",
+                        "dailyplan_name",
+                        "created_by_id",
+                        "created_by_username",
+                        "reviewed_by_id",
+                        "reviewed_by_username",
+                        "status",
+                        "source",
+                        "title",
+                        "summary",
+                        "is_reviewable",
+                        "is_final",
+                        "created_at",
+                        "reviewed_at",
+                    },
+                )
+
+            assert_json_serializable(self, data)
