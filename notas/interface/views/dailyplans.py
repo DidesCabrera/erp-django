@@ -36,6 +36,7 @@ from notas.application.use_cases.dailyplan_pages import (
 )
 
 from notas.application.services.commands.dailyplan_commands import (
+    configure_dailyplan,
     copy_dailyplan,
     create_draft_dailyplan,
     delete_dailyplan,
@@ -495,10 +496,9 @@ def dailyplan_configure(request, pk):
     # =====================
     # POST
     # =====================
-
     if request.method == "POST":
 
-        is_public   = bool(request.POST.get("is_public"))
+        is_public = bool(request.POST.get("is_public"))
         is_forkable = bool(request.POST.get("is_forkable"))
         is_copiable = bool(request.POST.get("is_copiable"))
 
@@ -510,15 +510,16 @@ def dailyplan_configure(request, pk):
             messages.error(request, "Your plan does not allow copies.")
             return redirect("dailyplan_configure", pk=pk)
 
-        dailyplan.is_public = is_public
-        dailyplan.is_forkable = is_forkable
-        dailyplan.is_copiable = is_copiable
-
-        dailyplan.save()
+        result = configure_dailyplan(
+            dailyplan=dailyplan,
+            is_public=is_public,
+            is_forkable=is_forkable,
+            is_copiable=is_copiable,
+        )
 
         messages.success(request, "Configuración guardada")
 
-        return redirect("dailyplan_detail", pk=pk)
+        return redirect("dailyplan_detail", pk=result.dailyplan.pk)
 
     # =====================
     # VIEWMODEL

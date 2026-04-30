@@ -18,6 +18,12 @@ class DailyPlanRenameResult:
 class DailyPlanDeleteResult:
     dailyplan_id: int
 
+
+@dataclass(frozen=True)
+class DailyPlanConfigureResult:
+    dailyplan: DailyPlan
+
+
 @dataclass(frozen=True)
 class DailyPlanMealCreateResult:
     dailyplan: DailyPlan
@@ -53,6 +59,7 @@ class DailyPlanMealSnapshotReplaceResult:
     replaced_meal: bool
     old_meal_id: int | None = None
     new_meal_id: int | None = None
+
 
 @dataclass(frozen=True)
 class DailyPlanMealCreateEmptyMealResult:
@@ -153,6 +160,31 @@ def delete_dailyplan(
 
     return DailyPlanDeleteResult(
         dailyplan_id=dailyplan_id,
+    )
+
+
+@transaction.atomic
+def configure_dailyplan(
+    *,
+    dailyplan: DailyPlan,
+    is_public: bool,
+    is_forkable: bool,
+    is_copiable: bool,
+) -> DailyPlanConfigureResult:
+    dailyplan.is_public = is_public
+    dailyplan.is_forkable = is_forkable
+    dailyplan.is_copiable = is_copiable
+
+    dailyplan.save(
+        update_fields=[
+            "is_public",
+            "is_forkable",
+            "is_copiable",
+        ]
+    )
+
+    return DailyPlanConfigureResult(
+        dailyplan=dailyplan,
     )
 
 
