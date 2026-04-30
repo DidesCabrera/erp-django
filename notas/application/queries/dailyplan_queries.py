@@ -1,5 +1,10 @@
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
+
+from notas.application.queries.read_boundaries import (
+    get_owned_dailyplan_queryset,
+    get_readable_dailyplan_or_404,
+    get_readable_dailyplan_queryset,
+)
 
 from notas.application.dto.dailyplan_dto import (
     DailyPlanDTO,
@@ -12,9 +17,9 @@ from notas.application.queries.meal_queries import (
     build_meal_food_dto,
     build_meal_kpi_dto,
 )
-from notas.application.services.access.access import get_dailyplan_for_user
+
 from notas.application.services.nutrition.nutrition_kpis import get_ppk_dailyplan
-from notas.domain.models import DailyPlan, DailyPlanShare
+from notas.domain.models import DailyPlan
 
 
 def _cached_or_computed(value, fallback):
@@ -202,35 +207,17 @@ def build_dailyplan_dto(
 
 def get_available_dailyplan_queryset(user):
     """
-    DailyPlans visibles para el usuario:
-    - propios;
-    - públicos no draft;
-    - compartidos aceptados, no dismissed, no removed.
+    Alias de compatibilidad para el boundary explícito de lectura.
+    Mantiene el contrato público existente de dailyplan_queries.
     """
-    shared_dailyplan_ids = DailyPlanShare.objects.filter(
-        accepted_by=user,
-        dismissed=False,
-        removed=False,
-    ).values_list("dailyplan_id", flat=True)
+    return get_readable_dailyplan_queryset(user)
 
-    return (
-        DailyPlan.objects
-        .filter(
-            Q(created_by=user)
-            | Q(is_public=True, is_draft=False)
-            | Q(id__in=shared_dailyplan_ids)
-        )
-        .distinct()
-        .order_by("name", "id")
-    )
 
 
 def list_user_dailyplans(user) -> list[DailyPlanListItemDTO]:
     dailyplans = (
-        DailyPlan.objects
-        .filter(created_by=user)
+        get_owned_dailyplan_queryset(user)
         .prefetch_related("dailyplan_meals__meal")
-        .order_by("name", "id")
     )
 
     return [
@@ -270,7 +257,7 @@ def search_dailyplans(user, query: str) -> list[DailyPlanListItemDTO]:
 
 
 def get_dailyplan_detail(user, dailyplan_id: int) -> DailyPlanDTO:
-    dailyplan = get_dailyplan_for_user(
+    dailyplan = get_readable_dailyplan_or_404(
         user,
         dailyplan_id,
     )

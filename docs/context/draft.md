@@ -1,15 +1,5 @@
-from notas.presentation.composition.viewmodel.components.foods_aggregation import (
-    build_meal_foods_aggregation,
-)
 
-
-El from no corresponde segun los cambios sugeridos ahora esta en
-
-from notas.application.services.nutrition.food_aggregation import (
-    build_meal_foods_aggregation,
-)
-
-Eso esta bien?
-
-
-
+python manage.py test notas.tests.test_food_views
+python manage.py test notas.tests.test_food_json_and_picker_contracts
+python manage.py test notas.tests.test_meal_views
+python manage.py test notas.tests.test_picker_payloads

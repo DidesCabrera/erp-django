@@ -32,14 +32,16 @@ python manage.py runserver
 cd proyecto_django
 python manage.py runserver
 
-
+git status
+git checkout main
+git pull origin main
 
 git ls-files | grep "notas/actions"
 
 git branch --show-current
 git status
 git add .
-git commit -m "Ajustes 2"
+git commit -m "Ultima version estable previo a pruebas con codex"
 git push origin main
 git log --oneline -n 5 #ver ultimos commit
 git checkout -b feature/ux-improvements #crear nuevo branch
@@ -78,3 +80,45 @@ user.is_staff = True
 user.is_superuser = True
 user.save()
 
+
+
+LIMPIEZA DE BRANCHS
+
+git branch -D codex-experiments
+git branch -D feature/improve-create-meal-from-dailyplan
+git branch -D feature/mejora-interfaz
+git branch -D feature/mejora-navegacion
+git branch -D feature/mejora-viewmodel
+git branch -D feature/sidebar-layout
+git branch -D feature/ux-improvements
+git branch -D refactor-header-actions-2
+git branch -D rescue-72f8e48
+
+git branch -r
+
+#MALO
+git push origin --delete origin/codex-experiments
+
+CORRECTO!
+git push origin --delete codex-experiments
+git push origin --delete feature/sidebar-layout
+git push origin --delete feature/ux-improvements
+git push origin --delete refactor-header-actions-2
+git push origin --delete rescue-72f8e48
+
+LIMPIAR REFERENCIAS REMOTAS
+git fetch --prune
+
+Y VERIFICAR
+git branch -r
+
+
+
+git add .
+git commit -m "Move meal dailyplan and dpm content builders to presentation"
+
+
+
+
+git add .
+git commit -m "Fix dailyplan meal picker update URL"

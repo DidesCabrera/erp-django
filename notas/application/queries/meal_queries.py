@@ -1,4 +1,8 @@
-from django.db.models import Q
+from notas.application.queries.read_boundaries import (
+    get_owned_meal_queryset,
+    get_readable_meal_or_404,
+    get_readable_meal_queryset,
+)
 from django.shortcuts import get_object_or_404
 
 from notas.application.dto.meal_dto import (
@@ -7,9 +11,9 @@ from notas.application.dto.meal_dto import (
     MealKpiDTO,
     MealListItemDTO,
 )
-from notas.application.services.access.access import get_meal_for_user
+
 from notas.application.services.nutrition.nutrition_kpis import get_ppk_meal
-from notas.domain.models import Meal, MealShare
+from notas.domain.models import Meal
 
 
 def _cached_or_computed(value, fallback):
@@ -168,35 +172,16 @@ def build_meal_dto(meal: Meal, user) -> MealDTO:
 
 def get_available_meal_queryset(user):
     """
-    Meals visibles para el usuario en esta etapa:
-    - propias;
-    - públicas no draft;
-    - compartidas aceptadas, no dismissed, no removed.
+    Alias de compatibilidad para el boundary explícito de lectura.
+    Mantiene el contrato público existente de meal_queries.
     """
-    shared_meal_ids = MealShare.objects.filter(
-        accepted_by=user,
-        dismissed=False,
-        removed=False,
-    ).values_list("meal_id", flat=True)
-
-    return (
-        Meal.objects
-        .filter(
-            Q(created_by=user) |
-            Q(is_public=True, is_draft=False) |
-            Q(id__in=shared_meal_ids)
-        )
-        .distinct()
-        .order_by("name", "id")
-    )
+    return get_readable_meal_queryset(user)
 
 
 def list_user_meals(user) -> list[MealListItemDTO]:
     meals = (
-        Meal.objects
-        .filter(created_by=user)
+        get_owned_meal_queryset(user)
         .prefetch_related("meal_food_set")
-        .order_by("name", "id")
     )
 
     return [
@@ -236,7 +221,7 @@ def search_meals(user, query: str) -> list[MealListItemDTO]:
 
 
 def get_meal_detail(user, meal_id: int) -> MealDTO:
-    meal = get_meal_for_user(
+    meal = get_readable_meal_or_404(
         user,
         meal_id,
     )

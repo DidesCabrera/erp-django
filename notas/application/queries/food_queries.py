@@ -1,5 +1,8 @@
-from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from notas.application.queries.read_boundaries import (
+    get_owned_food_queryset,
+    get_readable_food_or_404,
+    get_readable_food_queryset,
+)
 
 from notas.application.dto.food_dto import (
     FoodDTO,
@@ -48,29 +51,19 @@ def build_food_dto(food: Food) -> FoodDTO:
 
 def get_available_food_queryset(user):
     """
-    Foods visibles para el usuario en esta etapa:
-    - alimentos creados por el usuario;
-    - alimentos de sistema, con created_by=None.
-
-    Si más adelante Food tiene is_public/shared, este es el punto donde
-    se amplía la regla de lectura.
+    Alias de compatibilidad para el boundary explícito de lectura.
+    Mantiene el contrato público existente de food_queries.
     """
-    return (
-        Food.objects
-        .filter(
-            Q(created_by=user) |
-            Q(created_by__isnull=True)
-        )
-        .order_by("name", "id")
-    )
+    return get_readable_food_queryset(user)
 
 
 def list_user_foods(user) -> list[FoodListItemDTO]:
-    foods = (
-        Food.objects
-        .filter(created_by=user)
-        .order_by("name", "id")
-    )
+    foods = get_owned_food_queryset(user)
+
+    return [
+        build_food_list_item_dto(food)
+        for food in foods
+    ]
 
     return [
         build_food_list_item_dto(food)
@@ -104,9 +97,9 @@ def search_foods(user, query: str) -> list[FoodListItemDTO]:
 
 
 def get_food_detail(user, food_id: int) -> FoodDTO:
-    food = get_object_or_404(
-        get_available_food_queryset(user),
-        pk=food_id,
+    food = get_readable_food_or_404(
+        user,
+        food_id,
     )
 
     return build_food_dto(food)

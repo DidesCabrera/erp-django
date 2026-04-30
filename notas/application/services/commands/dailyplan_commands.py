@@ -68,6 +68,13 @@ class DailyPlanMealCreateEmptyMealResult:
     meal: Meal
     old_meal_id: int | None = None
 
+
+@dataclass(frozen=True)
+class DailyPlanPendingMealCreateResult:
+    dailyplan: DailyPlan
+    meal: Meal
+
+
 # ==================================================
 # DAILYPLAN HELPERS
 # ==================================================
@@ -466,3 +473,28 @@ def create_empty_meal_for_dailyplan_meal(
         meal=new_meal,
         old_meal_id=old_meal_id,
     )
+
+@transaction.atomic
+def create_pending_meal_for_dailyplan(
+    *,
+    dailyplan: DailyPlan,
+    user,
+    name: str,
+) -> DailyPlanPendingMealCreateResult:
+    clean_name = (name or "").strip()
+
+    if not clean_name:
+        raise ValueError("meal_name_required")
+
+    meal = Meal.objects.create(
+        name=clean_name,
+        created_by=user,
+        is_draft=True,
+        pending_dailyplan=dailyplan,
+    )
+
+    return DailyPlanPendingMealCreateResult(
+        dailyplan=dailyplan,
+        meal=meal,
+    )
+
