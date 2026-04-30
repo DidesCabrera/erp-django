@@ -594,12 +594,13 @@ def dailyplan_save(request, dailyplan_id):
     original = get_dailyplan_for_user(request.user, dailyplan_id)
 
     if not original.is_forkable:
-        return HttpResponseForbidden("No puedes forkear este daily plan")
+        return HttpResponseForbidden("No puedes guardar este daily plan")
 
-    forked = fork_dailyplan(original, request.user)
+    saved = save_dailyplan(original, request.user)
 
     messages.success(request, "Daily plan guardado en tu biblioteca")
     return redirect("dailyplan_list")
+
 
 
 @login_required

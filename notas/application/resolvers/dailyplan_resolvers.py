@@ -101,7 +101,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "desktop_position": "inline",
         "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
-            "dailyplan_fork", args=[dp.id]
+            "dailyplan_save", args=[dp.id]
         ),
         "capability": "can_fork",
     },
@@ -114,7 +114,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "desktop_position": "inline",
         "mobile_position": "inline",
         "get_url": lambda dp, context=None: reverse(
-            "dailyplan_fork", args=[dp.id]
+            "dailyplan_save", args=[dp.id]
         ),
         "capability": "can_fork",
     },
