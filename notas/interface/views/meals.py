@@ -34,6 +34,7 @@ from notas.application.use_cases.meal_pages import (
 )
 
 from notas.application.services.commands.meal_commands import (
+    configure_meal,
     copy_meal,
     create_draft_meal,
     delete_draft_meal,
@@ -501,7 +502,6 @@ def meal_configure(request, pk):
     # =====================
     # POST
     # =====================
-
     if request.method == "POST":
 
         is_public = bool(request.POST.get("is_public"))
@@ -516,19 +516,14 @@ def meal_configure(request, pk):
             messages.error(request, "Your plan does not allow copies.")
             return redirect("meal_configure", pk=pk)
 
-        meal.is_public = is_public
-        meal.is_forkable = is_forkable
-        meal.is_copiable = is_copiable
+        result = configure_meal(
+            meal=meal,
+            is_public=is_public,
+            is_forkable=is_forkable,
+            is_copiable=is_copiable,
+        )
 
-        origin_dailyplan = meal.pending_dailyplan
-
-        meal.save()
-
-        if origin_dailyplan:
-
-            meal.pending_dailyplan = None
-            meal.save(update_fields=["pending_dailyplan"])
-
+        if result.completed_from_pending_dailyplan:
             messages.success(
                 request,
                 "Meal saved and added to your DailyPlan."
@@ -536,12 +531,12 @@ def meal_configure(request, pk):
 
             return redirect(
                 "dailyplan_detail",
-                pk=origin_dailyplan.id
+                pk=result.origin_dailyplan_id,
             )
 
         messages.success(request, "Configuration saved")
-        return redirect("meal_detail", pk=pk)
-
+        return redirect("meal_detail", pk=result.meal.pk)
+        
     # =====================
     # VIEWMODEL
     # =====================

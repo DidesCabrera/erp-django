@@ -242,6 +242,13 @@ class SaveFoodInMealResult:
     created: bool
 
 
+@dataclass(frozen=True)
+class ConfigureMealResult:
+    meal: Meal
+    origin_dailyplan_id: int | None = None
+    completed_from_pending_dailyplan: bool = False
+
+
 @transaction.atomic
 def finish_meal_for_pending_dailyplan(
     *,
@@ -301,4 +308,40 @@ def save_food_in_meal(
         meal=meal,
         meal_food=meal_food,
         created=created,
+    )
+
+@transaction.atomic
+def configure_meal(
+    *,
+    meal: Meal,
+    is_public: bool,
+    is_forkable: bool,
+    is_copiable: bool,
+) -> ConfigureMealResult:
+    origin_dailyplan = meal.pending_dailyplan
+    origin_dailyplan_id = origin_dailyplan.id if origin_dailyplan else None
+
+    meal.is_public = is_public
+    meal.is_forkable = is_forkable
+    meal.is_copiable = is_copiable
+
+    update_fields = [
+        "is_public",
+        "is_forkable",
+        "is_copiable",
+    ]
+
+    completed_from_pending_dailyplan = False
+
+    if origin_dailyplan:
+        meal.pending_dailyplan = None
+        update_fields.append("pending_dailyplan")
+        completed_from_pending_dailyplan = True
+
+    meal.save(update_fields=update_fields)
+
+    return ConfigureMealResult(
+        meal=meal,
+        origin_dailyplan_id=origin_dailyplan_id,
+        completed_from_pending_dailyplan=completed_from_pending_dailyplan,
     )
