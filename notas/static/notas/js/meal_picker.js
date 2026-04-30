@@ -306,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      form.action = `/dailyplans/${ctx.dailyplan.id}/meals/${ctx.editing.dailyplanmeal_id}/update/`;
+      form.action = `/app/dailyplans/${ctx.dailyplan.id}/meals/${ctx.editing.dailyplanmeal_id}/update/`;
 
       document.dispatchEvent(new CustomEvent("picker:open", {
         detail: { sectionId: "dailyplan-picker-section" }
