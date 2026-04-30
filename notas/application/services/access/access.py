@@ -1,4 +1,11 @@
-from notas.domain.models import DailyPlan, DailyPlanShare
+from django.shortcuts import get_object_or_404
+
+from notas.domain.models import (
+    DailyPlan,
+    DailyPlanShare,
+    Meal,
+    MealShare,
+)
 
 def get_dailyplan_for_user(user, pk):
     """
@@ -33,22 +40,48 @@ def get_dailyplan_for_user(user, pk):
     raise DailyPlan.DoesNotExist
 
 
-from django.shortcuts import get_object_or_404
-from notas.domain.models import Meal
-
 
 def get_meal_for_user(user, meal_id):
     """
-    Retorna una Meal accesible para el usuario actual.
-
-    Ajusta aquí las reglas si más adelante quieres permitir:
-    - meals compartidas
-    - públicas
-    - forkables
-    - drafts propios
+    Permite acceder a una meal si:
+    - es del usuario
+    - es pública
+    - fue compartida con él
     """
-    return get_object_or_404(
-        Meal,
-        pk=meal_id,
-        created_by=user,
+
+    # 1. Es mía
+    try:
+        return Meal.objects.get(
+            pk=meal_id,
+            created_by=user,
+        )
+    except Meal.DoesNotExist:
+        pass
+
+    # 2. Es pública y visible en Explore
+    try:
+        return Meal.objects.get(
+            pk=meal_id,
+            is_public=True,
+            is_draft=False,
+        )
+    except Meal.DoesNotExist:
+        pass
+
+    # 3. Fue compartida conmigo
+    share = (
+        MealShare.objects
+        .filter(
+            meal_id=meal_id,
+            accepted_by=user,
+            dismissed=False,
+            removed=False,
+        )
+        .select_related("meal")
+        .first()
     )
+
+    if share:
+        return share.meal
+
+    raise Meal.DoesNotExist
