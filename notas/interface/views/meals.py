@@ -46,6 +46,14 @@ from notas.application.services.commands.meal_commands import (
     save_meal,
 )
 
+from notas.application.services.commands.share_commands import (
+    accept_meal_share,
+    create_meal_share,
+    dismiss_meal_share,
+    remove_meal_share,
+)
+
+
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from dataclasses import dataclass
@@ -83,11 +91,13 @@ def meal_share(request, pk):
     if request.method == "POST" and form.is_valid():
         email = form.cleaned_data["recipient_email"]
 
-        share, created = MealShare.objects.get_or_create(
+        result = create_meal_share(
             sender=request.user,
             recipient_email=email,
             meal=meal,
         )
+
+        share = result.share
 
         link = request.build_absolute_uri(
             reverse("meal_share_accept", args=[share.token])
@@ -111,11 +121,15 @@ def meal_share(request, pk):
 
 @login_required
 def meal_share_accept(request, token):
-    share = get_object_or_404(MealShare, token=token)
+    share = get_object_or_404(
+        MealShare,
+        token=token,
+    )
 
-    # Marcar como aceptado
-    share.accepted_by = request.user
-    share.save()
+    accept_meal_share(
+        share=share,
+        user=request.user,
+    )
 
     return redirect("meal_shared_list")
 
@@ -125,12 +139,13 @@ def meal_share_dismiss(request, share_id):
     share = get_object_or_404(
         MealShare,
         id=share_id,
-        accepted_by=request.user
+        accepted_by=request.user,
     )
 
     if request.method == "POST":
-        share.dismissed = True
-        share.save()
+        dismiss_meal_share(
+            share=share,
+        )
 
     return redirect("meal_shared_list")
 
@@ -145,12 +160,12 @@ def meal_unshare(request, share_id):
         accepted_by=request.user,
     )
 
-    share.removed = True
-    share.save()
+    remove_meal_share(
+        share=share,
+    )
 
     messages.success(request, "Meal removida de Shared with me.")
     return redirect("meal_shared_list")
-
 
 
 #************ RENDER COMPLEJOS *********************
