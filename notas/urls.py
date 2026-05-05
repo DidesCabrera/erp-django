@@ -118,6 +118,7 @@ from notas.interface.views.proposals import (
 )
 
 from notas.interface.api.ai_tools import (
+    ai_tools_compare_dailyplan_to_targets,
     ai_tools_health,
     ai_tools_list_user_proposals,
     ai_tools_read_dailyplan,
@@ -315,5 +316,9 @@ urlpatterns = [
     path("ai-tools/read-dailyplan/", ai_tools_read_dailyplan, name="ai_tools_read_dailyplan"),
     path("ai-tools/read-proposal/", ai_tools_read_proposal, name="ai_tools_read_proposal"),
     path("ai-tools/list-user-proposals/", ai_tools_list_user_proposals, name="ai_tools_list_user_proposals"),
-    
+    path(
+        "ai-tools/compare-dailyplan-to-targets/",
+        ai_tools_compare_dailyplan_to_targets,
+        name="ai_tools_compare_dailyplan_to_targets",
+    ),
 ]

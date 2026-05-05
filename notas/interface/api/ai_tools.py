@@ -5,6 +5,11 @@ from notas.application.ai_tools.read_tools import (
     read_meal_tool,
     read_proposal_tool,
 )
+
+from notas.application.ai_tools.validation_tools import (
+    compare_dailyplan_to_targets_tool,
+)
+
 from notas.application.ai_tools.results import (
     tool_error,
     tool_success,
@@ -99,6 +104,25 @@ def ai_tools_read_proposal(request):
 def ai_tools_list_user_proposals(request):
     result = list_user_proposals_tool(
         request.user,
+    )
+
+    return ai_tool_json_response(result)
+
+@ai_tool_api_view
+def ai_tools_compare_dailyplan_to_targets(request):
+    payload = request.ai_tool_payload
+
+    if "dailyplan_id" not in payload:
+        return _missing_required_field_response("dailyplan_id")
+
+    if "targets" not in payload:
+        return _missing_required_field_response("targets")
+
+    result = compare_dailyplan_to_targets_tool(
+        user=request.user,
+        dailyplan_id=payload["dailyplan_id"],
+        targets=payload["targets"],
+        tolerances=payload.get("tolerances"),
     )
 
     return ai_tool_json_response(result)
