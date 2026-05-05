@@ -160,7 +160,10 @@ class AIToolResultTests(SimpleTestCase):
                 "value": 123,
             }
 
-        result = run_ai_tool(fake_tool)
+        result = run_ai_tool(
+            fake_tool,
+            require_auth=False,
+        )
 
         data = result.as_dict()
 
@@ -182,7 +185,10 @@ class AIToolResultTests(SimpleTestCase):
         def fake_tool():
             raise ValueError("invalid_targets")
 
-        result = run_ai_tool(fake_tool)
+        result = run_ai_tool(
+            fake_tool,
+            require_auth=False,
+        )
 
         data = result.as_dict()
 
@@ -190,6 +196,54 @@ class AIToolResultTests(SimpleTestCase):
         self.assertEqual(
             data["error"]["code"],
             "invalid_targets",
+        )
+
+        assert_json_serializable(
+            self,
+            data,
+        )
+
+    def test_run_ai_tool_requires_user_by_default(self):
+        def fake_tool():
+            return {
+                "value": 123,
+            }
+
+        result = run_ai_tool(fake_tool)
+
+        data = result.as_dict()
+
+        self.assertFalse(data["ok"])
+        self.assertEqual(
+            data["error"]["code"],
+            "tool_user_required",
+        )
+
+        assert_json_serializable(
+            self,
+            data,
+        )
+
+    def test_run_ai_tool_rejects_anonymous_user(self):
+        class AnonymousUserLike:
+            is_authenticated = False
+
+        def fake_tool():
+            return {
+                "value": 123,
+            }
+
+        result = run_ai_tool(
+            fake_tool,
+            user=AnonymousUserLike(),
+        )
+
+        data = result.as_dict()
+
+        self.assertFalse(data["ok"])
+        self.assertEqual(
+            data["error"]["code"],
+            "tool_user_not_authenticated",
         )
 
         assert_json_serializable(

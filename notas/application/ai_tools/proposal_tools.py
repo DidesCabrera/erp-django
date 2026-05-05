@@ -105,6 +105,7 @@ def create_validated_dailyplan_proposal_tool(
         proposed_payload,
         tolerances,
         summary,
+        user=user,
     )
 
 
@@ -120,6 +121,7 @@ def list_user_proposals_tool(user):
     return run_ai_tool(
         _list_user_proposals_data,
         user,
+        user=user,
     )
 
 
@@ -140,6 +142,7 @@ def list_dailyplan_proposals_tool(user, dailyplan_id: int):
         _list_dailyplan_proposals_data,
         user,
         dailyplan_id,
+        user=user,
     )
 
 
@@ -160,6 +163,7 @@ def search_proposals_tool(user, query: str):
         _search_proposals_data,
         user,
         query,
+        user=user,
     )
 
 
@@ -177,4 +181,5 @@ def read_proposal_tool(user, proposal_id: int):
         _read_proposal_data,
         user,
         proposal_id,
+        user=user,
     )

@@ -47,6 +47,7 @@ def list_user_foods_tool(user):
     return run_ai_tool(
         _list_user_foods_data,
         user,
+        user=user,
     )
 
 
@@ -62,6 +63,7 @@ def list_available_foods_tool(user):
     return run_ai_tool(
         _list_available_foods_data,
         user,
+        user=user,
     )
 
 
@@ -82,6 +84,7 @@ def search_foods_tool(user, query: str):
         _search_foods_data,
         user,
         query,
+        user=user,
     )
 
 
@@ -99,6 +102,7 @@ def read_food_tool(user, food_id: int):
         _read_food_data,
         user,
         food_id,
+        user=user,
     )
 
 
@@ -117,6 +121,7 @@ def list_user_meals_tool(user):
     return run_ai_tool(
         _list_user_meals_data,
         user,
+        user=user,
     )
 
 
@@ -132,6 +137,7 @@ def list_available_meals_tool(user):
     return run_ai_tool(
         _list_available_meals_data,
         user,
+        user=user,
     )
 
 
@@ -152,6 +158,7 @@ def search_meals_tool(user, query: str):
         _search_meals_data,
         user,
         query,
+        user=user,
     )
 
 
@@ -169,6 +176,7 @@ def read_meal_tool(user, meal_id: int):
         _read_meal_data,
         user,
         meal_id,
+        user=user,
     )
 
 
@@ -187,6 +195,7 @@ def list_user_dailyplans_tool(user):
     return run_ai_tool(
         _list_user_dailyplans_data,
         user,
+        user=user,
     )
 
 
@@ -202,6 +211,7 @@ def list_available_dailyplans_tool(user):
     return run_ai_tool(
         _list_available_dailyplans_data,
         user,
+        user=user,
     )
 
 
@@ -222,6 +232,7 @@ def search_dailyplans_tool(user, query: str):
         _search_dailyplans_data,
         user,
         query,
+        user=user,
     )
 
 
@@ -239,6 +250,7 @@ def read_dailyplan_tool(user, dailyplan_id: int):
         _read_dailyplan_data,
         user,
         dailyplan_id,
+        user=user,
     )
 
 
@@ -257,6 +269,7 @@ def list_user_proposals_tool(user):
     return run_ai_tool(
         _list_user_proposals_data,
         user,
+        user=user,
     )
 
 
@@ -277,6 +290,7 @@ def list_dailyplan_proposals_tool(user, dailyplan_id: int):
         _list_dailyplan_proposals_data,
         user,
         dailyplan_id,
+        user=user,
     )
 
 
@@ -297,6 +311,7 @@ def search_proposals_tool(user, query: str):
         _search_proposals_data,
         user,
         query,
+        user=user,
     )
 
 
@@ -314,4 +329,5 @@ def read_proposal_tool(user, proposal_id: int):
         _read_proposal_data,
         user,
         proposal_id,
+        user=user,
     )
