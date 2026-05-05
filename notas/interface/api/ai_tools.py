@@ -1,6 +1,26 @@
-from notas.application.ai_tools.results import tool_success
+from notas.application.ai_tools.read_tools import (
+    list_user_proposals_tool,
+    read_dailyplan_tool,
+    read_food_tool,
+    read_meal_tool,
+    read_proposal_tool,
+)
+from notas.application.ai_tools.results import (
+    tool_error,
+    tool_success,
+)
 from notas.interface.api.decorators import ai_tool_api_view
 from notas.interface.api.responses import ai_tool_json_response
+
+
+def _missing_required_field_response(field_name: str):
+    return ai_tool_json_response(
+        tool_error(
+            code=f"missing_required_field:{field_name}",
+            message=f"Missing required field: {field_name}.",
+        ),
+        status=400,
+    )
 
 
 @ai_tool_api_view
@@ -13,3 +33,72 @@ def ai_tools_health(request):
             }
         )
     )
+
+
+@ai_tool_api_view
+def ai_tools_read_food(request):
+    payload = request.ai_tool_payload
+
+    if "food_id" not in payload:
+        return _missing_required_field_response("food_id")
+
+    result = read_food_tool(
+        request.user,
+        payload["food_id"],
+    )
+
+    return ai_tool_json_response(result)
+
+
+@ai_tool_api_view
+def ai_tools_read_meal(request):
+    payload = request.ai_tool_payload
+
+    if "meal_id" not in payload:
+        return _missing_required_field_response("meal_id")
+
+    result = read_meal_tool(
+        request.user,
+        payload["meal_id"],
+    )
+
+    return ai_tool_json_response(result)
+
+
+@ai_tool_api_view
+def ai_tools_read_dailyplan(request):
+    payload = request.ai_tool_payload
+
+    if "dailyplan_id" not in payload:
+        return _missing_required_field_response("dailyplan_id")
+
+    result = read_dailyplan_tool(
+        request.user,
+        payload["dailyplan_id"],
+    )
+
+    return ai_tool_json_response(result)
+
+
+@ai_tool_api_view
+def ai_tools_read_proposal(request):
+    payload = request.ai_tool_payload
+
+    if "proposal_id" not in payload:
+        return _missing_required_field_response("proposal_id")
+
+    result = read_proposal_tool(
+        request.user,
+        payload["proposal_id"],
+    )
+
+    return ai_tool_json_response(result)
+
+
+@ai_tool_api_view
+def ai_tools_list_user_proposals(request):
+    result = list_user_proposals_tool(
+        request.user,
+    )
+
+    return ai_tool_json_response(result)

@@ -117,7 +117,14 @@ from notas.interface.views.proposals import (
     proposal_reject,
 )
 
-from notas.interface.api.ai_tools import ai_tools_health
+from notas.interface.api.ai_tools import (
+    ai_tools_health,
+    ai_tools_list_user_proposals,
+    ai_tools_read_dailyplan,
+    ai_tools_read_food,
+    ai_tools_read_meal,
+    ai_tools_read_proposal,
+)
 
 
 
@@ -303,5 +310,10 @@ urlpatterns = [
 
     # AI TOOLS API ADAPTER
     path("ai-tools/health/", ai_tools_health, name="ai_tools_health"),
+    path("ai-tools/read-food/", ai_tools_read_food, name="ai_tools_read_food"),
+    path("ai-tools/read-meal/", ai_tools_read_meal, name="ai_tools_read_meal"),
+    path("ai-tools/read-dailyplan/", ai_tools_read_dailyplan, name="ai_tools_read_dailyplan"),
+    path("ai-tools/read-proposal/", ai_tools_read_proposal, name="ai_tools_read_proposal"),
+    path("ai-tools/list-user-proposals/", ai_tools_list_user_proposals, name="ai_tools_list_user_proposals"),
     
 ]
