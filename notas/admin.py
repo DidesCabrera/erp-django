@@ -9,6 +9,7 @@ from .domain.models import (
     DailyPlan,
     DailyPlanMeal,
     NutritionProposal,
+    NutritionProposalAuditEvent,
     Program,
     ProgramDay,
     WeightLog,
@@ -33,14 +34,17 @@ class NutritionProposalAdmin(admin.ModelAdmin):
         "source",
         "created_by",
         "reviewed_by",
+        "applied_by",
         "created_at",
         "reviewed_at",
+        "applied_at",
     )
     list_filter = (
         "status",
         "source",
         "created_at",
         "reviewed_at",
+        "applied_at",
     )
     search_fields = (
         "title",
@@ -48,12 +52,36 @@ class NutritionProposalAdmin(admin.ModelAdmin):
         "dailyplan__name",
         "created_by__username",
         "reviewed_by__username",
+        "applied_by__username",
     )
     readonly_fields = (
         "created_at",
         "reviewed_at",
+        "applied_at",
     )
 
+@admin.register(NutritionProposalAuditEvent)
+class NutritionProposalAuditEventAdmin(admin.ModelAdmin):
+    list_display = (
+        "proposal",
+        "action",
+        "actor",
+        "status_before",
+        "status_after",
+        "created_at",
+    )
+    list_filter = (
+        "action",
+        "created_at",
+    )
+    search_fields = (
+        "proposal__title",
+        "actor__username",
+        "message",
+    )
+    readonly_fields = (
+        "created_at",
+    )
 
 
 class DailyPlanMealInline(admin.TabularInline):

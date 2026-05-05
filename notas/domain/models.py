@@ -584,6 +584,7 @@ class NutritionProposal(models.Model):
     STATUS_APPROVED = "approved"
     STATUS_REJECTED = "rejected"
     STATUS_CANCELLED = "cancelled"
+    STATUS_APPLIED = "applied"
 
     STATUS_CHOICES = (
         (STATUS_DRAFT, "Draft"),
@@ -591,6 +592,7 @@ class NutritionProposal(models.Model):
         (STATUS_APPROVED, "Approved"),
         (STATUS_REJECTED, "Rejected"),
         (STATUS_CANCELLED, "Cancelled"),
+        (STATUS_APPLIED, "applied"),
     )
 
     SOURCE_MANUAL = "manual"
@@ -625,6 +627,14 @@ class NutritionProposal(models.Model):
         related_name="nutrition_proposals_reviewed",
     )
 
+    applied_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="nutrition_proposals_applied",
+    )
+
     status = models.CharField(
         max_length=30,
         choices=STATUS_CHOICES,
@@ -647,6 +657,7 @@ class NutritionProposal(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     reviewed_at = models.DateTimeField(null=True, blank=True)
+    applied_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at", "-id"]
@@ -664,8 +675,73 @@ class NutritionProposal(models.Model):
             self.STATUS_APPROVED,
             self.STATUS_REJECTED,
             self.STATUS_CANCELLED,
+            self.STATUS_APPLIED,
         }
+
+
+
+class NutritionProposalAuditEvent(models.Model):
+    ACTION_CREATED = "created"
+    ACTION_SUBMITTED_FOR_REVIEW = "submitted_for_review"
+    ACTION_APPROVED = "approved"
+    ACTION_REJECTED = "rejected"
+    ACTION_CANCELLED = "cancelled"
+
+    ACTION_CHOICES = (
+        (ACTION_CREATED, "Created"),
+        (ACTION_SUBMITTED_FOR_REVIEW, "Submitted for review"),
+        (ACTION_APPROVED, "Approved"),
+        (ACTION_REJECTED, "Rejected"),
+        (ACTION_CANCELLED, "Cancelled"),
+    )
+
+    proposal = models.ForeignKey(
+        NutritionProposal,
+        on_delete=models.CASCADE,
+        related_name="audit_events",
+    )
+
+    actor = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="nutrition_proposal_audit_events",
+    )
+
+    action = models.CharField(
+        max_length=40,
+        choices=ACTION_CHOICES,
+    )
+
+    status_before = models.CharField(
+        max_length=30,
+        blank=True,
+    )
+
+    status_after = models.CharField(
+        max_length=30,
+        blank=True,
+    )
+
+    message = models.TextField(blank=True)
+
+    metadata = models.JSONField(
+        default=dict,
+        blank=True,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at", "id"]
+
+    def __str__(self):
+        return f"{self.proposal_id} - {self.action}"
     
+
+
+
 
 class Program(models.Model):
     name = models.CharField(max_length=100)

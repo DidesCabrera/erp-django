@@ -103,3 +103,15 @@ class NutritionProposalModelTests(TestCase):
             str(proposal),
             "Adjust calories (pending_review)",
         )
+
+
+    def test_nutrition_proposal_applied_state_helpers(self):
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            title="Applied proposal",
+            status=NutritionProposal.STATUS_APPLIED,
+        )
+
+        self.assertFalse(proposal.is_reviewable)
+        self.assertTrue(proposal.is_final)

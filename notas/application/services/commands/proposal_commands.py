@@ -3,9 +3,19 @@ from dataclasses import dataclass
 from django.db import transaction
 from django.utils import timezone
 
-from notas.domain.models import DailyPlan, NutritionProposal
+from notas.application.proposals.applicators import (
+    ProposalOperationsApplyResult,
+    validate_and_apply_proposal_operations,
+)
 
 from notas.application.queries.validation_queries import compare_dailyplan_to_targets
+from notas.domain.models import (
+    DailyPlan,
+    NutritionProposal,
+    NutritionProposalAuditEvent,
+)
+
+
 
 @dataclass(frozen=True)
 class NutritionProposalCreateResult:
@@ -15,6 +25,12 @@ class NutritionProposalCreateResult:
 @dataclass(frozen=True)
 class NutritionProposalStatusResult:
     proposal: NutritionProposal
+
+
+@dataclass(frozen=True)
+class NutritionProposalApplyResult:
+    proposal: NutritionProposal
+    operations_result: ProposalOperationsApplyResult
 
 
 def _get_owned_dailyplan_for_proposal(
@@ -104,6 +120,44 @@ def _build_current_snapshot_from_validation(
     }
 
 
+def _create_proposal_audit_event(
+    *,
+    proposal: NutritionProposal,
+    actor,
+    action: str,
+    status_before: str = "",
+    status_after: str = "",
+    message: str = "",
+    metadata: dict | None = None,
+) -> NutritionProposalAuditEvent:
+    return NutritionProposalAuditEvent.objects.create(
+        proposal=proposal,
+        actor=actor,
+        action=action,
+        status_before=status_before or "",
+        status_after=status_after or "",
+        message=message,
+        metadata=metadata or {},
+    )
+
+
+def _ensure_approved(
+    proposal: NutritionProposal,
+) -> None:
+    if proposal.status != NutritionProposal.STATUS_APPROVED:
+        raise ValueError("proposal_is_not_approved")
+
+
+def _ensure_not_applied(
+    proposal: NutritionProposal,
+) -> None:
+    if proposal.applied_at or proposal.applied_by_id:
+        raise ValueError("proposal_already_applied")
+
+    if proposal.status == NutritionProposal.STATUS_APPLIED:
+        raise ValueError("proposal_already_applied")
+
+
 @transaction.atomic
 def create_dailyplan_proposal(
     *,
@@ -145,6 +199,19 @@ def create_dailyplan_proposal(
         validation_summary=validation_summary or {},
     )
 
+    _create_proposal_audit_event(
+        proposal=proposal,
+        actor=user,
+        action=NutritionProposalAuditEvent.ACTION_CREATED,
+        status_before="",
+        status_after=proposal.status,
+        message="Nutrition proposal created.",
+        metadata={
+            "source": proposal.source,
+            "dailyplan_id": proposal.dailyplan_id,
+        },
+    )
+
     return NutritionProposalCreateResult(
         proposal=proposal,
     )
@@ -162,11 +229,22 @@ def submit_proposal_for_review(
     if proposal.status != NutritionProposal.STATUS_DRAFT:
         raise ValueError("proposal_is_not_draft")
 
+    status_before = proposal.status
+
     proposal.status = NutritionProposal.STATUS_PENDING_REVIEW
     proposal.save(
         update_fields=[
             "status",
         ]
+    )
+
+    _create_proposal_audit_event(
+        proposal=proposal,
+        actor=user,
+        action=NutritionProposalAuditEvent.ACTION_SUBMITTED_FOR_REVIEW,
+        status_before=status_before,
+        status_after=proposal.status,
+        message="Nutrition proposal submitted for review.",
     )
 
     return NutritionProposalStatusResult(
@@ -186,6 +264,8 @@ def cancel_proposal(
     )
     _ensure_not_final(proposal)
 
+    status_before = proposal.status
+
     proposal.status = NutritionProposal.STATUS_CANCELLED
     proposal.reviewed_by = user
     proposal.reviewed_at = timezone.now()
@@ -196,6 +276,15 @@ def cancel_proposal(
             "reviewed_by",
             "reviewed_at",
         ]
+    )
+
+    _create_proposal_audit_event(
+        proposal=proposal,
+        actor=user,
+        action=NutritionProposalAuditEvent.ACTION_CANCELLED,
+        status_before=status_before,
+        status_after=proposal.status,
+        message="Nutrition proposal cancelled.",
     )
 
     return NutritionProposalStatusResult(
@@ -215,6 +304,8 @@ def reject_proposal(
     )
     _ensure_pending_review(proposal)
 
+    status_before = proposal.status
+
     proposal.status = NutritionProposal.STATUS_REJECTED
     proposal.reviewed_by = user
     proposal.reviewed_at = timezone.now()
@@ -225,6 +316,15 @@ def reject_proposal(
             "reviewed_by",
             "reviewed_at",
         ]
+    )
+
+    _create_proposal_audit_event(
+        proposal=proposal,
+        actor=user,
+        action=NutritionProposalAuditEvent.ACTION_REJECTED,
+        status_before=status_before,
+        status_after=proposal.status,
+        message="Nutrition proposal rejected.",
     )
 
     return NutritionProposalStatusResult(
@@ -251,6 +351,8 @@ def approve_proposal(
     )
     _ensure_pending_review(proposal)
 
+    status_before = proposal.status
+
     proposal.status = NutritionProposal.STATUS_APPROVED
     proposal.reviewed_by = user
     proposal.reviewed_at = timezone.now()
@@ -263,9 +365,22 @@ def approve_proposal(
         ]
     )
 
+    _create_proposal_audit_event(
+        proposal=proposal,
+        actor=user,
+        action=NutritionProposalAuditEvent.ACTION_APPROVED,
+        status_before=status_before,
+        status_after=proposal.status,
+        message="Nutrition proposal approved.",
+        metadata={
+            "applies_payload": False,
+        },
+    )
+
     return NutritionProposalStatusResult(
         proposal=proposal,
     )
+
 
 @transaction.atomic
 def create_validated_dailyplan_proposal(
@@ -319,4 +434,49 @@ def create_validated_dailyplan_proposal(
         current_snapshot=current_snapshot,
         proposed_payload=payload,
         validation_summary=validation_summary,
+    )
+
+
+@transaction.atomic
+def apply_approved_proposal(
+    *,
+    user,
+    proposal: NutritionProposal,
+) -> NutritionProposalApplyResult:
+    """
+    Aplica una propuesta aprobada usando applicators seguros.
+
+    Reglas:
+    - Solo el dueño del DailyPlan puede aplicar.
+    - La propuesta debe estar approved.
+    - No puede aplicarse dos veces.
+    - El proposed_payload se valida antes de aplicar.
+    - Las operaciones se aplican usando commands internos.
+    """
+    _ensure_can_review_proposal(
+        user=user,
+        proposal=proposal,
+    )
+    _ensure_approved(proposal)
+    _ensure_not_applied(proposal)
+
+    operations_result = validate_and_apply_proposal_operations(
+        proposal,
+    )
+
+    proposal.status = NutritionProposal.STATUS_APPLIED
+    proposal.applied_by = user
+    proposal.applied_at = timezone.now()
+
+    proposal.save(
+        update_fields=[
+            "status",
+            "applied_by",
+            "applied_at",
+        ]
+    )
+
+    return NutritionProposalApplyResult(
+        proposal=proposal,
+        operations_result=operations_result,
     )
