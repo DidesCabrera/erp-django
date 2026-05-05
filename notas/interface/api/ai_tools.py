@@ -17,6 +17,10 @@ from notas.application.ai_tools.results import (
 from notas.interface.api.decorators import ai_tool_api_view
 from notas.interface.api.responses import ai_tool_json_response
 
+from notas.application.ai_tools.proposal_tools import (
+    create_validated_dailyplan_proposal_tool,
+)
+
 
 def _missing_required_field_response(field_name: str):
     return ai_tool_json_response(
@@ -123,6 +127,31 @@ def ai_tools_compare_dailyplan_to_targets(request):
         dailyplan_id=payload["dailyplan_id"],
         targets=payload["targets"],
         tolerances=payload.get("tolerances"),
+    )
+
+    return ai_tool_json_response(result)
+
+@ai_tool_api_view
+def ai_tools_create_validated_dailyplan_proposal(request):
+    payload = request.ai_tool_payload
+
+    if "dailyplan_id" not in payload:
+        return _missing_required_field_response("dailyplan_id")
+
+    if "title" not in payload:
+        return _missing_required_field_response("title")
+
+    if "targets" not in payload:
+        return _missing_required_field_response("targets")
+
+    result = create_validated_dailyplan_proposal_tool(
+        user=request.user,
+        dailyplan_id=payload["dailyplan_id"],
+        title=payload["title"],
+        targets=payload["targets"],
+        proposed_payload=payload.get("proposed_payload"),
+        tolerances=payload.get("tolerances"),
+        summary=payload.get("summary", ""),
     )
 
     return ai_tool_json_response(result)
