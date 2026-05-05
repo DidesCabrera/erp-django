@@ -11,10 +11,11 @@ from notas.domain.models import (
     Meal,
     MealFood,
     NutritionProposal,
+    NutritionProposalAuditEvent,
 )
 
 
-class ApplyApprovedProposalCommandTests(TestCase):
+class ApplyProposalAuditTrailTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="felipe",
@@ -80,7 +81,7 @@ class ApplyApprovedProposalCommandTests(TestCase):
             },
         )
 
-    def test_apply_approved_proposal_updates_mealfood_and_marks_proposal_applied(self):
+    def test_apply_approved_proposal_creates_applied_audit_event(self):
         result = apply_approved_proposal(
             user=self.user,
             proposal=self.proposal,
@@ -89,129 +90,129 @@ class ApplyApprovedProposalCommandTests(TestCase):
         self.proposal.refresh_from_db()
         self.mealfood.refresh_from_db()
 
-        self.assertEqual(
-            result.proposal,
-            self.proposal,
+        event = self.proposal.audit_events.get(
+            action=NutritionProposalAuditEvent.ACTION_APPLIED,
         )
+
+        self.assertEqual(event.actor, self.user)
+        self.assertEqual(
+            event.status_before,
+            NutritionProposal.STATUS_APPROVED,
+        )
+        self.assertEqual(
+            event.status_after,
+            NutritionProposal.STATUS_APPLIED,
+        )
+        self.assertEqual(
+            event.message,
+            "Nutrition proposal applied.",
+        )
+
+        self.assertEqual(
+            event.metadata["proposal_id"],
+            self.proposal.id,
+        )
+        self.assertEqual(
+            event.metadata["applied_count"],
+            1,
+        )
+        self.assertEqual(
+            len(event.metadata["applied_operations"]),
+            1,
+        )
+
+        operation = event.metadata["applied_operations"][0]
+
+        self.assertEqual(
+            operation["type"],
+            "update_meal_food_quantity",
+        )
+        self.assertEqual(
+            operation["mealfood_id"],
+            self.mealfood.id,
+        )
+        self.assertEqual(
+            operation["meal_id"],
+            self.meal.id,
+        )
+        self.assertEqual(
+            operation["food_id"],
+            self.food.id,
+        )
+        self.assertEqual(
+            operation["food_name"],
+            "Base Food",
+        )
+        self.assertEqual(
+            operation["quantity_before"],
+            100,
+        )
+        self.assertEqual(
+            operation["quantity_after"],
+            150,
+        )
+
         self.assertEqual(
             result.operations_result.applied_count,
             1,
         )
-
         self.assertEqual(
             self.mealfood.quantity,
             150,
         )
 
-        self.assertEqual(
-            self.proposal.status,
-            NutritionProposal.STATUS_APPLIED,
-        )
-        self.assertEqual(
-            self.proposal.applied_by,
-            self.user,
-        )
-        self.assertIsNotNone(
-            self.proposal.applied_at,
-        )
-        self.assertTrue(
-            self.proposal.audit_events.filter(
-                action="applied",
-            ).exists()
-        )
-
-    def test_apply_approved_proposal_blocks_non_owner(self):
-        with self.assertRaisesMessage(
-            ValueError,
-            "proposal_review_not_allowed",
-        ):
-            apply_approved_proposal(
-                user=self.other_user,
-                proposal=self.proposal,
-            )
-
-        self.mealfood.refresh_from_db()
-        self.proposal.refresh_from_db()
-
-        self.assertEqual(
-            self.mealfood.quantity,
-            100,
-        )
-        self.assertEqual(
-            self.proposal.status,
-            NutritionProposal.STATUS_APPROVED,
-        )
-
-    def test_apply_approved_proposal_requires_approved_status(self):
+    def test_apply_empty_approved_proposal_creates_applied_audit_event(self):
         proposal = NutritionProposal.objects.create(
             dailyplan=self.dailyplan,
             created_by=self.user,
-            title="Pending proposal",
-            status=NutritionProposal.STATUS_PENDING_REVIEW,
+            title="Approved empty proposal",
+            status=NutritionProposal.STATUS_APPROVED,
             proposed_payload={
-                "suggested_changes": [
-                    {
-                        "type": "update_meal_food_quantity",
-                        "mealfood_id": self.mealfood.id,
-                        "from_quantity": 100,
-                        "to_quantity": 150,
-                    }
-                ],
+                "intent": "adjust_dailyplan_to_targets",
+                "suggested_changes": [],
             },
         )
 
-        with self.assertRaisesMessage(
-            ValueError,
-            "proposal_is_not_approved",
-        ):
-            apply_approved_proposal(
-                user=self.user,
-                proposal=proposal,
-            )
-
-        self.mealfood.refresh_from_db()
-        proposal.refresh_from_db()
-
-        self.assertEqual(
-            self.mealfood.quantity,
-            100,
-        )
-        self.assertEqual(
-            proposal.status,
-            NutritionProposal.STATUS_PENDING_REVIEW,
-        )
-
-    def test_apply_approved_proposal_blocks_double_application(self):
         apply_approved_proposal(
             user=self.user,
-            proposal=self.proposal,
+            proposal=proposal,
         )
 
-        self.proposal.refresh_from_db()
+        proposal.refresh_from_db()
 
-        with self.assertRaisesMessage(
-            ValueError,
-            "proposal_is_not_approved",
-        ):
-            apply_approved_proposal(
-                user=self.user,
-                proposal=self.proposal,
-            )
-
-        self.mealfood.refresh_from_db()
+        event = proposal.audit_events.get(
+            action=NutritionProposalAuditEvent.ACTION_APPLIED,
+        )
 
         self.assertEqual(
-            self.mealfood.quantity,
-            150,
+            event.status_before,
+            NutritionProposal.STATUS_APPROVED,
+        )
+        self.assertEqual(
+            event.status_after,
+            NutritionProposal.STATUS_APPLIED,
+        )
+        self.assertEqual(
+            event.metadata["proposal_id"],
+            proposal.id,
+        )
+        self.assertEqual(
+            event.metadata["applied_count"],
+            0,
+        )
+        self.assertEqual(
+            event.metadata["applied_operations"],
+            [],
         )
 
-    def test_apply_approved_proposal_reuses_validator_errors(self):
+    def test_apply_invalid_proposal_does_not_create_applied_audit_event(self):
         proposal = NutritionProposal.objects.create(
             dailyplan=self.dailyplan,
             created_by=self.user,
             title="Invalid approved proposal",
             status=NutritionProposal.STATUS_APPROVED,
             proposed_payload={
+                "intent": "adjust_dailyplan_to_targets",
                 "suggested_changes": [
                     {
                         "type": "update_meal_food_quantity",
@@ -232,60 +233,43 @@ class ApplyApprovedProposalCommandTests(TestCase):
                 proposal=proposal,
             )
 
-        self.mealfood.refresh_from_db()
         proposal.refresh_from_db()
+        self.mealfood.refresh_from_db()
 
-        self.assertEqual(
-            self.mealfood.quantity,
-            100,
-        )
         self.assertEqual(
             proposal.status,
             NutritionProposal.STATUS_APPROVED,
         )
-        self.assertIsNone(
-            proposal.applied_by,
-        )
-        self.assertIsNone(
-            proposal.applied_at,
-        )
-
-    def test_apply_approved_proposal_allows_empty_payload_and_marks_applied(self):
-        proposal = NutritionProposal.objects.create(
-            dailyplan=self.dailyplan,
-            created_by=self.user,
-            title="Approved empty proposal",
-            status=NutritionProposal.STATUS_APPROVED,
-            proposed_payload={
-                "intent": "adjust_dailyplan_to_targets",
-                "suggested_changes": [],
-            },
-        )
-
-        result = apply_approved_proposal(
-            user=self.user,
-            proposal=proposal,
-        )
-
-        proposal.refresh_from_db()
-        self.mealfood.refresh_from_db()
-
-        self.assertEqual(
-            result.operations_result.applied_count,
-            0,
-        )
-        self.assertEqual(
-            proposal.status,
-            NutritionProposal.STATUS_APPLIED,
-        )
-        self.assertEqual(
-            proposal.applied_by,
-            self.user,
-        )
-        self.assertIsNotNone(
-            proposal.applied_at,
-        )
         self.assertEqual(
             self.mealfood.quantity,
             100,
+        )
+        self.assertFalse(
+            proposal.audit_events.filter(
+                action=NutritionProposalAuditEvent.ACTION_APPLIED,
+            ).exists()
+        )
+
+    def test_apply_proposal_twice_does_not_create_second_applied_event(self):
+        apply_approved_proposal(
+            user=self.user,
+            proposal=self.proposal,
+        )
+
+        self.proposal.refresh_from_db()
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "proposal_is_not_approved",
+        ):
+            apply_approved_proposal(
+                user=self.user,
+                proposal=self.proposal,
+            )
+
+        self.assertEqual(
+            self.proposal.audit_events.filter(
+                action=NutritionProposalAuditEvent.ACTION_APPLIED,
+            ).count(),
+            1,
         )

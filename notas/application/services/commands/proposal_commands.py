@@ -452,6 +452,7 @@ def apply_approved_proposal(
     - No puede aplicarse dos veces.
     - El proposed_payload se valida antes de aplicar.
     - Las operaciones se aplican usando commands internos.
+    - La aplicación queda auditada.
     """
     _ensure_can_review_proposal(
         user=user,
@@ -459,6 +460,8 @@ def apply_approved_proposal(
     )
     _ensure_approved(proposal)
     _ensure_not_applied(proposal)
+
+    status_before = proposal.status
 
     operations_result = validate_and_apply_proposal_operations(
         proposal,
@@ -474,6 +477,16 @@ def apply_approved_proposal(
             "applied_by",
             "applied_at",
         ]
+    )
+
+    _create_proposal_audit_event(
+        proposal=proposal,
+        actor=user,
+        action=NutritionProposalAuditEvent.ACTION_APPLIED,
+        status_before=status_before,
+        status_after=proposal.status,
+        message="Nutrition proposal applied.",
+        metadata=operations_result.as_dict(),
     )
 
     return NutritionProposalApplyResult(

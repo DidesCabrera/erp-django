@@ -686,6 +686,7 @@ class NutritionProposalAuditEvent(models.Model):
     ACTION_APPROVED = "approved"
     ACTION_REJECTED = "rejected"
     ACTION_CANCELLED = "cancelled"
+    ACTION_APPLIED = "applied"
 
     ACTION_CHOICES = (
         (ACTION_CREATED, "Created"),
@@ -693,6 +694,7 @@ class NutritionProposalAuditEvent(models.Model):
         (ACTION_APPROVED, "Approved"),
         (ACTION_REJECTED, "Rejected"),
         (ACTION_CANCELLED, "Cancelled"),
+        (ACTION_APPLIED, "Applied"),
     )
 
     proposal = models.ForeignKey(
