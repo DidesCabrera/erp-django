@@ -109,6 +109,17 @@ from notas.interface.views.admin_tools import (
     admin_foods_template,
 )
 
+from notas.interface.views.proposals import (
+    proposal_approve,
+    proposal_cancel,
+    proposal_detail,
+    proposal_list,
+    proposal_reject,
+)
+
+from notas.interface.api.ai_tools import ai_tools_health
+
+
 
 
 urlpatterns = [
@@ -283,5 +294,14 @@ urlpatterns = [
     path("admin-tools/foods/export/", admin_foods_export_csv, name="admin_foods_export_csv"),
     path("admin-tools/foods/template/", admin_foods_template, name="admin_foods_template"),
 
+    # PROPOSALS
+    path("proposals/", proposal_list, name="proposal_list"),
+    path("proposals/<int:proposal_id>/", proposal_detail, name="proposal_detail"),
+    path("proposals/<int:proposal_id>/approve/", proposal_approve, name="proposal_approve"),
+    path("proposals/<int:proposal_id>/reject/", proposal_reject, name="proposal_reject"),
+    path("proposals/<int:proposal_id>/cancel/", proposal_cancel, name="proposal_cancel"),
 
+    # AI TOOLS API ADAPTER
+    path("ai-tools/health/", ai_tools_health, name="ai_tools_health"),
+    
 ]
