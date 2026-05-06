@@ -168,6 +168,16 @@ APP_NAVIGATION = (
             ),
 
             NavGroupSpec(
+                key="proposal",
+                label="Propuestas",
+                icon="sparkles",
+                page_icon="sparkles",
+                url_name="proposal_list",
+                nav_root="proposal",
+                scope="personal",
+            ),
+
+            NavGroupSpec(
                 key="create",
                 label="Crear",
                 icon="circle-fading-plus",

@@ -1,0 +1,161 @@
+{% extends "notas/base.html" %}
+{% block title %}Propuesta{% endblock %}
+{% block content %}
+
+<div class="page page--detail">
+
+  <div class="card">
+
+    <div class="card-main-title">
+      <div>
+        <p class="title-card">{{ vm.content.proposal.title }}</p>
+        <p class="subtitle">
+          Plan asociado:
+          <a href="{% url 'dailyplan_detail' vm.content.proposal.dailyplan_id %}">
+            {{ vm.content.proposal.dailyplan_name }}
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="metadata-row">
+      <span>Estado: <strong>{{ vm.content.proposal.status }}</strong></span>
+      <span>Fuente: <strong>{{ vm.content.proposal.source }}</strong></span>
+      <span>Creador: <strong>{{ vm.content.proposal.created_by_username }}</strong></span>
+    </div>
+
+    {% if vm.content.proposal.summary %}
+      <p>{{ vm.content.proposal.summary }}</p>
+    {% endif %}
+
+  </div>
+
+  <div class="card">
+    <h3>Objetivos</h3>
+
+    {% if vm.content.proposal.targets %}
+      <div class="data-grid">
+        {% for key, value in vm.content.proposal.targets.items %}
+          <div class="data-grid-row">
+            <span>{{ key }}</span>
+            <strong>{{ value }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Esta propuesta no tiene objetivos definidos.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Estado actual del plan</h3>
+
+    {% if vm.content.proposal.current_snapshot.actual %}
+      <div class="data-grid">
+        {% for key, value in vm.content.proposal.current_snapshot.actual.items %}
+          <div class="data-grid-row">
+            <span>{{ key }}</span>
+            <strong>{{ value }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No hay snapshot actual disponible.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Diferencias</h3>
+
+    {% if vm.content.proposal.validation_summary.delta %}
+      <div class="data-grid">
+        {% for key, value in vm.content.proposal.validation_summary.delta.items %}
+          <div class="data-grid-row">
+            <span>{{ key }}</span>
+            <strong>{{ value }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No hay diferencias calculadas.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Métricas de validación</h3>
+
+    {% if vm.content.proposal.validation_summary.metrics %}
+      <div class="data-grid">
+        {% for metric in vm.content.proposal.validation_summary.metrics %}
+          <div class="data-grid-row">
+            <span>
+              {{ metric.metric }}
+              <small>({{ metric.status }})</small>
+            </span>
+            <strong>
+              actual {{ metric.actual }} /
+              objetivo {{ metric.target }} /
+              delta {{ metric.delta }}
+            </strong>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No hay métricas de validación disponibles.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Cambios sugeridos</h3>
+
+    {% if vm.content.proposal.proposed_payload.suggested_changes %}
+      <div class="data-grid">
+        {% for change in vm.content.proposal.proposed_payload.suggested_changes %}
+          <div class="data-grid-row">
+            <span>{{ change.type }}</span>
+            <strong>{{ change }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Esta propuesta aún no contiene cambios sugeridos específicos.</p>
+    {% endif %}
+  </div>
+
+  {% if vm.content.proposal.is_reviewable %}
+    <div class="card">
+      <h3>Acciones</h3>
+
+      <div class="card-actions">
+        <form method="post" action="{% url 'proposal_approve' vm.content.proposal.id %}">
+          {% csrf_token %}
+          <button type="submit">
+            Aprobar
+          </button>
+        </form>
+
+        <form method="post" action="{% url 'proposal_reject' vm.content.proposal.id %}">
+          {% csrf_token %}
+          <button type="submit">
+            Rechazar
+          </button>
+        </form>
+
+        <form method="post" action="{% url 'proposal_cancel' vm.content.proposal.id %}">
+          {% csrf_token %}
+          <button type="submit">
+            Cancelar
+          </button>
+        </form>
+      </div>
+
+      <p>
+        Aprobar esta propuesta todavía no modifica el plan final.
+        Solo marca la propuesta como aprobada para revisión futura.
+      </p>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+from myscoope_mcp.contracts import MCPToolSpec
+
+
+TOOL_READ_DAILYPLAN = "read_dailyplan"
+TOOL_READ_PROPOSAL = "read_proposal"
+TOOL_LIST_USER_PROPOSALS = "list_user_proposals"
+TOOL_COMPARE_DAILYPLAN_TO_TARGETS = "compare_dailyplan_to_targets"
+TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL = "create_validated_dailyplan_proposal"
+
+
+FORBIDDEN_TOOL_NAMES = {
+    "apply_approved_proposal",
+    "apply_proposal",
+    "apply_validated_proposal",
+    "delete_food",
+    "delete_meal",
+    "delete_dailyplan",
+    "update_food",
+    "update_meal",
+    "update_dailyplan",
+    "create_food",
+    "create_meal",
+    "create_dailyplan",
+    "raw_sql",
+    "raw_command_execution",
+    "raw_model_mutation",
+}
+
+
+ALLOWED_TOOL_SPECS = {
+    TOOL_READ_DAILYPLAN: MCPToolSpec(
+        name=TOOL_READ_DAILYPLAN,
+        description="Read a DailyPlan available to the authenticated user.",
+        api_path="/ai-tools/read-dailyplan/",
+        input_schema={
+            "type": "object",
+            "required": ["dailyplan_id"],
+            "properties": {
+                "dailyplan_id": {
+                    "type": "integer",
+                    "description": "DailyPlan ID to read.",
+                },
+            },
+        },
+    ),
+    TOOL_READ_PROPOSAL: MCPToolSpec(
+        name=TOOL_READ_PROPOSAL,
+        description="Read a NutritionProposal available to the authenticated user.",
+        api_path="/ai-tools/read-proposal/",
+        input_schema={
+            "type": "object",
+            "required": ["proposal_id"],
+            "properties": {
+                "proposal_id": {
+                    "type": "integer",
+                    "description": "NutritionProposal ID to read.",
+                },
+            },
+        },
+    ),
+    TOOL_LIST_USER_PROPOSALS: MCPToolSpec(
+        name=TOOL_LIST_USER_PROPOSALS,
+        description="List proposals visible to the authenticated user.",
+        api_path="/ai-tools/list-user-proposals/",
+        input_schema={
+            "type": "object",
+            "required": [],
+            "properties": {},
+        },
+    ),
+    TOOL_COMPARE_DAILYPLAN_TO_TARGETS: MCPToolSpec(
+        name=TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+        description="Compare a DailyPlan against nutritional targets.",
+        api_path="/ai-tools/compare-dailyplan-to-targets/",
+        input_schema={
+            "type": "object",
+            "required": ["dailyplan_id", "targets"],
+            "properties": {
+                "dailyplan_id": {
+                    "type": "integer",
+                    "description": "DailyPlan ID to validate.",
+                },
+                "targets": {
+                    "type": "object",
+                    "description": "Target nutrition metrics.",
+                },
+                "tolerances": {
+                    "type": "object",
+                    "description": "Optional tolerance values.",
+                },
+            },
+        },
+    ),
+    TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL: MCPToolSpec(
+        name=TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+        description="Create a validated NutritionProposal for human review.",
+        api_path="/ai-tools/create-validated-dailyplan-proposal/",
+        input_schema={
+            "type": "object",
+            "required": ["dailyplan_id", "title", "targets"],
+            "properties": {
+                "dailyplan_id": {
+                    "type": "integer",
+                    "description": "DailyPlan ID for the proposal.",
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Proposal title.",
+                },
+                "summary": {
+                    "type": "string",
+                    "description": "Optional proposal summary.",
+                },
+                "targets": {
+                    "type": "object",
+                    "description": "Target nutrition metrics.",
+                },
+                "tolerances": {
+                    "type": "object",
+                    "description": "Optional tolerance values.",
+                },
+                "proposed_payload": {
+                    "type": "object",
+                    "description": "Optional structured proposal payload.",
+                },
+            },
+        },
+    ),
+}
+
+
+def list_allowed_tool_specs() -> list[MCPToolSpec]:
+    return list(ALLOWED_TOOL_SPECS.values())
+
+
+def get_tool_spec(tool_name: str) -> MCPToolSpec:
+    try:
+        return ALLOWED_TOOL_SPECS[tool_name]
+    except KeyError:
+        raise ValueError(f"unsupported_mcp_tool:{tool_name}")
+
+
+def is_forbidden_tool_name(tool_name: str) -> bool:
+    return tool_name in FORBIDDEN_TOOL_NAMES

@@ -80,3 +80,8 @@ ALLOC_PCT_OUTSIDE_THRESHOLD = 10
 
 ADMIN_HOME_VIEWMODE = vm("admin", "list", "admin")
 ADMIN_FOOD_CATALOG_VIEWMODE = vm("admin", "list", "foods")
+
+
+# PROPOSAL ---------------------------------------------
+PROPOSAL_VIEWMODE_LIST = vm("proposal", "list", "personal")
+PROPOSAL_VIEWMODE_DETAIL = vm("proposal", "detail", "personal")
