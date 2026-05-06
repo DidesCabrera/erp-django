@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch
 
 from mcp.server.fastmcp import FastMCP
 
@@ -100,43 +99,11 @@ class MCPProtocolServerTests(unittest.TestCase):
             },
         )
 
-    def test_create_mcp_server_registers_initial_tool_without_django_imports(self):
+    def test_create_mcp_server_registers_read_tools_without_django_imports(self):
         server = create_mcp_server()
 
         self.assertIsInstance(server, FastMCP)
-
-        # We do not inspect SDK internals here.
-        # The goal is to ensure server creation succeeds after registering tools.
         self.assertEqual(server.name, SERVER_NAME)
 
-    @patch("myscoope_mcp.protocol_server.create_api_client")
-    @patch("myscoope_mcp.protocol_server.dispatch_tool_call")
-    def test_list_user_proposals_tool_routes_through_dispatcher(
-        self,
-        mocked_dispatch,
-        mocked_create_api_client,
-    ):
-        fake_client = object()
-        mocked_create_api_client.return_value = fake_client
-        mocked_dispatch.return_value = MCPToolCallResult(
-            ok=True,
-            data={
-                "proposals": [],
-            },
-            error=None,
-        )
-
-        server = create_mcp_server()
-
-        # FastMCP stores tools internally in SDK-specific structures.
-        # To avoid coupling tests to SDK internals, we validate the underlying
-        # pieces separately and keep this as a server creation smoke test.
-        self.assertIsInstance(server, FastMCP)
-
-        # Direct tool invocation is intentionally deferred to a later
-        # protocol-integration test block.
-        self.assertEqual(server.name, SERVER_NAME)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        # We intentionally avoid relying on private SDK internals.
+        # Tool registration is protected through protocol boundary tests.

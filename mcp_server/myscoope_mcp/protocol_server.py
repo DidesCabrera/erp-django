@@ -57,8 +57,8 @@ def register_mcp_tools(server: FastMCP) -> None:
     """
     Register real MCP tools.
 
-    This block intentionally starts with list_user_proposals only.
-    Other tools are added in later blocks.
+    Read tools are safe because they route through dispatch_tool_call,
+    which routes through the API Adapter and Internal AI Tools Layer.
     """
 
     @server.tool()
@@ -72,6 +72,40 @@ def register_mcp_tools(server: FastMCP) -> None:
             client=client,
             tool_name=TOOL_LIST_USER_PROPOSALS,
             arguments={},
+        )
+
+        return serialize_tool_result(result)
+
+    @server.tool()
+    def read_dailyplan(dailyplan_id: int) -> dict[str, Any]:
+        """
+        Read a DailyPlan available to the authenticated My Scoope API context.
+        """
+        client = create_api_client()
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_READ_DAILYPLAN,
+            arguments={
+                "dailyplan_id": dailyplan_id,
+            },
+        )
+
+        return serialize_tool_result(result)
+
+    @server.tool()
+    def read_proposal(proposal_id: int) -> dict[str, Any]:
+        """
+        Read a NutritionProposal available to the authenticated My Scoope API context.
+        """
+        client = create_api_client()
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_READ_PROPOSAL,
+            arguments={
+                "proposal_id": proposal_id,
+            },
         )
 
         return serialize_tool_result(result)
