@@ -1,4 +1,5 @@
 from functools import wraps
+from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -65,7 +66,7 @@ def _parse_json_payload(request):
 
     return parsed_body, None
 
-    
+
 def ai_tool_api_view(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
@@ -91,4 +92,4 @@ def ai_tool_api_view(view_func):
 
         return view_func(request, *args, **kwargs)
 
-    return wrapper
+    return csrf_exempt(wrapper)
