@@ -4,6 +4,7 @@ from myscoope_mcp.client import MyscoopeAPIClient
 from myscoope_mcp.contracts import MCPToolCallResult
 from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+    TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
@@ -72,6 +73,38 @@ def compare_dailyplan_to_targets(
     )
 
 
+def create_validated_dailyplan_proposal(
+    client: MyscoopeAPIClient,
+    dailyplan_id: int,
+    title: str,
+    targets: dict[str, Any],
+    proposed_payload: dict[str, Any] | None = None,
+    tolerances: dict[str, Any] | None = None,
+    summary: str = "",
+) -> MCPToolCallResult:
+    spec = get_tool_spec(TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL)
+
+    payload = {
+        "dailyplan_id": dailyplan_id,
+        "title": title,
+        "targets": targets,
+    }
+
+    if summary:
+        payload["summary"] = summary
+
+    if proposed_payload is not None:
+        payload["proposed_payload"] = proposed_payload
+
+    if tolerances is not None:
+        payload["tolerances"] = tolerances
+
+    return client.call_ai_tool_api(
+        spec.api_path,
+        payload,
+    )
+
+
 READ_TOOL_HANDLERS = {
     TOOL_READ_DAILYPLAN: read_dailyplan,
     TOOL_READ_PROPOSAL: read_proposal,
@@ -81,6 +114,11 @@ READ_TOOL_HANDLERS = {
 
 VALIDATION_TOOL_HANDLERS = {
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS: compare_dailyplan_to_targets,
+}
+
+
+PROPOSAL_TOOL_HANDLERS = {
+    TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL: create_validated_dailyplan_proposal,
 }
 
 
@@ -162,6 +200,44 @@ def call_validation_tool(
         error={
             "code": f"unsupported_validation_tool:{tool_name}",
             "message": "Unsupported MCP validation tool.",
+            "details": {},
+        },
+    )
+
+
+def call_proposal_tool(
+    client: MyscoopeAPIClient,
+    tool_name: str,
+    arguments: dict[str, Any] | None = None,
+) -> MCPToolCallResult:
+    arguments = arguments or {}
+
+    if tool_name == TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL:
+        if "dailyplan_id" not in arguments:
+            return _missing_required_argument("dailyplan_id")
+
+        if "title" not in arguments:
+            return _missing_required_argument("title")
+
+        if "targets" not in arguments:
+            return _missing_required_argument("targets")
+
+        return create_validated_dailyplan_proposal(
+            client=client,
+            dailyplan_id=arguments["dailyplan_id"],
+            title=arguments["title"],
+            targets=arguments["targets"],
+            proposed_payload=arguments.get("proposed_payload"),
+            tolerances=arguments.get("tolerances"),
+            summary=arguments.get("summary", ""),
+        )
+
+    return MCPToolCallResult(
+        ok=False,
+        data={},
+        error={
+            "code": f"unsupported_proposal_tool:{tool_name}",
+            "message": "Unsupported MCP proposal tool.",
             "details": {},
         },
     )
