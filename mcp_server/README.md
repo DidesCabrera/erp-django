@@ -16,3 +16,20 @@ MCP Client / External AI
   → Internal AI Tools Layer
   → Read / Validation / Proposal Layers
   → Domain
+
+## Local Runtime / Inspector Integration
+
+The first local runtime target is `stdio`.
+
+This means a local MCP client or Inspector launches the MCP server process and communicates through standard input/output.
+
+Django still runs separately and is reached through HTTP by `MyscoopeAPIClient`.
+
+Expected local flow:
+
+```text
+MCP Inspector
+  → stdio
+  → My Scoope MCP Server
+  → HTTP
+  → Django API Adapter
