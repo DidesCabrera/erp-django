@@ -1,5 +1,10 @@
+from typing import Any
+
 from mcp.server.fastmcp import FastMCP
 
+from myscoope_mcp.client import MyscoopeAPIClient
+from myscoope_mcp.config import load_config_from_env
+from myscoope_mcp.contracts import MCPToolCallResult
 from myscoope_mcp.dispatcher import dispatch_tool_call
 from myscoope_mcp.tools import (
     FORBIDDEN_TOOL_NAMES,
@@ -14,19 +19,62 @@ from myscoope_mcp.tools import (
 SERVER_NAME = "my-scoope-mcp"
 
 
+def create_api_client() -> MyscoopeAPIClient:
+    config = load_config_from_env()
+
+    return MyscoopeAPIClient(config)
+
+
+def serialize_tool_result(
+    result: MCPToolCallResult,
+) -> dict[str, Any]:
+    """
+    Preserve the My Scoope ok/data/error contract for MCP responses.
+    """
+    return result.as_dict()
+
+
 def create_mcp_server() -> FastMCP:
     """
     Create the real MCP protocol server.
 
-    This function intentionally does not register business tools yet.
-    Tool registration starts in the next block.
-
     Boundary:
     - This module may import FastMCP.
     - This module may import the MCP dispatcher.
+    - This module may create MyscoopeAPIClient.
     - This module must not import Django models, queries or commands.
     """
-    return FastMCP(SERVER_NAME)
+    assert_protocol_tool_surface_is_safe()
+
+    server = FastMCP(SERVER_NAME)
+
+    register_mcp_tools(server)
+
+    return server
+
+
+def register_mcp_tools(server: FastMCP) -> None:
+    """
+    Register real MCP tools.
+
+    This block intentionally starts with list_user_proposals only.
+    Other tools are added in later blocks.
+    """
+
+    @server.tool()
+    def list_user_proposals() -> dict[str, Any]:
+        """
+        List proposals visible to the authenticated My Scoope API context.
+        """
+        client = create_api_client()
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_LIST_USER_PROPOSALS,
+            arguments={},
+        )
+
+        return serialize_tool_result(result)
 
 
 def get_protocol_allowed_tool_names() -> set[str]:
@@ -68,7 +116,5 @@ def protocol_dispatch_placeholder():
     """
     Placeholder reference proving that the protocol wrapper depends on
     dispatch_tool_call as the future routing boundary.
-
-    Real MCP tool functions will call dispatch_tool_call in later blocks.
     """
     return dispatch_tool_call

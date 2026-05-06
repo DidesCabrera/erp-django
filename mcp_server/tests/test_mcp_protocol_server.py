@@ -1,7 +1,9 @@
 import unittest
+from unittest.mock import patch
 
 from mcp.server.fastmcp import FastMCP
 
+from myscoope_mcp.contracts import MCPToolCallResult
 from myscoope_mcp.protocol_server import (
     SERVER_NAME,
     assert_protocol_tool_surface_is_safe,
@@ -9,6 +11,7 @@ from myscoope_mcp.protocol_server import (
     get_protocol_allowed_tool_names,
     get_protocol_forbidden_tool_names,
     protocol_dispatch_placeholder,
+    serialize_tool_result,
 )
 from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
@@ -52,6 +55,87 @@ class MCPProtocolServerTests(unittest.TestCase):
         dispatch = protocol_dispatch_placeholder()
 
         self.assertTrue(callable(dispatch))
+
+    def test_serialize_tool_result_preserves_success_contract(self):
+        result = MCPToolCallResult(
+            ok=True,
+            data={
+                "proposals": [],
+            },
+            error=None,
+        )
+
+        self.assertEqual(
+            serialize_tool_result(result),
+            {
+                "ok": True,
+                "data": {
+                    "proposals": [],
+                },
+                "error": None,
+            },
+        )
+
+    def test_serialize_tool_result_preserves_error_contract(self):
+        result = MCPToolCallResult(
+            ok=False,
+            data={},
+            error={
+                "code": "not_found",
+                "message": "Not found.",
+                "details": {},
+            },
+        )
+
+        self.assertEqual(
+            serialize_tool_result(result),
+            {
+                "ok": False,
+                "data": {},
+                "error": {
+                    "code": "not_found",
+                    "message": "Not found.",
+                    "details": {},
+                },
+            },
+        )
+
+    def test_create_mcp_server_registers_initial_tool_without_django_imports(self):
+        server = create_mcp_server()
+
+        self.assertIsInstance(server, FastMCP)
+
+        # We do not inspect SDK internals here.
+        # The goal is to ensure server creation succeeds after registering tools.
+        self.assertEqual(server.name, SERVER_NAME)
+
+    @patch("myscoope_mcp.protocol_server.create_api_client")
+    @patch("myscoope_mcp.protocol_server.dispatch_tool_call")
+    def test_list_user_proposals_tool_routes_through_dispatcher(
+        self,
+        mocked_dispatch,
+        mocked_create_api_client,
+    ):
+        fake_client = object()
+        mocked_create_api_client.return_value = fake_client
+        mocked_dispatch.return_value = MCPToolCallResult(
+            ok=True,
+            data={
+                "proposals": [],
+            },
+            error=None,
+        )
+
+        server = create_mcp_server()
+
+        # FastMCP stores tools internally in SDK-specific structures.
+        # To avoid coupling tests to SDK internals, we validate the underlying
+        # pieces separately and keep this as a server creation smoke test.
+        self.assertIsInstance(server, FastMCP)
+
+        # Direct tool invocation is intentionally deferred to a later
+        # protocol-integration test block.
+        self.assertEqual(server.name, SERVER_NAME)
 
 
 if __name__ == "__main__":

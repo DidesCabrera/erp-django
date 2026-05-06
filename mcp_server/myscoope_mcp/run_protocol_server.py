@@ -9,9 +9,9 @@ def main() -> None:
 
     server = create_mcp_server()
 
-    # We do not call server.run() in this block.
-    # This entrypoint is only a safe import/startup verification point.
     print(f"{server.name} protocol server initialized safely.")
+    print("Registered initial FastMCP tools.")
+    print("To run the server, use this module from a protocol runtime in the next blocks.")
 
 
 if __name__ == "__main__":
