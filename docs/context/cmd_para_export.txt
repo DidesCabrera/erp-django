@@ -128,5 +128,9 @@ PYTHONPATH=mcp_server python -m unittest discover -s mcp_server/tests
 
 
 ## Variables de MCP inspector
+Transport Type: STDIO
+Command: /Users/felipedides/Desktop/proyecto_django/venv/bin/python
+Arguments: -m myscoope_mcp.run_protocol_server
+
 PYTHONPATH=mcp_server
 MYSCOOPE_API_BASE_URL=http://127.0.0.1:8000/app
