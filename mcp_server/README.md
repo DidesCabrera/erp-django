@@ -13,3 +13,13 @@ MCP Client / External AI
   → Internal AI Tools Layer
   → Read / Validation / Proposal Layers
   → Domain
+
+## Manual Harness
+
+The MCP server includes a small manual harness for local development.
+
+Example:
+
+```bash
+PYTHONPATH=mcp_server python -m myscoope_mcp.manual_harness read_dailyplan \
+  --arguments '{"dailyplan_id": 123}'
