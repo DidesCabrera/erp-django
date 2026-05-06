@@ -1,0 +1,58 @@
+import unittest
+
+from mcp.server.fastmcp import FastMCP
+
+from myscoope_mcp.protocol_server import (
+    SERVER_NAME,
+    assert_protocol_tool_surface_is_safe,
+    create_mcp_server,
+    get_protocol_allowed_tool_names,
+    get_protocol_forbidden_tool_names,
+    protocol_dispatch_placeholder,
+)
+from myscoope_mcp.tools import (
+    TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+    TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+    TOOL_LIST_USER_PROPOSALS,
+    TOOL_READ_DAILYPLAN,
+    TOOL_READ_PROPOSAL,
+)
+
+
+class MCPProtocolServerTests(unittest.TestCase):
+    def test_create_mcp_server_returns_fastmcp_instance(self):
+        server = create_mcp_server()
+
+        self.assertIsInstance(server, FastMCP)
+        self.assertEqual(server.name, SERVER_NAME)
+
+    def test_allowed_protocol_tool_names_are_expected_mvp_surface(self):
+        self.assertEqual(
+            get_protocol_allowed_tool_names(),
+            {
+                TOOL_READ_DAILYPLAN,
+                TOOL_READ_PROPOSAL,
+                TOOL_LIST_USER_PROPOSALS,
+                TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+                TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+            },
+        )
+
+    def test_protocol_forbidden_tool_names_include_apply_tools(self):
+        forbidden = get_protocol_forbidden_tool_names()
+
+        self.assertIn("apply_approved_proposal", forbidden)
+        self.assertIn("apply_proposal", forbidden)
+        self.assertIn("apply_validated_proposal", forbidden)
+
+    def test_protocol_tool_surface_has_no_forbidden_overlap(self):
+        assert_protocol_tool_surface_is_safe()
+
+    def test_protocol_wrapper_uses_dispatcher_boundary(self):
+        dispatch = protocol_dispatch_placeholder()
+
+        self.assertTrue(callable(dispatch))
+
+
+if __name__ == "__main__":
+    unittest.main()
