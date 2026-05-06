@@ -10,8 +10,12 @@ def main() -> None:
     server = create_mcp_server()
 
     print(f"{server.name} protocol server initialized safely.")
-    print("Registered initial FastMCP tools.")
-    print("To run the server, use this module from a protocol runtime in the next blocks.")
+    print("Registered FastMCP MVP tools:")
+    print("- list_user_proposals")
+    print("- read_dailyplan")
+    print("- read_proposal")
+    print("- compare_dailyplan_to_targets")
+    print("- create_validated_dailyplan_proposal")
 
 
 if __name__ == "__main__":

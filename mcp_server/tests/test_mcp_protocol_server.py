@@ -99,11 +99,12 @@ class MCPProtocolServerTests(unittest.TestCase):
             },
         )
 
-    def test_create_mcp_server_registers_read_tools_without_django_imports(self):
+    def test_create_mcp_server_registers_all_mvp_tools_without_sdk_internal_assertions(self):
         server = create_mcp_server()
 
         self.assertIsInstance(server, FastMCP)
         self.assertEqual(server.name, SERVER_NAME)
 
-        # We intentionally avoid relying on private SDK internals.
-        # Tool registration is protected through protocol boundary tests.
+
+if __name__ == "__main__":
+    unittest.main()

@@ -57,8 +57,9 @@ def register_mcp_tools(server: FastMCP) -> None:
     """
     Register real MCP tools.
 
-    Read tools are safe because they route through dispatch_tool_call,
-    which routes through the API Adapter and Internal AI Tools Layer.
+    Every tool routes through dispatch_tool_call.
+    This keeps the protocol wrapper thin and prevents bypassing the
+    API Adapter / Internal AI Tools boundaries.
     """
 
     @server.tool()
@@ -110,6 +111,77 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
+    @server.tool()
+    def compare_dailyplan_to_targets(
+        dailyplan_id: int,
+        targets: dict[str, Any],
+        tolerances: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """
+        Compare a DailyPlan against nutritional targets.
+
+        This tool only validates and compares.
+        It does not modify the DailyPlan.
+        """
+        client = create_api_client()
+
+        arguments = {
+            "dailyplan_id": dailyplan_id,
+            "targets": targets,
+        }
+
+        if tolerances is not None:
+            arguments["tolerances"] = tolerances
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+            arguments=arguments,
+        )
+
+        return serialize_tool_result(result)
+
+    @server.tool()
+    def create_validated_dailyplan_proposal(
+        dailyplan_id: int,
+        title: str,
+        targets: dict[str, Any],
+        proposed_payload: dict[str, Any] | None = None,
+        tolerances: dict[str, Any] | None = None,
+        summary: str = "",
+    ) -> dict[str, Any]:
+        """
+        Create a validated NutritionProposal for human review.
+
+        This tool creates a proposal.
+        It does not approve it.
+        It does not apply final changes.
+        """
+        client = create_api_client()
+
+        arguments = {
+            "dailyplan_id": dailyplan_id,
+            "title": title,
+            "targets": targets,
+        }
+
+        if summary:
+            arguments["summary"] = summary
+
+        if proposed_payload is not None:
+            arguments["proposed_payload"] = proposed_payload
+
+        if tolerances is not None:
+            arguments["tolerances"] = tolerances
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+            arguments=arguments,
+        )
+
+        return serialize_tool_result(result)
+
 
 def get_protocol_allowed_tool_names() -> set[str]:
     """
@@ -149,6 +221,6 @@ def assert_protocol_tool_surface_is_safe() -> None:
 def protocol_dispatch_placeholder():
     """
     Placeholder reference proving that the protocol wrapper depends on
-    dispatch_tool_call as the future routing boundary.
+    dispatch_tool_call as the routing boundary.
     """
     return dispatch_tool_call

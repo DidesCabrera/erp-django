@@ -19,6 +19,17 @@ REQUIRED_TOOL_FUNCTIONS = {
     "list_user_proposals",
     "read_dailyplan",
     "read_proposal",
+    "compare_dailyplan_to_targets",
+    "create_validated_dailyplan_proposal",
+}
+
+
+REQUIRED_TOOL_CONSTANTS = {
+    "TOOL_LIST_USER_PROPOSALS",
+    "TOOL_READ_DAILYPLAN",
+    "TOOL_READ_PROPOSAL",
+    "TOOL_COMPARE_DAILYPLAN_TO_TARGETS",
+    "TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL",
 }
 
 
@@ -60,7 +71,7 @@ class MCPProtocolBoundaryTests(unittest.TestCase):
             source,
         )
 
-    def test_protocol_server_registers_required_read_tools(self):
+    def test_protocol_server_registers_required_mvp_tools(self):
         tree = self._parse_protocol_server()
 
         function_names = {
@@ -75,40 +86,24 @@ class MCPProtocolBoundaryTests(unittest.TestCase):
                 function_names,
             )
 
-    def test_registered_read_tools_call_dispatcher(self):
+    def test_registered_tools_use_required_tool_constants(self):
         source = PROTOCOL_SERVER_PATH.read_text()
 
-        checks = [
-            (
-                "list_user_proposals",
-                "TOOL_LIST_USER_PROPOSALS",
-            ),
-            (
-                "read_dailyplan",
-                "TOOL_READ_DAILYPLAN",
-            ),
-            (
-                "read_proposal",
-                "TOOL_READ_PROPOSAL",
-            ),
-        ]
-
-        for function_name, tool_constant in checks:
-            self.assertIn(
-                f"def {function_name}",
-                source,
-            )
+        for tool_constant in REQUIRED_TOOL_CONSTANTS:
             self.assertIn(
                 tool_constant,
                 source,
             )
 
+    def test_registered_tools_call_dispatcher(self):
+        source = PROTOCOL_SERVER_PATH.read_text()
+
         self.assertGreaterEqual(
             source.count("dispatch_tool_call("),
-            3,
+            5,
         )
 
-    def test_protocol_server_does_not_expose_apply_tool_names(self):
+    def test_protocol_server_does_not_expose_apply_tool_functions(self):
         source = PROTOCOL_SERVER_PATH.read_text()
 
         forbidden_snippets = [
@@ -137,6 +132,14 @@ class MCPProtocolBoundaryTests(unittest.TestCase):
                 snippet,
                 source,
             )
+
+    def test_protocol_server_documents_that_proposal_tool_does_not_apply_changes(self):
+        source = PROTOCOL_SERVER_PATH.read_text()
+
+        self.assertIn(
+            "It does not apply final changes.",
+            source,
+        )
 
 
 if __name__ == "__main__":
