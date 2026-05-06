@@ -54,3 +54,17 @@ def parse_json_body(request) -> dict:
         raise ValueError("json_body_must_be_object")
 
     return payload
+
+def internal_api_auth_error_response(error, status: int = 401):
+    return JsonResponse(
+        {
+            "ok": False,
+            "data": {},
+            "error": {
+                "code": error.code,
+                "message": error.message,
+                "details": error.details,
+            },
+        },
+        status=status,
+    )
