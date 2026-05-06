@@ -7,12 +7,13 @@ from notas.interface.api.auth import (
     get_authorization_header,
     resolve_internal_api_user,
 )
+
 from notas.interface.api.responses import (
     internal_api_auth_error_response,
+    invalid_json_response,
     method_not_allowed_response,
     parse_json_body,
 )
-
 
 def _has_internal_api_auth_header(request) -> bool:
     authorization = get_authorization_header(request)
@@ -35,14 +36,36 @@ def _authenticate_internal_api_request(request) -> bool:
 
 
 def _parse_json_payload(request):
-    parsed_body = parse_json_body(request)
+    try:
+        parsed_body = parse_json_body(request)
+    except ValueError as exc:
+        error_code = str(exc)
+
+        if error_code == "invalid_json":
+            return None, invalid_json_response()
+
+        if error_code == "json_body_must_be_object":
+            return None, JsonResponse(
+                {
+                    "ok": False,
+                    "data": {},
+                    "error": {
+                        "code": "json_body_must_be_object",
+                        "message": "Request body must be a JSON object.",
+                        "details": {},
+                    },
+                },
+                status=400,
+            )
+
+        raise
 
     if isinstance(parsed_body, JsonResponse):
         return None, parsed_body
 
     return parsed_body, None
 
-
+    
 def ai_tool_api_view(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
