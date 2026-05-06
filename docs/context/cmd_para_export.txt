@@ -22,11 +22,12 @@ cd proyecto_django
 2) Crear export limpio. Desde la carpeta padre del proyecto:
 3) Exportar
 
----
+--- 
 
 cd desktop
 cd proyecto_django
 source /Users/felipedides/Desktop/proyecto_django/venv/bin/activate
+
 python manage.py runserver
 
 cd proyecto_django
@@ -114,11 +115,18 @@ git branch -r
 
 
 
-git add .
-git commit -m "Move meal dailyplan and dpm content builders to presentation"
+git add docs/architecture/internal_ai_tools_layer.md
+git commit -m "Todo ok previo a MCP server MVP"
+
+Exponer read tools por protocolo MCP,
+Exponer validation tool por protocolo MCP,
+Exponer proposal tool por protocolo MCP
+
+
+PYTHONPATH=mcp_server python -m unittest discover -s mcp_server/tests
 
 
 
-
-git add .
-git commit -m "Fix dailyplan meal picker update URL"
+## Variables de MCP inspector
+PYTHONPATH=mcp_server
+MYSCOOPE_API_BASE_URL=http://127.0.0.1:8000/app
