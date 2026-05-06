@@ -33,3 +33,10 @@ MCP Inspector
   → My Scoope MCP Server
   → HTTP
   → Django API Adapter
+
+## Verify Protocol Wrapper
+
+Use check mode to verify that the server initializes and lists the registered tools without starting the blocking MCP runtime:
+
+```bash
+PYTHONPATH=mcp_server python -m myscoope_mcp.run_protocol_server --check

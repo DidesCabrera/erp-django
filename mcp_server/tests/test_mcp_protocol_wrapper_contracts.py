@@ -199,8 +199,15 @@ class MCPProtocolWrapperContractTests(unittest.TestCase):
             },
         )
 
+    @patch(
+        "sys.argv",
+        [
+            "run_protocol_server",
+            "--check",
+        ],
+    )
     @patch("builtins.print")
-    def test_run_protocol_server_entrypoint_prints_registered_tools(self, mocked_print):
+    def test_run_protocol_server_check_mode_prints_registered_tools(self, mocked_print):
         run_protocol_server_main()
 
         printed_lines = [
@@ -232,7 +239,6 @@ class MCPProtocolWrapperContractTests(unittest.TestCase):
             "- create_validated_dailyplan_proposal",
             printed_lines,
         )
-
 
 if __name__ == "__main__":
     unittest.main()
