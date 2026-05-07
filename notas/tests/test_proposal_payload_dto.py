@@ -394,3 +394,175 @@ class ProposalPayloadDTOTests(SimpleTestCase):
             "unsupported_proposal_payload_intent",
         ):
             parse_proposal_payload(payload)
+
+    def test_parse_create_dailyplan_payload_normalizes_hour(self):
+        payload = {
+            "intent": CREATE_DAILYPLAN_INTENT,
+            "dailyplan": {
+                "name": "Día entrenamiento IA",
+                "meals": [
+                    {
+                        "hour": " 9:05 ",
+                        "note": "Desayuno",
+                        "meal": {
+                            "name": "Desayuno",
+                            "foods": [
+                                {
+                                    "food_id": 1,
+                                    "quantity": 100,
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        }
+
+        dto = parse_proposed_dailyplan_payload(payload)
+
+        self.assertEqual(dto.dailyplan.meals[0].hour, "09:05")
+
+
+    def test_parse_create_dailyplan_payload_allows_empty_hour(self):
+        payload = {
+            "intent": CREATE_DAILYPLAN_INTENT,
+            "dailyplan": {
+                "name": "Día entrenamiento IA",
+                "meals": [
+                    {
+                        "hour": "   ",
+                        "note": "Comida sin hora",
+                        "meal": {
+                            "name": "Comida libre",
+                            "foods": [
+                                {
+                                    "food_id": 1,
+                                    "quantity": 100,
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        }
+
+        dto = parse_proposed_dailyplan_payload(payload)
+
+        self.assertIsNone(dto.dailyplan.meals[0].hour)
+
+    def test_parse_create_dailyplan_payload_rejects_invalid_hour_format(self):
+        payload = {
+            "intent": CREATE_DAILYPLAN_INTENT,
+            "dailyplan": {
+                "name": "Día entrenamiento IA",
+                "meals": [
+                    {
+                        "hour": "9am",
+                        "note": "Desayuno",
+                        "meal": {
+                            "name": "Desayuno",
+                            "foods": [
+                                {
+                                    "food_id": 1,
+                                    "quantity": 100,
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        }
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "proposed_dailyplan_meal_hour_must_use_hh_mm_format",
+        ):
+            parse_proposed_dailyplan_payload(payload)
+
+    def test_parse_create_dailyplan_payload_rejects_out_of_range_hour(self):
+        payload = {
+            "intent": CREATE_DAILYPLAN_INTENT,
+            "dailyplan": {
+                "name": "Día entrenamiento IA",
+                "meals": [
+                    {
+                        "hour": "25:00",
+                        "note": "Desayuno",
+                        "meal": {
+                            "name": "Desayuno",
+                            "foods": [
+                                {
+                                    "food_id": 1,
+                                    "quantity": 100,
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        }
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "proposed_dailyplan_meal_hour_out_of_range",
+        ):
+            parse_proposed_dailyplan_payload(payload)
+
+    def test_parse_create_dailyplan_payload_rejects_out_of_range_minutes(self):
+        payload = {
+            "intent": CREATE_DAILYPLAN_INTENT,
+            "dailyplan": {
+                "name": "Día entrenamiento IA",
+                "meals": [
+                    {
+                        "hour": "09:75",
+                        "note": "Desayuno",
+                        "meal": {
+                            "name": "Desayuno",
+                            "foods": [
+                                {
+                                    "food_id": 1,
+                                    "quantity": 100,
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        }
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "proposed_dailyplan_meal_hour_out_of_range",
+        ):
+            parse_proposed_dailyplan_payload(payload)
+
+    def test_parse_create_dailyplan_payload_rejects_too_many_meals(self):
+        payload = {
+            "intent": CREATE_DAILYPLAN_INTENT,
+            "dailyplan": {
+                "name": "Día entrenamiento IA",
+                "meals": [
+                    {
+                        "hour": "09:00",
+                        "note": f"Comida {index}",
+                        "meal": {
+                            "name": f"Meal {index}",
+                            "foods": [
+                                {
+                                    "food_id": index + 1,
+                                    "quantity": 100,
+                                },
+                            ],
+                        },
+                    }
+                    for index in range(11)
+                ],
+            },
+        }
+
+        with self.assertRaisesMessage(
+            ValueError,
+            "proposed_dailyplan_meals_exceeds_maximum",
+        ):
+            parse_proposed_dailyplan_payload(payload)

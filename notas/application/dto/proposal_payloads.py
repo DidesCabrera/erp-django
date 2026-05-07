@@ -5,6 +5,12 @@ from typing import Any
 CREATE_MEAL_INTENT = "create_meal"
 CREATE_DAILYPLAN_INTENT = "create_dailyplan"
 
+DEFAULT_PROPOSED_FOOD_UNIT = "g"
+
+MIN_PROPOSED_MEAL_FOODS = 1
+MIN_PROPOSED_DAILYPLAN_MEALS = 1
+MAX_PROPOSED_DAILYPLAN_MEALS = 10
+
 SUPPORTED_PROPOSAL_PAYLOAD_INTENTS = {
     CREATE_MEAL_INTENT,
     CREATE_DAILYPLAN_INTENT,
@@ -85,13 +91,48 @@ class ProposedDailyPlanPayloadDTO:
         }
 
 
+def _normalize_optional_hour(hour: Any) -> str | None:
+    if hour is None:
+        return None
+
+    if not isinstance(hour, str):
+        raise ValueError("proposed_dailyplan_meal_hour_must_be_string")
+
+    normalized_hour = hour.strip()
+
+    if not normalized_hour:
+        return None
+
+    parts = normalized_hour.split(":")
+
+    if len(parts) != 2:
+        raise ValueError("proposed_dailyplan_meal_hour_must_use_hh_mm_format")
+
+    hour_part, minute_part = parts
+
+    if not hour_part.isdigit() or not minute_part.isdigit():
+        raise ValueError("proposed_dailyplan_meal_hour_must_use_hh_mm_format")
+
+    hour_number = int(hour_part)
+    minute_number = int(minute_part)
+
+    if hour_number < 0 or hour_number > 23:
+        raise ValueError("proposed_dailyplan_meal_hour_out_of_range")
+
+    if minute_number < 0 or minute_number > 59:
+        raise ValueError("proposed_dailyplan_meal_hour_out_of_range")
+
+    return f"{hour_number:02d}:{minute_number:02d}"
+
+
+
 def parse_proposed_food_item_payload(payload: dict[str, Any]) -> ProposedFoodItemDTO:
     if not isinstance(payload, dict):
         raise ValueError("proposed_food_item_payload_must_be_object")
 
     food_id = payload.get("food_id")
     quantity = payload.get("quantity")
-    unit = payload.get("unit", "g")
+    unit = payload.get("unit", DEFAULT_PROPOSED_FOOD_UNIT)
 
     if not isinstance(food_id, int):
         raise ValueError("proposed_food_item_food_id_required")
@@ -137,7 +178,7 @@ def parse_proposed_meal_payload(payload: dict[str, Any]) -> ProposedMealPayloadD
     if not isinstance(foods_payload, list):
         raise ValueError("proposed_meal_foods_required")
 
-    if not foods_payload:
+    if len(foods_payload) < MIN_PROPOSED_MEAL_FOODS:
         raise ValueError("proposed_meal_foods_must_not_be_empty")
 
     foods = [
@@ -179,8 +220,11 @@ def parse_proposed_dailyplan_payload(
     if not isinstance(meals_payload, list):
         raise ValueError("proposed_dailyplan_meals_required")
 
-    if not meals_payload:
+    if len(meals_payload) < MIN_PROPOSED_DAILYPLAN_MEALS:
         raise ValueError("proposed_dailyplan_meals_must_not_be_empty")
+
+    if len(meals_payload) > MAX_PROPOSED_DAILYPLAN_MEALS:
+        raise ValueError("proposed_dailyplan_meals_exceeds_maximum")
 
     meals = [
         _parse_proposed_dailyplan_meal_payload(meal_payload)
@@ -202,12 +246,9 @@ def _parse_proposed_dailyplan_meal_payload(
     if not isinstance(payload, dict):
         raise ValueError("proposed_dailyplan_meal_payload_must_be_object")
 
-    hour = payload.get("hour")
+    hour = _normalize_optional_hour(payload.get("hour"))
     note = payload.get("note", "")
     meal_payload = payload.get("meal")
-
-    if hour is not None and not isinstance(hour, str):
-        raise ValueError("proposed_dailyplan_meal_hour_must_be_string")
 
     if not isinstance(note, str):
         raise ValueError("proposed_dailyplan_meal_note_must_be_string")
@@ -224,7 +265,7 @@ def _parse_proposed_dailyplan_meal_payload(
     if not isinstance(foods_payload, list):
         raise ValueError("proposed_dailyplan_meal_foods_required")
 
-    if not foods_payload:
+    if len(foods_payload) < MIN_PROPOSED_MEAL_FOODS:
         raise ValueError("proposed_dailyplan_meal_foods_must_not_be_empty")
 
     foods = [
@@ -233,7 +274,7 @@ def _parse_proposed_dailyplan_meal_payload(
     ]
 
     return ProposedDailyPlanMealDTO(
-        hour=hour.strip() if isinstance(hour, str) and hour.strip() else None,
+        hour=hour,
         note=note.strip(),
         meal=ProposedMealDTO(
             name=meal_name.strip(),
@@ -257,4 +298,3 @@ def parse_proposal_payload(
         return parse_proposed_dailyplan_payload(payload)
 
     raise ValueError("unsupported_proposal_payload_intent")
-    
