@@ -19,6 +19,7 @@ from notas.interface.api.decorators import ai_tool_api_view
 from notas.interface.api.responses import ai_tool_json_response
 
 from notas.application.ai_tools.proposal_tools import (
+    create_validated_dailyplan_build_proposal_tool,
     create_validated_dailyplan_proposal_tool,
     create_validated_meal_proposal_tool,
 )
@@ -187,6 +188,31 @@ def ai_tools_create_validated_meal_proposal(request):
         return _missing_required_field_response("proposed_payload")
 
     result = create_validated_meal_proposal_tool(
+        user=request.user,
+        dailyplan_id=payload["dailyplan_id"],
+        title=payload["title"],
+        proposed_payload=payload["proposed_payload"],
+        targets=payload.get("targets"),
+        summary=payload.get("summary", ""),
+    )
+
+    return ai_tool_json_response(result)
+
+
+@ai_tool_api_view
+def ai_tools_create_validated_dailyplan_build_proposal(request):
+    payload = request.ai_tool_payload
+
+    if "dailyplan_id" not in payload:
+        return _missing_required_field_response("dailyplan_id")
+
+    if "title" not in payload:
+        return _missing_required_field_response("title")
+
+    if "proposed_payload" not in payload:
+        return _missing_required_field_response("proposed_payload")
+
+    result = create_validated_dailyplan_build_proposal_tool(
         user=request.user,
         dailyplan_id=payload["dailyplan_id"],
         title=payload["title"],

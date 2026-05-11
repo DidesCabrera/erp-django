@@ -128,6 +128,7 @@ from notas.interface.api.ai_tools import (
     ai_tools_read_proposal,
     ai_tools_list_food_catalog,
     ai_tools_create_validated_meal_proposal,
+    ai_tools_create_validated_dailyplan_build_proposal,
 )
 
 
@@ -338,6 +339,11 @@ urlpatterns = [
         "ai-tools/create-validated-meal-proposal/",
         ai_tools_create_validated_meal_proposal,
         name="ai_tools_create_validated_meal_proposal",
+    ),
+    path(
+        "ai-tools/create-validated-dailyplan-build-proposal/",
+        ai_tools_create_validated_dailyplan_build_proposal,
+        name="ai_tools_create_validated_dailyplan_build_proposal",
     ),
 
 
