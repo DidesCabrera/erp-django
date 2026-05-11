@@ -3,6 +3,7 @@ import unittest
 from myscoope_mcp.tools import (
     FORBIDDEN_TOOL_NAMES,
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_LIST_FOOD_CATALOG,
@@ -31,6 +32,7 @@ class MCPToolRegistryTests(unittest.TestCase):
                 TOOL_LIST_USER_PROPOSALS,
                 TOOL_LIST_FOOD_CATALOG,
                 TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+                TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
                 TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
             },
         )
@@ -42,6 +44,7 @@ class MCPToolRegistryTests(unittest.TestCase):
             TOOL_LIST_USER_PROPOSALS: "/ai-tools/list-user-proposals/",
             TOOL_LIST_FOOD_CATALOG: "/ai-tools/list-food-catalog/",
             TOOL_COMPARE_DAILYPLAN_TO_TARGETS: "/ai-tools/compare-dailyplan-to-targets/",
+            TOOL_CREATE_VALIDATED_MEAL_PROPOSAL: "/ai-tools/create-validated-meal-proposal/",
             TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL: "/ai-tools/create-validated-dailyplan-proposal/",
         }
 

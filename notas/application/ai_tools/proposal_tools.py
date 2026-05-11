@@ -5,10 +5,15 @@ from notas.application.queries.proposal_queries import (
     list_user_proposals,
     search_proposals,
 )
+
 from notas.application.services.commands.proposal_commands import (
     create_validated_dailyplan_proposal,
+    create_validated_meal_proposal,
 )
+
 from notas.domain.models import NutritionProposal
+
+
 
 
 def _serialize_dto_list(items) -> list[dict]:
@@ -85,6 +90,57 @@ def _create_validated_dailyplan_proposal_data(
     return {
         "proposal": proposal,
     }
+
+
+def _create_validated_meal_proposal_data(
+    user,
+    dailyplan_id: int,
+    title: str,
+    proposed_payload: dict,
+    targets: dict | None = None,
+    summary: str = "",
+) -> dict:
+    _ensure_title_is_valid_for_tool(title)
+    _ensure_payload_is_valid_for_tool(proposed_payload)
+
+    result = create_validated_meal_proposal(
+        user=user,
+        dailyplan_id=dailyplan_id,
+        title=title,
+        summary=summary,
+        source=NutritionProposal.SOURCE_AI,
+        targets=targets or {},
+        proposed_payload=proposed_payload,
+    )
+
+    proposal = get_proposal_detail(
+        user,
+        result.proposal.id,
+    ).as_dict()
+
+    return {
+        "proposal": proposal,
+    }
+    
+
+def create_validated_meal_proposal_tool(
+    user,
+    dailyplan_id: int,
+    title: str,
+    proposed_payload: dict,
+    targets: dict | None = None,
+    summary: str = "",
+):
+    return run_ai_tool(
+        _create_validated_meal_proposal_data,
+        user,
+        dailyplan_id,
+        title,
+        proposed_payload,
+        targets,
+        summary,
+        user=user,
+    )
 
 
 def create_validated_dailyplan_proposal_tool(

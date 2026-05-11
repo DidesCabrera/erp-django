@@ -9,6 +9,7 @@ from myscoope_mcp.dispatcher import dispatch_tool_call
 from myscoope_mcp.tools import (
     FORBIDDEN_TOOL_NAMES,
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
@@ -173,6 +174,42 @@ def register_mcp_tools(server: FastMCP) -> None:
         return serialize_tool_result(result)
 
     @server.tool()
+    def create_validated_meal_proposal(
+        dailyplan_id: int,
+        title: str,
+        proposed_payload: dict[str, Any],
+        targets: dict[str, Any] | None = None,
+        summary: str = "",
+    ) -> dict[str, Any]:
+        """
+        Create a reviewable meal proposal from a rich create_meal payload.
+
+        This tool does not create a final Meal.
+        It only creates a NutritionProposal pending human review.
+        """
+        client = create_api_client()
+
+        arguments = {
+            "dailyplan_id": dailyplan_id,
+            "title": title,
+            "summary": summary,
+            "proposed_payload": proposed_payload,
+        }
+
+        if targets is not None:
+            arguments["targets"] = targets
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
+            arguments=arguments,
+        )
+
+        return serialize_tool_result(result)
+
+
+
+    @server.tool()
     def create_validated_dailyplan_proposal(
         dailyplan_id: int,
         title: str,
@@ -224,6 +261,7 @@ def get_protocol_allowed_tool_names() -> set[str]:
         TOOL_LIST_USER_PROPOSALS,
         TOOL_LIST_FOOD_CATALOG,
         TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+        TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
         TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
     }
 

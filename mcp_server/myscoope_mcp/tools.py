@@ -7,7 +7,7 @@ TOOL_LIST_USER_PROPOSALS = "list_user_proposals"
 TOOL_COMPARE_DAILYPLAN_TO_TARGETS = "compare_dailyplan_to_targets"
 TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL = "create_validated_dailyplan_proposal"
 TOOL_LIST_FOOD_CATALOG = "list_food_catalog"
-
+TOOL_CREATE_VALIDATED_MEAL_PROPOSAL = "create_validated_meal_proposal"
 
 FORBIDDEN_TOOL_NAMES = {
     "apply_approved_proposal",
@@ -127,7 +127,7 @@ ALLOWED_TOOL_SPECS = {
             },
         },
     ),
-        TOOL_LIST_FOOD_CATALOG: MCPToolSpec(
+    TOOL_LIST_FOOD_CATALOG: MCPToolSpec(
         name=TOOL_LIST_FOOD_CATALOG,
         description="List readable foods available for AI/MCP nutrition planning.",
         api_path="/ai-tools/list-food-catalog/",
@@ -142,6 +142,87 @@ ALLOWED_TOOL_SPECS = {
                 "limit": {
                     "type": "integer",
                     "description": "Optional maximum number of foods to return.",
+                },
+            },
+        },
+    ),
+    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL: MCPToolSpec(
+        name=TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
+        description=(
+            "Create a reviewable meal proposal using real food IDs and quantities. "
+            "This tool does not create a final Meal."
+        ),
+        api_path="/ai-tools/create-validated-meal-proposal/",
+        input_schema={
+            "type": "object",
+            "required": [
+                "dailyplan_id",
+                "title",
+                "proposed_payload",
+            ],
+            "properties": {
+                "dailyplan_id": {
+                    "type": "integer",
+                    "description": "DailyPlan context where the meal proposal will be reviewed.",
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Proposal title.",
+                },
+                "summary": {
+                    "type": "string",
+                    "description": "Optional proposal summary.",
+                },
+                "targets": {
+                    "type": "object",
+                    "description": "Optional meal-level target metrics.",
+                },
+                "proposed_payload": {
+                    "type": "object",
+                    "description": "Rich proposal payload with intent create_meal.",
+                    "required": [
+                        "intent",
+                        "meal",
+                    ],
+                    "properties": {
+                        "intent": {
+                            "type": "string",
+                            "const": "create_meal",
+                        },
+                        "meal": {
+                            "type": "object",
+                            "required": [
+                                "name",
+                                "foods",
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                },
+                                "foods": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "food_id",
+                                            "quantity",
+                                        ],
+                                        "properties": {
+                                            "food_id": {
+                                                "type": "integer",
+                                            },
+                                            "quantity": {
+                                                "type": "number",
+                                            },
+                                            "unit": {
+                                                "type": "string",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             },
         },

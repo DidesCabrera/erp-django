@@ -5,10 +5,11 @@ from myscoope_mcp.contracts import MCPToolCallResult
 from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
+    TOOL_LIST_FOOD_CATALOG,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
-    TOOL_LIST_FOOD_CATALOG,
     get_tool_spec,
 )
 
@@ -59,7 +60,7 @@ def list_food_catalog(
 ) -> MCPToolCallResult:
     spec = get_tool_spec(TOOL_LIST_FOOD_CATALOG)
 
-    payload = {
+    payload: dict[str, Any] = {
         "limit": limit,
     }
 
@@ -72,7 +73,6 @@ def list_food_catalog(
     )
 
 
-
 def compare_dailyplan_to_targets(
     client: MyscoopeAPIClient,
     dailyplan_id: int,
@@ -81,7 +81,7 @@ def compare_dailyplan_to_targets(
 ) -> MCPToolCallResult:
     spec = get_tool_spec(TOOL_COMPARE_DAILYPLAN_TO_TARGETS)
 
-    payload = {
+    payload: dict[str, Any] = {
         "dailyplan_id": dailyplan_id,
         "targets": targets,
     }
@@ -106,7 +106,7 @@ def create_validated_dailyplan_proposal(
 ) -> MCPToolCallResult:
     spec = get_tool_spec(TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL)
 
-    payload = {
+    payload: dict[str, Any] = {
         "dailyplan_id": dailyplan_id,
         "title": title,
         "targets": targets,
@@ -120,6 +120,32 @@ def create_validated_dailyplan_proposal(
 
     if tolerances is not None:
         payload["tolerances"] = tolerances
+
+    return client.call_ai_tool_api(
+        spec.api_path,
+        payload,
+    )
+
+
+def create_validated_meal_proposal(
+    client: MyscoopeAPIClient,
+    dailyplan_id: int,
+    title: str,
+    proposed_payload: dict[str, Any],
+    targets: dict[str, Any] | None = None,
+    summary: str = "",
+) -> MCPToolCallResult:
+    spec = get_tool_spec(TOOL_CREATE_VALIDATED_MEAL_PROPOSAL)
+
+    payload: dict[str, Any] = {
+        "dailyplan_id": dailyplan_id,
+        "title": title,
+        "summary": summary,
+        "proposed_payload": proposed_payload,
+    }
+
+    if targets is not None:
+        payload["targets"] = targets
 
     return client.call_ai_tool_api(
         spec.api_path,
@@ -142,6 +168,7 @@ VALIDATION_TOOL_HANDLERS = {
 
 PROPOSAL_TOOL_HANDLERS = {
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL: create_validated_dailyplan_proposal,
+    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL: create_validated_meal_proposal,
 }
 
 
@@ -169,8 +196,8 @@ def call_read_tool(
             return _missing_required_argument("dailyplan_id")
 
         return read_dailyplan(
-            client,
-            arguments["dailyplan_id"],
+            client=client,
+            dailyplan_id=arguments["dailyplan_id"],
         )
 
     if tool_name == TOOL_READ_PROPOSAL:
@@ -178,13 +205,15 @@ def call_read_tool(
             return _missing_required_argument("proposal_id")
 
         return read_proposal(
-            client,
-            arguments["proposal_id"],
+            client=client,
+            proposal_id=arguments["proposal_id"],
         )
 
     if tool_name == TOOL_LIST_USER_PROPOSALS:
-        return list_user_proposals(client)
-    
+        return list_user_proposals(
+            client=client,
+        )
+
     if tool_name == TOOL_LIST_FOOD_CATALOG:
         return list_food_catalog(
             client=client,
@@ -259,6 +288,25 @@ def call_proposal_tool(
             targets=arguments["targets"],
             proposed_payload=arguments.get("proposed_payload"),
             tolerances=arguments.get("tolerances"),
+            summary=arguments.get("summary", ""),
+        )
+
+    if tool_name == TOOL_CREATE_VALIDATED_MEAL_PROPOSAL:
+        if "dailyplan_id" not in arguments:
+            return _missing_required_argument("dailyplan_id")
+
+        if "title" not in arguments:
+            return _missing_required_argument("title")
+
+        if "proposed_payload" not in arguments:
+            return _missing_required_argument("proposed_payload")
+
+        return create_validated_meal_proposal(
+            client=client,
+            dailyplan_id=arguments["dailyplan_id"],
+            title=arguments["title"],
+            proposed_payload=arguments["proposed_payload"],
+            targets=arguments.get("targets"),
             summary=arguments.get("summary", ""),
         )
 

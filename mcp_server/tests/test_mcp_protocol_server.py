@@ -14,6 +14,7 @@ from myscoope_mcp.protocol_server import (
 )
 from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_LIST_FOOD_CATALOG,
@@ -38,6 +39,7 @@ class MCPProtocolServerTests(unittest.TestCase):
                 TOOL_LIST_USER_PROPOSALS,
                 TOOL_LIST_FOOD_CATALOG,
                 TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+                TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
                 TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
             },
         )

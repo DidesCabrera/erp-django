@@ -15,6 +15,10 @@ from notas.domain.models import (
     NutritionProposalAuditEvent,
 )
 
+from notas.application.dto.proposal_payloads import CREATE_MEAL_INTENT
+from notas.application.validation.proposal_payload_validators import (
+    validate_proposal_payload_or_raise,
+)
 
 
 @dataclass(frozen=True)
@@ -433,6 +437,66 @@ def create_validated_dailyplan_proposal(
         targets=targets,
         current_snapshot=current_snapshot,
         proposed_payload=payload,
+        validation_summary=validation_summary,
+    )
+
+
+@transaction.atomic
+def create_validated_meal_proposal(
+    *,
+    user,
+    dailyplan_id: int,
+    title: str,
+    proposed_payload: dict,
+    summary: str = "",
+    source: str = NutritionProposal.SOURCE_AI,
+    status: str = NutritionProposal.STATUS_PENDING_REVIEW,
+    targets: dict | None = None,
+) -> NutritionProposalCreateResult:
+    """
+    Crea una propuesta revisable para crear una Meal.
+
+    Importante:
+    - NO crea Meal real.
+    - NO crea MealFood real.
+    - NO modifica DailyPlan.
+    - Solo persiste una NutritionProposal validada.
+    """
+    if not isinstance(proposed_payload, dict):
+        raise ValueError("proposal_payload_must_be_object")
+
+    parsed_payload = validate_proposal_payload_or_raise(
+        proposed_payload,
+    )
+
+    if parsed_payload.intent != CREATE_MEAL_INTENT:
+        raise ValueError("proposal_payload_must_be_create_meal")
+
+    normalized_payload = parsed_payload.as_dict()
+
+    current_snapshot = {
+        "dailyplan_id": dailyplan_id,
+        "context": "meal_proposal",
+    }
+
+    validation_summary = {
+        "payload_validation": {
+            "is_valid": True,
+            "intent": CREATE_MEAL_INTENT,
+        },
+        "simulation": None,
+    }
+
+    return create_dailyplan_proposal(
+        user=user,
+        dailyplan_id=dailyplan_id,
+        title=title,
+        summary=summary,
+        source=source,
+        status=status,
+        targets=targets or {},
+        current_snapshot=current_snapshot,
+        proposed_payload=normalized_payload,
         validation_summary=validation_summary,
     )
 
