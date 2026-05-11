@@ -9,11 +9,6 @@ from notas.application.proposals.applicators import (
 )
 
 from notas.application.queries.validation_queries import compare_dailyplan_to_targets
-from notas.domain.models import (
-    DailyPlan,
-    NutritionProposal,
-    NutritionProposalAuditEvent,
-)
 
 from notas.application.dto.proposal_payloads import (
     CREATE_DAILYPLAN_INTENT,
@@ -26,6 +21,28 @@ from notas.application.validation.proposal_payload_validators import (
 
 from notas.application.queries.proposal_simulation_queries import (
     simulate_proposal_payload,
+)
+
+from notas.application.dto.proposal_apply import (
+    build_create_meal_apply_plan,
+)
+from notas.application.queries.read_boundaries import (
+    get_readable_food_queryset,
+)
+from notas.domain.models import (
+    DailyPlan,
+    Food,
+    Meal,
+    MealFood,
+    NutritionProposal,
+    NutritionProposalAuditEvent,
+)
+
+from notas.application.dto.proposal_apply import (
+    build_create_meal_apply_plan,
+)
+from notas.application.queries.read_boundaries import (
+    get_readable_food_queryset,
 )
 
 @dataclass(frozen=True)
@@ -42,6 +59,18 @@ class NutritionProposalStatusResult:
 class NutritionProposalApplyResult:
     proposal: NutritionProposal
     operations_result: ProposalOperationsApplyResult
+
+@dataclass(frozen=True)
+class NutritionProposalApplyCreateMealResult:
+    proposal: NutritionProposal
+    meal: Meal
+
+    def as_dict(self) -> dict:
+        return {
+            "proposal_id": self.proposal.id,
+            "meal_id": self.meal.id,
+            "meal_name": self.meal.name,
+        }
 
 
 def _get_owned_dailyplan_for_proposal(
@@ -579,6 +608,57 @@ def create_validated_dailyplan_build_proposal(
     )
 
 
+def _get_readable_food_for_apply(
+    *,
+    user,
+    food_id: int,
+) -> Food:
+    food = (
+        get_readable_food_queryset(user)
+        .filter(pk=food_id)
+        .first()
+    )
+
+    if not food:
+        raise ValueError("proposal_apply_food_not_available")
+
+    return food
+
+
+def _create_meal_from_apply_plan(
+    *,
+    user,
+    apply_plan,
+) -> Meal:
+    meal = Meal.objects.create(
+        name=apply_plan.meal.name,
+        created_by=user,
+        is_public=False,
+        is_forkable=True,
+        is_copiable=False,
+        is_draft=False,
+        pending_dailyplan=None,
+        forked_from=None,
+        original_author=None,
+    )
+
+    for index, food_item in enumerate(apply_plan.meal.foods, start=1):
+        food = _get_readable_food_for_apply(
+            user=user,
+            food_id=food_item.food_id,
+        )
+
+        MealFood.objects.create(
+            meal=meal,
+            food=food,
+            quantity=food_item.quantity,
+            order=index,
+        )
+
+    meal.refresh_from_db()
+
+    return meal
+
 
 @transaction.atomic
 def apply_approved_proposal(
@@ -635,4 +715,80 @@ def apply_approved_proposal(
     return NutritionProposalApplyResult(
         proposal=proposal,
         operations_result=operations_result,
+    )
+
+@transaction.atomic
+def apply_approved_create_meal_proposal(
+    *,
+    user,
+    proposal: NutritionProposal,
+) -> NutritionProposalApplyCreateMealResult:
+    """
+    Aplica una propuesta aprobada create_meal creando una Meal real independiente.
+
+    Reglas:
+    - Solo el dueño del DailyPlan contexto puede aplicar.
+    - La propuesta debe estar approved.
+    - No puede aplicarse dos veces.
+    - El intent debe ser create_meal.
+    - Los foods deben ser legibles por el usuario.
+    - NO se asocia la Meal creada a ningún DailyPlan.
+    """
+    _ensure_can_review_proposal(
+        user=user,
+        proposal=proposal,
+    )
+    _ensure_approved(proposal)
+    _ensure_not_applied(proposal)
+
+    status_before = proposal.status
+
+    apply_plan = build_create_meal_apply_plan(
+        proposal=proposal,
+    )
+
+    meal = _create_meal_from_apply_plan(
+        user=user,
+        apply_plan=apply_plan,
+    )
+
+    proposal.status = NutritionProposal.STATUS_APPLIED
+    proposal.applied_by = user
+    proposal.applied_at = timezone.now()
+
+    proposal.save(
+        update_fields=[
+            "status",
+            "applied_by",
+            "applied_at",
+        ]
+    )
+
+    _create_proposal_audit_event(
+        proposal=proposal,
+        actor=user,
+        action=NutritionProposalAuditEvent.ACTION_APPLIED,
+        status_before=status_before,
+        status_after=proposal.status,
+        message="Create meal proposal applied.",
+        metadata={
+            "intent": "create_meal",
+            "meal_id": meal.id,
+            "meal_name": meal.name,
+            "foods": [
+                {
+                    "food_id": meal_food.food_id,
+                    "food_name": meal_food.food.name,
+                    "quantity": float(meal_food.quantity),
+                    "unit": "g",
+                    "order": meal_food.order,
+                }
+                for meal_food in meal.meal_food_set.select_related("food").all()
+            ],
+        },
+    )
+
+    return NutritionProposalApplyCreateMealResult(
+        proposal=proposal,
+        meal=meal,
     )
