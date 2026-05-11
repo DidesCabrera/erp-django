@@ -15,7 +15,11 @@ from notas.domain.models import (
     NutritionProposalAuditEvent,
 )
 
-from notas.application.dto.proposal_payloads import CREATE_MEAL_INTENT
+from notas.application.dto.proposal_payloads import (
+    CREATE_DAILYPLAN_INTENT,
+    CREATE_MEAL_INTENT,
+)
+
 from notas.application.validation.proposal_payload_validators import (
     validate_proposal_payload_or_raise,
 )
@@ -507,6 +511,73 @@ def create_validated_meal_proposal(
         proposed_payload=normalized_payload,
         validation_summary=validation_summary,
     )
+
+
+@transaction.atomic
+def create_validated_dailyplan_build_proposal(
+    *,
+    user,
+    dailyplan_id: int,
+    title: str,
+    proposed_payload: dict,
+    summary: str = "",
+    source: str = NutritionProposal.SOURCE_AI,
+    status: str = NutritionProposal.STATUS_PENDING_REVIEW,
+    targets: dict | None = None,
+) -> NutritionProposalCreateResult:
+    """
+    Crea una propuesta revisable para construir un DailyPlan nuevo.
+
+    Importante:
+    - NO crea DailyPlan real.
+    - NO crea Meal real.
+    - NO crea MealFood real.
+    - NO modifica el DailyPlan de contexto.
+    - Solo persiste una NutritionProposal validada y simulada.
+    """
+    if not isinstance(proposed_payload, dict):
+        raise ValueError("proposal_payload_must_be_object")
+
+    parsed_payload = validate_proposal_payload_or_raise(
+        proposed_payload,
+    )
+
+    if parsed_payload.intent != CREATE_DAILYPLAN_INTENT:
+        raise ValueError("proposal_payload_must_be_create_dailyplan")
+
+    normalized_payload = parsed_payload.as_dict()
+
+    simulation = simulate_proposal_payload(
+        user=user,
+        payload=normalized_payload,
+    )
+
+    current_snapshot = {
+        "dailyplan_id": dailyplan_id,
+        "context": "dailyplan_build_proposal",
+    }
+
+    validation_summary = {
+        "payload_validation": {
+            "is_valid": True,
+            "intent": CREATE_DAILYPLAN_INTENT,
+        },
+        "simulation": simulation.as_dict(),
+    }
+
+    return create_dailyplan_proposal(
+        user=user,
+        dailyplan_id=dailyplan_id,
+        title=title,
+        summary=summary,
+        source=source,
+        status=status,
+        targets=targets or {},
+        current_snapshot=current_snapshot,
+        proposed_payload=normalized_payload,
+        validation_summary=validation_summary,
+    )
+
 
 
 @transaction.atomic
