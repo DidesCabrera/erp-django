@@ -5,6 +5,7 @@ from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
     TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+    TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_LIST_FOOD_CATALOG,
     TOOL_READ_DAILYPLAN,
@@ -34,6 +35,7 @@ class MCPToolRegistryTests(unittest.TestCase):
                 TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
                 TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
                 TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+                TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
             },
         )
 
@@ -46,6 +48,7 @@ class MCPToolRegistryTests(unittest.TestCase):
             TOOL_COMPARE_DAILYPLAN_TO_TARGETS: "/ai-tools/compare-dailyplan-to-targets/",
             TOOL_CREATE_VALIDATED_MEAL_PROPOSAL: "/ai-tools/create-validated-meal-proposal/",
             TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL: "/ai-tools/create-validated-dailyplan-proposal/",
+            TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL: "/ai-tools/create-validated-dailyplan-build-proposal/",
         }
 
         for tool_name, expected_path in checks.items():

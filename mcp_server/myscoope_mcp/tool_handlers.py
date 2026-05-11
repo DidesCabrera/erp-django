@@ -5,6 +5,7 @@ from myscoope_mcp.contracts import MCPToolCallResult
 from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+    TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
     TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
     TOOL_LIST_FOOD_CATALOG,
     TOOL_LIST_USER_PROPOSALS,
@@ -127,6 +128,32 @@ def create_validated_dailyplan_proposal(
     )
 
 
+def create_validated_dailyplan_build_proposal(
+    client: MyscoopeAPIClient,
+    dailyplan_id: int,
+    title: str,
+    proposed_payload: dict[str, Any],
+    targets: dict[str, Any] | None = None,
+    summary: str = "",
+) -> MCPToolCallResult:
+    spec = get_tool_spec(TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL)
+
+    payload: dict[str, Any] = {
+        "dailyplan_id": dailyplan_id,
+        "title": title,
+        "summary": summary,
+        "proposed_payload": proposed_payload,
+    }
+
+    if targets is not None:
+        payload["targets"] = targets
+
+    return client.call_ai_tool_api(
+        spec.api_path,
+        payload,
+    )
+
+
 def create_validated_meal_proposal(
     client: MyscoopeAPIClient,
     dailyplan_id: int,
@@ -169,6 +196,9 @@ VALIDATION_TOOL_HANDLERS = {
 PROPOSAL_TOOL_HANDLERS = {
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL: create_validated_dailyplan_proposal,
     TOOL_CREATE_VALIDATED_MEAL_PROPOSAL: create_validated_meal_proposal,
+    TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL: (
+        create_validated_dailyplan_build_proposal
+    ),
 }
 
 
@@ -302,6 +332,25 @@ def call_proposal_tool(
             return _missing_required_argument("proposed_payload")
 
         return create_validated_meal_proposal(
+            client=client,
+            dailyplan_id=arguments["dailyplan_id"],
+            title=arguments["title"],
+            proposed_payload=arguments["proposed_payload"],
+            targets=arguments.get("targets"),
+            summary=arguments.get("summary", ""),
+        )
+
+    if tool_name == TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL:
+        if "dailyplan_id" not in arguments:
+            return _missing_required_argument("dailyplan_id")
+
+        if "title" not in arguments:
+            return _missing_required_argument("title")
+
+        if "proposed_payload" not in arguments:
+            return _missing_required_argument("proposed_payload")
+
+        return create_validated_dailyplan_build_proposal(
             client=client,
             dailyplan_id=arguments["dailyplan_id"],
             title=arguments["title"],

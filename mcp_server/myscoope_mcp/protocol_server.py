@@ -11,6 +11,7 @@ from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
     TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
     TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+    TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
@@ -250,6 +251,40 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
+    @server.tool()
+    def create_validated_dailyplan_build_proposal(
+        dailyplan_id: int,
+        title: str,
+        proposed_payload: dict[str, Any],
+        targets: dict[str, Any] | None = None,
+        summary: str = "",
+    ) -> dict[str, Any]:
+        """
+        Create a reviewable DailyPlan build proposal from a rich create_dailyplan payload.
+
+        This tool does not create a final DailyPlan.
+        It only creates a NutritionProposal pending human review.
+        """
+        client = create_api_client()
+
+        arguments: dict[str, Any] = {
+            "dailyplan_id": dailyplan_id,
+            "title": title,
+            "summary": summary,
+            "proposed_payload": proposed_payload,
+        }
+
+        if targets is not None:
+            arguments["targets"] = targets
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
+            arguments=arguments,
+        )
+
+        return serialize_tool_result(result)
+
 
 def get_protocol_allowed_tool_names() -> set[str]:
     """
@@ -263,6 +298,7 @@ def get_protocol_allowed_tool_names() -> set[str]:
         TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
         TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
         TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+        TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
     }
 
 

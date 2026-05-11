@@ -22,6 +22,7 @@ REQUIRED_TOOL_FUNCTIONS = {
     "compare_dailyplan_to_targets",
     "create_validated_meal_proposal",
     "create_validated_dailyplan_proposal",
+    "create_validated_dailyplan_build_proposal",
     "list_food_catalog",
 }
 
@@ -33,6 +34,7 @@ REQUIRED_TOOL_CONSTANTS = {
     "TOOL_COMPARE_DAILYPLAN_TO_TARGETS",
     "TOOL_CREATE_VALIDATED_MEAL_PROPOSAL",
     "TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL",
+    "TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL",
     "TOOL_LIST_FOOD_CATALOG",
 }
 
