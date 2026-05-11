@@ -4,6 +4,37 @@
 
 <div class="page page--detail">
 
+{% if vm.content.proposal_review %}
+  <section class="proposal-review-shell">
+    <div class="proposal-review-header">
+      <p class="proposal-review-eyebrow">Propuesta IA</p>
+
+      <h2 class="proposal-review-title">
+        {{ vm.content.proposal_review.title }}
+      </h2>
+
+      <p class="proposal-review-status">
+        Estado: {{ vm.content.proposal_review.status.status }}
+      </p>
+
+      {% if vm.content.proposal_review.payload.is_create_meal %}
+        <p class="proposal-review-type">
+          Tipo: nueva comida propuesta
+        </p>
+      {% elif vm.content.proposal_review.payload.is_create_dailyplan %}
+        <p class="proposal-review-type">
+          Tipo: nuevo DailyPlan propuesto
+        </p>
+      {% else %}
+        <p class="proposal-review-type">
+          Tipo: propuesta legacy o no clasificada
+        </p>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
+
+
   <div class="card">
 
     <div class="card-main-title">

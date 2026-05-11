@@ -26,6 +26,9 @@ from notas.presentation.config.viewmodel_config import (
 )
 from notas.presentation.viewmodels.base_vm import BaseVM
 
+from notas.presentation.proposals.proposal_review_viewmodels import (
+    build_proposal_review_vm,
+)
 
 @dataclass
 class ProposalListContentVM:
@@ -37,6 +40,7 @@ class ProposalListContentVM:
 class ProposalDetailContentVM:
     header: object
     proposal: dict
+    proposal_review: dict
 
 
 @dataclass(frozen=True)
@@ -138,12 +142,17 @@ def proposal_detail(request, proposal_id):
         proposal_id,
     ).as_dict()
 
+    proposal_review = build_proposal_review_vm(
+        proposal,
+    ).as_dict()
+
     content_vm = ProposalDetailContentVM(
         header=build_page_header(
             title=proposal["title"],
             actions=_build_detail_actions(proposal),
         ),
         proposal=proposal,
+        proposal_review=proposal_review,
     )
 
     ui_vm = build_ui_vm(

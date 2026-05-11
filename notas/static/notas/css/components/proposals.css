@@ -1,0 +1,39 @@
+
+.proposal-review-shell {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid rgba(20, 20, 20, 0.08);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+  }
+  
+  .proposal-review-header {
+    display: grid;
+    gap: 0.35rem;
+  }
+  
+  .proposal-review-eyebrow {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(20, 20, 20, 0.55);
+  }
+  
+  .proposal-review-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: rgb(20, 20, 20);
+  }
+  
+  .proposal-review-status,
+  .proposal-review-type {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(20, 20, 20, 0.7);
+  }
+
+
+

@@ -220,3 +220,104 @@ class ProposalViewTests(TestCase):
             self.proposal.status,
             NutritionProposal.STATUS_PENDING_REVIEW,
         )
+
+    def test_proposal_detail_shows_review_vm_for_create_dailyplan(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Plan AI",
+            summary="DailyPlan completo propuesto desde MCP.",
+            targets={
+                "protein": 190,
+                "total_kcal": 2800,
+            },
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [],
+                },
+            },
+            validation_summary={
+                "payload_validation": {
+                    "is_valid": True,
+                    "intent": "create_dailyplan",
+                },
+                "simulation": {
+                    "intent": "create_dailyplan",
+                    "meal": None,
+                    "dailyplan": {
+                        "name": "Día entrenamiento IA",
+                        "kpis": {
+                            "protein": 2,
+                            "total_kcal": 34,
+                        },
+                    },
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Propuesta IA")
+        self.assertContains(response, "Plan AI")
+        self.assertContains(response, "Tipo: nuevo DailyPlan propuesto")
+
+    def test_proposal_detail_shows_review_vm_for_create_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Comida AI",
+            summary="Comida propuesta desde MCP.",
+            targets={
+                "protein": 60,
+            },
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [],
+                },
+            },
+            validation_summary={
+                "payload_validation": {
+                    "is_valid": True,
+                    "intent": "create_meal",
+                },
+                "simulation": {
+                    "intent": "create_meal",
+                    "meal": {
+                        "name": "Almuerzo IA",
+                        "kpis": {
+                            "protein": 62,
+                            "total_kcal": 312.8,
+                        },
+                    },
+                    "dailyplan": None,
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Propuesta IA")
+        self.assertContains(response, "Comida AI")
+        self.assertContains(response, "Tipo: nueva comida propuesta")
