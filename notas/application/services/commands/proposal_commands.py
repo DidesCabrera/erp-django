@@ -20,6 +20,9 @@ from notas.application.validation.proposal_payload_validators import (
     validate_proposal_payload_or_raise,
 )
 
+from notas.application.queries.proposal_simulation_queries import (
+    simulate_proposal_payload,
+)
 
 @dataclass(frozen=True)
 class NutritionProposalCreateResult:
@@ -473,7 +476,12 @@ def create_validated_meal_proposal(
         raise ValueError("proposal_payload_must_be_create_meal")
 
     normalized_payload = parsed_payload.as_dict()
-
+    
+    simulation = simulate_proposal_payload(
+        user=user,
+        payload=normalized_payload,
+    )
+    
     current_snapshot = {
         "dailyplan_id": dailyplan_id,
         "context": "meal_proposal",
@@ -484,7 +492,7 @@ def create_validated_meal_proposal(
             "is_valid": True,
             "intent": CREATE_MEAL_INTENT,
         },
-        "simulation": None,
+        "simulation": simulation.as_dict(),
     }
 
     return create_dailyplan_proposal(

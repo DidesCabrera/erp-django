@@ -84,7 +84,21 @@ class AIToolsAPIMealProposalEndpointTests(TestCase):
         self.assertEqual(proposal["dailyplan_id"], self.dailyplan.id)
         self.assertEqual(proposal["status"], "pending_review")
         self.assertEqual(proposal["proposed_payload"]["intent"], "create_meal")
+        simulation = proposal["validation_summary"]["simulation"]
+
+        self.assertEqual(simulation["intent"], "create_meal")
+        self.assertIsNone(simulation["dailyplan"])
+        self.assertEqual(simulation["meal"]["name"], "Almuerzo IA")
+        self.assertAlmostEqual(
+            simulation["meal"]["kpis"]["protein"],
+            62.0,
+        )
+        self.assertAlmostEqual(
+            simulation["meal"]["kpis"]["total_kcal"],
+            312.8,
+        )
         self.assertEqual(Meal.objects.count(), 0)
+
 
     def test_create_validated_meal_proposal_endpoint_requires_payload(self):
         self.client.force_login(self.user)

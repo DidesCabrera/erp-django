@@ -35,6 +35,14 @@ class CreateValidatedMealProposalCommandTests(TestCase):
             fat=3.6,
             created_by=self.user,
         )
+        
+        self.private_other_food = Food.objects.create(
+            name="Private Other Food",
+            protein=100,
+            carbs=100,
+            fat=100,
+            created_by=self.other_user,
+        )
 
     def test_create_validated_meal_proposal_creates_pending_review_proposal(self):
         payload = {
@@ -95,15 +103,36 @@ class CreateValidatedMealProposalCommandTests(TestCase):
                 },
             },
         )
+
         self.assertEqual(
-            proposal.validation_summary,
+            proposal.validation_summary["payload_validation"],
             {
-                "payload_validation": {
-                    "is_valid": True,
-                    "intent": "create_meal",
-                },
-                "simulation": None,
+                "is_valid": True,
+                "intent": "create_meal",
             },
+        )
+
+        simulation = proposal.validation_summary["simulation"]
+
+        self.assertEqual(simulation["intent"], "create_meal")
+        self.assertIsNone(simulation["dailyplan"])
+        self.assertEqual(simulation["meal"]["name"], "Almuerzo IA")
+        self.assertEqual(len(simulation["meal"]["foods"]), 1)
+        self.assertEqual(
+            simulation["meal"]["foods"][0]["food_name"],
+            "Pechuga pollo",
+        )
+        self.assertAlmostEqual(
+            simulation["meal"]["kpis"]["protein"],
+            62.0,
+        )
+        self.assertAlmostEqual(
+            simulation["meal"]["kpis"]["fat"],
+            7.2,
+        )
+        self.assertAlmostEqual(
+            simulation["meal"]["kpis"]["total_kcal"],
+            312.8,
         )
         self.assertEqual(
             proposal.current_snapshot,
@@ -214,6 +243,28 @@ class CreateValidatedMealProposalCommandTests(TestCase):
             create_validated_meal_proposal(
                 user=self.user,
                 dailyplan_id=self.other_dailyplan.id,
+                title="Invalid",
+                proposed_payload=payload,
+            )
+            
+    def test_create_validated_meal_proposal_rejects_unreadable_food(self):
+        payload = {
+            "intent": "create_meal",
+            "meal": {
+                "name": "Invalid Meal",
+                "foods": [
+                    {
+                        "food_id": self.private_other_food.id,
+                        "quantity": 100,
+                    },
+                ],
+            },
+        }
+
+        with self.assertRaisesMessage(Exception, "No Food matches the given query."):
+            create_validated_meal_proposal(
+                user=self.user,
+                dailyplan_id=self.dailyplan.id,
                 title="Invalid",
                 proposed_payload=payload,
             )

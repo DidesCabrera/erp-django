@@ -69,6 +69,19 @@ class AIMealProposalToolTests(TestCase):
                 "intent": "create_meal",
             },
         )
+        simulation = proposal["validation_summary"]["simulation"]
+
+        self.assertEqual(simulation["intent"], "create_meal")
+        self.assertIsNone(simulation["dailyplan"])
+        self.assertEqual(simulation["meal"]["name"], "Almuerzo IA")
+        self.assertAlmostEqual(
+            simulation["meal"]["kpis"]["protein"],
+            62.0,
+        )
+        self.assertAlmostEqual(
+            simulation["meal"]["kpis"]["total_kcal"],
+            312.8,
+        )
 
     def test_create_validated_meal_proposal_tool_returns_error_for_invalid_payload(self):
         result = create_validated_meal_proposal_tool(
