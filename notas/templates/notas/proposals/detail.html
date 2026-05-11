@@ -5,6 +5,12 @@
 <div class="page page--detail">
 
 {% if vm.content.proposal_review %}
+<p>DEBUG intent: {{ vm.content.proposal_review.payload.intent }}</p>
+<p>DEBUG is_create_meal: {{ vm.content.proposal_review.payload.is_create_meal }}</p>
+<p>DEBUG is_create_dailyplan: {{ vm.content.proposal_review.payload.is_create_dailyplan }}</p>
+<p>DEBUG meal: {{ vm.content.proposal_review.payload.meal }}</p>
+
+
   <section class="proposal-review-shell">
     <div class="proposal-review-header">
       <p class="proposal-review-eyebrow">Propuesta IA</p>
@@ -31,6 +37,14 @@
         </p>
       {% endif %}
     </div>
+
+    {% if vm.content.proposal_review.payload.is_create_meal %}
+      {% include "notas/proposals/partials/review_create_meal.html" %}
+    {% endif %}
+    
+    {% if vm.content.proposal_review.payload.is_create_dailyplan %}
+      {% include "notas/proposals/partials/review_create_dailyplan.html" %}
+    {% endif %}
   </section>
 {% endif %}
 

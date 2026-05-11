@@ -251,9 +251,46 @@ class ProposalViewTests(TestCase):
                     "meal": None,
                     "dailyplan": {
                         "name": "Día entrenamiento IA",
+                        "meals": [
+                            {
+                                "hour": "09:00",
+                                "note": "Desayuno",
+                                "meal": {
+                                    "name": "Desayuno IA",
+                                    "foods": [
+                                        {
+                                            "food_id": 128,
+                                            "food_name": "a nuevo egg TEST",
+                                            "quantity": 200,
+                                            "unit": "g",
+                                            "protein": 2,
+                                            "carbs": 2,
+                                            "fat": 2,
+                                            "total_kcal": 34,
+                                        },
+                                    ],
+                                    "kpis": {
+                                        "total_kcal": 34,
+                                        "protein": 2,
+                                        "carbs": 2,
+                                        "fat": 2,
+                                        "ppk": 0.02,
+                                        "alloc_protein": 23.52,
+                                        "alloc_carbs": 23.52,
+                                        "alloc_fat": 52.94,
+                                    },
+                                },
+                            },
+                        ],
                         "kpis": {
-                            "protein": 2,
                             "total_kcal": 34,
+                            "protein": 2,
+                            "carbs": 2,
+                            "fat": 2,
+                            "ppk": 0.02,
+                            "alloc_protein": 23.52,
+                            "alloc_carbs": 23.52,
+                            "alloc_fat": 52.94,
                         },
                     },
                 },
@@ -271,6 +308,14 @@ class ProposalViewTests(TestCase):
         self.assertContains(response, "Propuesta IA")
         self.assertContains(response, "Plan AI")
         self.assertContains(response, "Tipo: nuevo DailyPlan propuesto")
+        self.assertContains(response, "DailyPlan propuesto")
+        self.assertContains(response, "Día entrenamiento IA")
+        self.assertContains(response, "Desayuno IA")
+        self.assertContains(response, "09:00")
+        self.assertContains(response, "Desayuno")
+        self.assertContains(response, "a nuevo egg TEST")
+        self.assertContains(response, "200.0 g")
+        self.assertContains(response, "34.0")
 
     def test_proposal_detail_shows_review_vm_for_create_meal(self):
         self.client.force_login(self.user)
@@ -300,9 +345,27 @@ class ProposalViewTests(TestCase):
                     "intent": "create_meal",
                     "meal": {
                         "name": "Almuerzo IA",
+                        "foods": [
+                            {
+                                "food_id": 1,
+                                "food_name": "Pechuga pollo",
+                                "quantity": 200,
+                                "unit": "g",
+                                "protein": 62,
+                                "carbs": 0,
+                                "fat": 7.2,
+                                "total_kcal": 312.8,
+                            },
+                        ],
                         "kpis": {
-                            "protein": 62,
                             "total_kcal": 312.8,
+                            "protein": 62,
+                            "carbs": 0,
+                            "fat": 7.2,
+                            "ppk": 0.62,
+                            "alloc_protein": 79.28,
+                            "alloc_carbs": 0,
+                            "alloc_fat": 20.72,
                         },
                     },
                     "dailyplan": None,
@@ -321,3 +384,175 @@ class ProposalViewTests(TestCase):
         self.assertContains(response, "Propuesta IA")
         self.assertContains(response, "Comida AI")
         self.assertContains(response, "Tipo: nueva comida propuesta")
+
+    def test_proposal_detail_renders_create_meal_review_card(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Comida AI",
+            summary="Comida propuesta desde MCP.",
+            targets={
+                "protein": 60,
+                "total_kcal": 500,
+            },
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": 1,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+            validation_summary={
+                "payload_validation": {
+                    "is_valid": True,
+                    "intent": "create_meal",
+                },
+                "simulation": {
+                    "intent": "create_meal",
+                    "meal": {
+                        "name": "Almuerzo IA",
+                        "foods": [
+                            {
+                                "food_id": 1,
+                                "food_name": "Pechuga pollo",
+                                "quantity": 200,
+                                "unit": "g",
+                                "protein": 62,
+                                "carbs": 0,
+                                "fat": 7.2,
+                                "total_kcal": 312.8,
+                            },
+                        ],
+                        "kpis": {
+                            "total_kcal": 312.8,
+                            "protein": 62,
+                            "carbs": 0,
+                            "fat": 7.2,
+                            "ppk": 0.62,
+                            "alloc_protein": 79.28,
+                            "alloc_carbs": 0,
+                            "alloc_fat": 20.72,
+                        },
+                    },
+                    "dailyplan": None,
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Comida propuesta")
+        self.assertContains(response, "Almuerzo IA")
+        self.assertContains(response, "Pechuga pollo")
+        self.assertContains(response, "200.0 g")
+        self.assertContains(response, "62.0 g")
+        self.assertContains(response, "7.2 g")
+        self.assertContains(response, "312.8")
+
+    def test_proposal_detail_renders_create_dailyplan_review_card(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Plan AI",
+            summary="DailyPlan completo propuesto desde MCP.",
+            targets={
+                "protein": 190,
+                "total_kcal": 2800,
+            },
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [],
+                },
+            },
+            validation_summary={
+                "payload_validation": {
+                    "is_valid": True,
+                    "intent": "create_dailyplan",
+                },
+                "simulation": {
+                    "intent": "create_dailyplan",
+                    "meal": None,
+                    "dailyplan": {
+                        "name": "Día entrenamiento IA",
+                        "meals": [
+                            {
+                                "hour": "09:00",
+                                "note": "Desayuno",
+                                "meal": {
+                                    "name": "Desayuno IA",
+                                    "foods": [
+                                        {
+                                            "food_id": 128,
+                                            "food_name": "a nuevo egg TEST",
+                                            "quantity": 200,
+                                            "unit": "g",
+                                            "protein": 2,
+                                            "carbs": 2,
+                                            "fat": 2,
+                                            "total_kcal": 34,
+                                        },
+                                    ],
+                                    "kpis": {
+                                        "total_kcal": 34,
+                                        "protein": 2,
+                                        "carbs": 2,
+                                        "fat": 2,
+                                        "ppk": 0.02,
+                                        "alloc_protein": 23.52,
+                                        "alloc_carbs": 23.52,
+                                        "alloc_fat": 52.94,
+                                    },
+                                },
+                            },
+                        ],
+                        "kpis": {
+                            "total_kcal": 34,
+                            "protein": 2,
+                            "carbs": 2,
+                            "fat": 2,
+                            "ppk": 0.02,
+                            "alloc_protein": 23.52,
+                            "alloc_carbs": 23.52,
+                            "alloc_fat": 52.94,
+                        },
+                    },
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "DailyPlan propuesto")
+        self.assertContains(response, "Día entrenamiento IA")
+        self.assertContains(response, "Desayuno IA")
+        self.assertContains(response, "09:00")
+        self.assertContains(response, "Desayuno")
+        self.assertContains(response, "a nuevo egg TEST")
+        self.assertContains(response, "200.0 g")
+        self.assertContains(response, "34.0")

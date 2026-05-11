@@ -37,3 +37,154 @@
 
 
 
+  .proposal-review-card {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid rgba(20, 20, 20, 0.08);
+    border-radius: 16px;
+    background: rgba(250, 250, 250, 0.78);
+  }
+  
+  .proposal-review-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .proposal-review-section-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: rgb(20, 20, 20);
+  }
+  
+  .proposal-review-kpis {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .proposal-review-kpi {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.75rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(20, 20, 20, 0.06);
+  }
+  
+  .proposal-review-kpi-label {
+    font-size: 0.75rem;
+    color: rgba(20, 20, 20, 0.55);
+  }
+  
+  .proposal-review-kpi strong {
+    font-size: 0.95rem;
+    color: rgb(20, 20, 20);
+  }
+  
+  .proposal-review-food-list {
+    display: grid;
+    gap: 0.35rem;
+  }
+  
+  .proposal-review-food-row {
+    display: grid;
+    grid-template-columns: 2fr repeat(5, minmax(80px, 1fr));
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(20, 20, 20, 0.06);
+    font-size: 0.88rem;
+  }
+  
+  .proposal-review-food-row--header {
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.035em;
+    color: rgba(20, 20, 20, 0.52);
+  }
+  
+  .proposal-review-food-name {
+    font-weight: 700;
+    color: rgb(20, 20, 20);
+  }
+  
+  .proposal-review-empty {
+    margin: 0;
+    padding: 0.75rem;
+    color: rgba(20, 20, 20, 0.58);
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 760px) {
+    .proposal-review-kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  
+    .proposal-review-food-row,
+    .proposal-review-food-row--header {
+      grid-template-columns: 1fr;
+    }
+  
+    .proposal-review-food-row--header {
+      display: none;
+    }
+  
+    .proposal-review-food-row {
+      padding: 0.75rem;
+      border: 1px solid rgba(20, 20, 20, 0.06);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.85);
+    }
+  }
+
+  .proposal-review-meal-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .proposal-review-meal-card {
+    padding: 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(20, 20, 20, 0.08);
+    background: rgba(255, 255, 255, 0.82);
+  }
+  
+  .proposal-review-meal-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.85rem;
+  }
+  
+  .proposal-review-meal-meta {
+    margin: 0 0 0.2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(20, 20, 20, 0.52);
+  }
+  
+  .proposal-review-meal-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: rgb(20, 20, 20);
+  }
+  
+  .proposal-review-kpis--compact {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 0.85rem;
+  }
+  
+  @media (max-width: 760px) {
+    .proposal-review-kpis--compact {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
