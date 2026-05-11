@@ -4,6 +4,7 @@ from notas.application.ai_tools.read_tools import (
     read_food_tool,
     read_meal_tool,
     read_proposal_tool,
+    list_food_catalog_tool,
 )
 
 from notas.application.ai_tools.validation_tools import (
@@ -111,6 +112,20 @@ def ai_tools_list_user_proposals(request):
     )
 
     return ai_tool_json_response(result)
+
+
+@ai_tool_api_view
+def ai_tools_list_food_catalog(request):
+    payload = request.ai_tool_payload
+
+    result = list_food_catalog_tool(
+        user=request.user,
+        search=payload.get("search"),
+        limit=payload.get("limit", 50),
+    )
+
+    return ai_tool_json_response(result)
+
 
 @ai_tool_api_view
 def ai_tools_compare_dailyplan_to_targets(request):

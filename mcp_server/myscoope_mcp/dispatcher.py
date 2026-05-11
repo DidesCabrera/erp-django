@@ -13,6 +13,7 @@ from myscoope_mcp.tools import (
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
+    TOOL_LIST_FOOD_CATALOG,
     is_forbidden_tool_name,
 )
 
@@ -21,6 +22,7 @@ READ_TOOL_NAMES = {
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
     TOOL_LIST_USER_PROPOSALS,
+    TOOL_LIST_FOOD_CATALOG,
 }
 
 

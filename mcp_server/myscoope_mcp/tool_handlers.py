@@ -8,6 +8,7 @@ from myscoope_mcp.tools import (
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
+    TOOL_LIST_FOOD_CATALOG,
     get_tool_spec,
 )
 
@@ -49,6 +50,27 @@ def list_user_proposals(
         spec.api_path,
         {},
     )
+
+
+def list_food_catalog(
+    client: MyscoopeAPIClient,
+    search: str | None = None,
+    limit: int = 50,
+) -> MCPToolCallResult:
+    spec = get_tool_spec(TOOL_LIST_FOOD_CATALOG)
+
+    payload = {
+        "limit": limit,
+    }
+
+    if search is not None:
+        payload["search"] = search
+
+    return client.call_ai_tool_api(
+        spec.api_path,
+        payload,
+    )
+
 
 
 def compare_dailyplan_to_targets(
@@ -109,6 +131,7 @@ READ_TOOL_HANDLERS = {
     TOOL_READ_DAILYPLAN: read_dailyplan,
     TOOL_READ_PROPOSAL: read_proposal,
     TOOL_LIST_USER_PROPOSALS: list_user_proposals,
+    TOOL_LIST_FOOD_CATALOG: list_food_catalog,
 }
 
 
@@ -161,6 +184,13 @@ def call_read_tool(
 
     if tool_name == TOOL_LIST_USER_PROPOSALS:
         return list_user_proposals(client)
+    
+    if tool_name == TOOL_LIST_FOOD_CATALOG:
+        return list_food_catalog(
+            client=client,
+            search=arguments.get("search"),
+            limit=arguments.get("limit", 50),
+        )
 
     return MCPToolCallResult(
         ok=False,

@@ -24,13 +24,15 @@ from notas.application.queries.proposal_queries import (
     search_proposals,
 )
 
+from notas.application.queries.food_catalog_queries import (
+    list_food_catalog_for_planning,
+)
 
 def _serialize_dto_list(items) -> list[dict]:
     return [
         item.as_dict()
         for item in items
     ]
-
 
 # FOOD TOOLS -------------------------------------------------
 
@@ -102,6 +104,33 @@ def read_food_tool(user, food_id: int):
         _read_food_data,
         user,
         food_id,
+        user=user,
+    )
+
+def _list_food_catalog_data(
+    user,
+    search: str | None = None,
+    limit: int = 50,
+) -> dict:
+    return {
+        "catalog": list_food_catalog_for_planning(
+            user=user,
+            search=search,
+            limit=limit,
+        ).as_dict(),
+    }
+
+
+def list_food_catalog_tool(
+    user,
+    search: str | None = None,
+    limit: int = 50,
+):
+    return run_ai_tool(
+        _list_food_catalog_data,
+        user,
+        search=search,
+        limit=limit,
         user=user,
     )
 

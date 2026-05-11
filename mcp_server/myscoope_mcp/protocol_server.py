@@ -13,6 +13,7 @@ from myscoope_mcp.tools import (
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
+    TOOL_LIST_FOOD_CATALOG,
 )
 
 
@@ -76,6 +77,36 @@ def register_mcp_tools(server: FastMCP) -> None:
         )
 
         return serialize_tool_result(result)
+
+
+    @server.tool()
+    def list_food_catalog(
+        search: str | None = None,
+        limit: int = 50,
+    ) -> dict[str, Any]:
+        """
+        List readable foods available for AI/MCP nutrition planning.
+
+        This tool is read-only.
+        It does not create foods, meals or dailyplans.
+        """
+        client = create_api_client()
+
+        arguments = {
+            "limit": limit,
+        }
+
+        if search is not None:
+            arguments["search"] = search
+
+        result = dispatch_tool_call(
+            client=client,
+            tool_name=TOOL_LIST_FOOD_CATALOG,
+            arguments=arguments,
+        )
+
+        return serialize_tool_result(result)
+
 
     @server.tool()
     def read_dailyplan(dailyplan_id: int) -> dict[str, Any]:
@@ -191,6 +222,7 @@ def get_protocol_allowed_tool_names() -> set[str]:
         TOOL_READ_DAILYPLAN,
         TOOL_READ_PROPOSAL,
         TOOL_LIST_USER_PROPOSALS,
+        TOOL_LIST_FOOD_CATALOG,
         TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
         TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
     }

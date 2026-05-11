@@ -6,6 +6,7 @@ TOOL_READ_PROPOSAL = "read_proposal"
 TOOL_LIST_USER_PROPOSALS = "list_user_proposals"
 TOOL_COMPARE_DAILYPLAN_TO_TARGETS = "compare_dailyplan_to_targets"
 TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL = "create_validated_dailyplan_proposal"
+TOOL_LIST_FOOD_CATALOG = "list_food_catalog"
 
 
 FORBIDDEN_TOOL_NAMES = {
@@ -122,6 +123,25 @@ ALLOWED_TOOL_SPECS = {
                 "proposed_payload": {
                     "type": "object",
                     "description": "Optional structured proposal payload.",
+                },
+            },
+        },
+    ),
+        TOOL_LIST_FOOD_CATALOG: MCPToolSpec(
+        name=TOOL_LIST_FOOD_CATALOG,
+        description="List readable foods available for AI/MCP nutrition planning.",
+        api_path="/ai-tools/list-food-catalog/",
+        input_schema={
+            "type": "object",
+            "required": [],
+            "properties": {
+                "search": {
+                    "type": "string",
+                    "description": "Optional case-insensitive food name search.",
+                },
+                "limit": {
+                    "type": "integer",
+                    "description": "Optional maximum number of foods to return.",
                 },
             },
         },
