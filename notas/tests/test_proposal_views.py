@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from notas.domain.models import (
     DailyPlan,
+    Meal,
     NutritionProposal,
 )
 
@@ -556,3 +557,261 @@ class ProposalViewTests(TestCase):
         self.assertContains(response, "a nuevo egg TEST")
         self.assertContains(response, "200.0 g")
         self.assertContains(response, "34.0")
+
+    def test_proposal_detail_shows_safe_review_actions_for_reviewable_proposal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Comida AI",
+            summary="Comida propuesta desde MCP.",
+            targets={
+                "protein": 60,
+            },
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [],
+                },
+            },
+            validation_summary={
+                "payload_validation": {
+                    "is_valid": True,
+                    "intent": "create_meal",
+                },
+                "simulation": {
+                    "intent": "create_meal",
+                    "meal": {
+                        "name": "Almuerzo IA",
+                        "foods": [],
+                        "kpis": {
+                            "protein": 62,
+                            "total_kcal": 312.8,
+                        },
+                    },
+                    "dailyplan": None,
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Revisión humana")
+        self.assertContains(response, "Aprobar propuesta")
+        self.assertContains(response, "Rechazar propuesta")
+        self.assertContains(response, "Cancelar propuesta")
+        self.assertContains(response, "Aprobar todavía no aplica cambios reales")
+
+    def test_proposal_detail_shows_closed_review_message_for_final_proposal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Comida AI aprobada",
+            status=NutritionProposal.STATUS_APPROVED,
+            reviewed_by=self.user,
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [],
+                },
+            },
+            validation_summary={
+                "simulation": {
+                    "intent": "create_meal",
+                    "meal": {
+                        "name": "Almuerzo IA",
+                        "foods": [],
+                        "kpis": {
+                            "protein": 62,
+                            "total_kcal": 312.8,
+                        },
+                    },
+                    "dailyplan": None,
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Revisión cerrada")
+        self.assertContains(response, "Esta propuesta ya no está pendiente de revisión")
+        self.assertNotContains(response, "Aprobar propuesta")
+        self.assertNotContains(response, "Rechazar propuesta")
+
+    def test_approve_create_meal_proposal_does_not_create_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": 1,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+            validation_summary={
+                "simulation": {
+                    "intent": "create_meal",
+                    "meal": {
+                        "name": "Almuerzo IA",
+                        "foods": [],
+                        "kpis": {},
+                    },
+                    "dailyplan": None,
+                },
+            },
+        )
+
+        before_meal_count = Meal.objects.count()
+        before_dailyplan_count = DailyPlan.objects.count()
+
+        response = self.client.post(
+            reverse(
+                "proposal_approve",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPROVED)
+        self.assertEqual(Meal.objects.count(), before_meal_count)
+        self.assertEqual(DailyPlan.objects.count(), before_dailyplan_count)
+
+    def test_approve_create_dailyplan_proposal_does_not_create_dailyplan_or_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Plan AI",
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [
+                        {
+                            "hour": "09:00",
+                            "note": "Desayuno",
+                            "meal": {
+                                "name": "Desayuno IA",
+                                "foods": [
+                                    {
+                                        "food_id": 1,
+                                        "quantity": 200,
+                                        "unit": "g",
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+            validation_summary={
+                "simulation": {
+                    "intent": "create_dailyplan",
+                    "meal": None,
+                    "dailyplan": {
+                        "name": "Día entrenamiento IA",
+                        "meals": [],
+                        "kpis": {},
+                    },
+                },
+            },
+        )
+
+        before_meal_count = Meal.objects.count()
+        before_dailyplan_count = DailyPlan.objects.count()
+
+        response = self.client.post(
+            reverse(
+                "proposal_approve",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPROVED)
+        self.assertEqual(Meal.objects.count(), before_meal_count)
+        self.assertEqual(DailyPlan.objects.count(), before_dailyplan_count)
+
+    def test_reject_create_dailyplan_proposal_does_not_create_dailyplan_or_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            title="Plan AI",
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [],
+                },
+            },
+            validation_summary={
+                "simulation": {
+                    "intent": "create_dailyplan",
+                    "meal": None,
+                    "dailyplan": {
+                        "name": "Día entrenamiento IA",
+                        "meals": [],
+                        "kpis": {},
+                    },
+                },
+            },
+        )
+
+        before_meal_count = Meal.objects.count()
+        before_dailyplan_count = DailyPlan.objects.count()
+
+        response = self.client.post(
+            reverse(
+                "proposal_reject",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_REJECTED)
+        self.assertEqual(Meal.objects.count(), before_meal_count)
+        self.assertEqual(DailyPlan.objects.count(), before_dailyplan_count)
