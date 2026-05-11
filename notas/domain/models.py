@@ -385,7 +385,23 @@ class MealFood(models.Model):
 # ==================================================
 
 class DailyPlan(models.Model):
+    SOURCE_MANUAL = "manual"
+    SOURCE_AI = "ai"
+    SOURCE_SYSTEM = "system"
+    SOURCE_MCP = "mcp"
+
+    SOURCE_CHOICES = (
+        (SOURCE_MANUAL, "Manual"),
+        (SOURCE_AI, "AI"),
+        (SOURCE_SYSTEM, "System"),
+        (SOURCE_MCP, "MCP"),
+    )
     name = models.CharField(max_length=100)
+    source = models.CharField(
+        max_length=20,
+        choices=SOURCE_CHOICES,
+        default=SOURCE_MANUAL,
+    )
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     original_author = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
