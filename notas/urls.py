@@ -115,6 +115,7 @@ from notas.interface.views.proposals import (
     proposal_detail,
     proposal_list,
     proposal_reject,
+    proposal_apply,
 )
 
 from notas.interface.api.ai_tools import (
@@ -345,6 +346,10 @@ urlpatterns = [
         ai_tools_create_validated_dailyplan_build_proposal,
         name="ai_tools_create_validated_dailyplan_build_proposal",
     ),
-
+    path(
+        "proposals/<int:proposal_id>/apply/",
+        proposal_apply,
+        name="proposal_apply",
+    ),
 
 ]

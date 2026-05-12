@@ -15,6 +15,12 @@ from notas.application.services.commands.proposal_commands import (
     approve_proposal,
     cancel_proposal,
     reject_proposal,
+    apply_approved_create_dailyplan_proposal,
+    apply_approved_create_meal_proposal,
+)
+from notas.application.dto.proposal_payloads import (
+    CREATE_DAILYPLAN_INTENT,
+    CREATE_MEAL_INTENT,
 )
 from notas.presentation.composition.viewmodel.components.builder_headers import (
     build_page_header,
@@ -105,6 +111,20 @@ def _build_detail_actions(proposal: dict):
             "mobile_position": "menu",
         },
     ]
+
+
+def _get_proposal_intent(proposal):
+    payload = proposal.proposed_payload
+
+    if not isinstance(payload, dict):
+        return None
+
+    intent = payload.get("intent")
+
+    if isinstance(intent, str) and intent.strip():
+        return intent.strip()
+
+    return None
 
 
 @login_required
@@ -238,4 +258,60 @@ def proposal_cancel(request, proposal_id):
     return redirect(
         "proposal_detail",
         proposal_id=proposal.id,
+    )
+
+
+@login_required
+def proposal_apply(request, proposal_id):
+    if request.method != "POST":
+        return redirect(
+            "proposal_detail",
+            proposal_id=proposal_id,
+        )
+
+    proposal = _get_proposal_model_for_action(
+        request.user,
+        proposal_id,
+    )
+
+    intent = _get_proposal_intent(proposal)
+
+    try:
+        if intent == CREATE_MEAL_INTENT:
+            result = apply_approved_create_meal_proposal(
+                user=request.user,
+                proposal=proposal,
+            )
+
+            messages.success(
+                request,
+                f'Propuesta aplicada. Comida creada: "{result.meal.name}".',
+            )
+
+        elif intent == CREATE_DAILYPLAN_INTENT:
+            result = apply_approved_create_dailyplan_proposal(
+                user=request.user,
+                proposal=proposal,
+            )
+
+            messages.success(
+                request,
+                f'Propuesta aplicada. DailyPlan creado: "{result.dailyplan.name}".',
+            )
+
+        else:
+            messages.error(
+                request,
+                "Esta propuesta no tiene un tipo aplicable.",
+            )
+
+    except ValueError as exc:
+        messages.error(
+            request,
+            f"No se pudo aplicar la propuesta: {exc}",
+        )
+
+    return redirect(
+        "proposal_detail",
+        proposal_id=proposal_id,
     )

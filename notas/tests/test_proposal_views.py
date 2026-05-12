@@ -4,7 +4,10 @@ from django.urls import reverse
 
 from notas.domain.models import (
     DailyPlan,
+    DailyPlanMeal,
+    Food,
     Meal,
+    MealFood,
     NutritionProposal,
 )
 
@@ -33,6 +36,21 @@ class ProposalViewTests(TestCase):
             created_by=self.other_user,
             is_public=False,
             is_draft=False,
+        )
+
+        self.chicken = Food.objects.create(
+            name="Pechuga pollo",
+            protein=31,
+            carbs=0,
+            fat=3.6,
+            created_by=self.user,
+        )
+        self.rice = Food.objects.create(
+            name="Arroz blanco",
+            protein=2.7,
+            carbs=28,
+            fat=0.3,
+            created_by=self.user,
         )
 
         self.proposal = NutritionProposal.objects.create(
@@ -671,7 +689,7 @@ class ProposalViewTests(TestCase):
                     "name": "Almuerzo IA",
                     "foods": [
                         {
-                            "food_id": 1,
+                            "food_id": self.chicken.id,
                             "quantity": 200,
                             "unit": "g",
                         },
@@ -729,8 +747,8 @@ class ProposalViewTests(TestCase):
                                 "name": "Desayuno IA",
                                 "foods": [
                                     {
-                                        "food_id": 1,
-                                        "quantity": 200,
+                                        "food_id": self.rice.id,
+                                        "quantity": 100,
                                         "unit": "g",
                                     },
                                 ],
@@ -815,3 +833,180 @@ class ProposalViewTests(TestCase):
         self.assertEqual(proposal.status, NutritionProposal.STATUS_REJECTED)
         self.assertEqual(Meal.objects.count(), before_meal_count)
         self.assertEqual(DailyPlan.objects.count(), before_dailyplan_count)
+
+    def test_proposal_apply_create_meal_creates_real_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": self.chicken.id,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+        )
+
+        before_meal_count = Meal.objects.count()
+
+        response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            ),
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Meal.objects.count(), before_meal_count + 1)
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPLIED)
+        self.assertContains(response, "Propuesta aplicada")
+        self.assertContains(response, "Almuerzo IA")
+
+    def test_proposal_apply_create_dailyplan_creates_real_dailyplan(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Plan AI",
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [
+                        {
+                            "hour": "09:00",
+                            "note": "Desayuno",
+                            "meal": {
+                                "name": "Desayuno IA",
+                                "foods": [
+                                    {
+                                        "food_id": self.rice.id,
+                                        "quantity": 100,
+                                        "unit": "g",
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+        )
+
+        before_dailyplan_count = DailyPlan.objects.count()
+        before_meal_count = Meal.objects.count()
+        before_dpm_count = DailyPlanMeal.objects.count()
+        before_mealfood_count = MealFood.objects.count()
+
+        response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            ),
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(DailyPlan.objects.count(), before_dailyplan_count + 1)
+        self.assertEqual(Meal.objects.count(), before_meal_count + 1)
+        self.assertEqual(DailyPlanMeal.objects.count(), before_dpm_count + 1)
+        self.assertEqual(MealFood.objects.count(), before_mealfood_count + 1)
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPLIED)
+        self.assertContains(response, "Propuesta aplicada")
+        self.assertContains(response, "Día entrenamiento IA")
+
+    def test_proposal_apply_requires_approved_status(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_PENDING_REVIEW,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": self.chicken.id,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+        )
+
+        before_meal_count = Meal.objects.count()
+
+        response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            ),
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Meal.objects.count(), before_meal_count)
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_PENDING_REVIEW)
+        self.assertContains(response, "No se pudo aplicar la propuesta")
+
+    def test_unrelated_user_cannot_apply_private_proposal(self):
+        self.client.force_login(self.other_user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": self.chicken.id,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+        )
+
+        response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(Meal.objects.count(), 0)
