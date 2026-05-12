@@ -11,6 +11,7 @@ from myscoope_mcp.protocol_server import (
 
 DEFAULT_MCP_HTTP_HOST = "127.0.0.1"
 DEFAULT_MCP_HTTP_PORT = 8001
+
 STDIO_TRANSPORT = "stdio"
 STREAMABLE_HTTP_TRANSPORT = "streamable-http"
 HTTP_TRANSPORT_ALIAS = "http"
@@ -24,9 +25,10 @@ def _get_default_http_host() -> str:
 
 
 def _get_default_http_port() -> int:
-    raw_port = os.getenv(
-        "MYSCOOPE_MCP_PORT",
-        str(DEFAULT_MCP_HTTP_PORT),
+    raw_port = (
+        os.getenv("MYSCOOPE_MCP_PORT")
+        or os.getenv("PORT")
+        or str(DEFAULT_MCP_HTTP_PORT)
     )
 
     return int(raw_port)

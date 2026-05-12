@@ -1,7 +1,10 @@
 import unittest
 from unittest.mock import patch
 
-from myscoope_mcp.run_protocol_server import main as run_protocol_server_main
+from myscoope_mcp.run_protocol_server import (
+    _get_default_http_port,
+    main as run_protocol_server_main,
+)
 
 
 class MCPLocalRuntimeTests(unittest.TestCase):
@@ -142,6 +145,90 @@ class MCPLocalRuntimeTests(unittest.TestCase):
 
         fake_server.run.assert_called_once_with(
             transport="streamable-http",
+        )
+
+    @patch.dict(
+        "os.environ",
+        {},
+        clear=True,
+    )
+    def test_default_http_port_falls_back_to_local_default(self):
+        self.assertEqual(
+            _get_default_http_port(),
+            8001,
+        )
+
+    @patch.dict(
+        "os.environ",
+        {
+            "PORT": "10000",
+        },
+        clear=True,
+    )
+    def test_default_http_port_reads_render_port(self):
+        self.assertEqual(
+            _get_default_http_port(),
+            10000,
+        )
+
+    @patch.dict(
+        "os.environ",
+        {
+            "PORT": "10000",
+            "MYSCOOPE_MCP_PORT": "9001",
+        },
+        clear=True,
+    )
+    def test_explicit_mcp_port_overrides_render_port(self):
+        self.assertEqual(
+            _get_default_http_port(),
+            9001,
+        )
+
+    @patch(
+        "sys.argv",
+        [
+            "run_protocol_server",
+            "--transport",
+            "streamable-http",
+        ],
+    )
+    @patch.dict(
+        "os.environ",
+        {
+            "MYSCOOPE_MCP_HOST": "0.0.0.0",
+            "PORT": "10000",
+        },
+        clear=True,
+    )
+    @patch("builtins.print")
+    @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
+    def test_streamable_http_uses_remote_runtime_env_defaults(
+        self,
+        mocked_create_mcp_server,
+        mocked_print,
+    ):
+        fake_server = mocked_create_mcp_server.return_value
+
+        run_protocol_server_main()
+
+        mocked_create_mcp_server.assert_called_once_with(
+            host="0.0.0.0",
+            port=10000,
+        )
+
+        fake_server.run.assert_called_once_with(
+            transport="streamable-http",
+        )
+
+        printed_lines = [
+            call.args[0]
+            for call in mocked_print.call_args_list
+        ]
+
+        self.assertIn(
+            "MCP endpoint: http://0.0.0.0:10000/mcp",
+            printed_lines,
         )
 
 
