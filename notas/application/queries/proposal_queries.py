@@ -32,6 +32,11 @@ def get_available_proposal_queryset(user):
             "dailyplan",
             "created_by",
             "reviewed_by",
+            "applied_by",
+        )
+        .prefetch_related(
+            "audit_events",
+            "audit_events__actor",
         )
         .filter(
             Q(created_by=user)
@@ -68,6 +73,38 @@ def build_proposal_list_item_dto(
     )
 
 
+def build_proposal_audit_event_dto(
+    event,
+) -> dict:
+    return {
+        "id": event.id,
+        "action": event.action,
+        "actor_id": event.actor_id,
+        "actor_username": (
+            event.actor.username
+            if event.actor
+            else None
+        ),
+        "status_before": event.status_before,
+        "status_after": event.status_after,
+        "message": event.message,
+        "metadata": event.metadata or {},
+        "created_at": _serialize_datetime(event.created_at),
+    }
+
+
+def build_proposal_audit_events_dto(
+    proposal: NutritionProposal,
+) -> list[dict]:
+    return [
+        build_proposal_audit_event_dto(event)
+        for event in proposal.audit_events.all().order_by(
+            "created_at",
+            "id",
+        )
+    ]
+
+
 def build_proposal_dto(
     proposal: NutritionProposal,
 ) -> NutritionProposalDTO:
@@ -91,10 +128,12 @@ def build_proposal_dto(
         current_snapshot=proposal.current_snapshot or {},
         proposed_payload=proposal.proposed_payload or {},
         validation_summary=proposal.validation_summary or {},
+        audit_events=build_proposal_audit_events_dto(proposal),
         is_reviewable=proposal.is_reviewable,
         is_final=proposal.is_final,
         created_at=_serialize_datetime(proposal.created_at),
         reviewed_at=_serialize_datetime(proposal.reviewed_at),
+        applied_at=_serialize_datetime(proposal.applied_at),
     )
 
 

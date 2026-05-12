@@ -31,7 +31,7 @@
     </div>
   </section>
 {% elif vm.content.proposal_review.can_apply %}
-{% elif vm.content.proposal_review.status.is_applied %}
+{% elif vm.content.proposal_review.status.is_applied and not vm.content.proposal_review.applied_result %}
   <section class="proposal-review-actions proposal-review-actions--final">
     <p class="proposal-review-eyebrow">Propuesta aplicada</p>
     <p class="proposal-review-actions-text">

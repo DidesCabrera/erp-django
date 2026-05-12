@@ -202,6 +202,7 @@ class ProposalReviewViewModelTests(SimpleTestCase):
                     "dailyplan": None,
                 },
                 "can_apply": False,
+                "applied_result": None,
             }   
         )
     
@@ -503,3 +504,65 @@ class ProposalReviewViewModelTests(SimpleTestCase):
         self.assertTrue(vm.payload.is_apply_supported)
         self.assertFalse(vm.can_apply)
 
+    def test_build_review_vm_includes_applied_meal_result(self):
+        proposal = {
+            "id": 80,
+            "title": "Comida AI",
+            "status": "applied",
+            "is_reviewable": False,
+            "is_final": True,
+            "applied_at": "2026-05-11T23:59:00+00:00",
+            "proposed_payload": {
+                "intent": "create_meal",
+            },
+            "audit_events": [
+                {
+                    "action": "applied",
+                    "metadata": {
+                        "meal_id": 123,
+                        "meal_name": "Almuerzo IA",
+                    },
+                },
+            ],
+        }
+
+        vm = build_proposal_review_vm(proposal)
+
+        self.assertIsNotNone(vm.applied_result)
+        self.assertEqual(vm.applied_result.kind, "meal")
+        self.assertEqual(vm.applied_result.object_id, 123)
+        self.assertEqual(vm.applied_result.object_name, "Almuerzo IA")
+        self.assertEqual(vm.applied_result.detail_url_name, "meal_detail")
+        self.assertFalse(vm.can_apply)
+
+
+    def test_build_review_vm_includes_applied_dailyplan_result(self):
+        proposal = {
+            "id": 81,
+            "title": "Plan AI",
+            "status": "applied",
+            "is_reviewable": False,
+            "is_final": True,
+            "applied_at": "2026-05-11T23:59:00+00:00",
+            "proposed_payload": {
+                "intent": "create_dailyplan",
+            },
+            "audit_events": [
+                {
+                    "action": "applied",
+                    "metadata": {
+                        "dailyplan_id": 456,
+                        "dailyplan_name": "Día entrenamiento IA",
+                    },
+                },
+            ],
+        }
+
+        vm = build_proposal_review_vm(proposal)
+
+        self.assertIsNotNone(vm.applied_result)
+        self.assertEqual(vm.applied_result.kind, "dailyplan")
+        self.assertEqual(vm.applied_result.object_id, 456)
+        self.assertEqual(vm.applied_result.object_name, "Día entrenamiento IA")
+        self.assertEqual(vm.applied_result.detail_url_name, "dailyplan_detail")
+        self.assertFalse(vm.can_apply)

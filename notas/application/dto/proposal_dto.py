@@ -44,6 +44,8 @@ class NutritionProposalDTO:
     is_final: bool
     created_at: str | None
     reviewed_at: str | None
+    audit_events: list[dict]
+    applied_at: str | None
 
     def as_dict(self) -> dict:
         return asdict(self)

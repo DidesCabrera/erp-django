@@ -1,0 +1,45 @@
+{% if vm.content.proposal_review.applied_result %}
+  {% with result=vm.content.proposal_review.applied_result %}
+    <section class="proposal-review-applied">
+      <div class="proposal-review-actions-copy">
+        <p class="proposal-review-eyebrow">Propuesta aplicada</p>
+
+        {% if result.kind == "meal" %}
+          <p class="proposal-review-actions-text">
+            Esta propuesta ya fue aplicada. Se creó la comida:
+            <strong>{{ result.object_name }}</strong>.
+          </p>
+
+          {% if result.object_id %}
+            <a
+              href="{% url 'meal_detail' result.object_id %}"
+              class="proposal-review-result-link"
+            >
+              Ver comida creada
+            </a>
+          {% endif %}
+
+        {% elif result.kind == "dailyplan" %}
+          <p class="proposal-review-actions-text">
+            Esta propuesta ya fue aplicada. Se creó el DailyPlan:
+            <strong>{{ result.object_name }}</strong>.
+          </p>
+
+          {% if result.object_id %}
+            <a
+              href="{% url 'dailyplan_detail' result.object_id %}"
+              class="proposal-review-result-link"
+            >
+              Ver DailyPlan creado
+            </a>
+          {% endif %}
+
+        {% else %}
+          <p class="proposal-review-actions-text">
+            Esta propuesta ya fue aplicada.
+          </p>
+        {% endif %}
+      </div>
+    </section>
+  {% endwith %}
+{% endif %}

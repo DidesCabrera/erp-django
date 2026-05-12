@@ -102,6 +102,17 @@ class ProposalReviewDailyPlanVM:
 
 
 @dataclass(frozen=True)
+class ProposalAppliedResultVM:
+    kind: str | None
+    object_id: int | None
+    object_name: str
+    detail_url_name: str | None
+
+    def as_dict(self) -> dict:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class ProposalReviewPayloadVM:
     intent: str | None
     is_create_meal: bool
@@ -139,6 +150,7 @@ class ProposalReviewVM:
     status: ProposalReviewStatusVM
     payload: ProposalReviewPayloadVM
     can_apply: bool
+    applied_result: ProposalAppliedResultVM | None
 
     def as_dict(self) -> dict:
         return {
@@ -152,6 +164,11 @@ class ProposalReviewVM:
             "status": self.status.as_dict(),
             "payload": self.payload.as_dict(),
             "can_apply": self.can_apply,
+            "applied_result": (
+                self.applied_result.as_dict()
+                if self.applied_result
+                else None
+            ),
         }
 
 
@@ -209,6 +226,11 @@ def build_proposal_review_vm(
             ),
         ),
         can_apply=can_apply,
+        applied_result=_build_applied_result_vm(
+            proposal=proposal,
+            intent=intent,
+            status=status,
+        ),
     )
 
 
@@ -223,6 +245,59 @@ def _can_apply_proposal(
         and is_apply_supported
         and not applied_at
     )
+
+
+def _build_applied_result_vm(
+    *,
+    proposal: dict[str, Any],
+    intent: str | None,
+    status: str,
+) -> ProposalAppliedResultVM | None:
+    if status != "applied":
+        return None
+
+    metadata = _extract_applied_metadata(proposal)
+
+    if intent == CREATE_MEAL_INTENT:
+        meal_id = _safe_int_or_none(metadata.get("meal_id"))
+
+        return ProposalAppliedResultVM(
+            kind="meal",
+            object_id=meal_id,
+            object_name=_safe_str(metadata.get("meal_name")),
+            detail_url_name="meal_detail" if meal_id else None,
+        )
+
+    if intent == CREATE_DAILYPLAN_INTENT:
+        dailyplan_id = _safe_int_or_none(metadata.get("dailyplan_id"))
+
+        return ProposalAppliedResultVM(
+            kind="dailyplan",
+            object_id=dailyplan_id,
+            object_name=_safe_str(metadata.get("dailyplan_name")),
+            detail_url_name="dailyplan_detail" if dailyplan_id else None,
+        )
+
+    return None
+
+
+def _extract_applied_metadata(
+    proposal: dict[str, Any],
+) -> dict[str, Any]:
+    audit_events = _safe_list(
+        proposal.get("audit_events"),
+    )
+
+    for event in reversed(audit_events):
+        if not isinstance(event, dict):
+            continue
+
+        if event.get("action") != "applied":
+            continue
+
+        return _safe_dict(event.get("metadata"))
+
+    return {}
 
 
 def _build_meal_review_vm(
