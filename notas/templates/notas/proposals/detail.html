@@ -1,202 +1,159 @@
 {% extends "notas/base.html" %}
 {% block title %}Propuesta{% endblock %}
+
 {% block content %}
 
 <div class="page page--detail">
 
-{% if vm.content.proposal_review %}
-  <section class="proposal-review-shell">
-    <div class="proposal-review-header">
-      <p class="proposal-review-eyebrow">Propuesta IA</p>
+  {% if vm.content.proposal_review %}
+    <section class="proposal-review-shell">
+      <div class="proposal-review-header">
+        <p class="proposal-review-eyebrow">Propuesta IA</p>
 
-      <h2 class="proposal-review-title">
-        {{ vm.content.proposal_review.title }}
-      </h2>
+        <h2 class="proposal-review-title">
+          {{ vm.content.proposal_review.title }}
+        </h2>
 
-      <p class="proposal-review-status">
-        Estado: {{ vm.content.proposal_review.status.status }}
-      </p>
+        <p class="proposal-review-status">
+          Estado: {{ vm.content.proposal_review.status.status }}
+        </p>
+
+        {% if vm.content.proposal_review.payload.is_create_meal %}
+          <p class="proposal-review-type">
+            Tipo: nueva comida propuesta
+          </p>
+        {% elif vm.content.proposal_review.payload.is_create_dailyplan %}
+          <p class="proposal-review-type">
+            Tipo: nuevo DailyPlan propuesto
+          </p>
+        {% else %}
+          <p class="proposal-review-type">
+            Tipo: propuesta aprobada sin aplicación automática
+          </p>
+        {% endif %}
+
+        {% if vm.content.proposal_review.summary %}
+          <p class="proposal-review-summary">
+            {{ vm.content.proposal_review.summary }}
+          </p>
+        {% endif %}
+      </div>
+
+      <section class="proposal-review-context">
+        <div class="proposal-review-context-item">
+          <span>Plan asociado</span>
+          <strong>
+            <a href="{% url 'dailyplan_detail' vm.content.proposal_review.dailyplan_id %}">
+              {{ vm.content.proposal_review.dailyplan_name }}
+            </a>
+          </strong>
+        </div>
+
+        {% if vm.content.proposal_review.created_by_username %}
+          <div class="proposal-review-context-item">
+            <span>Creador</span>
+            <strong>{{ vm.content.proposal_review.created_by_username }}</strong>
+          </div>
+        {% endif %}
+
+        {% if vm.content.proposal_review.reviewed_by_username %}
+          <div class="proposal-review-context-item">
+            <span>Revisado por</span>
+            <strong>{{ vm.content.proposal_review.reviewed_by_username }}</strong>
+          </div>
+        {% endif %}
+
+        {% if vm.content.proposal_review.payload.intent %}
+          <div class="proposal-review-context-item">
+            <span>Intent</span>
+            <strong>{{ vm.content.proposal_review.payload.intent }}</strong>
+          </div>
+        {% endif %}
+      </section>
+
+      {% if vm.content.proposal_review.payload.targets %}
+        <section class="proposal-review-card">
+          <div class="proposal-review-card-header">
+            <div>
+              <p class="proposal-review-eyebrow">Objetivos</p>
+              <h3 class="proposal-review-section-title">
+                Targets usados para validar la propuesta
+              </h3>
+            </div>
+          </div>
+
+          <div class="proposal-review-kpis">
+            {% for key, value in vm.content.proposal_review.payload.targets.items %}
+              <div class="proposal-review-kpi">
+                <span class="proposal-review-kpi-label">{{ key }}</span>
+                <strong>{{ value }}</strong>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
 
       {% if vm.content.proposal_review.payload.is_create_meal %}
-        <p class="proposal-review-type">
-          Tipo: nueva comida propuesta
-        </p>
-      {% elif vm.content.proposal_review.payload.is_create_dailyplan %}
-        <p class="proposal-review-type">
-          Tipo: nuevo DailyPlan propuesto
-        </p>
-      {% else %}
-        <p class="proposal-review-type">
-          Tipo: propuesta legacy o no clasificada
-        </p>
+        {% include "notas/proposals/partials/review_create_meal.html" %}
       {% endif %}
-    </div>
 
-    {% if vm.content.proposal_review.payload.is_create_meal %}
-      {% include "notas/proposals/partials/review_create_meal.html" %}
-    {% endif %}
-    
-    {% if vm.content.proposal_review.payload.is_create_dailyplan %}
-      {% include "notas/proposals/partials/review_create_dailyplan.html" %}
-    {% endif %}
-    
-    {% include "notas/proposals/partials/review_applied_result.html" %}
-    {% include "notas/proposals/partials/review_apply_action.html" %}
-    {% include "notas/proposals/partials/review_actions.html" %}
-  </section>
-{% endif %}
+      {% if vm.content.proposal_review.payload.is_create_dailyplan %}
+        {% include "notas/proposals/partials/review_create_dailyplan.html" %}
+      {% endif %}
 
+      {% include "notas/proposals/partials/review_applied_result.html" %}
+      {% include "notas/proposals/partials/review_apply_action.html" %}
+      {% include "notas/proposals/partials/review_actions.html" %}
+    </section>
 
-  <div class="card">
+  {% else %}
+    <section class="proposal-review-shell">
+      <div class="proposal-review-header">
+        <p class="proposal-review-eyebrow">Propuesta</p>
 
-    <div class="card-main-title">
-      <div>
-        <p class="title-card">{{ vm.content.proposal.title }}</p>
-        <p class="subtitle">
-          Plan asociado:
-          <a href="{% url 'dailyplan_detail' vm.content.proposal.dailyplan_id %}">
-            {{ vm.content.proposal.dailyplan_name }}
-          </a>
+        <h2 class="proposal-review-title">
+          {{ vm.content.proposal.title }}
+        </h2>
+
+        <p class="proposal-review-status">
+          Estado: {{ vm.content.proposal.status }}
         </p>
-      </div>
-    </div>
 
-    <div class="metadata-row">
-      <span>Estado: <strong>{{ vm.content.proposal.status }}</strong></span>
-      <span>Fuente: <strong>{{ vm.content.proposal.source }}</strong></span>
-      <span>Creador: <strong>{{ vm.content.proposal.created_by_username }}</strong></span>
-    </div>
-
-    {% if vm.content.proposal.summary %}
-      <p>{{ vm.content.proposal.summary }}</p>
-    {% endif %}
-
-  </div>
-
-  <div class="card">
-    <h3>Objetivos</h3>
-
-    {% if vm.content.proposal.targets %}
-      <div class="data-grid">
-        {% for key, value in vm.content.proposal.targets.items %}
-          <div class="data-grid-row">
-            <span>{{ key }}</span>
-            <strong>{{ value }}</strong>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>Esta propuesta no tiene objetivos definidos.</p>
-    {% endif %}
-  </div>
-
-  <div class="card">
-    <h3>Estado actual del plan</h3>
-
-    {% if vm.content.proposal.current_snapshot.actual %}
-      <div class="data-grid">
-        {% for key, value in vm.content.proposal.current_snapshot.actual.items %}
-          <div class="data-grid-row">
-            <span>{{ key }}</span>
-            <strong>{{ value }}</strong>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>No hay snapshot actual disponible.</p>
-    {% endif %}
-  </div>
-
-  <div class="card">
-    <h3>Diferencias</h3>
-
-    {% if vm.content.proposal.validation_summary.delta %}
-      <div class="data-grid">
-        {% for key, value in vm.content.proposal.validation_summary.delta.items %}
-          <div class="data-grid-row">
-            <span>{{ key }}</span>
-            <strong>{{ value }}</strong>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>No hay diferencias calculadas.</p>
-    {% endif %}
-  </div>
-
-  <div class="card">
-    <h3>Métricas de validación</h3>
-
-    {% if vm.content.proposal.validation_summary.metrics %}
-      <div class="data-grid">
-        {% for metric in vm.content.proposal.validation_summary.metrics %}
-          <div class="data-grid-row">
-            <span>
-              {{ metric.metric }}
-              <small>({{ metric.status }})</small>
-            </span>
-            <strong>
-              actual {{ metric.actual }} /
-              objetivo {{ metric.target }} /
-              delta {{ metric.delta }}
-            </strong>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>No hay métricas de validación disponibles.</p>
-    {% endif %}
-  </div>
-
-  <div class="card">
-    <h3>Cambios sugeridos</h3>
-
-    {% if vm.content.proposal.proposed_payload.suggested_changes %}
-      <div class="data-grid">
-        {% for change in vm.content.proposal.proposed_payload.suggested_changes %}
-          <div class="data-grid-row">
-            <span>{{ change.type }}</span>
-            <strong>{{ change }}</strong>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>Esta propuesta aún no contiene cambios sugeridos específicos.</p>
-    {% endif %}
-  </div>
-
-  {% if vm.content.proposal.is_reviewable %}
-    <div class="card">
-      <h3>Acciones</h3>
-
-      <div class="card-actions">
-        <form method="post" action="{% url 'proposal_approve' vm.content.proposal.id %}">
-          {% csrf_token %}
-          <button type="submit">
-            Aprobar
-          </button>
-        </form>
-
-        <form method="post" action="{% url 'proposal_reject' vm.content.proposal.id %}">
-          {% csrf_token %}
-          <button type="submit">
-            Rechazar
-          </button>
-        </form>
-
-        <form method="post" action="{% url 'proposal_cancel' vm.content.proposal.id %}">
-          {% csrf_token %}
-          <button type="submit">
-            Cancelar
-          </button>
-        </form>
+        {% if vm.content.proposal.summary %}
+          <p class="proposal-review-summary">
+            {{ vm.content.proposal.summary }}
+          </p>
+        {% endif %}
       </div>
 
-      <p>
-        Aprobar esta propuesta todavía no modifica el plan final.
-        Solo marca la propuesta como aprobada para revisión futura.
-      </p>
-    </div>
+      <section class="proposal-review-context">
+        <div class="proposal-review-context-item">
+          <span>Plan asociado</span>
+          <strong>
+            <a href="{% url 'dailyplan_detail' vm.content.proposal.dailyplan_id %}">
+              {{ vm.content.proposal.dailyplan_name }}
+            </a>
+          </strong>
+        </div>
+
+        <div class="proposal-review-context-item">
+          <span>Fuente</span>
+          <strong>{{ vm.content.proposal.source }}</strong>
+        </div>
+
+        <div class="proposal-review-context-item">
+          <span>Creador</span>
+          <strong>{{ vm.content.proposal.created_by_username }}</strong>
+        </div>
+      </section>
+
+      <section class="proposal-review-actions proposal-review-actions--final">
+        <p class="proposal-review-eyebrow">Sin vista de revisión enriquecida</p>
+        <p class="proposal-review-actions-text">
+          Esta propuesta no tiene datos suficientes para mostrar una revisión enriquecida.
+        </p>
+      </section>
+    </section>
   {% endif %}
 
 </div>

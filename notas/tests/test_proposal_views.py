@@ -116,7 +116,30 @@ class ProposalViewTests(TestCase):
         self.assertContains(response, "Increase protein")
         self.assertNotContains(response, "Private other proposal")
 
-    def test_proposal_detail_shows_validation_data(self):
+    def test_proposal_detail_renders_review_page_for_validation_proposal(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[self.proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        # Regla de producto: la propuesta existe y pertenece al usuario.
+        self.assertContains(response, self.proposal.title)
+        self.assertContains(response, self.dailyplan.name)
+
+        # Regla de producto: una proposal pending_review mantiene acciones humanas.
+        self.assertContains(response, "Aprobar propuesta")
+        self.assertContains(response, "Rechazar propuesta")
+
+        # Regla de producto: no debe mostrar acción de apply todavía.
+        self.assertNotContains(response, "Aplicar propuesta")
+
+    def test_proposal_detail_shows_proposal_review_summary(self):
         self.client.force_login(self.user)
 
         response = self.client.get(
@@ -129,9 +152,14 @@ class ProposalViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Increase protein")
         self.assertContains(response, "Training Day")
+        self.assertContains(response, "Estado: pending_review")
+        self.assertContains(response, "adjust_dailyplan_to_targets")
         self.assertContains(response, "protein")
-        self.assertContains(response, "-20")
-        self.assertContains(response, "under_target")
+        self.assertContains(response, "190")
+        self.assertContains(response, "Revisión humana")
+        self.assertContains(response, "Aprobar propuesta")
+        self.assertContains(response, "Rechazar propuesta")
+
 
     def test_proposal_detail_blocks_private_other_proposal(self):
         self.client.force_login(self.user)
