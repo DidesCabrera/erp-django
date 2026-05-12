@@ -37,7 +37,10 @@ def serialize_tool_result(
     return result.as_dict()
 
 
-def create_mcp_server() -> FastMCP:
+def create_mcp_server(
+    host: str | None = None,
+    port: int | None = None,
+) -> FastMCP:
     """
     Create the real MCP protocol server.
 
@@ -49,7 +52,18 @@ def create_mcp_server() -> FastMCP:
     """
     assert_protocol_tool_surface_is_safe()
 
-    server = FastMCP(SERVER_NAME)
+    server_kwargs: dict[str, Any] = {}
+
+    if host is not None:
+        server_kwargs["host"] = host
+
+    if port is not None:
+        server_kwargs["port"] = port
+
+    server = FastMCP(
+        SERVER_NAME,
+        **server_kwargs,
+    )
 
     register_mcp_tools(server)
 

@@ -58,11 +58,92 @@ class MCPLocalRuntimeTests(unittest.TestCase):
 
         run_protocol_server_main()
 
+        mocked_create_mcp_server.assert_called_once_with()
+
         fake_server.run.assert_called_once_with(
             transport="stdio",
+        )
+
+    @patch(
+        "sys.argv",
+        [
+            "run_protocol_server",
+            "--transport",
+            "streamable-http",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8001",
+        ],
+    )
+    @patch("builtins.print")
+    @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
+    def test_streamable_http_mode_runs_http_server(
+        self,
+        mocked_create_mcp_server,
+        mocked_print,
+    ):
+        fake_server = mocked_create_mcp_server.return_value
+
+        run_protocol_server_main()
+
+        mocked_create_mcp_server.assert_called_once_with(
+            host="127.0.0.1",
+            port=8001,
+        )
+
+        fake_server.run.assert_called_once_with(
+            transport="streamable-http",
+        )
+
+        printed_lines = [
+            call.args[0]
+            for call in mocked_print.call_args_list
+        ]
+
+        self.assertIn(
+            "my-scoope-mcp HTTP MCP server starting.",
+            printed_lines,
+        )
+        self.assertIn(
+            "MCP endpoint: http://127.0.0.1:8001/mcp",
+            printed_lines,
+        )
+        self.assertIn(
+            "Transport: streamable-http",
+            printed_lines,
+        )
+
+    @patch(
+        "sys.argv",
+        [
+            "run_protocol_server",
+            "--transport",
+            "http",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8001",
+        ],
+    )
+    @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
+    def test_http_alias_runs_streamable_http_server(
+        self,
+        mocked_create_mcp_server,
+    ):
+        fake_server = mocked_create_mcp_server.return_value
+
+        run_protocol_server_main()
+
+        mocked_create_mcp_server.assert_called_once_with(
+            host="127.0.0.1",
+            port=8001,
+        )
+
+        fake_server.run.assert_called_once_with(
+            transport="streamable-http",
         )
 
 
 if __name__ == "__main__":
     unittest.main()
-    
