@@ -35,16 +35,19 @@ def main() -> None:
             "You are an external AI connected to My Scoope through remote MCP.\n"
             "\n"
             "Goal:\n"
-            "Create one reviewable DailyPlan build proposal using foods from the My Scoope catalog.\n"
+            "Create exactly one reviewable DailyPlan build proposal using foods from the My Scoope catalog.\n"
             "The proposal must represent a complete training-day diet.\n"
             "\n"
-            "Hard rules:\n"
-            "1. Use list_food_catalog first to inspect available foods.\n"
-            "2. Use only food_id values that come from list_food_catalog.\n"
-            "3. Do not invent food IDs.\n"
-            "4. Do not create final DailyPlans. Only create a pending_review proposal.\n"
-            "5. Do not call apply tools.\n"
-            "6. Create exactly one proposal.\n"
+            "Hard safety rules:\n"
+            "1. Call list_food_catalog first with search=null and limit=50.\n"
+            "2. If list_food_catalog returns count=0, stop and do not create a proposal.\n"
+            "3. Use only food_id values returned by list_food_catalog.\n"
+            "4. Never use placeholder food_id values such as 0.\n"
+            "5. Never use quantity <= 0.\n"
+            "6. Do not invent food IDs.\n"
+            "7. Do not create final DailyPlans. Only create a pending_review proposal.\n"
+            "8. Do not call apply tools.\n"
+            "9. Create exactly one proposal.\n"
             "\n"
             f"Associated base dailyplan_id: {DAILYPLAN_ID}\n"
             "\n"
@@ -54,14 +57,27 @@ def main() -> None:
             "- carbs: flexible\n"
             "- fat: flexible\n"
             "\n"
-            "DailyPlan structure requested:\n"
+            "Requested meal structure:\n"
             "- Desayuno\n"
             "- Almuerzo\n"
             "- Intraentreno\n"
             "- Post entreno\n"
             "- Cena\n"
             "\n"
-            "Use this exact top-level payload when calling create_validated_dailyplan_build_proposal:\n"
+            "Preferred catalog foods if available:\n"
+            "- Avena Integral\n"
+            "- Leche Descremada\n"
+            "- Plátano or another fruit\n"
+            "- Arroz Blanco Cocido\n"
+            "- Pechuga Pollo Cocida\n"
+            "- Dextrosa\n"
+            "- Whey Protein if available\n"
+            "- Palta\n"
+            "- Nueces\n"
+            "- Frambuesas\n"
+            "- Huevo Cocido\n"
+            "\n"
+            "When calling create_validated_dailyplan_build_proposal, use this exact top-level shape:\n"
             "{\n"
             f'  "dailyplan_id": {DAILYPLAN_ID},\n'
             '  "title": "OpenAI remote MCP - Dieta completa de entrenamiento",\n'
@@ -79,7 +95,47 @@ def main() -> None:
             '          "meal": {\n'
             '            "name": "Desayuno IA",\n'
             '            "foods": [\n'
-            '              {"food_id": 0, "quantity": 0, "unit": "g"}\n'
+            '              {"food_id": REAL_FOOD_ID_FROM_CATALOG, "quantity": POSITIVE_NUMBER, "unit": "g"}\n'
+            '            ]\n'
+            '          }\n'
+            '        },\n'
+            '        {\n'
+            '          "hour": "13:00",\n'
+            '          "note": "Almuerzo",\n'
+            '          "meal": {\n'
+            '            "name": "Almuerzo IA",\n'
+            '            "foods": [\n'
+            '              {"food_id": REAL_FOOD_ID_FROM_CATALOG, "quantity": POSITIVE_NUMBER, "unit": "g"}\n'
+            '            ]\n'
+            '          }\n'
+            '        },\n'
+            '        {\n'
+            '          "hour": "16:00",\n'
+            '          "note": "Intraentreno",\n'
+            '          "meal": {\n'
+            '            "name": "Intraentreno IA",\n'
+            '            "foods": [\n'
+            '              {"food_id": REAL_FOOD_ID_FROM_CATALOG, "quantity": POSITIVE_NUMBER, "unit": "g"}\n'
+            '            ]\n'
+            '          }\n'
+            '        },\n'
+            '        {\n'
+            '          "hour": "18:00",\n'
+            '          "note": "Post entreno",\n'
+            '          "meal": {\n'
+            '            "name": "Post entreno IA",\n'
+            '            "foods": [\n'
+            '              {"food_id": REAL_FOOD_ID_FROM_CATALOG, "quantity": POSITIVE_NUMBER, "unit": "g"}\n'
+            '            ]\n'
+            '          }\n'
+            '        },\n'
+            '        {\n'
+            '          "hour": "21:00",\n'
+            '          "note": "Cena",\n'
+            '          "meal": {\n'
+            '            "name": "Cena IA",\n'
+            '            "foods": [\n'
+            '              {"food_id": REAL_FOOD_ID_FROM_CATALOG, "quantity": POSITIVE_NUMBER, "unit": "g"}\n'
             '            ]\n'
             '          }\n'
             '        }\n'
@@ -87,16 +143,19 @@ def main() -> None:
             '    },\n'
             '    "analysis": {\n'
             '      "goal": "Crear una dieta completa de entrenamiento aproximada a 2800 kcal y 190 g de proteína.",\n'
-            '      "safety_boundary": "La IA solo crea una propuesta pendiente de revisión; no aplica cambios directamente."\n'
+            '      "safety_boundary": "La IA solo crea una propuesta pendiente de revisión; no aplica cambios directamente.",\n'
+            '      "catalog_rule": "Todos los food_id usados provienen de list_food_catalog."\n'
             '    }\n'
             '  }\n'
             "}\n"
             "\n"
-            "Important:\n"
-            "- Replace the example food_id 0 and quantity 0 with real catalog food IDs and useful quantities.\n"
-            "- Include multiple foods per meal when appropriate.\n"
-            "- Keep units as 'g' unless the catalog clearly implies another unit.\n"
-            "- After creating the proposal, list proposals and report the created proposal id.\n"
+            "Before calling create_validated_dailyplan_build_proposal:\n"
+            "- Replace every REAL_FOOD_ID_FROM_CATALOG with an actual food_id from list_food_catalog.\n"
+            "- Replace every POSITIVE_NUMBER with a positive numeric quantity.\n"
+            "- Ensure no placeholders remain in proposed_payload.\n"
+            "- Ensure all meals contain at least one food.\n"
+            "\n"
+            "After creating the proposal, call list_user_proposals and report the created proposal id if available.\n"
         ),
     )
 
