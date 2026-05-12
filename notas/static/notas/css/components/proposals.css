@@ -262,3 +262,32 @@
       width: 100%;
     }
   }
+
+  .proposal-review-apply {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    background: rgba(37, 99, 235, 0.06);
+  }
+  
+  .proposal-review-action--apply {
+    background: rgba(37, 99, 235, 0.14);
+    color: rgb(29, 78, 216);
+  }
+  
+  @media (max-width: 760px) {
+    .proposal-review-apply {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  
+    .proposal-review-apply form,
+    .proposal-review-action--apply {
+      width: 100%;
+    }
+  }

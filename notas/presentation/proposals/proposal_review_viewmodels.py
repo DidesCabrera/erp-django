@@ -5,12 +5,19 @@ from typing import Any
 CREATE_MEAL_INTENT = "create_meal"
 CREATE_DAILYPLAN_INTENT = "create_dailyplan"
 
+APPLY_SUPPORTED_INTENTS = {
+    CREATE_MEAL_INTENT,
+    CREATE_DAILYPLAN_INTENT,
+}
+
 
 @dataclass(frozen=True)
 class ProposalReviewStatusVM:
     status: str
     is_reviewable: bool
     is_final: bool
+    is_approved: bool
+    is_applied: bool
 
     def as_dict(self) -> dict:
         return asdict(self)
@@ -99,6 +106,7 @@ class ProposalReviewPayloadVM:
     intent: str | None
     is_create_meal: bool
     is_create_dailyplan: bool
+    is_apply_supported: bool
     proposed_payload: dict[str, Any]
     simulation: dict[str, Any] | None
     targets: dict[str, Any]
@@ -110,6 +118,7 @@ class ProposalReviewPayloadVM:
             "intent": self.intent,
             "is_create_meal": self.is_create_meal,
             "is_create_dailyplan": self.is_create_dailyplan,
+            "is_apply_supported": self.is_apply_supported,
             "proposed_payload": self.proposed_payload,
             "simulation": self.simulation,
             "targets": self.targets,
@@ -129,6 +138,7 @@ class ProposalReviewVM:
     reviewed_by_username: str | None
     status: ProposalReviewStatusVM
     payload: ProposalReviewPayloadVM
+    can_apply: bool
 
     def as_dict(self) -> dict:
         return {
@@ -141,6 +151,7 @@ class ProposalReviewVM:
             "reviewed_by_username": self.reviewed_by_username,
             "status": self.status.as_dict(),
             "payload": self.payload.as_dict(),
+            "can_apply": self.can_apply,
         }
 
 
@@ -157,6 +168,14 @@ def build_proposal_review_vm(
     intent = _extract_intent(proposed_payload)
     simulation = _extract_simulation(validation_summary)
 
+    status = _safe_str(proposal.get("status"))
+    is_apply_supported = intent in APPLY_SUPPORTED_INTENTS
+    can_apply = _can_apply_proposal(
+        status=status,
+        is_apply_supported=is_apply_supported,
+        applied_at=proposal.get("applied_at"),
+    )
+
     return ProposalReviewVM(
         proposal_id=proposal.get("id"),
         title=proposal.get("title", ""),
@@ -166,14 +185,17 @@ def build_proposal_review_vm(
         created_by_username=proposal.get("created_by_username"),
         reviewed_by_username=proposal.get("reviewed_by_username"),
         status=ProposalReviewStatusVM(
-            status=proposal.get("status", ""),
+            status=status,
             is_reviewable=bool(proposal.get("is_reviewable")),
             is_final=bool(proposal.get("is_final")),
+            is_approved=status == "approved",
+            is_applied=status == "applied",
         ),
         payload=ProposalReviewPayloadVM(
             intent=intent,
             is_create_meal=intent == CREATE_MEAL_INTENT,
             is_create_dailyplan=intent == CREATE_DAILYPLAN_INTENT,
+            is_apply_supported=is_apply_supported,
             proposed_payload=proposed_payload,
             simulation=simulation,
             targets=_safe_dict(proposal.get("targets")),
@@ -186,6 +208,20 @@ def build_proposal_review_vm(
                 simulation=simulation,
             ),
         ),
+        can_apply=can_apply,
+    )
+
+
+def _can_apply_proposal(
+    *,
+    status: str,
+    is_apply_supported: bool,
+    applied_at: Any,
+) -> bool:
+    return (
+        status == "approved"
+        and is_apply_supported
+        and not applied_at
     )
 
 

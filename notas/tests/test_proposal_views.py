@@ -629,15 +629,16 @@ class ProposalViewTests(TestCase):
         self.assertContains(response, "Cancelar propuesta")
         self.assertContains(response, "Aprobar todavía no aplica cambios reales")
 
-    def test_proposal_detail_shows_closed_review_message_for_final_proposal(self):
+
+    def test_proposal_detail_shows_closed_review_message_for_rejected_proposal(self):
         self.client.force_login(self.user)
 
         proposal = NutritionProposal.objects.create(
             dailyplan=self.dailyplan,
             created_by=self.user,
             source=NutritionProposal.SOURCE_AI,
-            title="Comida AI aprobada",
-            status=NutritionProposal.STATUS_APPROVED,
+            title="Comida AI rechazada",
+            status=NutritionProposal.STATUS_REJECTED,
             reviewed_by=self.user,
             proposed_payload={
                 "intent": "create_meal",
@@ -674,6 +675,9 @@ class ProposalViewTests(TestCase):
         self.assertContains(response, "Esta propuesta ya no está pendiente de revisión")
         self.assertNotContains(response, "Aprobar propuesta")
         self.assertNotContains(response, "Rechazar propuesta")
+        self.assertNotContains(response, "Aplicar propuesta")
+
+
 
     def test_approve_create_meal_proposal_does_not_create_meal(self):
         self.client.force_login(self.user)
@@ -1010,3 +1014,151 @@ class ProposalViewTests(TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(Meal.objects.count(), 0)
+
+    def test_proposal_detail_shows_apply_button_for_approved_create_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": self.chicken.id,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Aplicación segura")
+        self.assertContains(response, "Aplicar propuesta")
+        self.assertContains(response, "se crearán objetos reales")
+        self.assertNotContains(response, "Aprobar propuesta")
+        self.assertNotContains(response, "Rechazar propuesta")
+
+
+    def test_proposal_detail_shows_apply_button_for_approved_create_dailyplan(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Plan AI",
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [
+                        {
+                            "meal": {
+                                "name": "Desayuno IA",
+                                "foods": [
+                                    {
+                                        "food_id": self.rice.id,
+                                        "quantity": 100,
+                                        "unit": "g",
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Aplicación segura")
+        self.assertContains(response, "Aplicar propuesta")
+        self.assertNotContains(response, "Aprobar propuesta")
+        self.assertNotContains(response, "Rechazar propuesta")
+
+
+    def test_proposal_detail_does_not_show_apply_button_for_pending_review(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_PENDING_REVIEW,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": self.chicken.id,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Aplicar propuesta")
+        self.assertContains(response, "Aprobar propuesta")
+        self.assertContains(response, "Rechazar propuesta")
+
+
+    def test_proposal_detail_does_not_show_apply_button_for_unsupported_intent(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Legacy approved",
+            proposed_payload={
+                "intent": "adjust_dailyplan_to_targets",
+                "suggested_changes": [],
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Aplicar propuesta")
+        self.assertContains(response, "Revisión cerrada")
+

@@ -30,6 +30,14 @@
       </form>
     </div>
   </section>
+{% elif vm.content.proposal_review.can_apply %}
+{% elif vm.content.proposal_review.status.is_applied %}
+  <section class="proposal-review-actions proposal-review-actions--final">
+    <p class="proposal-review-eyebrow">Propuesta aplicada</p>
+    <p class="proposal-review-actions-text">
+      Esta propuesta ya fue aplicada.
+    </p>
+  </section>
 {% else %}
   <section class="proposal-review-actions proposal-review-actions--final">
     <p class="proposal-review-eyebrow">Revisión cerrada</p>

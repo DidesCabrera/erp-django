@@ -183,11 +183,14 @@ class ProposalReviewViewModelTests(SimpleTestCase):
                     "status": "pending_review",
                     "is_reviewable": True,
                     "is_final": False,
+                    "is_approved": False,
+                    "is_applied": False,
                 },
                 "payload": {
                     "intent": "create_meal",
                     "is_create_meal": True,
                     "is_create_dailyplan": False,
+                    "is_apply_supported": True,
                     "proposed_payload": {
                         "intent": "create_meal",
                     },
@@ -198,7 +201,8 @@ class ProposalReviewViewModelTests(SimpleTestCase):
                     "meal": None,
                     "dailyplan": None,
                 },
-            },
+                "can_apply": False,
+            }   
         )
     
     def test_build_review_vm_includes_create_meal_render_data(self):
@@ -387,4 +391,115 @@ class ProposalReviewViewModelTests(SimpleTestCase):
         self.assertEqual(food.food_name, "a nuevo egg TEST")
         self.assertEqual(food.quantity, 200.0)
         self.assertEqual(food.total_kcal, 34.0)
+
+    def test_build_review_vm_can_apply_approved_create_meal(self):
+        proposal = {
+            "id": 70,
+            "title": "Comida AI",
+            "summary": "",
+            "dailyplan_id": 128,
+            "dailyplan_name": "Menú Dia Entrenamiento",
+            "created_by_username": "felipe",
+            "reviewed_by_username": "felipe",
+            "status": "approved",
+            "is_reviewable": False,
+            "is_final": True,
+            "applied_at": None,
+            "targets": {},
+            "proposed_payload": {
+                "intent": "create_meal",
+            },
+            "validation_summary": {},
+        }
+
+        vm = build_proposal_review_vm(proposal)
+
+        self.assertTrue(vm.status.is_approved)
+        self.assertFalse(vm.status.is_applied)
+        self.assertTrue(vm.payload.is_apply_supported)
+        self.assertTrue(vm.can_apply)
+
+
+    def test_build_review_vm_can_apply_approved_create_dailyplan(self):
+        proposal = {
+            "id": 71,
+            "title": "Plan AI",
+            "summary": "",
+            "dailyplan_id": 128,
+            "dailyplan_name": "Menú Dia Entrenamiento",
+            "created_by_username": "felipe",
+            "reviewed_by_username": "felipe",
+            "status": "approved",
+            "is_reviewable": False,
+            "is_final": True,
+            "applied_at": None,
+            "targets": {},
+            "proposed_payload": {
+                "intent": "create_dailyplan",
+            },
+            "validation_summary": {},
+        }
+
+        vm = build_proposal_review_vm(proposal)
+
+        self.assertTrue(vm.status.is_approved)
+        self.assertTrue(vm.payload.is_apply_supported)
+        self.assertTrue(vm.can_apply)
+
+
+    def test_build_review_vm_cannot_apply_pending_review(self):
+        proposal = {
+            "id": 72,
+            "title": "Comida AI",
+            "status": "pending_review",
+            "is_reviewable": True,
+            "is_final": False,
+            "applied_at": None,
+            "proposed_payload": {
+                "intent": "create_meal",
+            },
+        }
+
+        vm = build_proposal_review_vm(proposal)
+
+        self.assertFalse(vm.can_apply)
+
+
+    def test_build_review_vm_cannot_apply_unsupported_intent(self):
+        proposal = {
+            "id": 73,
+            "title": "Legacy",
+            "status": "approved",
+            "is_reviewable": False,
+            "is_final": True,
+            "applied_at": None,
+            "proposed_payload": {
+                "intent": "adjust_dailyplan_to_targets",
+            },
+        }
+
+        vm = build_proposal_review_vm(proposal)
+
+        self.assertFalse(vm.payload.is_apply_supported)
+        self.assertFalse(vm.can_apply)
+
+
+    def test_build_review_vm_cannot_apply_already_applied(self):
+        proposal = {
+            "id": 74,
+            "title": "Comida AI",
+            "status": "applied",
+            "is_reviewable": False,
+            "is_final": True,
+            "applied_at": "2026-05-11T23:59:00+00:00",
+            "proposed_payload": {
+                "intent": "create_meal",
+            },
+        }
+
+        vm = build_proposal_review_vm(proposal)
+
+        self.assertTrue(vm.status.is_applied)
+        self.assertTrue(vm.payload.is_apply_supported)
+        self.assertFalse(vm.can_apply)
 

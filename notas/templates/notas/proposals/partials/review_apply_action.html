@@ -1,0 +1,17 @@
+{% if vm.content.proposal_review.can_apply %}
+  <section class="proposal-review-apply">
+    <div class="proposal-review-actions-copy">
+      <p class="proposal-review-eyebrow">Aplicación segura</p>
+      <p class="proposal-review-actions-text">
+        Esta propuesta ya fue aprobada. Al aplicarla se crearán objetos reales en tu librería.
+      </p>
+    </div>
+
+    <form method="post" action="{% url 'proposal_apply' vm.content.proposal_review.proposal_id %}">
+      {% csrf_token %}
+      <button type="submit" class="proposal-review-action proposal-review-action--apply">
+        Aplicar propuesta
+      </button>
+    </form>
+  </section>
+{% endif %}

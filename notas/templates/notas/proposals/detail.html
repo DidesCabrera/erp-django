@@ -39,7 +39,8 @@
     {% if vm.content.proposal_review.payload.is_create_dailyplan %}
       {% include "notas/proposals/partials/review_create_dailyplan.html" %}
     {% endif %}
-
+    
+    {% include "notas/proposals/partials/review_apply_action.html" %}
     {% include "notas/proposals/partials/review_actions.html" %}
   </section>
 {% endif %}
