@@ -231,3 +231,6 @@ PY
 git add .
 git commit -m "Document remote MCP deployment and safety checklist"
 git push origin main
+
+
+python scripts/openai_remote_mcp_smoke.py

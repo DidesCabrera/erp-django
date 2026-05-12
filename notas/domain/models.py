@@ -92,7 +92,15 @@ class Food(models.Model):
     carbs = models.FloatField()
     fat = models.FloatField()
 
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    is_global = models.BooleanField(
+        default=False,
+        help_text="If true, this food is available to every user as part of the global catalog.",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -129,10 +137,10 @@ class Food(models.Model):
 
     @property
     def category(self):
-        if self.created_by_id is None:
+        if self.is_global or self.created_by_id is None:
             return "system"
-        return "user"
 
+        return "user"
 
 # ==================================================
 # MEAL + MEAL FOOD

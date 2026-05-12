@@ -132,13 +132,14 @@ def _resolve_food_source(
     food,
     user,
 ) -> str:
-    if food.created_by_id is None:
+    if food.is_global or food.created_by_id is None:
         return "system"
 
     if food.created_by_id == user.id:
         return "user"
 
     return "unknown"
+
 
 
 def _normalize_search(search: str | None) -> str | None:

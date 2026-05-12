@@ -57,6 +57,14 @@ class ReadBoundaryTests(TestCase):
             fat=1,
             created_by=self.other_user,
         )
+        self.global_other_food = Food.objects.create(
+            name="Global Other Food",
+            protein=20,
+            carbs=10,
+            fat=2,
+            created_by=self.other_user,
+            is_global=True,
+        )
 
         self.user_meal = Meal.objects.create(
             name="User Meal",
@@ -173,7 +181,11 @@ class ReadBoundaryTests(TestCase):
 
         self.assertIn("User Food", names)
         self.assertIn("System Food", names)
+        self.assertIn("Global Other Food", names)
         self.assertNotIn("Other Food", names)
+
+
+
 
     def test_readable_food_or_404_blocks_other_user_food(self):
         with self.assertRaises(Http404):

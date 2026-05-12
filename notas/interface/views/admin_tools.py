@@ -189,12 +189,40 @@ def admin_food_catalog(request):
                     invalid_rows.append(index + 2)
                     continue
 
-                food.name = str(name).strip()
-                food.protein = protein
-                food.carbs = carbs
-                food.fat = fat
-                food.save(update_fields=["name", "protein", "carbs", "fat"])
-                updated += 1
+            food.name = str(name).strip()
+            food.protein = protein
+            food.carbs = carbs
+            food.fat = fat
+
+            update_fields = [
+                "name",
+                "protein",
+                "carbs",
+                "fat",
+            ]
+
+            if "is_global" in df.columns:
+                raw_is_global = row.get("is_global")
+
+                if not pd.isna(raw_is_global):
+                    if isinstance(raw_is_global, str):
+                        normalized_is_global = raw_is_global.strip().lower()
+                        food.is_global = normalized_is_global in {
+                            "1",
+                            "true",
+                            "t",
+                            "yes",
+                            "y",
+                            "si",
+                            "sí",
+                        }
+                    else:
+                        food.is_global = bool(raw_is_global)
+
+                    update_fields.append("is_global")
+
+            food.save(update_fields=update_fields)
+            updated += 1
 
             if missing_ids:
                 messages.warning(
@@ -235,7 +263,7 @@ def admin_foods_template(request):
     response["Content-Disposition"] = 'attachment; filename="foods_update_template.csv"'
 
     writer = csv.writer(response, delimiter=";")
-    writer.writerow(["id", "name", "protein", "carbs", "fat"])
-    writer.writerow([1, "Chicken breast", "31,0", "0,0", "3,6"])
+    writer.writerow(["id", "name", "protein", "carbs", "fat", "is_global"])
+    writer.writerow([1, "Chicken breast", "31,0", "0,0", "3,6", "true"])
 
     return response

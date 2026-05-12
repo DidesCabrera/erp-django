@@ -51,6 +51,14 @@ class FoodCatalogQueryTests(TestCase):
             fat=100,
             created_by=self.other_user,
         )
+        self.global_other_food = Food.objects.create(
+            name="Global Other Food",
+            protein=20,
+            carbs=10,
+            fat=2,
+            created_by=self.other_user,
+            is_global=True,
+        )
 
     def test_list_food_catalog_returns_readable_foods(self):
         catalog = list_food_catalog_for_planning(
@@ -68,8 +76,9 @@ class FoodCatalogQueryTests(TestCase):
         self.assertIn("Pechuga pollo", food_names)
         self.assertIn("Arroz blanco", food_names)
         self.assertNotIn("Private Other Food", food_names)
+        self.assertIn("Global Other Food", food_names)
 
-        self.assertEqual(data["count"], 3)
+        self.assertEqual(data["count"], 4)
         self.assertEqual(data["limit"], DEFAULT_FOOD_CATALOG_LIMIT)
         self.assertIsNone(data["search"])
 
@@ -88,6 +97,7 @@ class FoodCatalogQueryTests(TestCase):
         self.assertEqual(sources_by_name["Plátano"], "system")
         self.assertEqual(sources_by_name["Pechuga pollo"], "user")
         self.assertEqual(sources_by_name["Arroz blanco"], "user")
+        self.assertEqual(sources_by_name["Global Other Food"], "system")
 
     def test_list_food_catalog_returns_macros_and_kcal_per_100g(self):
         catalog = list_food_catalog_for_planning(
@@ -132,7 +142,7 @@ class FoodCatalogQueryTests(TestCase):
 
         data = catalog.as_dict()
 
-        self.assertEqual(data["count"], 3)
+        self.assertEqual(data["count"], 4)
         self.assertIsNone(data["search"])
 
     def test_list_food_catalog_respects_limit(self):

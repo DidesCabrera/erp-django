@@ -22,17 +22,25 @@ def get_readable_food_queryset(user):
     """
     Foods legibles para el usuario:
     - alimentos propios;
-    - alimentos de sistema, creados sin usuario.
+    - alimentos globales;
+    - alimentos legacy de sistema, creados sin usuario.
+
+    Regla de negocio:
+    - is_global=True => disponible para todos;
+    - created_by=user => disponible solo para ese usuario;
+    - created_by=None => tratado como system/legacy global.
     """
     return (
         Food.objects
         .filter(
             Q(created_by=user)
+            | Q(is_global=True)
             | Q(created_by__isnull=True)
         )
         .distinct()
         .order_by("name", "id")
     )
+
 
 
 def get_readable_food_or_404(user, food_id: int):
