@@ -134,3 +134,100 @@ Arguments: -m myscoope_mcp.run_protocol_server
 
 PYTHONPATH=mcp_server
 MYSCOOPE_API_BASE_URL=http://127.0.0.1:8000/app
+
+
+
+
+
+
+
+## Probar entorno local para MCP
+
+cd desktop
+cd proyecto_django
+source /Users/felipedides/Desktop/proyecto_django/venv/bin/activate
+
+
+export MYSCOOPE_INTERNAL_API_TOKEN="dev-mcp-token"
+export MYSCOOPE_INTERNAL_API_USERNAME="felipe"
+python manage.py runserver
+
+PYTHONPATH=mcp_server python -m myscoope_mcp.run_protocol_server --check
+
+MCP inspector
+
+npx @modelcontextprotocol/inspector
+
+PYTHONPATH=mcp_server python -m myscoope_mcp.run_protocol_server
+
+Transport Type: STDIO
+Command: /Users/felipedides/Desktop/proyecto_django/venv/bin/python
+Arguments: -m myscoope_mcp.run_protocol_server
+
+PYTHONPATH=mcp_server
+MYSCOOPE_API_BASE_URL=http://127.0.0.1:8000/app
+MYSCOOPE_API_AUTH_TOKEN=dev-mcp-token
+
+
+
+
+
+git add .
+git commit -m "Add proposal payload validators"
+
+
+
+
+
+PYTHONPATH
+mcp_server
+
+MYSCOOPE_API_BASE_URL
+http://127.0.0.1:8000/app
+
+MYSCOOPE_API_AUTH_TOKEN
+dev-mcp-token
+
+
+
+MYSCOOPE_MCP_TRANSPORT=streamable-http
+MYSCOOPE_MCP_HOST=0.0.0.0
+MYSCOOPE_API_BASE_URL=https://www.myscoope.com/app
+MYSCOOPE_API_AUTH_TOKEN=<token-interno-mcp-a-django>
+
+
+
+
+MYSCOOPE_MCP_TRANSPORT
+streamable-http
+
+MYSCOOPE_MCP_HOST
+0.0.0.0
+
+MYSCOOPE_MCP_PUBLIC_URL
+https://<url-del-servicio-mcp>.onrender.com
+
+MYSCOOPE_MCP_EXTERNAL_AUTH_TOKEN
+<token-externo-largo>
+
+MYSCOOPE_API_BASE_URL
+https://www.myscoope.com/app
+
+MYSCOOPE_API_AUTH_TOKEN
+<token-interno-mcp-a-django>
+
+PYTHON_VERSION
+3.13.5
+
+---
+
+
+python - <<'PY'
+import secrets
+
+print(secrets.token_urlsafe(48))
+PY
+
+git add .
+git commit -m "Document remote MCP deployment and safety checklist"
+git push origin main
