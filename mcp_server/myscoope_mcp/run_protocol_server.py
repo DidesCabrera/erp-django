@@ -1,6 +1,11 @@
 import argparse
 import os
 
+from myscoope_mcp.auth import (
+    create_external_mcp_auth_settings,
+    create_external_mcp_token_verifier,
+    get_mcp_public_url,
+)
 from myscoope_mcp.protocol_server import (
     SERVER_NAME,
     assert_protocol_tool_surface_is_safe,
@@ -52,10 +57,40 @@ def _print_registered_tools() -> None:
 def _print_http_runtime_info(
     host: str,
     port: int,
+    public_url: str,
 ) -> None:
     print(f"{SERVER_NAME} HTTP MCP server starting.")
     print(f"MCP endpoint: http://{host}:{port}/mcp")
+    print(f"Public MCP URL: {public_url}/mcp")
     print(f"Transport: {STREAMABLE_HTTP_TRANSPORT}")
+    print("External MCP auth: enabled")
+
+
+def _create_http_mcp_server(
+    host: str,
+    port: int,
+):
+    public_url = get_mcp_public_url(
+        host=host,
+        port=port,
+    )
+
+    token_verifier = create_external_mcp_token_verifier(
+        public_url=public_url,
+    )
+
+    auth_settings = create_external_mcp_auth_settings(
+        public_url=public_url,
+    )
+
+    server = create_mcp_server(
+        host=host,
+        port=port,
+        token_verifier=token_verifier,
+        auth_settings=auth_settings,
+    )
+
+    return server, public_url
 
 
 def main() -> None:
@@ -98,7 +133,7 @@ def main() -> None:
     assert_protocol_tool_surface_is_safe()
 
     if transport == STREAMABLE_HTTP_TRANSPORT:
-        server = create_mcp_server(
+        server, public_url = _create_http_mcp_server(
             host=args.host,
             port=args.port,
         )
@@ -110,6 +145,7 @@ def main() -> None:
         _print_http_runtime_info(
             host=args.host,
             port=args.port,
+            public_url=public_url,
         )
 
         server.run(

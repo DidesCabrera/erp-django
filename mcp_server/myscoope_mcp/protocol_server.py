@@ -17,6 +17,9 @@ from myscoope_mcp.tools import (
     TOOL_READ_PROPOSAL,
     TOOL_LIST_FOOD_CATALOG,
 )
+from mcp.server.auth.provider import TokenVerifier
+from mcp.server.auth.settings import AuthSettings
+
 
 
 SERVER_NAME = "my-scoope-mcp"
@@ -37,9 +40,12 @@ def serialize_tool_result(
     return result.as_dict()
 
 
+
 def create_mcp_server(
     host: str | None = None,
     port: int | None = None,
+    token_verifier: TokenVerifier | None = None,
+    auth_settings: AuthSettings | None = None,
 ) -> FastMCP:
     """
     Create the real MCP protocol server.
@@ -52,13 +58,22 @@ def create_mcp_server(
     """
     assert_protocol_tool_surface_is_safe()
 
-    server_kwargs: dict[str, Any] = {}
+    server_kwargs: dict[str, Any] = {
+        "stateless_http": True,
+        "json_response": True,
+    }
 
     if host is not None:
         server_kwargs["host"] = host
 
     if port is not None:
         server_kwargs["port"] = port
+
+    if token_verifier is not None:
+        server_kwargs["token_verifier"] = token_verifier
+
+    if auth_settings is not None:
+        server_kwargs["auth"] = auth_settings
 
     server = FastMCP(
         SERVER_NAME,
@@ -68,6 +83,7 @@ def create_mcp_server(
     register_mcp_tools(server)
 
     return server
+
 
 
 def register_mcp_tools(server: FastMCP) -> None:

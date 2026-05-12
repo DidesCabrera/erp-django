@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import os
 from typing import Any
 
 from mcp import ClientSession
@@ -26,6 +27,20 @@ def _parse_json_object(raw_value: str) -> dict[str, Any]:
     return parsed
 
 
+def _build_headers(token: str | None) -> dict[str, str] | None:
+    if token is None:
+        return None
+
+    token = token.strip()
+
+    if not token:
+        return None
+
+    return {
+        "Authorization": f"Bearer {token}",
+    }
+
+
 def _print_tools(tools: Any) -> None:
     print("Available MCP tools:")
 
@@ -37,8 +52,14 @@ async def _run_smoke_client(
     url: str,
     tool_name: str | None,
     tool_arguments: dict[str, Any],
+    token: str | None,
 ) -> None:
-    async with streamablehttp_client(url) as (
+    headers = _build_headers(token)
+
+    async with streamablehttp_client(
+        url,
+        headers=headers,
+    ) as (
         read_stream,
         write_stream,
         _,
@@ -89,6 +110,11 @@ def main() -> None:
         default={},
         help="JSON object with tool arguments.",
     )
+    parser.add_argument(
+        "--token",
+        default=os.getenv("MYSCOOPE_MCP_EXTERNAL_AUTH_TOKEN"),
+        help="Bearer token for the external MCP server.",
+    )
 
     args = parser.parse_args()
 
@@ -97,6 +123,7 @@ def main() -> None:
             url=args.url,
             tool_name=args.tool,
             tool_arguments=args.arguments,
+            token=args.token,
         )
     )
 
