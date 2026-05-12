@@ -2,9 +2,20 @@
   <section class="proposal-review-apply">
     <div class="proposal-review-actions-copy">
       <p class="proposal-review-eyebrow">Aplicación segura</p>
-      <p class="proposal-review-actions-text">
-        Esta propuesta ya fue aprobada. Al aplicarla se crearán objetos reales en tu librería.
-      </p>
+
+      {% if vm.content.proposal_review.payload.is_create_meal %}
+        <p class="proposal-review-actions-text">
+          Esta propuesta ya fue aprobada. Al aplicarla se creará una comida real en tu librería.
+        </p>
+      {% elif vm.content.proposal_review.payload.is_create_dailyplan %}
+        <p class="proposal-review-actions-text">
+          Esta propuesta ya fue aprobada. Al aplicarla se creará un DailyPlan real en tu librería.
+        </p>
+      {% else %}
+        <p class="proposal-review-actions-text">
+          Esta propuesta ya fue aprobada. Al aplicarla se crearán objetos reales en tu librería.
+        </p>
+      {% endif %}
     </div>
 
     <form method="post" action="{% url 'proposal_apply' vm.content.proposal_review.proposal_id %}">

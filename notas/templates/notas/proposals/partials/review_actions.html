@@ -30,14 +30,28 @@
       </form>
     </div>
   </section>
+
 {% elif vm.content.proposal_review.can_apply %}
-{% elif vm.content.proposal_review.status.is_applied and not vm.content.proposal_review.applied_result %}
+  {# El botón de aplicación vive en review_apply_action.html. #}
+
+{% elif vm.content.proposal_review.status.is_applied %}
+  {% if not vm.content.proposal_review.applied_result %}
+    <section class="proposal-review-actions proposal-review-actions--final">
+      <p class="proposal-review-eyebrow">Propuesta aplicada</p>
+      <p class="proposal-review-actions-text">
+        Esta propuesta ya fue aplicada.
+      </p>
+    </section>
+  {% endif %}
+
+{% elif vm.content.proposal_review.status.is_approved and not vm.content.proposal_review.payload.is_apply_supported %}
   <section class="proposal-review-actions proposal-review-actions--final">
-    <p class="proposal-review-eyebrow">Propuesta aplicada</p>
+    <p class="proposal-review-eyebrow">Propuesta aprobada</p>
     <p class="proposal-review-actions-text">
-      Esta propuesta ya fue aplicada.
+      Esta propuesta fue aprobada, pero su tipo todavía no tiene aplicación automática desde la interfaz.
     </p>
   </section>
+
 {% else %}
   <section class="proposal-review-actions proposal-review-actions--final">
     <p class="proposal-review-eyebrow">Revisión cerrada</p>

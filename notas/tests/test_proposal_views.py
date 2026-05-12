@@ -1049,10 +1049,8 @@ class ProposalViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Aplicación segura")
         self.assertContains(response, "Aplicar propuesta")
-        self.assertContains(response, "se crearán objetos reales")
         self.assertNotContains(response, "Aprobar propuesta")
         self.assertNotContains(response, "Rechazar propuesta")
-
 
     def test_proposal_detail_shows_apply_button_for_approved_create_dailyplan(self):
         self.client.force_login(self.user)
@@ -1159,6 +1157,261 @@ class ProposalViewTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Propuesta aprobada")
         self.assertNotContains(response, "Aplicar propuesta")
-        self.assertContains(response, "Revisión cerrada")
+        self.assertNotContains(response, "Aprobar propuesta")
+        self.assertNotContains(response, "Rechazar propuesta")
+
+    def test_proposal_detail_does_not_show_apply_button_for_applied_create_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": self.chicken.id,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+        )
+
+        self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            )
+        )
+
+        proposal.refresh_from_db()
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPLIED)
+        self.assertNotContains(response, "Aplicar propuesta")
+        self.assertContains(response, "Propuesta aplicada")
+
+
+    def test_proposal_detail_does_not_show_apply_button_for_applied_create_dailyplan(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Plan AI",
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [
+                        {
+                            "hour": "09:00",
+                            "note": "Desayuno",
+                            "meal": {
+                                "name": "Desayuno IA",
+                                "foods": [
+                                    {
+                                        "food_id": self.rice.id,
+                                        "quantity": 100,
+                                        "unit": "g",
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+        )
+
+        self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            )
+        )
+
+        proposal.refresh_from_db()
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPLIED)
+        self.assertNotContains(response, "Aplicar propuesta")
+        self.assertContains(response, "Propuesta aplicada")
+
+
+    def test_proposal_detail_shows_non_applicable_message_for_approved_unsupported_intent(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Legacy approved",
+            proposed_payload={
+                "intent": "adjust_dailyplan_to_targets",
+                "suggested_changes": [],
+            },
+        )
+
+        response = self.client.get(
+            reverse(
+                "proposal_detail",
+                args=[proposal.id],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Aplicar propuesta")
+        self.assertNotContains(response, "Aprobar propuesta")
+        self.assertNotContains(response, "Rechazar propuesta")
+        self.assertContains(
+            response,
+            "su tipo todavía no tiene aplicación automática desde la interfaz",
+        )
+
+
+    def test_double_apply_create_meal_does_not_create_duplicate_meal(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Comida AI",
+            proposed_payload={
+                "intent": "create_meal",
+                "meal": {
+                    "name": "Almuerzo IA",
+                    "foods": [
+                        {
+                            "food_id": self.chicken.id,
+                            "quantity": 200,
+                            "unit": "g",
+                        },
+                    ],
+                },
+            },
+        )
+
+        first_response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            ),
+            follow=True,
+        )
+
+        second_response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            ),
+            follow=True,
+        )
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(second_response.status_code, 200)
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPLIED)
+        self.assertEqual(
+            Meal.objects.filter(
+                name="Almuerzo IA",
+                created_by=self.user,
+            ).count(),
+            1,
+        )
+        self.assertContains(second_response, "No se pudo aplicar la propuesta")
+
+
+    def test_double_apply_create_dailyplan_does_not_create_duplicate_dailyplan(self):
+        self.client.force_login(self.user)
+
+        proposal = NutritionProposal.objects.create(
+            dailyplan=self.dailyplan,
+            created_by=self.user,
+            source=NutritionProposal.SOURCE_AI,
+            status=NutritionProposal.STATUS_APPROVED,
+            title="Plan AI",
+            proposed_payload={
+                "intent": "create_dailyplan",
+                "dailyplan": {
+                    "name": "Día entrenamiento IA",
+                    "meals": [
+                        {
+                            "hour": "09:00",
+                            "note": "Desayuno",
+                            "meal": {
+                                "name": "Desayuno IA",
+                                "foods": [
+                                    {
+                                        "food_id": self.rice.id,
+                                        "quantity": 100,
+                                        "unit": "g",
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+        )
+
+        first_response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            ),
+            follow=True,
+        )
+
+        second_response = self.client.post(
+            reverse(
+                "proposal_apply",
+                args=[proposal.id],
+            ),
+            follow=True,
+        )
+
+        proposal.refresh_from_db()
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(second_response.status_code, 200)
+        self.assertEqual(proposal.status, NutritionProposal.STATUS_APPLIED)
+        self.assertEqual(
+            DailyPlan.objects.filter(
+                name="Día entrenamiento IA",
+                created_by=self.user,
+            ).count(),
+            1,
+        )
+        self.assertContains(second_response, "No se pudo aplicar la propuesta")
+
+
 
