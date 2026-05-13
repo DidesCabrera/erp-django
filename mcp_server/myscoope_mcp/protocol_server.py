@@ -1,7 +1,11 @@
 from dataclasses import replace
 from typing import Any
 
+from mcp.server.auth.middleware.auth_context import get_access_token
+from mcp.server.auth.provider import TokenVerifier
+from mcp.server.auth.settings import AuthSettings
 from mcp.server.fastmcp import FastMCP
+from mcp.types import ToolAnnotations
 
 from myscoope_mcp.client import MyscoopeAPIClient
 from myscoope_mcp.config import load_config_from_env
@@ -10,21 +14,42 @@ from myscoope_mcp.dispatcher import dispatch_tool_call
 from myscoope_mcp.tools import (
     FORBIDDEN_TOOL_NAMES,
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
-    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
-    TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
     TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
+    TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+    TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
+    TOOL_LIST_FOOD_CATALOG,
     TOOL_LIST_USER_PROPOSALS,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
-    TOOL_LIST_FOOD_CATALOG,
 )
-from mcp.server.auth.provider import TokenVerifier
-from mcp.server.auth.settings import AuthSettings
-
-from mcp.server.auth.middleware.auth_context import get_access_token
 
 
 SERVER_NAME = "my-scoope-mcp"
+
+READ_ONLY_TOOL_ANNOTATIONS = ToolAnnotations(
+    readOnlyHint=True,
+    destructiveHint=False,
+    openWorldHint=True,
+)
+
+PROPOSAL_CREATE_TOOL_ANNOTATIONS = ToolAnnotations(
+    readOnlyHint=False,
+    destructiveHint=False,
+    openWorldHint=True,
+)
+
+
+def get_protocol_tool_annotations() -> dict[str, ToolAnnotations]:
+    return {
+        TOOL_LIST_USER_PROPOSALS: READ_ONLY_TOOL_ANNOTATIONS,
+        TOOL_LIST_FOOD_CATALOG: READ_ONLY_TOOL_ANNOTATIONS,
+        TOOL_READ_DAILYPLAN: READ_ONLY_TOOL_ANNOTATIONS,
+        TOOL_READ_PROPOSAL: READ_ONLY_TOOL_ANNOTATIONS,
+        TOOL_COMPARE_DAILYPLAN_TO_TARGETS: READ_ONLY_TOOL_ANNOTATIONS,
+        TOOL_CREATE_VALIDATED_MEAL_PROPOSAL: PROPOSAL_CREATE_TOOL_ANNOTATIONS,
+        TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL: PROPOSAL_CREATE_TOOL_ANNOTATIONS,
+        TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL: PROPOSAL_CREATE_TOOL_ANNOTATIONS,
+    }
 
 
 def _get_current_mcp_bearer_token() -> str | None:
@@ -56,7 +81,7 @@ def create_api_client() -> MyscoopeAPIClient:
         )
 
     return MyscoopeAPIClient(config)
-    
+
 
 def serialize_tool_result(
     result: MCPToolCallResult,
@@ -65,7 +90,6 @@ def serialize_tool_result(
     Preserve the My Scoope ok/data/error contract for MCP responses.
     """
     return result.as_dict()
-
 
 
 def create_mcp_server(
@@ -112,7 +136,6 @@ def create_mcp_server(
     return server
 
 
-
 def register_mcp_tools(server: FastMCP) -> None:
     """
     Register real MCP tools.
@@ -121,8 +144,11 @@ def register_mcp_tools(server: FastMCP) -> None:
     This keeps the protocol wrapper thin and prevents bypassing the
     API Adapter / Internal AI Tools boundaries.
     """
+    annotations = get_protocol_tool_annotations()
 
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_LIST_USER_PROPOSALS],
+    )
     def list_user_proposals() -> dict[str, Any]:
         """
         List proposals visible to the authenticated My Scoope API context.
@@ -137,8 +163,9 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
-
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_LIST_FOOD_CATALOG],
+    )
     def list_food_catalog(
         search: str | None = None,
         limit: int = 50,
@@ -166,8 +193,9 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
-
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_READ_DAILYPLAN],
+    )
     def read_dailyplan(dailyplan_id: int) -> dict[str, Any]:
         """
         Read a DailyPlan available to the authenticated My Scoope API context.
@@ -184,7 +212,9 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_READ_PROPOSAL],
+    )
     def read_proposal(proposal_id: int) -> dict[str, Any]:
         """
         Read a NutritionProposal available to the authenticated My Scoope API context.
@@ -201,7 +231,9 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_COMPARE_DAILYPLAN_TO_TARGETS],
+    )
     def compare_dailyplan_to_targets(
         dailyplan_id: int,
         targets: dict[str, Any],
@@ -231,7 +263,9 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_CREATE_VALIDATED_MEAL_PROPOSAL],
+    )
     def create_validated_meal_proposal(
         dailyplan_id: int,
         title: str,
@@ -265,9 +299,9 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
-
-
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL],
+    )
     def create_validated_dailyplan_proposal(
         dailyplan_id: int,
         title: str,
@@ -308,7 +342,9 @@ def register_mcp_tools(server: FastMCP) -> None:
 
         return serialize_tool_result(result)
 
-    @server.tool()
+    @server.tool(
+        annotations=annotations[TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL],
+    )
     def create_validated_dailyplan_build_proposal(
         dailyplan_id: int,
         title: str,

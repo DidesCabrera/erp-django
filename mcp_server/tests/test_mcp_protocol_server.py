@@ -7,15 +7,7 @@ from starlette.applications import Starlette
 from mcp.server.fastmcp import FastMCP
 
 from myscoope_mcp.contracts import MCPToolCallResult
-from myscoope_mcp.protocol_server import (
-    SERVER_NAME,
-    assert_protocol_tool_surface_is_safe,
-    create_mcp_server,
-    get_protocol_allowed_tool_names,
-    get_protocol_forbidden_tool_names,
-    protocol_dispatch_placeholder,
-    serialize_tool_result,
-)
+
 from myscoope_mcp.tools import (
     TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
     TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
@@ -25,6 +17,17 @@ from myscoope_mcp.tools import (
     TOOL_LIST_FOOD_CATALOG,
     TOOL_READ_DAILYPLAN,
     TOOL_READ_PROPOSAL,
+)
+
+from myscoope_mcp.protocol_server import (
+    SERVER_NAME,
+    assert_protocol_tool_surface_is_safe,
+    create_mcp_server,
+    get_protocol_allowed_tool_names,
+    get_protocol_forbidden_tool_names,
+    get_protocol_tool_annotations,
+    protocol_dispatch_placeholder,
+    serialize_tool_result,
 )
 
 
@@ -201,6 +204,61 @@ class MCPProtocolServerTests(unittest.TestCase):
         app = _create_http_app(server)
 
         self.assertIsInstance(app, Starlette)
+
+
+
+    def test_protocol_tool_annotations_cover_all_allowed_tools(self):
+        annotations = get_protocol_tool_annotations()
+
+        self.assertEqual(
+            set(annotations.keys()),
+            get_protocol_allowed_tool_names(),
+        )
+
+    def test_read_tools_are_annotated_as_read_only_non_destructive_open_world(self):
+        annotations = get_protocol_tool_annotations()
+
+        for tool_name in [
+            TOOL_LIST_USER_PROPOSALS,
+            TOOL_LIST_FOOD_CATALOG,
+            TOOL_READ_DAILYPLAN,
+            TOOL_READ_PROPOSAL,
+            TOOL_COMPARE_DAILYPLAN_TO_TARGETS,
+        ]:
+            self.assertTrue(
+                annotations[tool_name].readOnlyHint,
+                tool_name,
+            )
+            self.assertFalse(
+                annotations[tool_name].destructiveHint,
+                tool_name,
+            )
+            self.assertTrue(
+                annotations[tool_name].openWorldHint,
+                tool_name,
+            )
+
+    def test_proposal_create_tools_are_annotated_as_write_non_destructive_open_world(self):
+        annotations = get_protocol_tool_annotations()
+
+        for tool_name in [
+            TOOL_CREATE_VALIDATED_MEAL_PROPOSAL,
+            TOOL_CREATE_VALIDATED_DAILYPLAN_PROPOSAL,
+            TOOL_CREATE_VALIDATED_DAILYPLAN_BUILD_PROPOSAL,
+        ]:
+            self.assertFalse(
+                annotations[tool_name].readOnlyHint,
+                tool_name,
+            )
+            self.assertFalse(
+                annotations[tool_name].destructiveHint,
+                tool_name,
+            )
+            self.assertTrue(
+                annotations[tool_name].openWorldHint,
+                tool_name,
+            )
+
 
 
 if __name__ == "__main__":
