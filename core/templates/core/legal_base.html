@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}My Scoope{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo legal-logo">My Scoope</a>
+
+      <nav class="nav">
+        <a href="/">Inicio</a>
+        <a href="/privacy/">Privacidad</a>
+        <a href="/terms/">Términos</a>
+        <a href="/support/">Soporte</a>
+        <a href="/accounts/login/" class="login">Ingresar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal-page">
+    <div class="container legal-container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© My Scoope</p>
+      <div class="footer-links">
+        <a href="/privacy/">Privacidad</a>
+        <a href="/terms/">Términos</a>
+        <a href="/support/">Soporte</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
