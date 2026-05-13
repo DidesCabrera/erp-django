@@ -1,95 +1,81 @@
-
-.block-logo-sidebar{
+.block-logo-sidebar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
 }
 
-
-.brand-logo{
+.brand-logo {
     width: 110px;
     padding-top: 1px;
     margin-left: 8px;
 }
 
-
 .collapse-sidebar-btn {
     display: none;
 }
-
-
 
 @media (max-width: 768px) {
 
     .collapse-sidebar-btn {
         background: none;
         border: none;
+        color: var(--sidebar-text-active);
         cursor: pointer;
         padding: 4px;
         display: flex;
         align-items: center;
     }
-  
+
     .mobile-menu-btn {
         display: flex;
         align-items: center;
         padding-right: 10px;
+        color: var(--text-main);
     }
 
-    .block-logo-sidebar{
+    .block-logo-sidebar {
         margin-top: 3px;
     }
-
 }
 
-
-.brad-logo.project{
+.brad-logo.project {
     align-items: center;
 }
-  
-.user-block{
+
+.user-block {
     height: 100px;
     padding: 8px 10px;
     padding-bottom: 15px;
-    border: 1px solid rgb(36, 36, 36);
-    background-color: rgb(30, 30, 30);
+    border: 1px solid var(--sidebar-card-border);
+    background-color: var(--sidebar-card-bg);
     border-radius: 10px;
     position: relative;
 }
-  
-.user{
+
+.user {
     display: flex;
-    align-items:center;
+    align-items: center;
     gap: 4px;
     margin-bottom: 10px;
 }
-  
-.user h2{
-    margin: 0;              /* ← ESTO SUELE SER EL CULPABLE */
+
+.user h2 {
+    margin: 0;
     font-size: 16px;
     font-weight: 400;
-    color: white;
+    color: var(--sidebar-text-active);
 }
 
-.user p{
+.user p {
     font-size: 13px;
     font-weight: 300;
-    margin-bottom: 6px;
+    margin: 0;
     padding-right: 10px;
-    color: rgb(182, 182, 182);
+    color: var(--sidebar-text);
 }
 
-.user p{
-    font-size: 13px;
-    font-weight: 300;
-    margin: 0;              /* ← CLAVE */
-    padding-right: 10px;
-    color: rgb(182, 182, 182);
-}
-
-
-.user input{
+.user input {
     padding: 3px 4px;
     width: 30px;
     text-align: center;
@@ -101,44 +87,26 @@
     margin: 0 20x;
 }
 
-
-.label-rol{
+.label-rol {
     font-size: 12px;
     padding: 1px 6px;
-
-    margin-right: 2px;
-    margin-bottom: 9px;
-
+    margin: 0;
     border-radius: 3px;
-    color: rgb(255, 255, 255);
+    color: var(--sidebar-text-active);
     font-weight: 400;
     background-color: rgb(57, 57, 57);
 }
 
-.label-rol{
-    font-size: 12px;
-    padding: 1px 6px;
-
-    margin: 0; /* ← CLAVE */
-
-    border-radius: 3px;
-    color: rgb(255, 255, 255);
-    font-weight: 400;
-    background-color: rgb(57, 57, 57);
-}
-
-
-.btn-weight{
+.btn-weight {
     background-color: var(--color-qty);
     border-radius: 5px;
-    border-width: 0px;
+    border-width: 0;
     height: 22px;
     font-weight: 600;
     color: black;
-  }
-  
+}
 
-  .sidebar-group-head {
+.sidebar-group-head {
     display: flex;
     align-items: stretch;
     gap: 6px;
@@ -156,6 +124,9 @@
     min-width: 36px;
     border-radius: 10px;
     text-decoration: none;
+    color: inherit;
+    background: transparent;
+    border: none;
 }
 
 .sidebar-group-action-icon {
@@ -163,16 +134,9 @@
     height: 16px;
 }
 
-.sidebar-group-action {
-    color: inherit;
-    background: transparent;
-    border: none;
-}
-
 .sidebar-group-action:hover {
     background: rgba(255, 255, 255, 0.06);
 }
-
 
 .sidebar .nav-tab .sidebar-leading-icon,
 .sidebar .nav-tab .nav-text {
@@ -181,7 +145,7 @@
 
 .sidebar-main--link {
     text-decoration: none;
-    color: rgb(176, 176, 176);
+    color: var(--sidebar-text);
     border-radius: 6px;
     background-color: transparent;
     transition: background-color 0.15s ease, color 0.15s ease;
@@ -189,8 +153,8 @@
 
 .sidebar-main--link:hover,
 .sidebar-main--link.is-active {
-    background-color: rgba(255, 255, 255, 0.08);
-    color: white;
+    background-color: var(--sidebar-hover);
+    color: var(--sidebar-text-active);
 }
 
 .sidebar-main--link .sidebar-main-icon,
@@ -205,16 +169,13 @@
     flex-direction: column;
 }
 
-
-
-
 .sidebar .nav-tab {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 12px 6px 12px;
+    padding: 6px 12px;
     border-radius: 6px;
-    color: rgb(176, 176, 176);
+    color: var(--sidebar-text);
     background-color: transparent;
     transition: background-color 0.15s ease, color 0.15s ease;
 }
@@ -242,7 +203,6 @@
     opacity: 1;
 }
 
-
 .nav-tab.is-active.nav-tab--dailyplan .nav-item-dot {
     background-color: var(--color-dailyplan);
 }
@@ -254,7 +214,6 @@
 .nav-tab.is-active.nav-tab--food .nav-item-dot {
     background-color: var(--color-food);
 }
-
 
 .sidebar-leading-icon {
     width: 18px;
