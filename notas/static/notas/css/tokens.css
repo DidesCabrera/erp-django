@@ -173,7 +173,4 @@ html[data-theme="dark"] {
     --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.24);
     --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.38);
 
-    /* Entity adjustments */
-    --entity-home: #f5f5f5;
-    --entity-profile: #f5f5f5;
 }

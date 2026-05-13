@@ -1,22 +1,20 @@
 /*  ALLOC BAR */
 
-
 .alloc-bar-comp {
   position: relative;
   width: 100%;
   min-width: 0;
   height: inherit;
-  border-radius: 0px 6px 6px 0px;
+  border-radius: 0 6px 6px 0;
   overflow: hidden;
 }
-
 
 /* alloc para card-mini */
 .alloc-bar-comp.mini {
   height: 18px;
 }
 
-/* Fondo */
+/* Fondo: se mantiene claro en light y dark */
 .alloc-bar-bg {
   position: absolute;
   inset: 0;
@@ -24,7 +22,7 @@
   z-index: 0;
 }
 
-.alloc-bar-bg.picker{
+.alloc-bar-bg.picker {
   border-radius: 0 6px 6px 0;
   background-color: white;
   border-left: none;
@@ -45,11 +43,10 @@
   transition: width 0.35s ease;
 }
 
-/* colores */
+/* Colores nutricionales: iguales en light y dark */
 .alloc-bar-fill--protein { background: var(--color-protein); }
 .alloc-bar-fill--carbs   { background: var(--color-carbs); }
 .alloc-bar-fill--fat     { background: var(--color-fat); }
-
 
 .alloc-pct {
   font-size: 13.5px;
@@ -58,7 +55,7 @@
   white-space: nowrap;
   width: 60px;
   height: inherit;
-  border-radius: 6px 0px 0px 6px;
+  border-radius: 6px 0 0 6px;
   border-right: 1px solid rgba(0, 0, 0, 0.18);
 
   display: flex;
@@ -78,7 +75,3 @@
   font-size: 12px;
   font-weight: 700;
 }
-
-
-
-
