@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Autorizar My Scoope</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f7f7f8;
+            color: #18181b;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .oauth-card {
+            width: min(560px, 100%);
+            background: #ffffff;
+            border: 1px solid #e4e4e7;
+            border-radius: 24px;
+            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+            padding: 28px;
+        }
+
+        .eyebrow {
+            color: #71717a;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+
+        p {
+            color: #3f3f46;
+            line-height: 1.5;
+        }
+
+        .scope-list {
+            margin: 20px 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .scope-list li {
+            border: 1px solid #e4e4e7;
+            border-radius: 14px;
+            padding: 12px 14px;
+            background: #fafafa;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #18181b;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e4e4e7;
+            color: #18181b;
+        }
+
+        .warning {
+            margin-top: 18px;
+            font-size: 0.9rem;
+            color: #71717a;
+        }
+    </style>
+</head>
+<body>
+    <section class="oauth-card">
+        <div class="eyebrow">Conexión OAuth</div>
+
+        <h1>Autorizar {{ client.client_name }}</h1>
+
+        <p>
+            {{ client.client_name }} quiere conectarse a tu cuenta de My Scoope
+            para ayudarte a crear propuestas de dieta.
+        </p>
+
+        <p>Permisos solicitados:</p>
+
+        <ul class="scope-list">
+            {% for requested_scope in requested_scopes %}
+                <li>
+                    {% if requested_scope == "myscoope:read" %}
+                        Leer alimentos, planes diarios y propuestas visibles para tu cuenta.
+                    {% elif requested_scope == "myscoope:proposals:create" %}
+                        Crear propuestas de dieta pendientes de revisión.
+                    {% else %}
+                        {{ requested_scope }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <p class="warning">
+            La IA no podrá aplicar cambios finales directamente. Las propuestas deberán ser revisadas y aprobadas en My Scoope.
+        </p>
+
+        <form method="post" action="{% url 'oauth_authorize_consent' %}">
+            {% csrf_token %}
+
+            <input type="hidden" name="client_id" value="{{ client_id }}">
+            <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
+            <input type="hidden" name="response_type" value="{{ response_type }}">
+            <input type="hidden" name="scope" value="{{ scope }}">
+            <input type="hidden" name="state" value="{{ state }}">
+            <input type="hidden" name="code_challenge" value="{{ code_challenge }}">
+            <input type="hidden" name="code_challenge_method" value="{{ code_challenge_method }}">
+
+            <div class="actions">
+                <a class="btn btn-secondary" href="{% url 'home_view' %}">Cancelar</a>
+                <button class="btn btn-primary" type="submit">Autorizar</button>
+            </div>
+        </form>
+    </section>
+</body>
+</html>
