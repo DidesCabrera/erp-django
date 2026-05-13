@@ -277,17 +277,19 @@ class OAuthAuthorizeViewsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/accounts/login", response["Location"])
 
-    def test_token_placeholder_returns_not_implemented(self):
+
+    def test_token_endpoint_rejects_missing_grant_type(self):
         response = self.client.post(
-            reverse("oauth_token_placeholder"),
+            reverse("oauth_token"),
             data={},
         )
 
-        self.assertEqual(response.status_code, 501)
+        self.assertEqual(response.status_code, 400)
 
         data = response.json()
 
         self.assertEqual(
-            data["error"]["code"],
-            "oauth_token_endpoint_not_implemented",
+            data["error"],
+            "unsupported_grant_type",
         )
+

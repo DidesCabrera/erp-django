@@ -7,12 +7,16 @@ from typing import Iterable, Optional
 
 from django.utils import timezone
 
+from notas.application.services.mcp_user_tokens import (
+    create_mcp_user_token,
+)
 from notas.domain.models import OAuthAuthorizationCode, OAuthClient
 
 
 OAUTH_AUTHORIZATION_CODE_PREFIX = "oauth_code_"
 OAUTH_CODE_CHALLENGE_METHOD_S256 = "S256"
 DEFAULT_OAUTH_AUTHORIZATION_CODE_TTL_MINUTES = 5
+DEFAULT_OAUTH_ACCESS_TOKEN_TTL_SECONDS = 60 * 60 * 24
 
 
 @dataclass(frozen=True)
@@ -50,6 +54,34 @@ class OAuthAuthorizationCodeValidationResult:
             return None
 
         return self.authorization_code.client
+
+
+@dataclass(frozen=True)
+class OAuthAccessTokenIssueError:
+    code: str
+    message: str
+    details: dict
+
+
+@dataclass(frozen=True)
+class OAuthAccessTokenIssueResult:
+    access_token: str = ""
+    token_type: str = "Bearer"
+    expires_in: int = DEFAULT_OAUTH_ACCESS_TOKEN_TTL_SECONDS
+    scope: str = ""
+    error: Optional[OAuthAccessTokenIssueError] = None
+
+    @property
+    def ok(self) -> bool:
+        return bool(self.access_token) and self.error is None
+
+    def as_token_response(self) -> dict:
+        return {
+            "access_token": self.access_token,
+            "token_type": self.token_type,
+            "expires_in": self.expires_in,
+            "scope": self.scope,
+        }
 
 
 def generate_oauth_authorization_raw_code() -> str:
@@ -263,4 +295,61 @@ def validate_oauth_authorization_code(
 
     return OAuthAuthorizationCodeValidationResult(
         authorization_code=authorization_code,
+    )
+
+
+def _issue_error(
+    *,
+    code: str,
+    message: str,
+    details: Optional[dict] = None,
+) -> OAuthAccessTokenIssueResult:
+    return OAuthAccessTokenIssueResult(
+        error=OAuthAccessTokenIssueError(
+            code=code,
+            message=message,
+            details=details or {},
+        )
+    )
+
+
+def issue_oauth_access_token_from_authorization_code(
+    *,
+    raw_code: str,
+    client: OAuthClient,
+    redirect_uri: str,
+    code_verifier: str,
+    expires_in: int = DEFAULT_OAUTH_ACCESS_TOKEN_TTL_SECONDS,
+) -> OAuthAccessTokenIssueResult:
+    validation = validate_oauth_authorization_code(
+        raw_code=raw_code,
+        client=client,
+        redirect_uri=redirect_uri,
+        code_verifier=code_verifier,
+    )
+
+    if not validation.ok:
+        return _issue_error(
+            code=validation.error.code,
+            message=validation.error.message,
+            details=validation.error.details,
+        )
+
+    authorization_code = validation.authorization_code
+    scopes = authorization_code.scopes
+
+    expires_at = timezone.now() + timedelta(seconds=expires_in)
+
+    created = create_mcp_user_token(
+        user=authorization_code.user,
+        name=f"OAuth access token - {authorization_code.client.client_name}",
+        scopes=scopes,
+        expires_at=expires_at,
+    )
+
+    return OAuthAccessTokenIssueResult(
+        access_token=created.raw_token,
+        token_type="Bearer",
+        expires_in=expires_in,
+        scope=" ".join(scopes),
     )

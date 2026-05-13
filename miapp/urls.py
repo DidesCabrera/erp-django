@@ -5,7 +5,7 @@ from notas.interface.views.oauth import (
     oauth_authorization_server_metadata,
     oauth_authorize,
     oauth_authorize_consent,
-    oauth_token_placeholder,
+    oauth_token,
 )
 
 
@@ -30,8 +30,8 @@ urlpatterns = [
     ),
     path(
         "oauth/token",
-        oauth_token_placeholder,
-        name="oauth_token_placeholder",
+        oauth_token,
+        name="oauth_token",
     ),
 
     # Landing pública

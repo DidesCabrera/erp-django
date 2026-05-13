@@ -14,6 +14,7 @@ from notas.application.services.mcp_user_tokens import (
 from notas.application.services.oauth_authorization_codes import (
     OAUTH_CODE_CHALLENGE_METHOD_S256,
     create_oauth_authorization_code,
+    issue_oauth_access_token_from_authorization_code,
     normalize_oauth_scopes,
 )
 from notas.domain.models import OAuthClient
@@ -47,6 +48,23 @@ def _oauth_error_response(
                 "message": message,
                 "details": details or {},
             },
+        },
+        status=status,
+    )
+
+
+def _oauth_token_error_response(
+    *,
+    code: str,
+    message: str,
+    status: int = 400,
+    details: dict | None = None,
+) -> JsonResponse:
+    return JsonResponse(
+        {
+            "error": code,
+            "error_description": message,
+            "details": details or {},
         },
         status=status,
     )
@@ -132,11 +150,15 @@ def _oauth_error_message(error_code: str) -> str:
         "oauth_scope_not_allowed": "OAuth scope is not allowed.",
         "oauth_code_challenge_required": "OAuth code challenge is required.",
         "oauth_code_challenge_method_not_supported": "OAuth code challenge method is not supported.",
+        "oauth_grant_type_not_supported": "OAuth grant type is not supported.",
+        "oauth_client_required": "OAuth client_id is required.",
+        "oauth_code_required": "OAuth authorization code is required.",
+        "oauth_code_verifier_required": "OAuth code verifier is required.",
     }
 
     return messages.get(
         error_code,
-        "OAuth authorization request is invalid.",
+        "OAuth request is invalid.",
     )
 
 
@@ -148,7 +170,7 @@ def oauth_authorization_server_metadata(request):
         {
             "issuer": issuer,
             "authorization_endpoint": f"{issuer}{reverse('oauth_authorize')}",
-            "token_endpoint": f"{issuer}{reverse('oauth_token_placeholder')}",
+            "token_endpoint": f"{issuer}{reverse('oauth_token')}",
             "scopes_supported": [
                 MCP_SCOPE_READ,
                 MCP_SCOPE_PROPOSALS_CREATE,
@@ -264,9 +286,77 @@ def oauth_authorize_consent(request):
 
 
 @require_POST
-def oauth_token_placeholder(request):
-    return _oauth_error_response(
-        code="oauth_token_endpoint_not_implemented",
-        message="OAuth token endpoint is not implemented yet.",
-        status=501,
+def oauth_token(request):
+    grant_type = request.POST.get("grant_type", "").strip()
+    client_id = request.POST.get("client_id", "").strip()
+    raw_code = request.POST.get("code", "").strip()
+    redirect_uri = request.POST.get("redirect_uri", "").strip()
+    code_verifier = request.POST.get("code_verifier", "").strip()
+
+    if grant_type != OAUTH_GRANT_TYPE_AUTHORIZATION_CODE:
+        return _oauth_token_error_response(
+            code="unsupported_grant_type",
+            message=_oauth_error_message("oauth_grant_type_not_supported"),
+        )
+
+    if not client_id:
+        return _oauth_token_error_response(
+            code="invalid_request",
+            message=_oauth_error_message("oauth_client_required"),
+        )
+
+    client = _get_oauth_client(client_id)
+
+    if client is None:
+        return _oauth_token_error_response(
+            code="invalid_client",
+            message=_oauth_error_message("oauth_client_not_found"),
+            status=401,
+        )
+
+    if not client.is_active:
+        return _oauth_token_error_response(
+            code="invalid_client",
+            message=_oauth_error_message("oauth_client_inactive"),
+            status=401,
+        )
+
+    if not raw_code:
+        return _oauth_token_error_response(
+            code="invalid_request",
+            message=_oauth_error_message("oauth_code_required"),
+        )
+
+    if not redirect_uri:
+        return _oauth_token_error_response(
+            code="invalid_request",
+            message=_oauth_error_message("oauth_redirect_uri_required"),
+        )
+
+    if not code_verifier:
+        return _oauth_token_error_response(
+            code="invalid_request",
+            message=_oauth_error_message("oauth_code_verifier_required"),
+        )
+
+    result = issue_oauth_access_token_from_authorization_code(
+        raw_code=raw_code,
+        client=client,
+        redirect_uri=redirect_uri,
+        code_verifier=code_verifier,
+    )
+
+    if not result.ok:
+        return _oauth_token_error_response(
+            code="invalid_grant",
+            message=result.error.message,
+            details={
+                "code": result.error.code,
+                **result.error.details,
+            },
+        )
+
+    return JsonResponse(
+        result.as_token_response(),
+        status=200,
     )
