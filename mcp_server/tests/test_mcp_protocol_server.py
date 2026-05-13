@@ -2,6 +2,7 @@ import unittest
 
 from unittest.mock import patch
 from mcp.server.auth.provider import AccessToken
+from starlette.applications import Starlette
 
 from mcp.server.fastmcp import FastMCP
 
@@ -193,8 +194,14 @@ class MCPProtocolServerTests(unittest.TestCase):
             "legacy-api-token",
         )
 
+    def test_create_http_app_mounts_starlette_app(self):
+        from myscoope_mcp.run_protocol_server import _create_http_app
+
+        server = create_mcp_server()
+        app = _create_http_app(server)
+
+        self.assertIsInstance(app, Starlette)
 
 
-        
 if __name__ == "__main__":
     unittest.main()

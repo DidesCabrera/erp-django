@@ -6,7 +6,14 @@ from mcp.server.auth.settings import AuthSettings
 from pydantic import AnyHttpUrl
 
 
-DEFAULT_MCP_AUTH_SCOPE = "myscoope:mcp"
+MCP_SCOPE_READ = "myscoope:read"
+MCP_SCOPE_PROPOSALS_CREATE = "myscoope:proposals:create"
+
+DEFAULT_MCP_AUTH_SCOPES = [
+    MCP_SCOPE_READ,
+    MCP_SCOPE_PROPOSALS_CREATE,
+]
+
 MCP_USER_TOKEN_PREFIX = "mcp_user_"
 
 
@@ -35,12 +42,12 @@ class StaticMCPTokenVerifier(TokenVerifier):
     def __init__(
         self,
         expected_token: str,
-        scope: str = DEFAULT_MCP_AUTH_SCOPE,
+        scopes: list[str] | None = None,
         resource: str | None = None,
         allow_mcp_user_tokens: bool = True,
     ) -> None:
         self.expected_token = expected_token
-        self.scope = scope
+        self.scopes = list(scopes or DEFAULT_MCP_AUTH_SCOPES)
         self.resource = resource
         self.allow_mcp_user_tokens = allow_mcp_user_tokens
 
@@ -55,9 +62,7 @@ class StaticMCPTokenVerifier(TokenVerifier):
             return AccessToken(
                 token=token,
                 client_id="myscoope-external-mcp-client",
-                scopes=[
-                    self.scope,
-                ],
+                scopes=list(self.scopes),
                 resource=self.resource,
             )
 
@@ -68,9 +73,7 @@ class StaticMCPTokenVerifier(TokenVerifier):
             return AccessToken(
                 token=token,
                 client_id="myscoope-mcp-user-token-client",
-                scopes=[
-                    self.scope,
-                ],
+                scopes=list(self.scopes),
                 resource=self.resource,
             )
 
@@ -112,22 +115,21 @@ def get_mcp_auth_issuer_url(
 
 def create_external_mcp_auth_settings(
     public_url: str,
-    scope: str = DEFAULT_MCP_AUTH_SCOPE,
+    scopes: list[str] | None = None,
 ) -> AuthSettings:
     issuer_url = get_mcp_auth_issuer_url(public_url)
+    required_scopes = list(scopes or DEFAULT_MCP_AUTH_SCOPES)
 
     return AuthSettings(
         issuer_url=AnyHttpUrl(issuer_url),
         resource_server_url=AnyHttpUrl(public_url),
-        required_scopes=[
-            scope,
-        ],
+        required_scopes=required_scopes,
     )
 
 
 def create_external_mcp_token_verifier(
     public_url: str,
-    scope: str = DEFAULT_MCP_AUTH_SCOPE,
+    scopes: list[str] | None = None,
 ) -> StaticMCPTokenVerifier:
     token = get_external_mcp_auth_token()
 
@@ -138,7 +140,7 @@ def create_external_mcp_token_verifier(
 
     return StaticMCPTokenVerifier(
         expected_token=token,
-        scope=scope,
+        scopes=list(scopes or DEFAULT_MCP_AUTH_SCOPES),
         resource=public_url,
         allow_mcp_user_tokens=True,
     )

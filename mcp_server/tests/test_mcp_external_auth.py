@@ -50,7 +50,8 @@ class MCPExternalAuthTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(
             access_token.scopes,
             [
-                "myscoope:mcp",
+                "myscoope:read",
+                "myscoope:proposals:create",
             ],
         )
         self.assertEqual(
@@ -164,7 +165,8 @@ class MCPExternalAuthTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(
             access_token.scopes,
             [
-                "myscoope:mcp",
+                "myscoope:read",
+                "myscoope:proposals:create",
             ],
         )
         self.assertEqual(

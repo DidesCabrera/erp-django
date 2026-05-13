@@ -34,6 +34,20 @@ class MCPLocalRuntimeTests(unittest.TestCase):
             call_kwargs["auth_settings"],
         )
 
+    def _assert_streamable_http_runtime_called(
+        self,
+        mocked_run_streamable_http_server,
+        *,
+        expected_server,
+        expected_host: str,
+        expected_port: int,
+    ) -> None:
+        mocked_run_streamable_http_server.assert_called_once_with(
+            server=expected_server,
+            host=expected_host,
+            port=expected_port,
+        )
+
     def _get_printed_lines(
         self,
         mocked_print,
@@ -124,12 +138,14 @@ class MCPLocalRuntimeTests(unittest.TestCase):
         },
         clear=True,
     )
+    @patch("myscoope_mcp.run_protocol_server._run_streamable_http_server")
     @patch("builtins.print")
     @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
-    def test_streamable_http_mode_runs_http_server(
+    def test_streamable_http_mode_runs_http_server_without_binding_port(
         self,
         mocked_create_mcp_server,
         mocked_print,
+        mocked_run_streamable_http_server,
     ):
         fake_server = mocked_create_mcp_server.return_value
 
@@ -140,10 +156,14 @@ class MCPLocalRuntimeTests(unittest.TestCase):
             expected_host="127.0.0.1",
             expected_port=8001,
         )
-
-        fake_server.run.assert_called_once_with(
-            transport="streamable-http",
+        self._assert_streamable_http_runtime_called(
+            mocked_run_streamable_http_server,
+            expected_server=fake_server,
+            expected_host="127.0.0.1",
+            expected_port=8001,
         )
+
+        fake_server.run.assert_not_called()
 
         printed_lines = self._get_printed_lines(mocked_print)
 
@@ -157,6 +177,22 @@ class MCPLocalRuntimeTests(unittest.TestCase):
         )
         self.assertIn(
             "Public MCP URL: http://127.0.0.1:8001/mcp",
+            printed_lines,
+        )
+        self.assertIn(
+            "Well-known endpoints:",
+            printed_lines,
+        )
+        self.assertIn(
+            "- http://127.0.0.1:8001/.well-known/openai-apps-challenge",
+            printed_lines,
+        )
+        self.assertIn(
+            "- http://127.0.0.1:8001/.well-known/oauth-protected-resource",
+            printed_lines,
+        )
+        self.assertIn(
+            "- http://127.0.0.1:8001/.well-known/oauth-protected-resource/mcp",
             printed_lines,
         )
         self.assertIn(
@@ -187,10 +223,12 @@ class MCPLocalRuntimeTests(unittest.TestCase):
         },
         clear=True,
     )
+    @patch("myscoope_mcp.run_protocol_server._run_streamable_http_server")
     @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
-    def test_http_alias_runs_streamable_http_server(
+    def test_http_alias_runs_streamable_http_server_without_binding_port(
         self,
         mocked_create_mcp_server,
+        mocked_run_streamable_http_server,
     ):
         fake_server = mocked_create_mcp_server.return_value
 
@@ -201,10 +239,14 @@ class MCPLocalRuntimeTests(unittest.TestCase):
             expected_host="127.0.0.1",
             expected_port=8001,
         )
-
-        fake_server.run.assert_called_once_with(
-            transport="streamable-http",
+        self._assert_streamable_http_runtime_called(
+            mocked_run_streamable_http_server,
+            expected_server=fake_server,
+            expected_host="127.0.0.1",
+            expected_port=8001,
         )
+
+        fake_server.run.assert_not_called()
 
     @patch(
         "sys.argv",
@@ -223,15 +265,18 @@ class MCPLocalRuntimeTests(unittest.TestCase):
         {},
         clear=True,
     )
+    @patch("myscoope_mcp.run_protocol_server._run_streamable_http_server")
     @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
     def test_streamable_http_fails_without_external_auth_token(
         self,
         mocked_create_mcp_server,
+        mocked_run_streamable_http_server,
     ):
         with self.assertRaises(RuntimeError):
             run_protocol_server_main()
 
         mocked_create_mcp_server.assert_not_called()
+        mocked_run_streamable_http_server.assert_not_called()
 
     @patch.dict(
         "os.environ",
@@ -288,12 +333,14 @@ class MCPLocalRuntimeTests(unittest.TestCase):
         },
         clear=True,
     )
+    @patch("myscoope_mcp.run_protocol_server._run_streamable_http_server")
     @patch("builtins.print")
     @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
     def test_streamable_http_uses_remote_runtime_env_defaults(
         self,
         mocked_create_mcp_server,
         mocked_print,
+        mocked_run_streamable_http_server,
     ):
         fake_server = mocked_create_mcp_server.return_value
 
@@ -304,10 +351,14 @@ class MCPLocalRuntimeTests(unittest.TestCase):
             expected_host="0.0.0.0",
             expected_port=10000,
         )
-
-        fake_server.run.assert_called_once_with(
-            transport="streamable-http",
+        self._assert_streamable_http_runtime_called(
+            mocked_run_streamable_http_server,
+            expected_server=fake_server,
+            expected_host="0.0.0.0",
+            expected_port=10000,
         )
+
+        fake_server.run.assert_not_called()
 
         printed_lines = self._get_printed_lines(mocked_print)
 
@@ -342,12 +393,14 @@ class MCPLocalRuntimeTests(unittest.TestCase):
         },
         clear=True,
     )
+    @patch("myscoope_mcp.run_protocol_server._run_streamable_http_server")
     @patch("builtins.print")
     @patch("myscoope_mcp.run_protocol_server.create_mcp_server")
     def test_streamable_http_prints_configured_public_url(
         self,
         mocked_create_mcp_server,
         mocked_print,
+        mocked_run_streamable_http_server,
     ):
         fake_server = mocked_create_mcp_server.return_value
 
@@ -358,10 +411,14 @@ class MCPLocalRuntimeTests(unittest.TestCase):
             expected_host="0.0.0.0",
             expected_port=10000,
         )
-
-        fake_server.run.assert_called_once_with(
-            transport="streamable-http",
+        self._assert_streamable_http_runtime_called(
+            mocked_run_streamable_http_server,
+            expected_server=fake_server,
+            expected_host="0.0.0.0",
+            expected_port=10000,
         )
+
+        fake_server.run.assert_not_called()
 
         printed_lines = self._get_printed_lines(mocked_print)
 
@@ -371,6 +428,18 @@ class MCPLocalRuntimeTests(unittest.TestCase):
         )
         self.assertIn(
             "Public MCP URL: https://mcp.myscoope.com/mcp",
+            printed_lines,
+        )
+        self.assertIn(
+            "- https://mcp.myscoope.com/.well-known/openai-apps-challenge",
+            printed_lines,
+        )
+        self.assertIn(
+            "- https://mcp.myscoope.com/.well-known/oauth-protected-resource",
+            printed_lines,
+        )
+        self.assertIn(
+            "- https://mcp.myscoope.com/.well-known/oauth-protected-resource/mcp",
             printed_lines,
         )
 

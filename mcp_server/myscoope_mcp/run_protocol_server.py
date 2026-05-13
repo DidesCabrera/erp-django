@@ -1,6 +1,10 @@
 import argparse
 import os
 
+import uvicorn
+from starlette.applications import Starlette
+from starlette.routing import Route
+
 from myscoope_mcp.auth import (
     create_external_mcp_auth_settings,
     create_external_mcp_token_verifier,
@@ -11,6 +15,10 @@ from myscoope_mcp.protocol_server import (
     assert_protocol_tool_surface_is_safe,
     create_mcp_server,
     get_protocol_allowed_tool_names,
+)
+from myscoope_mcp.well_known import (
+    oauth_protected_resource_metadata,
+    openai_apps_challenge,
 )
 
 
@@ -62,6 +70,10 @@ def _print_http_runtime_info(
     print(f"{SERVER_NAME} HTTP MCP server starting.")
     print(f"MCP endpoint: http://{host}:{port}/mcp")
     print(f"Public MCP URL: {public_url}/mcp")
+    print("Well-known endpoints:")
+    print(f"- {public_url}/.well-known/openai-apps-challenge")
+    print(f"- {public_url}/.well-known/oauth-protected-resource")
+    print(f"- {public_url}/.well-known/oauth-protected-resource/mcp")
     print(f"Transport: {STREAMABLE_HTTP_TRANSPORT}")
     print("External MCP auth: enabled")
 
@@ -91,6 +103,73 @@ def _create_http_mcp_server(
     )
 
     return server, public_url
+
+
+def _create_http_app(server) -> Starlette:
+    """
+    Return FastMCP's own streamable HTTP app and prepend public well-known routes.
+
+    Important:
+    FastMCP's streamable_http_app owns the MCP HTTP lifespan/session manager.
+    Wrapping it as a mounted sub-app can break /mcp with runtime 500 errors.
+    Therefore we keep the FastMCP app as the top-level ASGI app and insert
+    OpenAI Apps discovery/domain-verification routes before the MCP routes.
+    """
+    if not hasattr(server, "streamable_http_app"):
+        raise RuntimeError(
+            "This FastMCP version does not expose streamable_http_app(). "
+            "Upgrade mcp[cli] or run without well-known support."
+        )
+
+    app = server.streamable_http_app()
+
+    well_known_routes = [
+        Route(
+            "/.well-known/openai-apps-challenge",
+            openai_apps_challenge,
+            methods=[
+                "GET",
+            ],
+        ),
+        Route(
+            "/.well-known/oauth-protected-resource",
+            oauth_protected_resource_metadata,
+            methods=[
+                "GET",
+            ],
+        ),
+        Route(
+            "/.well-known/oauth-protected-resource/mcp",
+            oauth_protected_resource_metadata,
+            methods=[
+                "GET",
+            ],
+        ),
+    ]
+
+    app.router.routes = [
+        *well_known_routes,
+        *app.router.routes,
+    ]
+
+    return app
+
+
+
+
+def _run_streamable_http_server(
+    *,
+    server,
+    host: str,
+    port: int,
+) -> None:
+    app = _create_http_app(server)
+
+    uvicorn.run(
+        app,
+        host=host,
+        port=port,
+    )
 
 
 def main() -> None:
@@ -148,8 +227,10 @@ def main() -> None:
             public_url=public_url,
         )
 
-        server.run(
-            transport=STREAMABLE_HTTP_TRANSPORT,
+        _run_streamable_http_server(
+            server=server,
+            host=args.host,
+            port=args.port,
         )
         return
 
