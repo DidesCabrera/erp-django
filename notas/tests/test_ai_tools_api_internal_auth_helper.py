@@ -1,6 +1,11 @@
 from django.contrib.auth.models import User
 from django.test import RequestFactory, TestCase, override_settings
 
+from notas.application.services.mcp_user_tokens import (
+    MCP_SCOPE_PROPOSALS_CREATE,
+    MCP_SCOPE_READ,
+    create_mcp_user_token,
+)
 from notas.interface.api.auth import (
     extract_bearer_token,
     get_authorization_header,
@@ -15,6 +20,12 @@ class InternalAPIAuthHelperTests(TestCase):
         self.user = User.objects.create_user(
             username="felipe",
             email="felipe@example.com",
+            password="pass123",
+        )
+
+        self.other_user = User.objects.create_user(
+            username="other",
+            email="other@example.com",
             password="pass123",
         )
 
@@ -220,7 +231,77 @@ class InternalAPIAuthHelperTests(TestCase):
             result.user,
             self.user,
         )
+        self.assertEqual(
+            result.auth_source,
+            "internal_api",
+        )
         self.assertIsNone(result.error)
+
+    def test_resolve_internal_api_user_returns_mcp_user_token_owner(self):
+        created = create_mcp_user_token(
+            user=self.other_user,
+            name="ChatGPT token",
+            scopes=[
+                MCP_SCOPE_READ,
+            ],
+        )
+        request = self.build_request(
+            f"Bearer {created.raw_token}",
+        )
+
+        with self._env(
+            token=None,
+            username=None,
+        ):
+            result = resolve_internal_api_user(
+                request,
+                required_scopes=[
+                    MCP_SCOPE_READ,
+                ],
+            )
+
+        self.assertTrue(result.ok)
+        self.assertEqual(
+            result.user,
+            self.other_user,
+        )
+        self.assertEqual(
+            result.auth_source,
+            "mcp_user_token",
+        )
+
+    def test_resolve_internal_api_user_rejects_mcp_user_token_without_scope(self):
+        created = create_mcp_user_token(
+            user=self.other_user,
+            name="Read-only token",
+            scopes=[
+                MCP_SCOPE_READ,
+            ],
+        )
+        request = self.build_request(
+            f"Bearer {created.raw_token}",
+        )
+
+        result = resolve_internal_api_user(
+            request,
+            required_scopes=[
+                MCP_SCOPE_PROPOSALS_CREATE,
+            ],
+        )
+
+        self.assertFalse(result.ok)
+        self.assertEqual(
+            result.error.code,
+            "mcp_user_token_missing_scope",
+        )
+        self.assertEqual(
+            result.error.status_code,
+            403,
+        )
+        self.assertEqual(
+            result.auth_source,
+            "mcp_user_token",
+        )
 
     def _env(self, token: str | None, username: str | None):
         return TemporaryEnv(
@@ -257,5 +338,3 @@ class TemporaryEnv:
                 os.environ.pop(key, None)
             else:
                 os.environ[key] = previous_value
-
-        return False

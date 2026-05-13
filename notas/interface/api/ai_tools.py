@@ -15,6 +15,10 @@ from notas.application.ai_tools.results import (
     tool_error,
     tool_success,
 )
+from notas.application.services.mcp_user_tokens import (
+    MCP_SCOPE_PROPOSALS_CREATE,
+    MCP_SCOPE_READ,
+)
 from notas.interface.api.decorators import ai_tool_api_view
 from notas.interface.api.responses import ai_tool_json_response
 
@@ -35,7 +39,7 @@ def _missing_required_field_response(field_name: str):
     )
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_health(request):
     return ai_tool_json_response(
         tool_success(
@@ -47,7 +51,7 @@ def ai_tools_health(request):
     )
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_read_food(request):
     payload = request.ai_tool_payload
 
@@ -62,7 +66,7 @@ def ai_tools_read_food(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_read_meal(request):
     payload = request.ai_tool_payload
 
@@ -77,7 +81,7 @@ def ai_tools_read_meal(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_read_dailyplan(request):
     payload = request.ai_tool_payload
 
@@ -92,7 +96,7 @@ def ai_tools_read_dailyplan(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_read_proposal(request):
     payload = request.ai_tool_payload
 
@@ -107,7 +111,7 @@ def ai_tools_read_proposal(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_list_user_proposals(request):
     result = list_user_proposals_tool(
         request.user,
@@ -116,7 +120,7 @@ def ai_tools_list_user_proposals(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_list_food_catalog(request):
     payload = request.ai_tool_payload
 
@@ -129,7 +133,7 @@ def ai_tools_list_food_catalog(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_READ])
 def ai_tools_compare_dailyplan_to_targets(request):
     payload = request.ai_tool_payload
 
@@ -148,7 +152,8 @@ def ai_tools_compare_dailyplan_to_targets(request):
 
     return ai_tool_json_response(result)
 
-@ai_tool_api_view
+
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_PROPOSALS_CREATE])
 def ai_tools_create_validated_dailyplan_proposal(request):
     payload = request.ai_tool_payload
 
@@ -174,7 +179,7 @@ def ai_tools_create_validated_dailyplan_proposal(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_PROPOSALS_CREATE])
 def ai_tools_create_validated_meal_proposal(request):
     payload = request.ai_tool_payload
 
@@ -199,7 +204,7 @@ def ai_tools_create_validated_meal_proposal(request):
     return ai_tool_json_response(result)
 
 
-@ai_tool_api_view
+@ai_tool_api_view(required_scopes=[MCP_SCOPE_PROPOSALS_CREATE])
 def ai_tools_create_validated_dailyplan_build_proposal(request):
     payload = request.ai_tool_payload
 

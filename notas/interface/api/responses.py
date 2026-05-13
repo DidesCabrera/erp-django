@@ -55,6 +55,7 @@ def parse_json_body(request) -> dict:
 
     return payload
 
+
 def internal_api_auth_error_response(error, status: int = 401):
     return JsonResponse(
         {
@@ -66,5 +67,9 @@ def internal_api_auth_error_response(error, status: int = 401):
                 "details": error.details,
             },
         },
-        status=status,
+        status=getattr(
+            error,
+            "status_code",
+            status,
+        ),
     )
