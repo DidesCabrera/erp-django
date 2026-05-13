@@ -1,3 +1,4 @@
+from dataclasses import replace
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
@@ -20,16 +21,42 @@ from myscoope_mcp.tools import (
 from mcp.server.auth.provider import TokenVerifier
 from mcp.server.auth.settings import AuthSettings
 
+from mcp.server.auth.middleware.auth_context import get_access_token
 
 
 SERVER_NAME = "my-scoope-mcp"
 
 
+def _get_current_mcp_bearer_token() -> str | None:
+    access_token = get_access_token()
+
+    if access_token is None:
+        return None
+
+    return access_token.token
+
+
+def _should_forward_mcp_bearer_token(
+    token: str | None,
+) -> bool:
+    if not token:
+        return False
+
+    return token.startswith("mcp_user_")
+
+
 def create_api_client() -> MyscoopeAPIClient:
     config = load_config_from_env()
+    current_bearer_token = _get_current_mcp_bearer_token()
+
+    if _should_forward_mcp_bearer_token(current_bearer_token):
+        config = replace(
+            config,
+            auth_token=current_bearer_token,
+        )
 
     return MyscoopeAPIClient(config)
-
+    
 
 def serialize_tool_result(
     result: MCPToolCallResult,

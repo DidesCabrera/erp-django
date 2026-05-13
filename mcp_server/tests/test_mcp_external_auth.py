@@ -142,5 +142,49 @@ class MCPExternalAuthTests(unittest.IsolatedAsyncioTestCase):
             )
 
 
+    async def test_static_verifier_accepts_mcp_user_token_when_enabled(self):
+        verifier = StaticMCPTokenVerifier(
+            expected_token="external-token",
+            resource="http://127.0.0.1:8001",
+        )
+
+        access_token = await verifier.verify_token(
+            "mcp_user_example-token",
+        )
+
+        self.assertIsNotNone(access_token)
+        self.assertEqual(
+            access_token.token,
+            "mcp_user_example-token",
+        )
+        self.assertEqual(
+            access_token.client_id,
+            "myscoope-mcp-user-token-client",
+        )
+        self.assertEqual(
+            access_token.scopes,
+            [
+                "myscoope:mcp",
+            ],
+        )
+        self.assertEqual(
+            access_token.resource,
+            "http://127.0.0.1:8001",
+        )
+
+    async def test_static_verifier_can_disable_mcp_user_tokens(self):
+        verifier = StaticMCPTokenVerifier(
+            expected_token="external-token",
+            resource="http://127.0.0.1:8001",
+            allow_mcp_user_tokens=False,
+        )
+
+        access_token = await verifier.verify_token(
+            "mcp_user_example-token",
+        )
+
+        self.assertIsNone(access_token)
+
+        
 if __name__ == "__main__":
     unittest.main()

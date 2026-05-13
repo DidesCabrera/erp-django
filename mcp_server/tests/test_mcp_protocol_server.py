@@ -1,5 +1,8 @@
 import unittest
 
+from unittest.mock import patch
+from mcp.server.auth.provider import AccessToken
+
 from mcp.server.fastmcp import FastMCP
 
 from myscoope_mcp.contracts import MCPToolCallResult
@@ -112,5 +115,86 @@ class MCPProtocolServerTests(unittest.TestCase):
         self.assertEqual(server.name, SERVER_NAME)
 
 
+    @patch("myscoope_mcp.protocol_server.get_access_token")
+    def test_create_api_client_uses_current_mcp_access_token_when_available(
+        self,
+        mocked_get_access_token,
+    ):
+        from myscoope_mcp.protocol_server import create_api_client
+
+        mocked_get_access_token.return_value = AccessToken(
+            token="mcp_user_dynamic-token",
+            client_id="client",
+            scopes=[
+                "myscoope:mcp",
+            ],
+            resource="http://127.0.0.1:8001",
+        )
+
+        client = create_api_client()
+
+        self.assertEqual(
+            client.config.auth_token,
+            "mcp_user_dynamic-token",
+        )
+
+    @patch("myscoope_mcp.protocol_server.get_access_token")
+    @patch.dict(
+        "os.environ",
+        {
+            "MYSCOOPE_API_AUTH_TOKEN": "legacy-api-token",
+        },
+        clear=False,
+    )
+
+    def test_create_api_client_falls_back_to_legacy_env_token_without_current_mcp_token(
+        self,
+        mocked_get_access_token,
+    ):
+        from myscoope_mcp.protocol_server import create_api_client
+
+        mocked_get_access_token.return_value = None
+
+        client = create_api_client()
+
+        self.assertEqual(
+            client.config.auth_token,
+            "legacy-api-token",
+        )
+
+    @patch("myscoope_mcp.protocol_server.get_access_token")
+    @patch.dict(
+        "os.environ",
+        {
+            "MYSCOOPE_API_AUTH_TOKEN": "legacy-api-token",
+        },
+        clear=False,
+    )
+    def test_create_api_client_uses_legacy_env_token_for_external_mcp_token(
+        self,
+        mocked_get_access_token,
+    ):
+        from mcp.server.auth.provider import AccessToken
+        from myscoope_mcp.protocol_server import create_api_client
+
+        mocked_get_access_token.return_value = AccessToken(
+            token="external-dev-mcp-token",
+            client_id="myscoope-external-mcp-client",
+            scopes=[
+                "myscoope:mcp",
+            ],
+            resource="http://127.0.0.1:8001",
+        )
+
+        client = create_api_client()
+
+        self.assertEqual(
+            client.config.auth_token,
+            "legacy-api-token",
+        )
+
+
+
+        
 if __name__ == "__main__":
     unittest.main()
