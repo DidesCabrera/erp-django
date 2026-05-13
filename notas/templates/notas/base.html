@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script>
+        (function () {
+            const storageKey = "myscoope-theme";
+            const validThemes = ["light", "dark"];
+            const savedTheme = localStorage.getItem(storageKey);
+
+            const prefersDark = window.matchMedia &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+            const fallbackTheme = prefersDark ? "dark" : "light";
+            const theme = validThemes.includes(savedTheme) ? savedTheme : fallbackTheme;
+
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Notas{% endblock %}</title>
