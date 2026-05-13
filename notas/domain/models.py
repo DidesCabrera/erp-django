@@ -81,6 +81,52 @@ class Subscription(models.Model):
         return f"{self.member} → {self.nutritionist}"
 
 
+class MCPUserToken(models.Model):
+    user = models.ForeignKey(
+        User,
+        related_name="mcp_user_tokens",
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(max_length=120)
+    token_hash = models.CharField(
+        max_length=64,
+        unique=True,
+    )
+    scopes = models.JSONField(default=list)
+    is_active = models.BooleanField(default=True)
+    expires_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    revoked_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    last_used_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = [
+            "-created_at",
+            "-id",
+        ]
+
+    def __str__(self):
+        return f"{self.name} ({self.user.username})"
+
+    @property
+    def is_revoked(self):
+        return self.revoked_at is not None
+
+    def has_scope(self, scope: str) -> bool:
+        return scope in self.scopes
+
+
+
+
 # ==================================================
 # FOOD
 # ==================================================
