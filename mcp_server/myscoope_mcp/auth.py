@@ -7,19 +7,29 @@ from pydantic import AnyHttpUrl
 
 
 DEFAULT_MCP_AUTH_SCOPE = "myscoope:mcp"
+MCP_USER_TOKEN_PREFIX = "mcp_user_"
 
 
 class StaticMCPTokenVerifier(TokenVerifier):
     """
-    Minimal external MCP auth for the remote MVP.
+    Transitional external MCP auth verifier.
 
-    This verifier protects the MCP server boundary:
+    Supported modes:
 
-    External MCP client
-        -> Authorization: Bearer MYSCOOPE_MCP_EXTERNAL_AUTH_TOKEN
-        -> My Scoope MCP server
+    1. Legacy technical token:
+       External MCP client
+           -> Authorization: Bearer MYSCOOPE_MCP_EXTERNAL_AUTH_TOKEN
+           -> My Scoope MCP server
+           -> Django API with MYSCOOPE_API_AUTH_TOKEN fallback
 
-    It intentionally does not reuse the internal Django API token.
+    2. User token:
+       External MCP client
+           -> Authorization: Bearer mcp_user_xxx
+           -> My Scoope MCP server
+           -> Django API with the same mcp_user_xxx token
+
+    The final OAuth version should replace this transitional user-token
+    acceptance with proper OAuth-issued access token verification.
     """
 
     def __init__(
@@ -27,26 +37,44 @@ class StaticMCPTokenVerifier(TokenVerifier):
         expected_token: str,
         scope: str = DEFAULT_MCP_AUTH_SCOPE,
         resource: str | None = None,
+        allow_mcp_user_tokens: bool = True,
     ) -> None:
         self.expected_token = expected_token
         self.scope = scope
         self.resource = resource
+        self.allow_mcp_user_tokens = allow_mcp_user_tokens
 
     async def verify_token(self, token: str) -> AccessToken | None:
-        if not self.expected_token:
+        if not token:
             return None
 
-        if not hmac.compare_digest(token, self.expected_token):
-            return None
+        if (
+            self.expected_token
+            and hmac.compare_digest(token, self.expected_token)
+        ):
+            return AccessToken(
+                token=token,
+                client_id="myscoope-external-mcp-client",
+                scopes=[
+                    self.scope,
+                ],
+                resource=self.resource,
+            )
 
-        return AccessToken(
-            token=token,
-            client_id="myscoope-external-mcp-client",
-            scopes=[
-                self.scope,
-            ],
-            resource=self.resource,
-        )
+        if (
+            self.allow_mcp_user_tokens
+            and token.startswith(MCP_USER_TOKEN_PREFIX)
+        ):
+            return AccessToken(
+                token=token,
+                client_id="myscoope-mcp-user-token-client",
+                scopes=[
+                    self.scope,
+                ],
+                resource=self.resource,
+            )
+
+        return None
 
 
 def get_external_mcp_auth_token() -> str | None:
@@ -112,4 +140,5 @@ def create_external_mcp_token_verifier(
         expected_token=token,
         scope=scope,
         resource=public_url,
+        allow_mcp_user_tokens=True,
     )
