@@ -129,7 +129,7 @@ class MCPUserTokenServiceTests(TestCase):
         self.assertFalse(result.ok)
         self.assertEqual(
             result.error.code,
-            "mcp_user_token_inactive",
+            "mcp_user_token_revoked",
         )
 
         created.token.refresh_from_db()
@@ -137,6 +137,8 @@ class MCPUserTokenServiceTests(TestCase):
         self.assertIsNotNone(
             created.token.revoked_at,
         )
+
+
 
     def test_validate_mcp_user_token_rejects_expired_token(self):
         created = create_mcp_user_token(

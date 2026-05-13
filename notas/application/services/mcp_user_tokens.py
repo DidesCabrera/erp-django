@@ -124,20 +124,20 @@ def validate_mcp_user_token(
             )
         )
 
-    if not token.is_active:
-        return MCPUserTokenValidationResult(
-            error=MCPUserTokenValidationError(
-                code="mcp_user_token_inactive",
-                message="MCP user token is inactive.",
-                details={},
-            )
-        )
-
     if token.revoked_at is not None:
         return MCPUserTokenValidationResult(
             error=MCPUserTokenValidationError(
                 code="mcp_user_token_revoked",
                 message="MCP user token has been revoked.",
+                details={},
+            )
+        )
+
+    if not token.is_active:
+        return MCPUserTokenValidationResult(
+            error=MCPUserTokenValidationError(
+                code="mcp_user_token_inactive",
+                message="MCP user token is inactive.",
                 details={},
             )
         )
