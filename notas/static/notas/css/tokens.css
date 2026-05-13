@@ -1,11 +1,18 @@
 :root {
+    /* =========================================================
+       Legacy color tokens
+       ---------------------------------------------------------
+       Estos tokens ya existen en el sistema y se mantienen para
+       no romper componentes actuales.
+       ========================================================= */
+
     --color-primary: #4f46e5;
     --color-primary-light: #818cf8;
     --color-secondary: #14b8a6;
-  
+
     --color-text: #1f2937;
     --color-text-muted: #6b7280;
-  
+
     --color-bg: #ffffff; /* mas claro */
     --color-bg-3: #f8f8f8; /* claro - se usa solo en bg de alloc-bar */
     --color-bg-2: #f5f5f5; /* oscuro */
@@ -14,22 +21,22 @@
     --color-bg-picker: rgb(255, 251, 245);
     --color-bg-picker2: rgba(0, 0, 0, 0.010);
 
-    --color-bg-98:  rgb(32, 32, 32);/* gris ultra oscuro */
+    --color-bg-98: rgb(32, 32, 32); /* gris ultra oscuro */
 
     --color-border-1: #dfdfdf;
     --color-border-2: #ebebeb;
-    
+
     --color-protein: #00d0f5;
     --color-carbs: #01e888;
-    --color-fat: #bbff00; 
+    --color-fat: #bbff00;
     --color-qty: rgb(255, 251, 130);
-    --color-kcal:  rgb(255, 249, 245);
-    --color-kcal-border:  rgb(254, 221, 200);
-    --color-ppk:  rgb(255, 209, 110);
-    --color-ppk0:  rgb(255, 182, 159);
+    --color-kcal: rgb(255, 249, 245);
+    --color-kcal-border: rgb(254, 221, 200);
+    --color-ppk: rgb(255, 209, 110);
+    --color-ppk0: rgb(255, 182, 159);
 
     --color-dailyplan: rgb(98, 41, 206);
-    --color-dpm:  rgb(0, 132, 162);
+    --color-dpm: rgb(0, 132, 162);
     --color-meal: #cf34b0;
     --color-food: #ff8800;
     --color-dailyplan-light: #ffffff;
@@ -40,4 +47,133 @@
 
     --color-actions: #0054e5;
 
+    /* =========================================================
+       Semantic theme tokens — Light mode
+       ---------------------------------------------------------
+       Estos tokens son la nueva capa recomendada para implementar
+       dark mode de forma gradual y segura.
+       ========================================================= */
+
+    /* Surfaces */
+    --surface-app: #f5f5f5;
+    --surface-page: #f8f8f8;
+    --surface-card: #ffffff;
+    --surface-card-muted: #fafafa;
+    --surface-elevated: #ffffff;
+    --surface-picker: rgb(255, 251, 245);
+    --surface-picker-muted: rgba(0, 0, 0, 0.010);
+    --surface-sidebar: rgb(32, 32, 32);
+
+    /* Text */
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --text-soft: #8a8a8a;
+    --text-subtle: #a3a3a3;
+    --text-inverted: #ffffff;
+    --text-link: #0054e5;
+
+    /* Borders */
+    --border-soft: #ebebeb;
+    --border-default: #dfdfdf;
+    --border-strong: #cfcfcf;
+    --border-inverted: rgba(255, 255, 255, 0.18);
+
+    /* Interactive */
+    --interactive-primary: #0054e5;
+    --interactive-primary-hover: #0044bd;
+    --interactive-secondary: #4f46e5;
+    --interactive-muted: #6b7280;
+    --interactive-hover: rgba(0, 0, 0, 0.04);
+    --interactive-active: rgba(0, 0, 0, 0.08);
+
+    /* Inputs */
+    --input-bg: #ffffff;
+    --input-border: #dfdfdf;
+    --input-text: #1f2937;
+    --input-placeholder: #9ca3af;
+    --input-focus-border: #0054e5;
+    --input-focus-shadow: rgba(0, 84, 229, 0.18);
+
+    /* Shadows */
+    --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.05);
+    --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.12);
+
+    /* Nutrition semantic aliases */
+    --nutrition-protein: var(--color-protein);
+    --nutrition-carbs: var(--color-carbs);
+    --nutrition-fat: var(--color-fat);
+    --nutrition-qty: var(--color-qty);
+    --nutrition-kcal: var(--color-kcal);
+    --nutrition-kcal-border: var(--color-kcal-border);
+    --nutrition-ppk: var(--color-ppk);
+    --nutrition-ppk-muted: var(--color-ppk0);
+
+    /* Entity semantic aliases */
+    --entity-dailyplan: var(--color-dailyplan);
+    --entity-dpm: var(--color-dpm);
+    --entity-meal: var(--color-meal);
+    --entity-food: var(--color-food);
+    --entity-program: var(--color-program);
+    --entity-inbox: var(--color-inbox);
+    --entity-home: var(--color-home);
+    --entity-profile: var(--color-profile);
+}
+
+html[data-theme="dark"] {
+    /* =========================================================
+       Semantic theme tokens — Dark mode
+       ---------------------------------------------------------
+       Estos valores solo afectan componentes que usen la nueva
+       capa semántica de tokens.
+       ========================================================= */
+
+    /* Surfaces */
+    --surface-app: #101010;
+    --surface-page: #121212;
+    --surface-card: #181818;
+    --surface-card-muted: #202020;
+    --surface-elevated: #242424;
+    --surface-picker: #1f1b16;
+    --surface-picker-muted: rgba(255, 255, 255, 0.035);
+    --surface-sidebar: #111111;
+
+    /* Text */
+    --text-main: #f5f5f5;
+    --text-muted: #b5b5b5;
+    --text-soft: #8f8f8f;
+    --text-subtle: #737373;
+    --text-inverted: #111111;
+    --text-link: #8ab4ff;
+
+    /* Borders */
+    --border-soft: #2a2a2a;
+    --border-default: #343434;
+    --border-strong: #4a4a4a;
+    --border-inverted: rgba(0, 0, 0, 0.18);
+
+    /* Interactive */
+    --interactive-primary: #8ab4ff;
+    --interactive-primary-hover: #a9c8ff;
+    --interactive-secondary: #a5b4fc;
+    --interactive-muted: #a3a3a3;
+    --interactive-hover: rgba(255, 255, 255, 0.06);
+    --interactive-active: rgba(255, 255, 255, 0.10);
+
+    /* Inputs */
+    --input-bg: #181818;
+    --input-border: #343434;
+    --input-text: #f5f5f5;
+    --input-placeholder: #737373;
+    --input-focus-border: #8ab4ff;
+    --input-focus-shadow: rgba(138, 180, 255, 0.22);
+
+    /* Shadows */
+    --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.28);
+    --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.24);
+    --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.38);
+
+    /* Entity adjustments */
+    --entity-home: #f5f5f5;
+    --entity-profile: #f5f5f5;
 }
