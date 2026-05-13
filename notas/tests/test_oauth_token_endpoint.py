@@ -275,3 +275,26 @@ class OAuthTokenEndpointTests(TestCase):
             data["error"],
             "unsupported_grant_type",
         )
+
+    def test_token_endpoint_is_csrf_exempt_for_external_clients(self):
+        csrf_client = Client(enforce_csrf_checks=True)
+        raw_code = self._create_authorization_code()
+
+        response = csrf_client.post(
+            reverse("oauth_token"),
+            data={
+                "grant_type": "authorization_code",
+                "client_id": "chatgpt",
+                "code": raw_code,
+                "redirect_uri": self.redirect_uri,
+                "code_verifier": self.code_verifier,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        self.assertTrue(
+            data["access_token"].startswith("mcp_user_"),
+        )

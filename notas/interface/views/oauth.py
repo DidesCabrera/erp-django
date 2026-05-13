@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
 from notas.application.services.mcp_user_tokens import (
@@ -285,6 +286,7 @@ def oauth_authorize_consent(request):
     )
 
 
+@csrf_exempt
 @require_POST
 def oauth_token(request):
     grant_type = request.POST.get("grant_type", "").strip()
