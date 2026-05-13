@@ -1,5 +1,7 @@
-.section_picker{
-  background: rgb(250, 250, 250);
+.section_picker {
+  background: var(--surface-card-muted);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
   border-radius: 10px;
   margin-top: 12px;
   margin-bottom: 12px;
@@ -9,14 +11,14 @@
   display: none;
 }
 
-.add-row{
+.add-row {
   display: flex;
   gap: 6px;
   align-items: center;
   padding: 12px 12px;
 }
 
-.btn-create-picker{
+.btn-create-picker {
   display: flex;
   justify-content: center;
 }
@@ -38,8 +40,9 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--surface-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
   border-radius: 6px;
   max-height: 340px;
   overflow-y: auto;
@@ -47,31 +50,36 @@
   margin: 4px 0 0;
   list-style: none;
   z-index: 250;
+  box-shadow: var(--shadow-elevated);
 }
 
-p.h3-table{
+p.h3-table {
   font-weight: 600;
+  color: var(--text-main);
 }
 
-p.h3-table2{
+p.h3-table2 {
   margin: 0;
   padding: 0;
   font-size: 14px;
   font-weight: 600;
+  color: var(--text-main);
 }
 
 .food-item {
   margin: 0;
   cursor: pointer;
+  color: var(--text-main);
 }
 
 .food-item:hover {
-  background: #f5f5f5;
+  background: var(--interactive-hover);
 }
 
 .food-name,
 .meal-name {
   font-size: 14px;
+  color: var(--text-main);
 }
 
 .alloc-bar-picker {
@@ -80,6 +88,7 @@ p.h3-table2{
   margin-top: 4px;
   border-radius: 3px;
   overflow: hidden;
+  background: var(--alloc-picker-bg);
 }
 
 .alloc-bar-picker span {
@@ -101,53 +110,74 @@ p.h3-table2{
 
 .preview-section {
   margin-top: 12px;
+  color: var(--text-main);
 }
 
 .preview-section h4 {
   margin-bottom: 6px;
+  color: var(--text-main);
 }
 
-#form-preview{
-  margin: 0px;
-  padding: 0px;
+#form-preview {
+  margin: 0;
+  padding: 0;
 }
 
 #food-search,
-#meal-search{
+#meal-search {
   width: 400px;
   height: 32px;
-  border: 1px solid var(--color-border-1);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   padding-left: 10px;
+  background: var(--input-bg);
+  color: var(--input-text);
+}
+
+#food-search::placeholder,
+#meal-search::placeholder,
+.note-picker::placeholder {
+  color: var(--input-placeholder);
+}
+
+#food-search:focus,
+#meal-search:focus,
+#food-quantity:focus,
+.hour-picker:focus,
+.note-picker:focus {
+  outline: none;
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow);
 }
 
 #dp-form:not(.has-selection) button[type="submit"] {
   display: none;
 }
 
-
-#food-quantity{
-  background-color: white;
-  border: 1px solid rgba(0,0,0,0.15);
+#food-quantity {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
   text-align: center;
   width: 50px;
-  line-height: 20px;   /* ← clave */
+  line-height: 20px;
   padding: 2px 8px;
   font-weight: 500;
 }
 
-.qty-preview{
+.qty-preview {
   margin-top: 12px;
   padding: 4px;
   margin-bottom: 12px;
+  color: var(--text-main);
 }
 
 /* ---------------------------
    EXTRA FIELDS
    --------------------------- */
 
-.extra-fields{
+.extra-fields {
   display: flex;
   align-items: center;
   justify-content: right;
@@ -155,20 +185,24 @@ p.h3-table2{
   margin-bottom: 20px;
 }
 
-.hour-picker{
+.hour-picker {
   width: 100px;
   height: 25px;
-  border: 1px solid var(--color-border-1);
+  border: 1px solid var(--input-border);
   border-radius: 4px;
   text-align: center;
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
-.note-picker{
+.note-picker {
   width: 300px;
   height: 25px;
-  border: 1px solid var(--color-border-1);
+  border: 1px solid var(--input-border);
   border-radius: 4px;
   padding-left: 10px;
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
 /* ---------------------------
@@ -177,7 +211,7 @@ p.h3-table2{
 
 .actions-row {
   display: flex;
-  justify-content: flex-end; /* 👈 a la derecha */
+  justify-content: flex-end;
   align-items: center;
   padding: 12px 20px 20px 20px;
   gap: 8px;
@@ -193,7 +227,10 @@ p.h3-table2{
   border-radius: 10px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 /* ---------------------------
@@ -202,13 +239,14 @@ p.h3-table2{
 
 .btn-add-picker,
 .btn-update-picker {
-  background-color: black;
-  color: #fff;
+  background-color: var(--text-main);
+  color: var(--text-inverted);
 }
 
 .btn-add-picker:hover,
 .btn-update-picker:hover {
-  background-color: rgb(187, 187, 187);
+  background-color: var(--interactive-primary);
+  color: #ffffff;
 }
 
 /* ---------------------------
@@ -217,15 +255,15 @@ p.h3-table2{
 
 .btn-cancel-picker {
   background-color: transparent;
-  color: var(--color-text-muted, #555);
+  color: var(--text-muted);
   border: none;
   margin-left: 4px;
 }
 
 .btn-cancel-picker:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--interactive-hover);
+  color: var(--text-main);
 }
-
 
 .btn-cancel-picker-inline {
   margin-left: auto;
@@ -234,33 +272,41 @@ p.h3-table2{
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
   flex: 0 0 auto;
+  background-color: transparent;
+  color: var(--text-muted);
+}
+
+.btn-cancel-picker-inline:hover {
+  background-color: var(--interactive-hover);
+  color: var(--text-main);
 }
 
 .btn-update-picker {
   font-weight: 600;
 }
 
-@media (max-width: 768px){
-
-  .add-row{
+@media (max-width: 768px) {
+  .add-row {
     flex-direction: column;
     align-items: stretch;
     height: auto;
-    gap:10px;
+    gap: 10px;
     padding: 12px;
     padding-bottom: 6px;
   }
 
-  .add-row > *{
+  .add-row > * {
     width: 100%;
   }
 
-  .selector{
+  .selector {
     width: 100%;
   }
-
 }
 
 .impact-positive {
@@ -276,28 +322,30 @@ p.h3-table2{
 .ppk-inline {
   font-size: 0.75rem;
   background-color: var(--color-ppk);
+  color: #111111;
   padding: 2px 4px;
   border-radius: 4px;
 }
 
-.picker-layout{
-  display:flex;
-  width:100%;
+.picker-layout {
+  display: flex;
+  width: 100%;
 }
 
-.picker-section{
-  flex:1;
-  min-width:0;
+.picker-section {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-main);
 }
 
-.picker-section h3{
+.picker-section h3 {
   font-size: 16px;
+  color: var(--text-main);
 }
 
 /* mobile LEGACY */
 
-
-.table-preview-picker{
+.table-preview-picker {
   min-width: 0;
 }
 
@@ -310,11 +358,11 @@ p.h3-table2{
 .table-preview-picker tbody tr {
   display: grid;
   grid-template-columns:
-    70px   /* label (Kcal / Protein etc) */
-    70px     /* Meal */
-    70px     /* Meal */
-    70px     /* Meal */
-    1fr;  /* Alloc bar */
+    70px
+    70px
+    70px
+    70px
+    1fr;
   align-items: center;
 }
 
@@ -323,46 +371,47 @@ p.h3-table2{
 .table-preview-picker.dpm tbody tr {
   display: grid;
   grid-template-columns:
-    55px   /* label (Kcal / Protein etc) */
-    65px     /* Meal */
-    65px     /* Meal */
-    1fr  /* Alloc bar */
-    65px     /* Meal */
-    1fr;  /* Alloc bar */
+    55px
+    65px
+    65px
+    1fr
+    65px
+    1fr;
   align-items: center;
 }
 
-.picker-layout{
+.picker-layout {
   padding: 12px 18px;
-  background: rgb(250, 250, 250);
+  background: var(--surface-card-muted);
+  color: var(--text-main);
 }
-
 
 .preview-picker {
   margin: 0;
+  color: var(--text-main);
 }
 
-.table-preview-picker{
+.table-preview-picker {
   background-color: transparent;
+  color: var(--text-main);
 }
 
-.picker-impact{
+.picker-impact {
   margin-top: 4px;
   margin-left: 18px;
   padding-left: 18px;
-  border-left: 1px solid var(--color-border-1);
+  border-left: 1px solid var(--border-soft);
+  color: var(--text-main);
 }
 
-@media (max-width: 768px){
-
-  .picker-impact{
+@media (max-width: 768px) {
+  .picker-impact {
     margin-left: 0;
     padding-left: 0;
     border-left: none;
     margin-top: 22px;
     margin-bottom: 10px;
   }
-
 }
 
 .selector {
@@ -436,7 +485,7 @@ p.h3-table2{
   .add-row--meal-picker .btn-create-picker a {
     width: auto;
     font-size: 14px;
-    color: black;
+    color: var(--text-main);
     margin-right: 10px;
   }
 
@@ -447,17 +496,15 @@ p.h3-table2{
   }
 }
 
-@media (max-width: 768px){
-
-  .picker-layout{
-    flex-direction:column;
+@media (max-width: 768px) {
+  .picker-layout {
+    flex-direction: column;
     padding: 18px 10px;
   }
 
   .actions-row {
     padding: 8px 12px 20px 12px;
   }
-
 }
 
 .picker-preview-grid {
@@ -489,15 +536,18 @@ p.h3-table2{
 
 .picker-preview-grid__cell {
   min-width: 0;
+  color: var(--text-main);
 }
 
 .picker-preview-grid__cell--label {
   font-size: 13px;
+  color: var(--text-muted);
 }
 
 .picker-preview-grid__cell--value,
 .picker-preview-grid__cell--ppk {
   text-align: center;
+  color: var(--text-main);
 }
 
 .picker-preview-grid__cell--alloc {
@@ -588,6 +638,7 @@ p.h3-table2{
   gap: 10px;
   width: 100%;
   min-width: 0;
+  color: var(--text-main);
 }
 
 .picker-preview-kpi__tot {
@@ -600,9 +651,10 @@ p.h3-table2{
   text-align: center;
   padding: 10px 8px;
   margin: 4px 0;
-  background-color: var(--color-kcal);
-  border: 3px solid var(--color-kcal-border);
   border-radius: 16px;
+  background-color: var(--kpi-total-bg);
+  border: 3px solid var(--kpi-total-border);
+  color: var(--kpi-total-text);
 }
 
 .picker-preview-kpi__tot-value {
@@ -618,12 +670,14 @@ p.h3-table2{
   font-size: 0.78rem;
   font-weight: 500;
   line-height: 1.1;
+  color: var(--kpi-total-text);
 }
 
 .picker-preview-kpi__tot-result {
   font-size: 22px;
   font-weight: 500;
   line-height: 1.1;
+  color: var(--kpi-total-text);
 }
 
 .picker-preview-kpi__macros {
@@ -632,14 +686,15 @@ p.h3-table2{
   gap: 0;
   width: 100%;
   min-width: 0;
+  color: var(--text-main);
 }
 
 .picker-preview-kpi__row {
   display: grid;
   align-items: center;
   gap: 6px;
-  border-bottom: 1px solid var(--color-border-2);
-  grid-template-columns: 
+  border-bottom: 1px solid var(--border-soft);
+  grid-template-columns:
     15px
     75px
     60px
@@ -653,6 +708,7 @@ p.h3-table2{
 .picker-preview-kpi__label {
   font-weight: 600;
   font-size: 13px;
+  color: var(--text-main);
 }
 
 .picker-preview-kpi__value {
@@ -663,6 +719,7 @@ p.h3-table2{
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   font-size: 13px;
+  color: var(--text-main);
 }
 
 .picker-preview-kpi__ppk {
@@ -687,7 +744,6 @@ p.h3-table2{
 }
 
 @media (max-width: 768px) {
-
   .picker-preview-kpi__tot {
     flex: 0 0 85px;
     padding: 8px 6px;
@@ -711,8 +767,6 @@ p.h3-table2{
   }
 }
 
-
-
 .picker-preview-kpi__alloc {
   min-width: 75px;
   width: 100%;
@@ -722,33 +776,35 @@ p.h3-table2{
   display: flex;
   flex-direction: column;
   gap: 18px;
+  color: var(--text-main);
 }
 
 .picker-preview-section {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  color: var(--text-main);
 }
 
 .picker-preview-section__title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
+  color: var(--text-main);
 }
 
 @media (max-width: 768px) {
-
   .picker-preview-section__title {
     font-size: 18px;
   }
 
-  .picker-section h3{
+  .picker-section h3 {
     font-size: 18px;
   }
+
   .preview-picker--stacked {
     gap: 20px;
   }
-
 }
 
 .picker-title-row {
@@ -756,6 +812,7 @@ p.h3-table2{
   align-items: center;
   gap: 8px;
   margin-bottom: 4px;
+  color: var(--text-main);
 }
 
 .picker-title-row.selected {
@@ -765,4 +822,5 @@ p.h3-table2{
 .picker-title-row h2,
 .picker-title-row h3 {
   margin: 0;
+  color: var(--text-main);
 }

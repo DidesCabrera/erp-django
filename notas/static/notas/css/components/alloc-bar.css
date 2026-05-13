@@ -18,13 +18,13 @@
 .alloc-bar-bg {
   position: absolute;
   inset: 0;
-  background: var(--color-bg-3);
+  background: var(--alloc-bar-bg);
   z-index: 0;
 }
 
 .alloc-bar-bg.picker {
   border-radius: 0 6px 6px 0;
-  background-color: white;
+  background-color: var(--alloc-picker-bg);
   border-left: none;
 }
 

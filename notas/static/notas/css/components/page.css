@@ -12,7 +12,7 @@
 .list-page-title h2{
     font-size: 22px;
     font-weight: 500;
-    color: rgb(25, 25, 25);
+    color: var(--text-main);
     margin-bottom: 0;
 }
 
@@ -25,19 +25,25 @@
     margin-top: 18px;
     padding: 0px;
     border-radius: 18px;
+    border: 1px solid var(--border-soft);
+}
+
+.page.list{
+    border: none;
 }
 
 .page--detail{
     max-width: 900px;
     margin-top: 18px;
     padding: 26px 40px;
-    background-color: white;
+    background-color: var(--surface-card);
+    color: var(--text-main);
 }
 
 .page--detail.dpm_meal{
-    border-radius: 0 0 14px 14px;
+    border-radius: 14px;
     margin-top: 0;
-    border-width: 0 1px 1px 1px;
+    border-width: 1px;
 }
 
 

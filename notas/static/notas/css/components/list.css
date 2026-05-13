@@ -17,8 +17,7 @@
     }
 
     .dailyplan-detail__children-header,
-    .dailyplan-detail__foods-aggregation,
-    .dailyplan-detail__children-separator {
+    .dailyplan-detail__foods-aggregation {
         margin-left: 16px;
         margin-right: 16px;
     }

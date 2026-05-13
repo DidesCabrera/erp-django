@@ -15,9 +15,6 @@
     {% include "components/card_main_dailyplan.html" with main_card=vm.content.main_card %}
   {% endif %}
 
-
-  <hr>
-
   <!-- MEALS LIST =========================== -->
   <div class="page-list dailyplan-detail__children-bleed">
     {% if vm.content.child_cards %}
@@ -28,8 +25,7 @@
           {{ vm.content.structural_indicators.foods_count }} Alimentos
         </p>
       </div>
-      
-      <hr class="dailyplan-detail__children-separator">
+
 
       <div class="dailyplan-detail__foods-aggregation">
         {% include "components/grid_foods_aggregation.html" with foods=vm.content.foods_aggregation %}

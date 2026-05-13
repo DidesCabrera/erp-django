@@ -9,8 +9,6 @@
     background-color: rgb(21, 21, 21);
     color: rgb(227, 227, 227);
     font-weight: 500;
-    border: 1px solid var(--color-border-1);
-    border-width: 1px 1px 0 1px;
     border-radius: 14px;
     margin-bottom: 12px;
 }
@@ -97,4 +95,33 @@
         grid-template-columns: 1fr 1fr 1fr auto;
     }
     
+}
+
+
+/* =========================================================
+   Theme-aware DPM mini cards
+   ========================================================= */
+
+.card-mini-dpm {
+    background: var(--surface-card-muted);
+    color: var(--text-main);
+    border: 1px solid var(--border-soft);
+}
+
+html[data-theme="dark"] .card-mini-dpm {
+    background: var(--surface-card-muted);
+    color: var(--text-main);
+    border-color: var(--border-soft);
+}
+
+.card-mini-dpm .card-title,
+.card-mini-dpm .card-title-comp,
+.card-mini-dpm .main-title h3 {
+    color: var(--text-main);
+}
+
+.card-mini-dpm .card-icon,
+.card-mini-dpm .label-fork,
+.card-mini-dpm .title-card-block {
+    color: var(--text-muted);
 }

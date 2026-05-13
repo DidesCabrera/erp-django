@@ -432,3 +432,114 @@
   }
 }
     
+
+/* =========================================================
+   Theme-aware icons
+   ========================================================= */
+
+   .action-card-icon,
+   .search-icon-add-row-icon,
+   .add-row-icon,
+   .mobile-menu-btn,
+   .back-header-icon,
+   .menu-icon,
+   .collapse-list-icon,
+   .more-horizontal-icon,
+   .header-action-icon,
+   .metadata-icon,
+   .page-icon,
+   .view-list-icon,
+   .welcome-icon,
+   .table-icon {
+       color: var(--text-main);
+   }
+   
+   .edit-title-icon,
+   .card-icon,
+   .table-info-icon {
+       color: var(--text-muted);
+   }
+   
+   html[data-theme="dark"] .action-card-icon,
+   html[data-theme="dark"] .search-icon-add-row-icon,
+   html[data-theme="dark"] .add-row-icon,
+   html[data-theme="dark"] .mobile-menu-btn,
+   html[data-theme="dark"] .back-header-icon,
+   html[data-theme="dark"] .menu-icon,
+   html[data-theme="dark"] .collapse-list-icon,
+   html[data-theme="dark"] .more-horizontal-icon,
+   html[data-theme="dark"] .header-action-icon,
+   html[data-theme="dark"] .metadata-icon,
+   html[data-theme="dark"] .page-icon,
+   html[data-theme="dark"] .view-list-icon,
+   html[data-theme="dark"] .welcome-icon,
+   html[data-theme="dark"] .table-icon {
+       color: var(--text-main);
+   }
+   
+   html[data-theme="dark"] .edit-title-icon,
+   html[data-theme="dark"] .card-icon,
+   html[data-theme="dark"] .table-info-icon {
+       color: var(--text-muted);
+   }
+   
+   /* Íconos sobre fondos de entidad o nutrición: se mantienen blancos/negros según diseño original */
+   
+   .profile-icon,
+   .dpm-icon,
+   .selected-picker-icon,
+   .preview-picker-icon,
+   .home-stat-icon,
+   .home-section-header-icon,
+   .main-modal-icon,
+   .enter-user-icon {
+       color: #ffffff;
+   }
+   
+   .home-stat-icon.weight {
+       color: #000000;
+   }
+
+   /* =========================================================
+   Entity-background icon corrections
+   ========================================================= */
+
+/* DPM icon normal: oscuro en light mode, claro en dark mode */
+.dpm-icon {
+  color: var(--text-main);
+}
+
+/* Íconos que van sobre fondos de entidad: siempre blancos */
+.label-entity .card-icon,
+.label-entity .card-icon.main,
+.label-entity svg,
+.label-entity i,
+.card-icon.main,
+.home-stat-icon.food,
+.home-stat-icon.meal,
+.home-stat-icon.dailyplan,
+.home-section-header-icon.food,
+.home-section-header-icon.meal,
+.home-section-header-icon.dailyplan,
+.preview-picker-icon.food,
+.preview-picker-icon.meal,
+.preview-picker-icon.dailyplan,
+.selected-picker-icon.food,
+.selected-picker-icon.meal,
+.selected-picker-icon.dailyplan,
+.main-modal-icon.food,
+.main-modal-icon.meal,
+.main-modal-icon.dailyplan {
+  color: #ffffff;
+}
+
+/* Caso explícito: utensil/clipboard dentro de fondos de entidad */
+.lucide-clipboard-list.card-icon.main,
+.lucide-utensils.card-icon:not(.dpm-icon) {
+  color: #ffffff;
+}
+
+/* DPM icon específico: gana sobre la regla anterior */
+.lucide-utensils.dpm-icon {
+  color: var(--text-main);
+}

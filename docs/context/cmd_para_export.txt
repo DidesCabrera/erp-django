@@ -234,3 +234,19 @@ git push origin main
 
 
 python scripts/openai_remote_mcp_smoke.py
+
+
+
+
+
+MYSCOOPE_MCP_RESOURCE_URL
+https://myscoope-mcp.onrender.com
+
+MYSCOOPE_OAUTH_ISSUER_URL
+https://www.myscoope.com
+
+MYSCOOPE_MCP_AUTH_ISSUER_URL
+https://www.myscoope.com
+
+
+

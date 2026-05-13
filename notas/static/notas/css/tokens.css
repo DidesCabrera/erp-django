@@ -109,6 +109,16 @@
     --nutrition-ppk: var(--color-ppk);
     --nutrition-ppk-muted: var(--color-ppk0);
 
+    /* Alloc backgrounds */
+   --alloc-bar-bg: var(--color-bg-3);
+   --alloc-cell-bg: #ffffff;
+   --alloc-picker-bg: var(--color-bg-3);
+
+   /* KPI total */
+   --kpi-total-bg: var(--color-kcal);
+   --kpi-total-border: var(--color-kcal-border);
+   --kpi-total-text: #111111;
+
     /* Entity semantic aliases */
     --entity-dailyplan: var(--color-dailyplan);
     --entity-dpm: var(--color-dpm);
@@ -172,5 +182,15 @@ html[data-theme="dark"] {
     --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.28);
     --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.24);
     --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.38);
+
+    /* Alloc backgrounds */
+      --alloc-bar-bg: #313131;
+      --alloc-cell-bg: #313131;
+      --alloc-picker-bg: #313131;
+
+      /* KPI total */
+      --kpi-total-bg: #26211d;
+      --kpi-total-border: #5a4031;
+      --kpi-total-text: #f5f5f5;
 
 }
