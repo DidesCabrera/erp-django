@@ -9,7 +9,7 @@
           <div class="data-grid-row data-grid-row--foods-aggregation">
               <div class="data-grid-cell data-grid-cell--foods">
                   {% for food in foods %}
-                      {{ food.food.name }}{% if not forloop.last %} · {% endif %}
+                      {{ food.food.name }}{% if not forloop.last %}, {% endif %}
                   {% endfor %}
               </div>
           </div>

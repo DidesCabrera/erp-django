@@ -21,7 +21,7 @@ export function renderMealItem(meal) {
           return food.name || "";
         })
         .filter(Boolean)
-        .join(" · ")
+        .join(", ")
     : "";
 
   return `
