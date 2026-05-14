@@ -1,368 +1,366 @@
-.sidebar-icon {
+/* =========================
+   Sidebar icons
+   ========================= */
+
+   .sidebar-icon {
     width: 16px;
     height: 16px;
-    display: block;             /* 🔥 elimina baseline inline */
+    display: block;
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.18s ease;
     stroke-width: 2;
-  }
-
-  .profile-icon {
-    height: 20px;
-    width: 20px;
-    flex-shrink: 0;
-    color: white;
-    stroke-width: 1.5;  
   }
   
   .sidebar-group.is-open .sidebar-icon {
     transform: rotate(90deg);
   }
-
+  
   .sidebar-main-icon {
     width: 16px;
     height: 16px;
-    margin-right: 0px;
+    margin-right: 0;
     stroke-width: 1.5;
     flex-shrink: 0;
   }
-
+  
   .sidebar-leading-icon {
     width: 16px;
     height: 16px;
     stroke-width: 1.5;
     flex-shrink: 0;
   }
-
-  .label-icon{
+  
+  .collapse-sidebar-icon {
+    height: 22px;
+    width: 22px;
+    flex-shrink: 0;
+    color: rgb(134, 134, 134);
+    stroke-width: 1.5;
+  }
+  
+  /* =========================
+     Entity label icons
+     ========================= */
+  
+  .label-icon {
     width: 14px;
     height: 14px;
     stroke-width: 2;
     flex-shrink: 0;
   }
-
-  @media (max-width: 768px) {
-    .label-icon{
-      width: 18px;
-      height: 18px;
-      stroke-width: 2;
-    }
+  
+  /* Íconos sobre label-entity: siempre blancos */
+  .label-entity,
+  .label-entity svg,
+  .label-entity i,
+  .label-entity .label-icon,
+  .label-entity .card-icon,
+  .label-entity .card-icon.main,
+  .label-entity.header,
+  .label-entity.header svg,
+  .label-entity.header i,
+  .label-entity.header .label-icon {
+    color: #ffffff;
   }
-
-  .action-icon-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border:none;
-    background:none;
-    cursor:pointer;
-    padding:4px;
+  
+  /* =========================
+     Action icons
+     ========================= */
+  
+  .action-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 4px;
     flex-shrink: 0;
   }
-
-  .action-card-icon{
+  
+  .action-card-icon {
     height: 18px;
     width: 18px;
-    margin: 0px 4px;
+    margin: 0 4px;
     stroke-width: 2;
     flex-shrink: 0;
-    color: rgb(60, 60, 60);
+    color: var(--text-main);
   }
-
-  .search-icon-add-row-icon{
+  
+  .more-horizontal-icon,
+  .header-action-icon {
+    margin-top: 3px;
+    margin-right: 2px;
+    height: 18px;
+    width: 18px;
+    color: var(--text-main);
+    flex-shrink: 0;
+    stroke-width: 2;
+  }
+  
+  .header-action-icon {
+    margin-top: 0;
+    margin-right: 4px;
+    margin-left: 4px;
+  }
+  
+  /* =========================
+     Search / Add row icons
+     ========================= */
+  
+  .search-icon-add-row-icon {
     width: 20px;
     height: 20px;
     margin: 0 4px;
     stroke-width: 2;
-    color: rgb(28, 28, 28);
+    color: var(--text-main);
     flex: 0 0 auto;
     flex-shrink: 0;
     display: block;
     align-self: center;
   }
-
-  .btn-card-home-icon{
-    width: 18px;
-    height: 18px;
-    stroke-width: 2;
-    flex-shrink: 0;
-    margin-right: 3px;
-  }
-  .btn-card-home-icon.black { color:rgb(0, 0, 0);}
-  .btn-card-home-icon.white { color:rgb(255, 255, 255);}
-
-
-
-
+  
   .search-icon-add-row-icon svg,
   svg.search-icon-add-row-icon {
     width: 20px;
     height: 20px;
     display: block;
   }
-
-  .dpm-icon{
-    width: 14px;
-    height: 14px;
-    color: white;
-    flex-shrink: 0;
-    stroke-width: 2;
-}
-
-.card_mini-dpm-info-icon{
-    height: 14px;
-    width: 14px;
-    stroke-width: 2;
-    flex-shrink: 0;
-  }
-
-.edit-title-icon{
-    display: block;
-    color: #8d8d8d;
-    height: 22px;
-    width: 22px;
-    stroke-width: 1.5;
-    flex-shrink: 0;
-  }
-
-.tab-icon-hide,
-.tab-icon-edit {
-    color: #000000;
+  
+  .add-row-icon {
     height: 16px;
     width: 16px;
     stroke-width: 2;
+    color: var(--text-main);
     flex-shrink: 0;
   }
-
-  .card-icon{
-    width: 13px;
-    height: 13px;
-    display: block;             /* 🔥 elimina baseline inline */
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-    stroke-width: 2;
-}
-
-.sidebar-icon{
-    transition: transform 0.18s ease;
-  }
-
-.add-row-icon {
-    height: 16px;
-    width: 16px;
-    stroke-width: 2;
-    color: rgb(27, 27, 27);
-    flex-shrink: 0;
-}
-
-
-
-
-
-.mobile-menu-btn,
-.back-header-icon {
-  background-color: transparent;
-  color: rgb(60, 60, 60);
-  padding: 0;
-  border: none;
-  cursor: pointer;
-  display: none;
-}
-
-.menu-icon{
-  height: 22px;
-  width: 22px;
-  color: rgb(60, 60, 60);
-  flex-shrink: 0;
-  stroke-width: 2;
-}
-
-.collapse-list-icon{
-  height: 20px;
-  width: 20px;
-  color: rgb(60, 60, 60);
-  flex-shrink: 0;
-  stroke-width: 2;
-}
-
-.more-horizontal-icon,
-.header-action-icon {
-  margin-top: 3px;
-  margin-right: 2px;
-  height: 18px;
-  width: 18px;
-  color: rgb(60, 60, 60);
-  flex-shrink: 0;
-  stroke-width: 2;
-}
-
-.header-action-icon {
-  margin-top: 0;
-  margin-right: 4px;
-  margin-left: 4px;
-}
-
-.action-icon-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:none;
-  border:none;
-  cursor:pointer;
-  padding:4px;
-}
-
-.metadata-icon{
-    padding: 0;
-    height: 16px;
-    width: 16px;
-    stroke-width: 1.8;
-    flex-shrink: 0;
-    color: rgb(67, 67, 67);
-  }
-
-.page-icon{
-    height: 22px;
-    width: 22px;
-    color: rgb(25, 25, 25);
-    stroke-width: 2.2;
-    flex-shrink: 0;
-}
-
-.collapse-sidebar-icon{
-    height: 22px;
-    width: 22px;
-    flex-shrink: 0;
-    color: rgb(134, 134, 134);
-    stroke-width: 1.5;
-}
-
-.enter-user-icon{
-    height: 18px;
+  
+  /* =========================
+     Home icons
+     ========================= */
+  
+  .btn-card-home-icon {
     width: 18px;
+    height: 18px;
+    stroke-width: 2;
     flex-shrink: 0;
-    color: rgb(255, 255, 255);
-    stroke-width: 1.5;
-
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-}
-
-.selected-picker-icon{
-  color: rgb(255, 255, 255);
-  height: 22px;
-  width: 22px;
-  flex-shrink: 0;
-  padding: 4px;
-  border-radius: 6px;
-}
-
-.preview-picker-icon{
-    color: rgb(255, 255, 255);
+    margin-right: 3px;
+    color: currentColor;
+  }
+  
+  .btn-card-home-icon.black,
+  .btn-card-home-icon.white {
+    color: currentColor;
+  }
+  
+  .home-stat-icon {
+    color: #ffffff;
     height: 18px;
     width: 18px;
     flex-shrink: 0;
     padding: 3px;
     border-radius: 5px;
-}
-
-.home-stat-icon{
-  color: rgb(255, 255, 255);
-  height: 18px;
-  width: 18px;
-  flex-shrink: 0;
-  padding: 3px;
-  border-radius: 5px;
-}
-
-.home-section-header-icon{
-  color: rgb(255, 255, 255);
-  height: 22px;
-  width: 22px;
-  flex-shrink: 0;
-  padding: 4px;
-  border-radius: 6px;
-}
-
-.main-modal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 16px;
-}
-
-.main-modal p {
-  width: 100%;
-  max-width: 420px;
-  margin: 0;
-}
-
-.input-create {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.main-modal-icon{
-  color: rgb(255, 255, 255);
-  height: 40px;
-  width: 40px;
-  flex-shrink: 0;
-  padding: 7px;
-  border-radius: 10px;
-  stroke-width: 1.5;
-}
-
-.view-list-icon{
-  color: rgb(49, 49, 49);
-  height: 18px;
-  width: 18px;
-  flex-shrink: 0;
-}
-
-.welcome-icon{
-  color: rgb(21, 21, 21);
-  height: 16px;
-  width: 16px;
-  flex-shrink: 0;
-  stroke-width: 2.5;
-}
-
-
-.main-modal-icon.food,
-.home-section-header-icon.food,
-.preview-picker-icon.food,
-.selected-picker-icon.food,
-.home-stat-icon.food { 
-  background-color: var(--color-food);
-}
-
-.main-modal-icon.meal,
-.home-section-header-icon.meal,
-.preview-picker-icon.meal, 
-.selected-picker-icon.meal,
-.home-stat-icon.meal {  
-  background-color: var(--color-meal); 
-}
-
-.main-modal-icon.dailyplan,
-.home-section-header-icon.dailyplan,
-.preview-picker-icon.dailyplan, 
-.selected-picker-icon.dailyplan,
-.home-stat-icon.dailyplan {  
-  background-color: var(--color-dailyplan); 
-}
-
-.home-stat-icon.weight { 
-  padding: 0;
-  color: black;
-}
-
-
-
-.table-icon{
-    color: rgb(24, 24, 24);
+  }
+  
+  .home-stat-icon.food {
+    background-color: var(--color-food);
+    color: #ffffff;
+  }
+  
+  .home-stat-icon.meal {
+    background-color: var(--color-meal);
+    color: #ffffff;
+  }
+  
+  .home-stat-icon.dailyplan {
+    background-color: var(--color-dailyplan);
+    color: #ffffff;
+  }
+  
+  .home-stat-icon.weight {
+    padding: 0;
+    color: #000000;
+  }
+  
+  .home-section-header-icon {
+    color: #ffffff;
+    height: 22px;
+    width: 22px;
+    flex-shrink: 0;
+    padding: 4px;
+    border-radius: 6px;
+  }
+  
+  .home-section-header-icon.food {
+    background-color: var(--color-food);
+    color: #ffffff;
+  }
+  
+  .home-section-header-icon.meal {
+    background-color: var(--color-meal);
+    color: #ffffff;
+  }
+  
+  .home-section-header-icon.dailyplan {
+    background-color: var(--color-dailyplan);
+    color: #ffffff;
+  }
+  
+  .view-list-icon {
+    color: currentColor;
+    height: 18px;
+    width: 18px;
+    flex-shrink: 0;
+  }
+  
+  .welcome-icon {
+    color: var(--text-main);
+    height: 16px;
+    width: 16px;
+    flex-shrink: 0;
+    stroke-width: 2.5;
+  }
+  
+  /* =========================
+     Card / title icons
+     ========================= */
+  
+  .card-icon {
+    width: 13px;
+    height: 13px;
+    display: block;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    stroke-width: 2;
+    color: var(--text-muted);
+  }
+  
+  /* Íconos card-icon sobre fondos de entidad: siempre blancos */
+  .card-icon.main,
+  .lucide-clipboard-list.card-icon.main,
+  .lucide-utensils.card-icon:not(.dpm-icon) {
+    color: #ffffff;
+  }
+  
+  .edit-title-icon {
+    display: block;
+    color: var(--text-muted);
+    height: 22px;
+    width: 22px;
+    stroke-width: 1.5;
+    flex-shrink: 0;
+  }
+  
+  .card_mini-dpm-info-icon {
+    height: 14px;
+    width: 14px;
+    stroke-width: 2;
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+  
+  /* =========================
+     Tab icons
+     ========================= */
+  
+  .tab-icon,
+  .tab-icon-hide,
+  .tab-icon-edit {
+    color: currentColor;
+    height: 16px;
+    width: 16px;
+    stroke-width: 2;
+    flex-shrink: 0;
+  }
+  
+  .btn-desplegar .tab-icon,
+  .btn-desplegar .tab-icon-hide,
+  .btn-desplegar .tab-icon-edit,
+  .btn-desplegar-mobile .tab-icon,
+  .btn-desplegar-mobile .tab-icon-hide,
+  .btn-desplegar-mobile .tab-icon-edit {
+    color: currentColor;
+  }
+  
+  .btn-desplegar.is-active .tab-icon,
+  .btn-desplegar.is-active .tab-icon-hide,
+  .btn-desplegar.is-active .tab-icon-edit,
+  .btn-desplegar-mobile.is-active .tab-icon,
+  .btn-desplegar-mobile.is-active .tab-icon-hide,
+  .btn-desplegar-mobile.is-active .tab-icon-edit {
+    color: currentColor;
+  }
+  
+  /* =========================
+     DPM icons
+     ========================= */
+  
+  /* DPM icon: oscuro en light, claro en dark, porque no va sobre fondo de entidad */
+  .dpm-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text-main);
+    flex-shrink: 0;
+    stroke-width: 2;
+  }
+  
+  .lucide-utensils.dpm-icon {
+    color: var(--text-main);
+  }
+  
+  /* =========================
+     Header / mobile shell icons
+     ========================= */
+  
+  .mobile-menu-btn,
+  .back-header-icon {
+    background-color: transparent;
+    color: var(--text-main);
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    display: none;
+  }
+  
+  .menu-icon {
+    height: 22px;
+    width: 22px;
+    color: var(--text-main);
+    flex-shrink: 0;
+    stroke-width: 2;
+  }
+  
+  .collapse-list-icon {
+    height: 20px;
+    width: 20px;
+    color: var(--text-main);
+    flex-shrink: 0;
+    stroke-width: 2;
+  }
+  
+  /* =========================
+     Metadata / page / table icons
+     ========================= */
+  
+  .metadata-icon {
+    padding: 0;
+    height: 16px;
+    width: 16px;
+    stroke-width: 1.8;
+    flex-shrink: 0;
+    color: var(--text-main);
+  }
+  
+  .page-icon {
+    height: 22px;
+    width: 22px;
+    color: var(--text-main);
+    stroke-width: 2.2;
+    flex-shrink: 0;
+  }
+  
+  .table-icon {
+    color: var(--text-main);
     stroke-width: 1.5;
     height: 13px;
     width: 13px;
@@ -370,176 +368,192 @@
     margin: 0;
     flex-shrink: 0;
   }
-
-.table-info-icon{
+  
+  .table-info-icon {
     height: 10px;
     width: 10px;
-    stroke-width: 1.5x;
+    stroke-width: 1.5;
     flex-shrink: 0;
+    color: var(--text-muted);
   }
-
-
-@media (max-width: 768px) {
-
-  .sidebar-leading-icon {
-    width: 20px;
+  
+  /* =========================
+     User / profile icons
+     ========================= */
+  
+  .profile-icon {
     height: 20px;
-  }
-
-  .sidebar-icon{
-    width: 18px;
-    height: 18px;
-  }
-
-  .back-header-icon{
-      display: flex;
-      align-items: center;
-      padding-right: 2px;
+    width: 20px;
+    flex-shrink: 0;
+    color: #ffffff;
+    stroke-width: 1.5;
   }
   
-  .more-horizontal-icon,
-  .header-action-icon {
-      height: 22px;
-      width: 22px;
-  }
-
-  .enter-user-icon{
-      height: 22px;
-      width: 22px;
-  
-  }
-
-  .action-card-icon{
-      height: 22px;
-      width: 22px;
-  }
-
-  .table-icon{
-    height: 16px;
-    width: 16px;
-  }
-
-  .home-stat-icon{
+  .enter-user-icon {
     height: 18px;
     width: 18px;
+    flex-shrink: 0;
+    color: #ffffff;
+    stroke-width: 1.5;
+  
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+  }
+  
+  /* =========================
+     Picker / modal icons
+     ========================= */
+  
+  .selected-picker-icon {
+    color: #ffffff;
+    height: 22px;
+    width: 22px;
+    flex-shrink: 0;
+    padding: 4px;
+    border-radius: 6px;
+  }
+  
+  .preview-picker-icon {
+    color: #ffffff;
+    height: 18px;
+    width: 18px;
+    flex-shrink: 0;
     padding: 3px;
     border-radius: 5px;
   }
   
-  .metadata-icon{
-    height: 18px;
-    width: 18px;
+  .selected-picker-icon.food,
+  .preview-picker-icon.food {
+    background-color: var(--color-food);
+    color: #ffffff;
   }
-}
-    
-
-/* =========================================================
-   Theme-aware icons
-   ========================================================= */
-
-   .action-card-icon,
-   .search-icon-add-row-icon,
-   .add-row-icon,
-   .mobile-menu-btn,
-   .back-header-icon,
-   .menu-icon,
-   .collapse-list-icon,
-   .more-horizontal-icon,
-   .header-action-icon,
-   .metadata-icon,
-   .page-icon,
-   .view-list-icon,
-   .welcome-icon,
-   .table-icon {
-       color: var(--text-main);
-   }
-   
-   .edit-title-icon,
-   .card-icon,
-   .table-info-icon {
-       color: var(--text-muted);
-   }
-   
-   html[data-theme="dark"] .action-card-icon,
-   html[data-theme="dark"] .search-icon-add-row-icon,
-   html[data-theme="dark"] .add-row-icon,
-   html[data-theme="dark"] .mobile-menu-btn,
-   html[data-theme="dark"] .back-header-icon,
-   html[data-theme="dark"] .menu-icon,
-   html[data-theme="dark"] .collapse-list-icon,
-   html[data-theme="dark"] .more-horizontal-icon,
-   html[data-theme="dark"] .header-action-icon,
-   html[data-theme="dark"] .metadata-icon,
-   html[data-theme="dark"] .page-icon,
-   html[data-theme="dark"] .view-list-icon,
-   html[data-theme="dark"] .welcome-icon,
-   html[data-theme="dark"] .table-icon {
-       color: var(--text-main);
-   }
-   
-   html[data-theme="dark"] .edit-title-icon,
-   html[data-theme="dark"] .card-icon,
-   html[data-theme="dark"] .table-info-icon {
-       color: var(--text-muted);
-   }
-   
-   /* Íconos sobre fondos de entidad o nutrición: se mantienen blancos/negros según diseño original */
-   
-   .profile-icon,
-   .dpm-icon,
-   .selected-picker-icon,
-   .preview-picker-icon,
-   .home-stat-icon,
-   .home-section-header-icon,
-   .main-modal-icon,
-   .enter-user-icon {
-       color: #ffffff;
-   }
-   
-   .home-stat-icon.weight {
-       color: #000000;
-   }
-
-   /* =========================================================
-   Entity-background icon corrections
-   ========================================================= */
-
-/* DPM icon normal: oscuro en light mode, claro en dark mode */
-.dpm-icon {
-  color: var(--text-main);
-}
-
-/* Íconos que van sobre fondos de entidad: siempre blancos */
-.label-entity .card-icon,
-.label-entity .card-icon.main,
-.label-entity svg,
-.label-entity i,
-.card-icon.main,
-.home-stat-icon.food,
-.home-stat-icon.meal,
-.home-stat-icon.dailyplan,
-.home-section-header-icon.food,
-.home-section-header-icon.meal,
-.home-section-header-icon.dailyplan,
-.preview-picker-icon.food,
-.preview-picker-icon.meal,
-.preview-picker-icon.dailyplan,
-.selected-picker-icon.food,
-.selected-picker-icon.meal,
-.selected-picker-icon.dailyplan,
-.main-modal-icon.food,
-.main-modal-icon.meal,
-.main-modal-icon.dailyplan {
-  color: #ffffff;
-}
-
-/* Caso explícito: utensil/clipboard dentro de fondos de entidad */
-.lucide-clipboard-list.card-icon.main,
-.lucide-utensils.card-icon:not(.dpm-icon) {
-  color: #ffffff;
-}
-
-/* DPM icon específico: gana sobre la regla anterior */
-.lucide-utensils.dpm-icon {
-  color: var(--text-main);
-}
+  
+  .selected-picker-icon.meal,
+  .preview-picker-icon.meal {
+    background-color: var(--color-meal);
+    color: #ffffff;
+  }
+  
+  .selected-picker-icon.dailyplan,
+  .preview-picker-icon.dailyplan {
+    background-color: var(--color-dailyplan);
+    color: #ffffff;
+  }
+  
+  .main-modal-icon {
+    color: #ffffff;
+    height: 40px;
+    width: 40px;
+    flex-shrink: 0;
+    padding: 7px;
+    border-radius: 10px;
+    stroke-width: 1.5;
+  }
+  
+  .main-modal-icon.food {
+    background-color: var(--color-food);
+    color: #ffffff;
+  }
+  
+  .main-modal-icon.meal {
+    background-color: var(--color-meal);
+    color: #ffffff;
+  }
+  
+  .main-modal-icon.dailyplan {
+    background-color: var(--color-dailyplan);
+    color: #ffffff;
+  }
+  
+  /* =========================
+     Modal layout helpers
+     ========================= */
+  
+  .main-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .main-modal p {
+    width: 100%;
+    max-width: 420px;
+    margin: 0;
+  }
+  
+  .input-create {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* =========================
+     Mobile
+     ========================= */
+  
+  @media (max-width: 768px) {
+    .label-icon {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+  
+    .sidebar-leading-icon {
+      width: 20px;
+      height: 20px;
+    }
+  
+    .sidebar-icon {
+      width: 18px;
+      height: 18px;
+    }
+  
+    .mobile-menu-btn,
+    .back-header-icon {
+      display: flex;
+      align-items: center;
+    }
+  
+    .mobile-menu-btn {
+      padding-right: 10px;
+    }
+  
+    .back-header-icon {
+      padding-right: 2px;
+    }
+  
+    .more-horizontal-icon,
+    .header-action-icon {
+      height: 22px;
+      width: 22px;
+    }
+  
+    .enter-user-icon {
+      height: 22px;
+      width: 22px;
+    }
+  
+    .action-card-icon {
+      height: 22px;
+      width: 22px;
+    }
+  
+    .table-icon {
+      height: 16px;
+      width: 16px;
+    }
+  
+    .home-stat-icon {
+      height: 18px;
+      width: 18px;
+      padding: 3px;
+      border-radius: 5px;
+    }
+  
+    .metadata-icon {
+      height: 18px;
+      width: 18px;
+    }
+  }
