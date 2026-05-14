@@ -60,11 +60,13 @@
   background: var(--surface-card-muted);
   border: 1px solid var(--border-soft);
   border-radius: 14px;
-  margin-top: 10px;
+  margin: 10px -6px;
 }
 
 
-
+.card-detail-block.main {
+  margin: 10px -8px;
+}
 /* =========================
    MOBILE BASE
    ========================= */

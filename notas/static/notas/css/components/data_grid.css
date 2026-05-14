@@ -294,6 +294,11 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
 }
 
 @media (max-width: 980px) {
+
+    .data-grid {
+        padding: 6px 8px;
+    }
+
     .block-mobile-grid-tabs {
         display: flex;
         gap: 8px;
@@ -348,7 +353,6 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
         minmax(30px, 1fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr);
-    padding: 0 0 0 8px;
 }
 
 .data-grid-header--mobile-alloc,
@@ -376,7 +380,6 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
         minmax(30px, 1fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr);
-    padding: 0 0 0 8px;
 }
 
 .data-grid-header--mobile-foods-alloc,
@@ -406,7 +409,7 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
 .data-grid-header--mobile-meals-edit,
 .data-grid-row--mobile-meals-edit {
     grid-template-columns:
-        40px
+        32px
         minmax(120px, 1.8fr)
         44px
         44px
