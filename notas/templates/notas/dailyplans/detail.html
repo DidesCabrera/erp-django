@@ -26,11 +26,6 @@
         </p>
       </div>
 
-
-      <div class="dailyplan-detail__foods-aggregation">
-        {% include "components/grid_foods_aggregation.html" with foods=vm.content.foods_aggregation %}
-      </div>
-
       <div class="dailyplan-detail__children-list">
         {% for child in vm.content.child_cards %}
           <div class="dpm-mini-card-list">
@@ -44,6 +39,11 @@
           <p>No meals added yet.</p>
         {% endfor %}
       </div>
+
+      <div class="dailyplan-detail__foods-aggregation">
+        {% include "components/grid_foods_aggregation.html" with foods=vm.content.foods_aggregation %}
+      </div>
+      
     {% endif %}
   </div>
 

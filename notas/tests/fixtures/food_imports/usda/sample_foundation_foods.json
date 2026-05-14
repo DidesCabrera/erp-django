@@ -1,0 +1,68 @@
+[
+    {
+      "fdcId": 1001,
+      "description": "Oats, raw",
+      "foodCategory": {
+        "description": "Cereal Grains and Pasta"
+      },
+      "foodNutrients": [
+        {
+          "nutrient": {
+            "number": "203"
+          },
+          "amount": 16.9
+        },
+        {
+          "nutrient": {
+            "number": "205"
+          },
+          "amount": 66.3
+        },
+        {
+          "nutrient": {
+            "number": "204"
+          },
+          "amount": 6.9
+        },
+        {
+          "nutrient": {
+            "number": "291"
+          },
+          "amount": 10.6
+        }
+      ]
+    },
+    {
+      "fdcId": 1002,
+      "description": "Chicken breast, cooked",
+      "foodCategory": {
+        "description": "Poultry Products"
+      },
+      "foodNutrients": [
+        {
+          "nutrient": {
+            "number": "203"
+          },
+          "amount": 31
+        },
+        {
+          "nutrient": {
+            "number": "205"
+          },
+          "amount": 0
+        },
+        {
+          "nutrient": {
+            "number": "204"
+          },
+          "amount": 3.6
+        },
+        {
+          "nutrient": {
+            "number": "307"
+          },
+          "amount": 74
+        }
+      ]
+    }
+  ]
