@@ -255,3 +255,97 @@
     display: none !important;
   }
 }
+
+
+
+/* =========================================================
+   Theme-aware overflow dropdown
+   ========================================================= */
+
+   .overflow-dropdown {
+    background: var(--surface-elevated);
+    color: var(--text-main);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    box-shadow: var(--shadow-elevated);
+    overflow: hidden;
+  }
+  
+  .overflow-dropdown a,
+  .overflow-dropdown button,
+  .overflow-dropdown form {
+    color: var(--text-main);
+  }
+  
+  .overflow-dropdown form {
+    margin: 0;
+  }
+  
+  .overflow-dropdown .overflow-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  
+    width: 100%;
+    padding: 8px 10px;
+  
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+  
+    cursor: pointer;
+    text-align: left;
+    text-decoration: none;
+  
+    font: inherit;
+  
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  
+  .overflow-dropdown .overflow-action:hover {
+    background: var(--interactive-hover);
+    color: var(--text-main);
+    text-decoration: none;
+  }
+  
+  .overflow-dropdown .overflow-action + .overflow-action,
+  .overflow-dropdown form + form,
+  .overflow-dropdown a + a {
+    border-top: 1px solid var(--border-soft);
+  }
+  
+  .overflow-dropdown .overflow-action i,
+  .overflow-dropdown .overflow-action svg,
+  .overflow-dropdown .overflow-action .header-action-icon {
+    color: currentColor;
+  }
+  
+  .overflow-dropdown .overflow-action span {
+    color: currentColor;
+    white-space: nowrap;
+  }
+
+  .page-header-right .overflow-dropdown {
+    background: var(--surface-elevated);
+    color: var(--text-main);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-elevated);
+  }
+  
+  .page-header-right .overflow-dropdown .overflow-action {
+    background: transparent;
+    color: var(--text-main);
+  }
+  
+  .page-header-right .overflow-dropdown .overflow-action:hover {
+    background: var(--interactive-hover);
+    color: var(--text-main);
+  }
+  
+  .page-header-right .overflow-dropdown .overflow-action i,
+  .page-header-right .overflow-dropdown .overflow-action svg,
+  .page-header-right .overflow-dropdown .overflow-action .header-action-icon {
+    color: currentColor;
+  }

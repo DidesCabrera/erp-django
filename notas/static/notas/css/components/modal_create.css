@@ -68,3 +68,53 @@
         margin: 18px 10px;
     }
 }
+
+/* =========================================================
+   Theme-aware create modal inputs
+   ========================================================= */
+
+   .input-create,
+   .name-create,
+   .title-create {
+     color: var(--text-main);
+   }
+   
+   .input-create {
+     background: var(--input-bg);
+     color: var(--input-text);
+     border: 1px solid var(--input-border);
+   }
+   
+   .input-create::placeholder {
+     color: var(--input-placeholder);
+   }
+   
+   .input-create:focus {
+     outline: none;
+     border-color: var(--input-focus-border);
+     box-shadow: 0 0 0 3px var(--input-focus-shadow);
+   }
+
+
+   /* =========================================================
+   Theme-aware create inputs autofill fix
+   ========================================================= */
+
+.input-create {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    caret-color: var(--input-text);
+  }
+  
+  .input-create:-webkit-autofill,
+  .input-create:-webkit-autofill:hover,
+  .input-create:-webkit-autofill:focus,
+  .input-create:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--input-text);
+    caret-color: var(--input-text);
+    box-shadow: 0 0 0 1000px var(--input-bg) inset;
+    -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+    border: 1px solid var(--input-border);
+    transition: background-color 9999s ease-in-out 0s;
+  }

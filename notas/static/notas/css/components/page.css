@@ -103,3 +103,90 @@
     }
   
   }
+
+
+/* =========================================================
+   Theme-aware form inputs for create / rename pages
+   ========================================================= */
+
+   .page--detail input[type="text"],
+   .page--detail input[type="number"],
+   .page--detail textarea,
+   .page--detail select,
+   .card-father.edit input[type="text"],
+   .card-father.edit input[type="number"],
+   .card-father.edit textarea,
+   .card-father.edit select {
+     background: var(--input-bg);
+     color: var(--input-text);
+     border: 1px solid var(--input-border);
+   }
+   
+   .page--detail input[type="text"]::placeholder,
+   .page--detail input[type="number"]::placeholder,
+   .page--detail textarea::placeholder,
+   .card-father.edit input[type="text"]::placeholder,
+   .card-father.edit input[type="number"]::placeholder,
+   .card-father.edit textarea::placeholder {
+     color: var(--input-placeholder);
+   }
+   
+   .page--detail input[type="text"]:focus,
+   .page--detail input[type="number"]:focus,
+   .page--detail textarea:focus,
+   .page--detail select:focus,
+   .card-father.edit input[type="text"]:focus,
+   .card-father.edit input[type="number"]:focus,
+   .card-father.edit textarea:focus,
+   .card-father.edit select:focus {
+     outline: none;
+     border-color: var(--input-focus-border);
+     box-shadow: 0 0 0 3px var(--input-focus-shadow);
+   }
+
+
+
+
+
+
+   /* =========================================================
+   Theme-aware rename/edit inputs autofill fix
+   ========================================================= */
+
+.page--detail input[type="text"],
+.page--detail input[type="number"],
+.page--detail textarea,
+.page--detail select,
+.card-father.edit input[type="text"],
+.card-father.edit input[type="number"],
+.card-father.edit textarea,
+.card-father.edit select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  caret-color: var(--input-text);
+}
+
+.page--detail input[type="text"]:-webkit-autofill,
+.page--detail input[type="number"]:-webkit-autofill,
+.card-father.edit input[type="text"]:-webkit-autofill,
+.card-father.edit input[type="number"]:-webkit-autofill,
+.page--detail input[type="text"]:-webkit-autofill:hover,
+.page--detail input[type="number"]:-webkit-autofill:hover,
+.card-father.edit input[type="text"]:-webkit-autofill:hover,
+.card-father.edit input[type="number"]:-webkit-autofill:hover,
+.page--detail input[type="text"]:-webkit-autofill:focus,
+.page--detail input[type="number"]:-webkit-autofill:focus,
+.card-father.edit input[type="text"]:-webkit-autofill:focus,
+.card-father.edit input[type="number"]:-webkit-autofill:focus,
+.page--detail input[type="text"]:-webkit-autofill:active,
+.page--detail input[type="number"]:-webkit-autofill:active,
+.card-father.edit input[type="text"]:-webkit-autofill:active,
+.card-father.edit input[type="number"]:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--input-text);
+  caret-color: var(--input-text);
+  box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  border: 1px solid var(--input-border);
+  transition: background-color 9999s ease-in-out 0s;
+}

@@ -128,7 +128,13 @@
     --entity-inbox: var(--color-inbox);
     --entity-home: var(--color-home);
     --entity-profile: var(--color-profile);
+
+    /* Breadcrumbs */
+   --breadcrumb-text: #3f3f46;
+   --breadcrumb-hover: #111111;
+   --breadcrumb-separator: #71717a;
 }
+
 
 html[data-theme="dark"] {
     /* =========================================================
@@ -193,4 +199,8 @@ html[data-theme="dark"] {
       --kpi-total-border: #5a4031;
       --kpi-total-text: #f5f5f5;
 
+      /* Breadcrumbs */
+      --breadcrumb-text: #d4d4d8;
+      --breadcrumb-hover: #ffffff;
+      --breadcrumb-separator: #a1a1aa;
 }

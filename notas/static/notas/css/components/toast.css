@@ -2,28 +2,157 @@
 
 /* TOAST - MENSAJES CUANDO QUIERES SALIR DEL FLUJO Y AUN NO CONFIRMAS LOS CAMBIOS)*/
 
-.modal {
+/* =========================================================
+   Global modal
+   ========================================================= */
+
+   .modal {
     position: fixed;
     inset: 0;
+  
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,.45);
+  
+    padding: 18px;
+  
+    background: rgba(0, 0, 0, 0.45);
     z-index: 100000000000;
-}
-  .hidden { display: none; }
-
-  .modal-content {
-      background: #fff;
-      padding: 18px 20px;
-      border-radius: 12px;
-      width: 340px;
   }
-
+  
+  html[data-theme="dark"] .modal {
+    background: rgba(0, 0, 0, 0.62);
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .modal-content {
+    width: 340px;
+    max-width: 100%;
+  
+    padding: 18px 20px;
+  
+    background: var(--surface-elevated);
+    color: var(--text-main);
+  
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    box-shadow: var(--shadow-elevated);
+  }
+  
+  .modal-content h3 {
+    margin-top: 0;
+    color: var(--text-main);
+  }
+  
+  .modal-content label {
+    display: block;
+    margin-bottom: 6px;
+  
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .modal-content input,
+  .modal-content textarea,
+  .modal-content select {
+    width: 100%;
+  
+    background: var(--input-bg);
+    color: var(--input-text);
+  
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+  
+    padding: 9px 10px;
+  
+    caret-color: var(--input-text);
+  }
+  
+  .modal-content input::placeholder,
+  .modal-content textarea::placeholder {
+    color: var(--input-placeholder);
+  }
+  
+  .modal-content input:focus,
+  .modal-content textarea:focus,
+  .modal-content select:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+  }
+  
+  .modal-content input:-webkit-autofill,
+  .modal-content input:-webkit-autofill:hover,
+  .modal-content input:-webkit-autofill:focus,
+  .modal-content input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--input-text);
+    caret-color: var(--input-text);
+    box-shadow: 0 0 0 1000px var(--input-bg) inset;
+    -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset;
+    border: 1px solid var(--input-border);
+    transition: background-color 9999s ease-in-out 0s;
+  }
+  
   .modal-actions {
-      margin-top: 14px;
-      display: flex;
-      gap: 10px;
+    margin-top: 14px;
+  
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .modal-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  
+    min-height: 32px;
+    padding: 6px 12px;
+  
+    border-radius: 10px;
+    border: 1px solid transparent;
+  
+    cursor: pointer;
+  
+    font-size: 13px;
+    font-weight: 500;
+  
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease,
+      opacity 0.15s ease;
+  }
+  
+  /* Primary */
+  .modal-actions .btn-primary,
+  .modal-actions button[type="submit"] {
+    background: var(--text-main);
+    color: var(--text-inverted);
+    border-color: var(--text-main);
+  }
+  
+  .modal-actions .btn-primary:hover,
+  .modal-actions button[type="submit"]:hover {
+    background: var(--interactive-primary);
+    color: #ffffff;
+    border-color: var(--interactive-primary);
+  }
+  
+  /* Secondary */
+  .modal-actions button[type="button"] {
+    background: transparent;
+    color: var(--text-muted);
+    border-color: transparent;
+  }
+  
+  .modal-actions button[type="button"]:hover {
+    background: var(--interactive-hover);
+    color: var(--text-main);
   }
 
   
