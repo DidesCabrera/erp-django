@@ -173,8 +173,8 @@ html[data-theme="dark"] {
    --border-inverted: rgba(0, 0, 0, 0.18);
 
    /* Internal separators */
-   --panel-row-separator: #2f2f2f;
-   --kpi-row-separator: #2f2f2f;
+   --panel-row-separator: #2f2f2f85;
+   --kpi-row-separator: #2f2f2f85;
 
     /* Interactive */
     --interactive-primary: #8ab4ff;

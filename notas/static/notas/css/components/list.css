@@ -26,3 +26,7 @@
         width: 100%;
     }
 }
+
+.dailyplan-detail__child-card > .card {
+    border-color: var(--panel-row-separator);
+}
