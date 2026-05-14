@@ -93,7 +93,7 @@
 }
 
 .data-grid-row {
-    border-bottom: 1px solid var(--color-border-1);
+    border-bottom: 1px solid var(--panel-row-separator);
     margin-bottom: 0;
 }
 
@@ -487,8 +487,8 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
     border-bottom-color: var(--border-soft);
 }
 
-.data-grid-col {
-    color: var(--text-muted);
+.data-grid-row {
+    border-bottom-color: var(--panel-row-separator);
 }
 
 .data-grid-cell,
