@@ -28,6 +28,10 @@
     border: 1px solid var(--border-soft);
 }
 
+.page-detail{
+    margin-bottom: 60px;
+}
+
 .page.list{
     border: none;
 }
@@ -63,7 +67,7 @@
 
 
 .page-kpi {
-    padding-bottom: 10px;
+    padding-bottom: 35px;
 }
 
 

@@ -3,12 +3,14 @@ from dataclasses import dataclass
 from django.db import transaction
 
 from notas.application.dto.imported_food_dto import ImportedFoodDTO
+from notas.application.services.food_imports.normalization import normalize_imported_food
+from notas.application.services.food_imports.quality import evaluate_imported_food_quality
 from notas.domain.models import Food, FoodSourceMetadata
 
 
 @dataclass(frozen=True)
 class ImportFoodFromSourceResult:
-    food: Food
+    food: Food | None
     created: bool
     skipped: bool
     reason: str = ""
@@ -16,7 +18,7 @@ class ImportFoodFromSourceResult:
 
 def import_food_from_source(dto: ImportedFoodDTO) -> ImportFoodFromSourceResult:
     """
-    Creates a global Food from an external source DTO.
+    Create a global Food from an external source DTO.
 
     This command is intentionally source-agnostic. USDA, Open Food Facts,
     LATINFOODS or manual importers should map their data into ImportedFoodDTO
@@ -27,20 +29,23 @@ def import_food_from_source(dto: ImportedFoodDTO) -> ImportFoodFromSourceResult:
     - Existing foods with the same source + source_food_id are not duplicated.
     - Imported foods are global, not user-owned.
     - Imported foods start unverified.
+    - Imported foods are normalized and quality-checked before creation.
     """
 
-    validation_error = _validate_imported_food(dto)
-    if validation_error:
+    normalized_dto = normalize_imported_food(dto)
+
+    quality_result = evaluate_imported_food_quality(normalized_dto)
+    if not quality_result.is_valid:
         return ImportFoodFromSourceResult(
             food=None,
             created=False,
             skipped=True,
-            reason=validation_error,
+            reason=quality_result.reason,
         )
 
     existing_metadata = FoodSourceMetadata.objects.select_related("food").filter(
-        source=dto.source,
-        source_food_id=dto.source_food_id,
+        source=normalized_dto.source,
+        source_food_id=normalized_dto.source_food_id,
     ).first()
 
     if existing_metadata:
@@ -53,36 +58,36 @@ def import_food_from_source(dto: ImportedFoodDTO) -> ImportFoodFromSourceResult:
 
     with transaction.atomic():
         food = Food.objects.create(
-            name=dto.name,
-            canonical_name=dto.canonical_name,
-            protein=float(dto.protein),
-            carbs=float(dto.carbs),
-            fat=float(dto.fat),
+            name=normalized_dto.name,
+            canonical_name=normalized_dto.canonical_name,
+            protein=float(normalized_dto.protein),
+            carbs=float(normalized_dto.carbs),
+            fat=float(normalized_dto.fat),
             created_by=None,
             is_global=True,
             is_verified=False,
             is_active=True,
-            food_group=dto.food_group,
-            food_subgroup=dto.food_subgroup,
-            fiber_g_per_100g=dto.fiber_g_per_100g,
-            sugar_g_per_100g=dto.sugar_g_per_100g,
-            saturated_fat_g_per_100g=dto.saturated_fat_g_per_100g,
-            sodium_mg_per_100g=dto.sodium_mg_per_100g,
+            food_group=normalized_dto.food_group,
+            food_subgroup=normalized_dto.food_subgroup,
+            fiber_g_per_100g=normalized_dto.fiber_g_per_100g,
+            sugar_g_per_100g=normalized_dto.sugar_g_per_100g,
+            saturated_fat_g_per_100g=normalized_dto.saturated_fat_g_per_100g,
+            sodium_mg_per_100g=normalized_dto.sodium_mg_per_100g,
             visibility=Food.VISIBILITY_EXTENDED,
-            data_quality_score=0,
+            data_quality_score=quality_result.score,
         )
 
         FoodSourceMetadata.objects.create(
             food=food,
-            source=dto.source,
-            source_food_id=dto.source_food_id,
-            source_dataset=dto.source_dataset,
-            source_version=dto.source_version,
-            source_url=dto.source_url,
-            raw_payload_hash=dto.raw_payload_hash,
-            normalized_payload_hash=dto.normalized_payload_hash,
-            license_name=dto.license_name,
-            attribution=dto.attribution,
+            source=normalized_dto.source,
+            source_food_id=normalized_dto.source_food_id,
+            source_dataset=normalized_dto.source_dataset,
+            source_version=normalized_dto.source_version,
+            source_url=normalized_dto.source_url,
+            raw_payload_hash=normalized_dto.raw_payload_hash,
+            normalized_payload_hash=normalized_dto.normalized_payload_hash,
+            license_name=normalized_dto.license_name,
+            attribution=normalized_dto.attribution,
         )
 
     return ImportFoodFromSourceResult(
@@ -90,34 +95,3 @@ def import_food_from_source(dto: ImportedFoodDTO) -> ImportFoodFromSourceResult:
         created=True,
         skipped=False,
     )
-
-
-def _validate_imported_food(dto: ImportedFoodDTO) -> str:
-    if not dto.source:
-        return "missing_source"
-
-    if not dto.source_food_id:
-        return "missing_source_food_id"
-
-    if not dto.name:
-        return "missing_name"
-
-    if dto.protein is None:
-        return "missing_protein"
-
-    if dto.carbs is None:
-        return "missing_carbs"
-
-    if dto.fat is None:
-        return "missing_fat"
-
-    if dto.protein < 0:
-        return "invalid_negative_protein"
-
-    if dto.carbs < 0:
-        return "invalid_negative_carbs"
-
-    if dto.fat < 0:
-        return "invalid_negative_fat"
-
-    return ""
