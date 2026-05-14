@@ -1,0 +1,131 @@
+/* =========================================================
+   Theme toggle
+   ========================================================= */
+
+   .theme-toggle-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  
+    width: 100%;
+    padding: 14px 16px;
+  
+    background: var(--surface-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    box-shadow: var(--shadow-card);
+  }
+  
+  .theme-toggle-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  
+  .theme-toggle-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .theme-toggle-title-row h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  
+  .theme-toggle-title-icon {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  
+  .theme-toggle-copy p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+  
+  .theme-toggle-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  
+    min-height: 32px;
+    padding: 6px 12px;
+  
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+  
+    background: var(--surface-card-muted);
+    color: var(--text-muted);
+  
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  
+    cursor: pointer;
+  
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease,
+      opacity 0.15s ease;
+  }
+  
+  .theme-toggle-button:hover {
+    background: var(--interactive-hover);
+    color: var(--text-main);
+    border-color: var(--border-default);
+  }
+  
+  .theme-toggle-button.is-dark {
+    background: var(--text-main);
+    color: var(--text-inverted);
+    border-color: var(--text-main);
+  }
+  
+  .theme-toggle-button.is-dark:hover {
+    background: var(--interactive-primary);
+    color: #ffffff;
+    border-color: var(--interactive-primary);
+  }
+  
+  .theme-toggle-button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+  }
+  
+  .theme-toggle-button-icon svg,
+  .theme-toggle-button-icon i {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+  }
+  
+  .theme-toggle-button-text {
+    color: currentColor;
+  }
+  
+  @media (max-width: 768px) {
+    .theme-toggle-card {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px;
+    }
+  
+    .theme-toggle-button {
+      width: 100%;
+    }
+  }
