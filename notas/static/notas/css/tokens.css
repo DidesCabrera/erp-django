@@ -1,76 +1,76 @@
 :root {
-    /* =========================================================
-       Legacy color tokens
-       ---------------------------------------------------------
-       Estos tokens ya existen en el sistema y se mantienen para
-       no romper componentes actuales.
-       ========================================================= */
+   /* =========================================================
+      Legacy color tokens
+      ---------------------------------------------------------
+      Estos tokens ya existen en el sistema y se mantienen para
+      no romper componentes actuales.
+      ========================================================= */
 
-    --color-primary: #4f46e5;
-    --color-primary-light: #818cf8;
-    --color-secondary: #14b8a6;
+   --color-primary: #4f46e5;
+   --color-primary-light: #818cf8;
+   --color-secondary: #14b8a6;
 
-    --color-text: #1f2937;
-    --color-text-muted: #6b7280;
+   --color-text: #1f2937;
+   --color-text-muted: #6b7280;
 
-    --color-bg: #ffffff; /* mas claro */
-    --color-bg-3: #f8f8f8; /* claro - se usa solo en bg de alloc-bar */
-    --color-bg-2: #f5f5f5; /* oscuro */
-    --color-bg-4: #e9e9e9; /* mas oscuro */
+   --color-bg: #ffffff; /* mas claro */
+   --color-bg-3: #f8f8f8; /* claro - se usa solo en bg de alloc-bar */
+   --color-bg-2: #f5f5f5; /* oscuro */
+   --color-bg-4: #e9e9e9; /* mas oscuro */
 
-    --color-bg-picker: rgb(255, 251, 245);
-    --color-bg-picker2: rgba(0, 0, 0, 0.010);
+   --color-bg-picker: rgb(255, 251, 245);
+   --color-bg-picker2: rgba(0, 0, 0, 0.010);
 
-    --color-bg-98: rgb(32, 32, 32); /* gris ultra oscuro */
+   --color-bg-98: rgb(32, 32, 32); /* gris ultra oscuro */
 
-    --color-border-1: #dfdfdf;
-    --color-border-2: #ebebeb;
+   --color-border-1: #dfdfdf;
+   --color-border-2: #ebebeb;
 
-    --color-protein: #00d0f5;
-    --color-carbs: #01e888;
-    --color-fat: #bbff00;
-    --color-qty: rgb(255, 251, 130);
-    --color-kcal: rgb(255, 249, 245);
-    --color-kcal-border: rgb(254, 221, 200);
-    --color-ppk: rgb(255, 209, 110);
-    --color-ppk0: rgb(255, 182, 159);
+   --color-protein: #00d0f5;
+   --color-carbs: #01e888;
+   --color-fat: #bbff00;
+   --color-qty: rgb(255, 251, 130);
+   --color-kcal: rgb(255, 249, 245);
+   --color-kcal-border: rgb(254, 221, 200);
+   --color-ppk: rgb(255, 209, 110);
+   --color-ppk0: rgb(255, 182, 159);
 
-    --color-dailyplan: rgb(98, 41, 206);
-    --color-dpm: rgb(0, 132, 162);
-    --color-meal: #cf34b0;
-    --color-food: #ff8800;
-    --color-dailyplan-light: #ffffff;
-    --color-program: #512fff;
-    --color-inbox: #ff4343;
-    --color-home: black;
-    --color-profile: black;
+   --color-dailyplan: rgb(98, 41, 206);
+   --color-dpm: rgb(0, 132, 162);
+   --color-meal: #cf34b0;
+   --color-food: #ff8800;
+   --color-dailyplan-light: #ffffff;
+   --color-program: #512fff;
+   --color-inbox: #ff4343;
+   --color-home: black;
+   --color-profile: black;
 
-    --color-actions: #0054e5;
+   --color-actions: #0054e5;
 
-    /* =========================================================
-       Semantic theme tokens — Light mode
-       ---------------------------------------------------------
-       Estos tokens son la nueva capa recomendada para implementar
-       dark mode de forma gradual y segura.
-       ========================================================= */
+   /* =========================================================
+      Semantic theme tokens — Light mode
+      ---------------------------------------------------------
+      Estos tokens son la nueva capa recomendada para implementar
+      dark mode de forma gradual y segura.
+      ========================================================= */
 
-    /* Surfaces */
-    --surface-app: #f5f5f5;
-    --surface-page: #f8f8f8;
-    --surface-card: #ffffff;
-    --surface-card-muted: #fafafa;
-    --surface-elevated: #ffffff;
-    --surface-picker: rgb(255, 251, 245);
-    --surface-picker-muted: rgba(0, 0, 0, 0.010);
-    --surface-sidebar: rgb(32, 32, 32);
+   /* Surfaces */
+   --surface-app: #f5f5f5;
+   --surface-page: #f8f8f8;
+   --surface-card: #ffffff;
+   --surface-card-muted: #fafafa;
+   --surface-elevated: #ffffff;
+   --surface-picker: rgb(255, 251, 245);
+   --surface-picker-muted: rgba(0, 0, 0, 0.010);
+   --surface-sidebar: rgb(32, 32, 32);
 
-    /* Text */
-    --text-main: #1f2937;
-    --text-muted: #6b7280;
-    --text-soft: #8a8a8a;
-    --text-subtle: #a3a3a3;
-    --text-inverted: #ffffff;
-    --text-link: #0054e5;
+   /* Text */
+   --text-main: #1f2937;
+   --text-muted: #6b7280;
+   --text-soft: #8a8a8a;
+   --text-subtle: #a3a3a3;
+   --text-inverted: #ffffff;
+   --text-link: #0054e5;
 
    /* Borders */
    --border-soft: #ebebeb0b;
@@ -82,38 +82,49 @@
    --panel-row-separator: #e6e6e6;
    --kpi-row-separator: #e6e6e6;
 
-    /* Interactive */
-    --interactive-primary: #0054e5;
-    --interactive-primary-hover: #0044bd;
-    --interactive-secondary: #4f46e5;
-    --interactive-muted: #6b7280;
-    --interactive-hover: rgba(0, 0, 0, 0.04);
-    --interactive-active: rgba(0, 0, 0, 0.08);
+   /* Panel tabs */
+   --panel-tab-bg: var(--surface-card-muted);
+   --panel-tab-text: var(--text-muted);
+   --panel-tab-border: var(--panel-row-separator);
+   --panel-tab-hover-bg: var(--interactive-hover);
+   --panel-tab-hover-text: var(--text-main);
+   --panel-tab-hover-border: var(--panel-row-separator);
+   --panel-tab-active-bg: var(--text-main);
+   --panel-tab-active-text: var(--text-inverted);
+   --panel-tab-active-border: var(--text-main);
 
-    /* Inputs */
-    --input-bg: #ffffff;
-    --input-border: #dfdfdf;
-    --input-text: #1f2937;
-    --input-placeholder: #9ca3af;
-    --input-focus-border: #0054e5;
-    --input-focus-shadow: rgba(0, 84, 229, 0.18);
+   /* Interactive */
+   --interactive-primary: #0054e5;
+   --interactive-primary-hover: #0044bd;
+   --interactive-secondary: #4f46e5;
+   --interactive-muted: #6b7280;
+   --interactive-hover: rgba(0, 0, 0, 0.04);
+   --interactive-active: rgba(0, 0, 0, 0.08);
 
-    /* Shadows */
-    --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.06);
-    --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.05);
-    --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.12);
+   /* Inputs */
+   --input-bg: #ffffff;
+   --input-border: #dfdfdf;
+   --input-text: #1f2937;
+   --input-placeholder: #9ca3af;
+   --input-focus-border: #0054e5;
+   --input-focus-shadow: rgba(0, 84, 229, 0.18);
 
-    /* Nutrition semantic aliases */
-    --nutrition-protein: var(--color-protein);
-    --nutrition-carbs: var(--color-carbs);
-    --nutrition-fat: var(--color-fat);
-    --nutrition-qty: var(--color-qty);
-    --nutrition-kcal: var(--color-kcal);
-    --nutrition-kcal-border: var(--color-kcal-border);
-    --nutrition-ppk: var(--color-ppk);
-    --nutrition-ppk-muted: var(--color-ppk0);
+   /* Shadows */
+   --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.06);
+   --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.05);
+   --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.12);
 
-    /* Alloc backgrounds */
+   /* Nutrition semantic aliases */
+   --nutrition-protein: var(--color-protein);
+   --nutrition-carbs: var(--color-carbs);
+   --nutrition-fat: var(--color-fat);
+   --nutrition-qty: var(--color-qty);
+   --nutrition-kcal: var(--color-kcal);
+   --nutrition-kcal-border: var(--color-kcal-border);
+   --nutrition-ppk: var(--color-ppk);
+   --nutrition-ppk-muted: var(--color-ppk0);
+
+   /* Alloc backgrounds */
    --alloc-bar-bg: var(--color-bg-3);
    --alloc-cell-bg: #ffffff;
    --alloc-picker-bg: var(--color-bg-3);
@@ -123,17 +134,17 @@
    --kpi-total-border: var(--color-kcal-border);
    --kpi-total-text: #111111;
 
-    /* Entity semantic aliases */
-    --entity-dailyplan: var(--color-dailyplan);
-    --entity-dpm: var(--color-dpm);
-    --entity-meal: var(--color-meal);
-    --entity-food: var(--color-food);
-    --entity-program: var(--color-program);
-    --entity-inbox: var(--color-inbox);
-    --entity-home: var(--color-home);
-    --entity-profile: var(--color-profile);
+   /* Entity semantic aliases */
+   --entity-dailyplan: var(--color-dailyplan);
+   --entity-dpm: var(--color-dpm);
+   --entity-meal: var(--color-meal);
+   --entity-food: var(--color-food);
+   --entity-program: var(--color-program);
+   --entity-inbox: var(--color-inbox);
+   --entity-home: var(--color-home);
+   --entity-profile: var(--color-profile);
 
-    /* Breadcrumbs */
+   /* Breadcrumbs */
    --breadcrumb-text: #3f3f46;
    --breadcrumb-hover: #111111;
    --breadcrumb-separator: #71717a;
@@ -141,30 +152,30 @@
 
 
 html[data-theme="dark"] {
-    /* =========================================================
-       Semantic theme tokens — Dark mode
-       ---------------------------------------------------------
-       Estos valores solo afectan componentes que usen la nueva
-       capa semántica de tokens.
-       ========================================================= */
+   /* =========================================================
+      Semantic theme tokens — Dark mode
+      ---------------------------------------------------------
+      Estos valores solo afectan componentes que usen la nueva
+      capa semántica de tokens.
+      ========================================================= */
 
-    /* Surfaces */
-    --surface-app: #101010;
-    --surface-page: #121212;
-    --surface-card: #181818;
-    --surface-card-muted: #202020;
-    --surface-elevated: #242424;
-    --surface-picker: #1f1b16;
-    --surface-picker-muted: rgba(255, 255, 255, 0.035);
-    --surface-sidebar: #111111;
+   /* Surfaces */
+   --surface-app: #101010;
+   --surface-page: #121212;
+   --surface-card: #181818;
+   --surface-card-muted: #202020;
+   --surface-elevated: #242424;
+   --surface-picker: #1f1b16;
+   --surface-picker-muted: rgba(255, 255, 255, 0.035);
+   --surface-sidebar: #111111;
 
-    /* Text */
-    --text-main: #f5f5f5;
-    --text-muted: #b5b5b5;
-    --text-soft: #8f8f8f;
-    --text-subtle: #737373;
-    --text-inverted: #111111;
-    --text-link: #8ab4ff;
+   /* Text */
+   --text-main: #f5f5f5;
+   --text-muted: #b5b5b5;
+   --text-soft: #8f8f8f;
+   --text-subtle: #737373;
+   --text-inverted: #111111;
+   --text-link: #8ab4ff;
 
    /* Borders */
    --border-soft: #2424240e;
@@ -176,39 +187,50 @@ html[data-theme="dark"] {
    --panel-row-separator: #2f2f2f85;
    --kpi-row-separator: #2f2f2f85;
 
-    /* Interactive */
-    --interactive-primary: #8ab4ff;
-    --interactive-primary-hover: #a9c8ff;
-    --interactive-secondary: #a5b4fc;
-    --interactive-muted: #a3a3a3;
-    --interactive-hover: rgba(255, 255, 255, 0.06);
-    --interactive-active: rgba(255, 255, 255, 0.10);
+   /* Panel tabs */
+   --panel-tab-bg: var(--surface-card-muted);
+   --panel-tab-text: var(--text-muted);
+   --panel-tab-border: var(--panel-row-separator);
+   --panel-tab-hover-bg: var(--interactive-hover);
+   --panel-tab-hover-text: var(--text-main);
+   --panel-tab-hover-border: var(--panel-row-separator);
+   --panel-tab-active-bg: var(--text-main);
+   --panel-tab-active-text: var(--text-inverted);
+   --panel-tab-active-border: var(--text-main);
 
-    /* Inputs */
-    --input-bg: #181818;
-    --input-border: #343434;
-    --input-text: #f5f5f5;
-    --input-placeholder: #737373;
-    --input-focus-border: #8ab4ff;
-    --input-focus-shadow: rgba(138, 180, 255, 0.22);
+   /* Interactive */
+   --interactive-primary: #8ab4ff;
+   --interactive-primary-hover: #a9c8ff;
+   --interactive-secondary: #a5b4fc;
+   --interactive-muted: #a3a3a3;
+   --interactive-hover: rgba(255, 255, 255, 0.06);
+   --interactive-active: rgba(255, 255, 255, 0.10);
 
-    /* Shadows */
-    --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.28);
-    --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.24);
-    --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.38);
+   /* Inputs */
+   --input-bg: #181818;
+   --input-border: #343434;
+   --input-text: #f5f5f5;
+   --input-placeholder: #737373;
+   --input-focus-border: #8ab4ff;
+   --input-focus-shadow: rgba(138, 180, 255, 0.22);
 
-    /* Alloc backgrounds */
-      --alloc-bar-bg: #313131;
-      --alloc-cell-bg: #313131;
-      --alloc-picker-bg: #313131;
+   /* Shadows */
+   --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.28);
+   --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.24);
+   --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.38);
 
-      /* KPI total */
-      --kpi-total-bg: #26211d;
-      --kpi-total-border: #5a4031;
-      --kpi-total-text: #f5f5f5;
+   /* Alloc backgrounds */
+   --alloc-bar-bg: #313131;
+   --alloc-cell-bg: #313131;
+   --alloc-picker-bg: #313131;
 
-      /* Breadcrumbs */
-      --breadcrumb-text: #d4d4d8;
-      --breadcrumb-hover: #ffffff;
-      --breadcrumb-separator: #a1a1aa;
+   /* KPI total */
+   --kpi-total-bg: #26211d;
+   --kpi-total-border: #5a4031;
+   --kpi-total-text: #f5f5f5;
+
+   /* Breadcrumbs */
+   --breadcrumb-text: #d4d4d8;
+   --breadcrumb-hover: #ffffff;
+   --breadcrumb-separator: #a1a1aa;
 }

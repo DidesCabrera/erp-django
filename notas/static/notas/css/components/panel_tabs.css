@@ -1,200 +1,201 @@
 :root {
-    --tab-fade-out-duration: 140ms;
-    --tab-fade-in-duration: 200ms;
-  }
-  
-  /* =========================
-     PANEL TAB WRAPPERS
-     ========================= */
-  
-  .card-detail-tabs {
-    padding: 10px;
-  }
-  
-  .card-detail-tabs--desktop {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: nowrap;
-  }
-  
+  --tab-fade-out-duration: 140ms;
+  --tab-fade-in-duration: 200ms;
+}
+
+/* =========================
+   PANEL TAB WRAPPERS
+   ========================= */
+
+.card-detail-tabs {
+  padding: 10px;
+}
+
+.card-detail-tabs--desktop {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.card-detail-tabs-mobile {
+  display: none;
+  padding: 10px;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   PANEL TAB BUTTONS
+   ========================= */
+
+.block-desplegar-tabla {
+  gap: 6px;
+  width: fit-content;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.btn-desplegar-tabla,
+.btn-desplegar-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-desplegar-tabla p,
+.btn-desplegar-menu p {
+  margin: 0;
+}
+
+.btn-desplegar,
+.btn-desplegar-mobile {
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 12px;
+
+  background-color: var(--panel-tab-bg);
+  color: var(--panel-tab-text);
+  border: 1px solid var(--panel-tab-border);
+
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btn-desplegar:hover,
+.btn-desplegar-mobile:hover {
+  background-color: var(--panel-tab-hover-bg);
+  color: var(--panel-tab-hover-text);
+  border-color: var(--panel-tab-hover-border);
+}
+
+.btn-desplegar p,
+.btn-desplegar-mobile p {
+  margin: 0;
+  font-size: 13px;
+  color: inherit;
+  font-weight: 450;
+}
+
+/* Activo: se invierte según tema */
+.btn-desplegar.is-active,
+.btn-desplegar-mobile.is-active {
+  background-color: var(--panel-tab-active-bg);
+  color: var(--panel-tab-active-text);
+  border-color: var(--panel-tab-active-border);
+}
+
+.btn-desplegar.is-active p,
+.btn-desplegar-mobile.is-active p {
+  color: inherit;
+}
+
+/* Íconos internos del tab menu */
+.btn-desplegar .tab-icon,
+.btn-desplegar-mobile .tab-icon,
+.btn-desplegar .tab-icon-hide,
+.btn-desplegar-mobile .tab-icon-hide,
+.btn-desplegar .tab-icon-edit,
+.btn-desplegar-mobile .tab-icon-edit {
+  color: currentColor;
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+/* Hide buttons */
+.btn-desplegar--hide,
+.btn-desplegar-mobile--hide {
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-desplegar--hide {
+  min-width: 36px;
+  padding-inline: 8px;
+}
+
+.btn-desplegar-mobile--hide {
+  min-width: 36px;
+}
+
+/* =========================
+   PANEL VISIBILITY
+   ========================= */
+
+.card-table-foods,
+.card-foods-aggregation,
+.card-menu,
+.card-table-meals,
+.card-table-meals-mobile,
+.card-table-foods-mobile {
+  display: none;
+  opacity: 0;
+}
+
+.card-table-foods.is-visible,
+.card-foods-aggregation.is-visible,
+.card-menu.is-visible,
+.card-table-meals.is-visible,
+.card-table-meals-mobile.is-visible,
+.card-table-foods-mobile.is-visible {
+  display: block;
+  opacity: 1;
+}
+
+/* =========================
+   RESPONSIVE CONTRACT
+   ========================= */
+
+@media (min-width: 981px) {
   .card-detail-tabs-mobile {
-    display: none;
-    padding: 10px;
-    gap: 6px;
-    flex-wrap: wrap;
+    display: none !important;
   }
-  
-  /* =========================
-     PANEL TAB BUTTONS
-     ========================= */
-  
-  .block-desplegar-tabla {
-    gap: 6px;
-    width: fit-content;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-top: auto;
-    align-self: flex-start;
+
+  .card-table-foods-mobile,
+  .card-table-meals-mobile {
+    display: none !important;
+    opacity: 0 !important;
   }
-  
-  .btn-desplegar-tabla,
-  .btn-desplegar-menu {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+}
+
+@media (max-width: 980px) {
+  .card-detail-tabs--desktop {
+    display: none !important;
   }
-  
-  .btn-desplegar-tabla p,
-  .btn-desplegar-menu p {
-    margin: 0;
+
+  .card-detail-tabs-mobile {
+    display: flex !important;
   }
-  
-  .btn-desplegar,
+
+  .card-detail-tabs-mobile button {
+    font-size: 14px;
+  }
+
   .btn-desplegar-mobile {
-    height: 22px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 8px;
-    border-radius: 12px;
-  
-    background-color: var(--surface-card-muted);
-    color: var(--text-muted);
-    border: 1px solid var(--border-soft);
-  
-    gap: 4px;
-    cursor: pointer;
-    user-select: none;
-  
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease,
-      border-color 0.2s ease,
-      opacity 0.2s ease;
+    padding: 4px 12px;
+    border-radius: 13px;
+    height: 24px;
   }
-  
-  .btn-desplegar:hover,
-  .btn-desplegar-mobile:hover {
-    background-color: var(--interactive-hover);
-    color: var(--text-main);
-  }
-  
-  .btn-desplegar p,
-  .btn-desplegar-mobile p {
-    margin: 0;
-    font-size: 13px;
-    color: inherit;
-    font-weight: 450;
-  }
-  
-  /* Activo: se invierte según tema */
-  .btn-desplegar.is-active,
-  .btn-desplegar-mobile.is-active {
-    background-color: var(--text-main);
-    color: var(--text-inverted);
-    border-color: var(--text-main);
-  }
-  
-  .btn-desplegar.is-active p,
-  .btn-desplegar-mobile.is-active p {
-    color: inherit;
-  }
-  
-  /* Íconos internos del tab menu */
-  .btn-desplegar .tab-icon,
-  .btn-desplegar-mobile .tab-icon,
-  .btn-desplegar .tab-icon-hide,
-  .btn-desplegar-mobile .tab-icon-hide,
-  .btn-desplegar .tab-icon-edit,
-  .btn-desplegar-mobile .tab-icon-edit {
-    color: currentColor;
-    width: 16px;
-    height: 16px;
-    stroke-width: 2;
-    flex-shrink: 0;
-  }
-  
-  /* Hide buttons */
-  .btn-desplegar--hide,
-  .btn-desplegar-mobile--hide {
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .btn-desplegar--hide {
-    min-width: 36px;
-    padding-inline: 8px;
-  }
-  
-  .btn-desplegar-mobile--hide {
-    min-width: 36px;
-  }
-  
-  /* =========================
-     PANEL VISIBILITY
-     ========================= */
-  
+
   .card-table-foods,
-  .card-foods-aggregation,
-  .card-menu,
-  .card-table-meals,
-  .card-table-meals-mobile,
-  .card-table-foods-mobile {
-    display: none;
-    opacity: 0;
+  .card-table-meals {
+    display: none !important;
+    opacity: 0 !important;
   }
-  
-  .card-table-foods.is-visible,
-  .card-foods-aggregation.is-visible,
-  .card-menu.is-visible,
-  .card-table-meals.is-visible,
-  .card-table-meals-mobile.is-visible,
-  .card-table-foods-mobile.is-visible {
-    display: block;
-    opacity: 1;
-  }
-  
-  /* =========================
-     RESPONSIVE CONTRACT
-     ========================= */
-  
-  @media (min-width: 981px) {
-    .card-detail-tabs-mobile {
-      display: none !important;
-    }
-  
-    .card-table-foods-mobile,
-    .card-table-meals-mobile {
-      display: none !important;
-      opacity: 0 !important;
-    }
-  }
-  
-  @media (max-width: 980px) {
-    .card-detail-tabs--desktop {
-      display: none !important;
-    }
-  
-    .card-detail-tabs-mobile {
-      display: flex !important;
-    }
-  
-    .card-detail-tabs-mobile button {
-      font-size: 14px;
-    }
-  
-    .btn-desplegar-mobile {
-      padding: 4px 12px;
-      border-radius: 13px;
-      height: 24px;
-    }
-  
-    .card-table-foods,
-    .card-table-meals {
-      display: none !important;
-      opacity: 0 !important;
-    }
-  }
+}
