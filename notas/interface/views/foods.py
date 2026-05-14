@@ -6,6 +6,7 @@ from openpyxl import Workbook
 from django.contrib import messages
 from notas.application.services.access.capabilities import get_capabilities
 from notas.domain.models import Food
+from notas.application.queries.food_picker_queries import get_food_picker_queryset
 from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_LIST, 
     FOOD_VIEWMODE_PERSONAL_DETAIL,
@@ -263,10 +264,11 @@ def download_food_template(request):
 
 
 
+@login_required
 def foods_json(request):
     foods = []
 
-    for food in Food.objects.all().order_by("name"):
+    for food in get_food_picker_queryset(request.user):
         foods.append({
             "id": food.id,
             "name": food.name,

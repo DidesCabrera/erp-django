@@ -9,7 +9,8 @@ from notas.application.services.nutrition.nutrition_kpis import (
     build_nutrition_kpis_from_dailyplan,
     build_nutrition_kpis_from_meal,
 )
-from notas.domain.models import DailyPlanMeal, Food, MealFood
+from notas.domain.models import DailyPlanMeal, MealFood
+from notas.application.queries.food_picker_queries import get_food_picker_queryset
 from notas.presentation.composition.js.dpm_food_picker_builder import (
     build_dpm_food_picker_context_payload,
 )
@@ -95,7 +96,7 @@ def get_dpm_detail_page_data(
         )
 
         foods_payload = build_food_picker_foods_payload(
-            Food.objects.all()
+            get_food_picker_queryset(user)
         )
 
         meal_kpis = build_nutrition_kpis_from_meal(

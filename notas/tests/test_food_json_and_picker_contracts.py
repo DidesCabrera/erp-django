@@ -147,3 +147,79 @@ class FoodJsonAndPickerContractTests(TestCase):
 
         payload = json.loads(response.content)
         self.assertIsNotNone(payload[0]["total_kcal"])
+
+
+    def test_foods_json_includes_visible_global_foods(self):
+        user_food = Food.objects.create(
+            name="User Egg",
+            protein=10,
+            carbs=2,
+            fat=5,
+            created_by=self.user,
+        )
+
+        global_food = Food.objects.create(
+            name="Global Oats",
+            protein=16.9,
+            carbs=66.3,
+            fat=6.9,
+            created_by=None,
+            is_global=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_CORE,
+        )
+
+        response = self.client.get(reverse("foods_json"))
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+        names = [item["name"] for item in payload]
+
+        self.assertIn(user_food.name, names)
+        self.assertIn(global_food.name, names)
+
+    def test_foods_json_excludes_private_foods_from_other_users(self):
+        other_user = User.objects.create_user(
+            username="other",
+            email="other@test.com",
+            password="12345678",
+        )
+
+        Food.objects.create(
+            name="Other User Food",
+            protein=1,
+            carbs=1,
+            fat=1,
+            created_by=other_user,
+        )
+
+        response = self.client.get(reverse("foods_json"))
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+        names = [item["name"] for item in payload]
+
+        self.assertNotIn("Other User Food", names)
+
+    def test_foods_json_excludes_hidden_global_foods(self):
+        Food.objects.create(
+            name="Hidden Global Banana",
+            protein=1,
+            carbs=23,
+            fat=0.3,
+            created_by=None,
+            is_global=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_HIDDEN,
+        )
+
+        response = self.client.get(reverse("foods_json"))
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+        names = [item["name"] for item in payload]
+
+        self.assertNotIn("Hidden Global Banana", names)

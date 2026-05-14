@@ -6,12 +6,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import get_object_or_404
 
 from notas.application.services.access.access import get_meal_for_user
-from notas.domain.models import Meal, MealFood, Food
+from notas.domain.models import Meal, MealFood
+from notas.application.queries.food_picker_queries import get_food_picker_queryset
 from notas.presentation.config.viewmodel_config import (
     MEAL_VIEWMODE_PERSONAL_DETAIL,
-    MEAL_VIEWMODE_EXPLORE_DETAIL,
-    MEAL_VIEWMODE_SHARED_DETAIL,
-    MEAL_VIEWMODE_DRAFT_DETAIL,
     MEAL_VIEWMODE_PERSONAL_LIST,
     MEAL_VIEWMODE_EXPLORE_LIST,
     MEAL_VIEWMODE_SHARED_LIST,
@@ -90,7 +88,7 @@ def get_meal_detail_page_data(
             )
 
         foods_payload = build_food_picker_foods_payload(
-            Food.objects.all()
+            get_food_picker_queryset(user)
         )
 
         nutrition_kpis = build_nutrition_kpis_from_meal(
