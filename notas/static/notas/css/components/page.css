@@ -24,7 +24,7 @@
     margin: 0 auto;
     margin-top: 18px;
     padding: 0px;
-    border-radius: 18px;
+    border-radius: 22px;
     border: 1px solid var(--border-soft);
 }
 
@@ -49,7 +49,7 @@
 }
 
 .page--detail.dpm_meal{
-    border-radius: 14px;
+    border-radius: 22px;
     margin-top: 0;
     border-width: 1px;
 }

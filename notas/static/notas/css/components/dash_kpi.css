@@ -28,7 +28,7 @@ background: transparent;
   padding: 10px 10px;
   margin: 4px;
 
-  border-radius: 16px;
+  border-radius: 22px;
   gap: 2px;
   background-color: var(--kpi-total-bg);
   border: 3px solid var(--kpi-total-border);

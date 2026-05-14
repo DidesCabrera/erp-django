@@ -504,9 +504,9 @@
   padding: 28px;
   background: linear-gradient(
     to top,
-    rgba(255, 255, 255, 0.62) 0%,
-    rgba(255, 255, 255, 0.24) 45%,
-    rgba(255, 255, 255, 0.04) 100%
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.1) 45%,
+    rgba(0, 0, 0, 0.04) 100%
   );
 }
 
