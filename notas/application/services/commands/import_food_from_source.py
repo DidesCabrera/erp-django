@@ -7,6 +7,10 @@ from notas.application.services.food_imports.normalization import normalize_impo
 from notas.application.services.food_imports.quality import evaluate_imported_food_quality
 from notas.domain.models import Food, FoodSourceMetadata
 
+from notas.application.services.food_imports.visibility_policy import (
+    resolve_initial_food_visibility,
+)
+
 
 @dataclass(frozen=True)
 class ImportFoodFromSourceResult:
@@ -42,6 +46,10 @@ def import_food_from_source(dto: ImportedFoodDTO) -> ImportFoodFromSourceResult:
             skipped=True,
             reason=quality_result.reason,
         )
+    
+    initial_visibility = resolve_initial_food_visibility(
+        quality_score=quality_result.score,
+    )
 
     existing_metadata = FoodSourceMetadata.objects.select_related("food").filter(
         source=normalized_dto.source,
@@ -73,7 +81,7 @@ def import_food_from_source(dto: ImportedFoodDTO) -> ImportFoodFromSourceResult:
             sugar_g_per_100g=normalized_dto.sugar_g_per_100g,
             saturated_fat_g_per_100g=normalized_dto.saturated_fat_g_per_100g,
             sodium_mg_per_100g=normalized_dto.sodium_mg_per_100g,
-            visibility=Food.VISIBILITY_EXTENDED,
+            visibility=initial_visibility,
             data_quality_score=quality_result.score,
         )
 

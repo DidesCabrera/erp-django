@@ -11,6 +11,7 @@
     font-weight: 500;
     border-radius: 14px;
     margin-bottom: 12px;
+    display: none;
 }
 
 .card-mini-dpm p{
