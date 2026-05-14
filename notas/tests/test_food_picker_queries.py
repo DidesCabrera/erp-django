@@ -1,8 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from notas.application.queries.food_picker_queries import get_food_picker_queryset
-from notas.domain.models import Food
+from notas.application.queries.food_picker_queries import (
+    DEFAULT_FOOD_PICKER_LIMIT,
+    MAX_FOOD_PICKER_LIMIT,
+    PICKER_SOURCE_GLOBAL,
+    PICKER_SOURCE_USER,
+    get_food_picker_queryset,
+    list_food_picker_items,
+    search_food_picker_items,
+)
+from notas.domain.models import Food, FoodAlias, FoodSourceMetadata
 
 
 User = get_user_model()
@@ -31,6 +39,7 @@ class FoodPickerQueryTests(TestCase):
             is_global=False,
             is_active=True,
             visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=10,
         )
 
         self.other_user_food = Food.objects.create(
@@ -42,10 +51,12 @@ class FoodPickerQueryTests(TestCase):
             is_global=False,
             is_active=True,
             visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=10,
         )
 
         self.core_global_food = Food.objects.create(
             name="Global Oats Core",
+            canonical_name="global oats core",
             protein=16.9,
             carbs=66.3,
             fat=6.9,
@@ -54,10 +65,28 @@ class FoodPickerQueryTests(TestCase):
             is_verified=True,
             is_active=True,
             visibility=Food.VISIBILITY_CORE,
+            data_quality_score=90,
+        )
+
+        FoodSourceMetadata.objects.create(
+            food=self.core_global_food,
+            source=FoodSourceMetadata.SOURCE_USDA,
+            source_food_id="1001",
+            source_dataset="foundation_foods",
+            source_version="2026-04",
+        )
+
+        FoodAlias.objects.create(
+            food=self.core_global_food,
+            name="Avena",
+            normalized_name="avena",
+            language="es",
+            country="CL",
         )
 
         self.extended_global_food = Food.objects.create(
             name="Global Chicken Extended",
+            canonical_name="global chicken extended",
             protein=31,
             carbs=0,
             fat=3.6,
@@ -66,6 +95,21 @@ class FoodPickerQueryTests(TestCase):
             is_verified=False,
             is_active=True,
             visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=75,
+        )
+
+        self.lower_quality_extended_global_food = Food.objects.create(
+            name="Global Banana Extended",
+            canonical_name="global banana extended",
+            protein=1,
+            carbs=23,
+            fat=0.3,
+            created_by=None,
+            is_global=True,
+            is_verified=False,
+            is_active=True,
+            visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=65,
         )
 
         self.hidden_global_food = Food.objects.create(
@@ -132,3 +176,111 @@ class FoodPickerQueryTests(TestCase):
         extended_index = foods.index(self.extended_global_food)
 
         self.assertLess(core_index, extended_index)
+
+    def test_food_picker_queryset_orders_higher_quality_extended_before_lower_quality(self):
+        foods = list(get_food_picker_queryset(self.user))
+
+        higher_quality_index = foods.index(self.extended_global_food)
+        lower_quality_index = foods.index(self.lower_quality_extended_global_food)
+
+        self.assertLess(higher_quality_index, lower_quality_index)
+
+    def test_list_food_picker_items_returns_enriched_contract(self):
+        result = list_food_picker_items(user=self.user)
+
+        data = result.as_dict()
+
+        self.assertEqual(data["count"], 4)
+        self.assertEqual(data["limit"], DEFAULT_FOOD_PICKER_LIMIT)
+        self.assertIsNone(data["search"])
+
+        first_item = data["foods"][0]
+
+        self.assertIn("id", first_item)
+        self.assertIn("name", first_item)
+        self.assertIn("protein", first_item)
+        self.assertIn("carbs", first_item)
+        self.assertIn("fat", first_item)
+        self.assertIn("total_kcal", first_item)
+        self.assertIn("alloc", first_item)
+        self.assertIn("picker_source", first_item)
+        self.assertIn("picker_label", first_item)
+        self.assertIn("is_user_food", first_item)
+        self.assertIn("is_global_food", first_item)
+        self.assertIn("is_verified", first_item)
+        self.assertIn("visibility", first_item)
+        self.assertIn("data_quality_score", first_item)
+        self.assertIn("source", first_item)
+
+    def test_list_food_picker_items_marks_user_food(self):
+        result = list_food_picker_items(
+            user=self.user,
+            search="User Egg",
+        )
+
+        item = result.foods[0]
+
+        self.assertEqual(item.picker_source, PICKER_SOURCE_USER)
+        self.assertEqual(item.picker_label, "Tu alimento")
+        self.assertTrue(item.is_user_food)
+        self.assertFalse(item.is_global_food)
+        self.assertEqual(item.source, PICKER_SOURCE_USER)
+
+    def test_list_food_picker_items_marks_global_food(self):
+        result = list_food_picker_items(
+            user=self.user,
+            search="oats",
+        )
+
+        item = result.foods[0]
+
+        self.assertEqual(item.picker_source, PICKER_SOURCE_GLOBAL)
+        self.assertEqual(item.picker_label, "Global")
+        self.assertFalse(item.is_user_food)
+        self.assertTrue(item.is_global_food)
+        self.assertTrue(item.is_verified)
+        self.assertEqual(item.visibility, Food.VISIBILITY_CORE)
+        self.assertEqual(item.source, FoodSourceMetadata.SOURCE_USDA)
+
+    def test_list_food_picker_items_searches_by_alias(self):
+        result = list_food_picker_items(
+            user=self.user,
+            search="avena",
+        )
+
+        self.assertEqual(result.count, 1)
+        self.assertEqual(result.foods[0].name, "Global Oats Core")
+
+    def test_search_food_picker_items_returns_items(self):
+        foods = search_food_picker_items(
+            user=self.user,
+            search="chicken",
+        )
+
+        self.assertEqual(len(foods), 1)
+        self.assertEqual(foods[0].name, "Global Chicken Extended")
+
+    def test_list_food_picker_items_respects_limit(self):
+        result = list_food_picker_items(
+            user=self.user,
+            limit=1,
+        )
+
+        self.assertEqual(result.count, 1)
+        self.assertEqual(result.limit, 1)
+
+    def test_list_food_picker_items_normalizes_invalid_limit(self):
+        result = list_food_picker_items(
+            user=self.user,
+            limit=0,
+        )
+
+        self.assertEqual(result.limit, DEFAULT_FOOD_PICKER_LIMIT)
+
+    def test_list_food_picker_items_caps_limit(self):
+        result = list_food_picker_items(
+            user=self.user,
+            limit=999,
+        )
+
+        self.assertEqual(result.limit, MAX_FOOD_PICKER_LIMIT)

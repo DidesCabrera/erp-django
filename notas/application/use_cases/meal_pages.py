@@ -5,31 +5,31 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import get_object_or_404
 
-from notas.application.services.access.access import get_meal_for_user
-from notas.domain.models import Meal, MealFood
-from notas.application.queries.food_picker_queries import get_food_picker_queryset
-from notas.presentation.config.viewmodel_config import (
-    MEAL_VIEWMODE_PERSONAL_DETAIL,
-    MEAL_VIEWMODE_PERSONAL_LIST,
-    MEAL_VIEWMODE_EXPLORE_LIST,
-    MEAL_VIEWMODE_SHARED_LIST,
-    MEAL_VIEWMODE_DRAFT_LIST,
-    MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN,
+from notas.application.queries.food_picker_queries import list_food_picker_items
+from notas.application.resolvers.meal_resolvers import (
+    resolve_meal_page_actions,
 )
+from notas.application.services.access.access import get_meal_for_user
 from notas.application.services.nutrition.nutrition_kpis import (
     build_nutrition_kpis_from_meal,
 )
+from notas.domain.models import Meal, MealFood
 from notas.presentation.composition.js.food_picker_builder import (
     build_food_picker_context_payload,
-    build_food_picker_foods_payload,
-)
-from notas.application.resolvers.meal_resolvers import (
-    resolve_meal_page_actions,
 )
 from notas.presentation.composition.viewmodel.meal.meal_content import (
     build_meal_detail_content_data,
     build_meal_list_content_data,
 )
+from notas.presentation.config.viewmodel_config import (
+    MEAL_VIEWMODE_DRAFT_LIST,
+    MEAL_VIEWMODE_EXPLORE_LIST,
+    MEAL_VIEWMODE_PERSONAL_DETAIL,
+    MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN,
+    MEAL_VIEWMODE_PERSONAL_LIST,
+    MEAL_VIEWMODE_SHARED_LIST,
+)
+
 
 @dataclass
 class MealDetailPageData:
@@ -50,6 +50,15 @@ class MealListPageData:
     list_content_data: Any
     page_actions: list
     viewmode: Any
+
+
+def _build_food_picker_items_payload(user) -> list[dict]:
+    picker_items = list_food_picker_items(user=user)
+
+    return [
+        food.as_dict()
+        for food in picker_items.foods
+    ]
 
 
 def get_meal_detail_page_data(
@@ -87,9 +96,7 @@ def get_meal_detail_page_data(
                 meal=meal,
             )
 
-        foods_payload = build_food_picker_foods_payload(
-            get_food_picker_queryset(user)
-        )
+        foods_payload = _build_food_picker_items_payload(user)
 
         nutrition_kpis = build_nutrition_kpis_from_meal(
             meal,
@@ -103,7 +110,7 @@ def get_meal_detail_page_data(
         )
 
         foods_json = json.dumps(
-            foods_payload.as_list(),
+            foods_payload,
             cls=DjangoJSONEncoder,
         )
 
@@ -144,6 +151,7 @@ def get_meal_detail_page_data(
         show_return_to_dailyplan=show_return_to_dailyplan,
         viewmode=effective_viewmode,
     )
+
 
 def get_meal_list_page_data(user) -> MealListPageData:
     meals = (

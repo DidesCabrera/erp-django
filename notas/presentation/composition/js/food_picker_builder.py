@@ -32,22 +32,22 @@ def build_food_picker_context_payload(
         editing=None,
     )
 
-def build_food_picker_foods_payload(foods_qs):
-    return FoodPickerFoodsPayload(
-        foods=[
-            {
-                "id": f.id,
-                "name": f.name,
-                "total_kcal": float(f.total_kcal),
-                "protein": float(f.protein),
-                "carbs": float(f.carbs),
-                "fat": float(f.fat),
-                "alloc": {
-                    "protein": float(f.alloc["protein"]),
-                    "carbs": float(f.alloc["carbs"]),
-                    "fat": float(f.alloc["fat"]),
-                },
-            }
-            for f in foods_qs
-        ]
-    )
+def build_food_picker_foods_payload(foods):
+    payload = []
+
+    for food in foods:
+        if hasattr(food, "as_dict"):
+            payload.append(food.as_dict())
+            continue
+
+        payload.append({
+            "id": food.id,
+            "name": food.name,
+            "protein": food.protein,
+            "carbs": food.carbs,
+            "fat": food.fat,
+            "total_kcal": food.total_kcal,
+            "alloc": food.alloc,
+        })
+
+    return payload

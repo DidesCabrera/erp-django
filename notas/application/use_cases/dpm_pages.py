@@ -5,17 +5,14 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import get_object_or_404
 
+from notas.application.queries.food_picker_queries import list_food_picker_items
 from notas.application.services.nutrition.nutrition_kpis import (
     build_nutrition_kpis_from_dailyplan,
     build_nutrition_kpis_from_meal,
 )
 from notas.domain.models import DailyPlanMeal, MealFood
-from notas.application.queries.food_picker_queries import get_food_picker_queryset
 from notas.presentation.composition.js.dpm_food_picker_builder import (
     build_dpm_food_picker_context_payload,
-)
-from notas.presentation.composition.js.food_picker_builder import (
-    build_food_picker_foods_payload,
 )
 from notas.presentation.composition.viewmodel.dpm.dpm_content import (
     build_dpm_detail_content_data,
@@ -38,6 +35,7 @@ def _get_dpm_for_user(user, dailyplan_id: int, dpm_id: int):
         dailyplan__created_by=user,
     )
 
+
 def _get_optional_editing_mealfood(request_get, meal):
     edit_mf_id = request_get.get("edit_food")
     mealfood = None
@@ -52,6 +50,15 @@ def _get_optional_editing_mealfood(request_get, meal):
     return edit_mf_id, mealfood
 
 
+def _build_food_picker_items_payload(user) -> list[dict]:
+    picker_items = list_food_picker_items(user=user)
+
+    return [
+        food.as_dict()
+        for food in picker_items.foods
+    ]
+
+
 @dataclass
 class DpmDetailPageData:
     dailyplan: Any
@@ -64,6 +71,7 @@ class DpmDetailPageData:
     foods_json: str = "[]"
     food_picker_context_json: str = "{}"
     viewmode: Any = None
+
 
 def get_dpm_detail_page_data(
     user,
@@ -95,9 +103,7 @@ def get_dpm_detail_page_data(
             meal=meal,
         )
 
-        foods_payload = build_food_picker_foods_payload(
-            get_food_picker_queryset(user)
-        )
+        foods_payload = _build_food_picker_items_payload(user)
 
         meal_kpis = build_nutrition_kpis_from_meal(
             meal,
@@ -119,10 +125,12 @@ def get_dpm_detail_page_data(
 
         selected_food_id = request_get.get("select_food")
         editing_mealfood_id = int(edit_mf_id) if edit_mf_id else None
+
         foods_json = json.dumps(
-            foods_payload.as_list(),
+            foods_payload,
             cls=DjangoJSONEncoder,
         )
+
         food_picker_context_json = json.dumps(
             food_picker_ctx.as_dict(),
             cls=DjangoJSONEncoder,
@@ -160,6 +168,7 @@ class DpmEditPageData:
     detail_content_data: Any
     viewmode: Any
 
+
 def get_dpm_edit_page_data(
     user,
     dailyplan_id: int,
@@ -193,4 +202,3 @@ def get_dpm_edit_page_data(
         detail_content_data=detail_content_data,
         viewmode=viewmode,
     )
- 

@@ -240,3 +240,42 @@ class PickerPayloadTests(TestCase):
 
         self.assertIn(user_food.name, names)
         self.assertIn(global_food.name, names)
+
+    def test_meal_detail_foods_json_includes_picker_metadata_for_global_foods(self):
+        meal = Meal.objects.create(
+            name="Editable meal",
+            created_by=self.user,
+            is_draft=True,
+        )
+
+        Food.objects.create(
+            name="Global Oats",
+            canonical_name="global oats",
+            protein=16.9,
+            carbs=66.3,
+            fat=6.9,
+            created_by=None,
+            is_global=True,
+            is_verified=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_CORE,
+            data_quality_score=90,
+        )
+
+        response = self.client.get(
+            reverse("meal_detail", args=[meal.id])
+        )
+
+        foods_payload = json.loads(response.context["foods_json"])
+        item = next(
+            food
+            for food in foods_payload
+            if food["name"] == "Global Oats"
+        )
+
+        self.assertEqual(item["picker_source"], "global")
+        self.assertEqual(item["picker_label"], "Global")
+        self.assertFalse(item["is_user_food"])
+        self.assertTrue(item["is_global_food"])
+        self.assertTrue(item["is_verified"])
+        self.assertEqual(item["visibility"], Food.VISIBILITY_CORE)

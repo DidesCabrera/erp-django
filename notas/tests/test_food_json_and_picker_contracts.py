@@ -223,3 +223,37 @@ class FoodJsonAndPickerContractTests(TestCase):
         names = [item["name"] for item in payload]
 
         self.assertNotIn("Hidden Global Banana", names)
+
+    def test_foods_json_includes_picker_metadata(self):
+        Food.objects.create(
+            name="Global Oats",
+            canonical_name="global oats",
+            protein=16.9,
+            carbs=66.3,
+            fat=6.9,
+            created_by=None,
+            is_global=True,
+            is_verified=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_CORE,
+            data_quality_score=90,
+        )
+
+        response = self.client.get(reverse("foods_json"))
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+        item = next(
+            food
+            for food in payload
+            if food["name"] == "Global Oats"
+        )
+
+        self.assertEqual(item["picker_source"], "global")
+        self.assertEqual(item["picker_label"], "Global")
+        self.assertFalse(item["is_user_food"])
+        self.assertTrue(item["is_global_food"])
+        self.assertTrue(item["is_verified"])
+        self.assertEqual(item["visibility"], Food.VISIBILITY_CORE)
+        self.assertEqual(item["data_quality_score"], 90)

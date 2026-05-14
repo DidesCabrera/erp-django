@@ -6,7 +6,7 @@ from openpyxl import Workbook
 from django.contrib import messages
 from notas.application.services.access.capabilities import get_capabilities
 from notas.domain.models import Food
-from notas.application.queries.food_picker_queries import get_food_picker_queryset
+from notas.application.queries.food_picker_queries import list_food_picker_items
 from notas.presentation.config.viewmodel_config import (
     FOOD_VIEWMODE_PERSONAL_LIST, 
     FOOD_VIEWMODE_PERSONAL_DETAIL,
@@ -266,17 +266,29 @@ def download_food_template(request):
 
 @login_required
 def foods_json(request):
+    picker_items = list_food_picker_items(
+        user=request.user,
+    )
+
     foods = []
 
-    for food in get_food_picker_queryset(request.user):
+    for item in picker_items.foods:
         foods.append({
-            "id": food.id,
-            "name": food.name,
-            "protein": food.protein,
-            "carbs": food.carbs,
-            "fat": food.fat,
-            "total_kcal": food.total_kcal,
-            "alloc": food.alloc,
+            "id": item.id,
+            "name": item.name,
+            "protein": item.protein,
+            "carbs": item.carbs,
+            "fat": item.fat,
+            "total_kcal": item.total_kcal,
+            "alloc": item.alloc,
+            "picker_source": item.picker_source,
+            "picker_label": item.picker_label,
+            "is_user_food": item.is_user_food,
+            "is_global_food": item.is_global_food,
+            "is_verified": item.is_verified,
+            "visibility": item.visibility,
+            "data_quality_score": item.data_quality_score,
+            "source": item.source,
         })
 
     return JsonResponse(foods, safe=False)
