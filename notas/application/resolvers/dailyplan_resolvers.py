@@ -280,7 +280,6 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
 
 DAILYPLAN_ENTITY_ACTIONS_BY_VIEWMODE = {
     DAILYPLAN_VIEWMODE_PERSONAL_LIST: [
-        "fork",
         "detail",
         # "share",
     ],
