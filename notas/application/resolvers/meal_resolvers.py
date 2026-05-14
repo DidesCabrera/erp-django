@@ -59,7 +59,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "icon": "copy",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_fork", args=[meal.id]
         ),
@@ -72,7 +72,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "icon": "bookmark",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_save", args=[meal.id]
         ),
@@ -85,7 +85,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "icon": "bookmark",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "meal_save", args=[meal.id]
         ),
@@ -111,7 +111,7 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
         "icon": "clipboard-plus",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda meal, context=None: reverse(
             "add_meal_from_list", args=[meal.id]
         ),
@@ -222,6 +222,18 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
             "meal_share", args=[meal.id]
         ),
     },
+
+    "rename": {
+        "label": "Renombrar",
+        "method": "get",
+        "icon": "pencil",
+        "order": 40,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
+        "get_url": lambda meal, context=None: reverse(
+            "meal_rename", args=[meal.id]
+        ),
+    },
 }
 
 
@@ -238,6 +250,7 @@ MEAL_ENTITY_ACTIONS_BY_VIEWMODE = {
 
     MEAL_VIEWMODE_PERSONAL_DETAIL: [
         "back_to_list",
+        "rename",
         "configure",
         "fork",
         "add_to_dailyplan",
@@ -266,6 +279,7 @@ MEAL_ENTITY_ACTIONS_BY_VIEWMODE = {
     ],
 
     MEAL_VIEWMODE_PERSONAL_EDIT_FROM_DAILYPLAN: [
+        "rename",
         "configure",
         "remove",
         "finish_for_dailyplan",

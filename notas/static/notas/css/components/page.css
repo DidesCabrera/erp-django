@@ -28,8 +28,12 @@
     border: 1px solid var(--border-soft);
 }
 
-.page-detail{
-    margin-bottom: 60px;
+.detail-section{
+    margin-bottom: 14px;
+}
+
+.detail-section.dailyplan {
+    margin-bottom: 55px;
 }
 
 .page.list{

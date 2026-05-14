@@ -3,10 +3,7 @@
   <div class="main-title main-card">
 
     <div class="block-title-card-edit">
-        <h1>{{ titulo.name }}</h1>
-        <a href="{% url 'meal_rename' main_id %}?return_to={{ request.get_full_path|urlencode }}">
-          <i data-lucide="pencil" class="edit-title-icon"></i>
-        </a>
+      <h1>{{ titulo.name }}</h1>
     </div>
 
     <div class="label-class">

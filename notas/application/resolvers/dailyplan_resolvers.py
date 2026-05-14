@@ -73,7 +73,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "icon": "copy",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_fork", args=[dp.id]
         ),
@@ -99,7 +99,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "icon": "bookmark",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_save", args=[dp.id]
         ),
@@ -112,7 +112,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "icon": "bookmark",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_save", args=[dp.id]
         ),
@@ -175,7 +175,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "icon": "trash-2",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda share_id, context=None: reverse(
             "dailyplan_unshare", args=[share_id]
         ),
@@ -199,7 +199,7 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "icon": "pencil",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda dp, context=None: reverse(
             "dailyplan_draft_edit", args=[dp.id]
         ),
@@ -258,6 +258,19 @@ DAILYPLAN_ENTITY_ACTION_DEFINITIONS = {
         "mobile_position": "hidden",
         "get_url": lambda dp, context=None: reverse("dailyplan_draft_list"),
     },
+
+    "rename": {
+        "label": "Renombrar",
+        "method": "get",
+        "icon": "pencil",
+        "order": 40,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
+        "get_url": lambda dp, context=None: reverse(
+            "dailyplan_rename", args=[dp.id]
+        ),
+    },
+
 }
 
 
@@ -274,6 +287,7 @@ DAILYPLAN_ENTITY_ACTIONS_BY_VIEWMODE = {
 
     DAILYPLAN_VIEWMODE_PERSONAL_DETAIL: [
         "back_to_list",
+        "rename",
         "configure",
         "fork",
         "remove",

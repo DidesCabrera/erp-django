@@ -27,7 +27,7 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         "icon": "repeat",
         "order": 90,
         "desktop_position": "inline",
-        "mobile_position": "inline",
+        "mobile_position": "menu",
         "get_url": lambda dpm, context=None: (
             reverse(
                 "dailyplan_detail",
@@ -92,6 +92,25 @@ DAILYPLAN_MEAL_ACTION_DEFINITIONS = {
         ),
         "capability": "can_edit_own_content",
     },
+
+    "rename": {
+        "label": "Renombrar",
+        "method": "get",
+        "icon": "pencil",
+        "order": 40,
+        "desktop_position": "menu",
+        "mobile_position": "menu",
+        "get_url": lambda dpm, context=None: (
+            reverse("meal_rename", args=[dpm.meal.id])
+            + "?return_to="
+            + reverse(
+                "dailyplan_meal_detail",
+                args=[dpm.dailyplan.id, dpm.id],
+            )
+        ),
+        "capability": "can_edit_own_content",
+    },
+
 }
 
 # ==================================================
@@ -105,6 +124,7 @@ DAILYPLAN_MEAL_ACTIONS_BY_VIEWMODE = {
 
     DAILYPLAN_MEAL_VIEWMODE_DETAIL: [
         "back_dp_detail",
+        "rename",
         "replace",
         "edit",
         "remove",
