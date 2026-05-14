@@ -20,6 +20,16 @@ from .domain.models import (
     WeightLog,
 )
 
+from .admin_food_actions import (
+    mark_foods_as_active,
+    mark_foods_as_core,
+    mark_foods_as_extended,
+    mark_foods_as_hidden,
+    mark_foods_as_inactive,
+    mark_foods_as_rejected,
+    mark_foods_as_unverified,
+    mark_foods_as_verified,
+)
 
 # =============================================================================
 # Account / subscription
@@ -274,6 +284,17 @@ class FoodAdmin(admin.ModelAdmin):
         FoodSourceMetadataInline,
         FoodPortionInline,
         FoodAliasInline,
+    )
+
+    actions = (
+        mark_foods_as_core,
+        mark_foods_as_extended,
+        mark_foods_as_hidden,
+        mark_foods_as_rejected,
+        mark_foods_as_verified,
+        mark_foods_as_unverified,
+        mark_foods_as_active,
+        mark_foods_as_inactive,
     )
 
     @admin.display(description="Total kcal / 100 g")
