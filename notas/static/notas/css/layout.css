@@ -260,8 +260,8 @@ header {
 }
 
 .personal-metrics {
-  font-size: 13px;
-  font-weight: 200;
+  font-size: 16px;
+  font-weight: 300;
   color: var(--sidebar-text);
 }
 
@@ -297,6 +297,14 @@ header {
 
   .nav-tab.tab-list .nav-text,
   .sidebar-label {
+    font-size: 16px;
+  }
+
+  .sidebar-sub a {
+    font-size: 16px;
+  }
+
+  .sidebar-main {
     font-size: 16px;
   }
 }

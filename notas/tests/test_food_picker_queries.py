@@ -284,3 +284,13 @@ class FoodPickerQueryTests(TestCase):
         )
 
         self.assertEqual(result.limit, MAX_FOOD_PICKER_LIMIT)
+
+
+    def test_list_food_picker_items_finds_usda_food_by_spanish_alias(self):
+        result = list_food_picker_items(
+            user=self.user,
+            search="avena",
+        )
+
+        self.assertEqual(result.count, 1)
+        self.assertEqual(result.foods[0].name, self.core_global_food.name)

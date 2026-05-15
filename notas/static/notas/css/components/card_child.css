@@ -59,7 +59,7 @@
 .card-detail-block {
   background: var(--surface-card-muted);
   border: 1px solid var(--border-soft);
-  border-radius: 14px;
+  border-radius: 18px;
   margin: 10px -6px;
 }
 
