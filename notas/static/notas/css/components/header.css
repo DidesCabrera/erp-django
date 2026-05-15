@@ -92,7 +92,7 @@
   display: none;
   font-weight: 600;
   min-width: 150px;
-  max-width: 200px;
+  max-width: 220px;
   color: var(--text-main);
 }
 
@@ -172,6 +172,7 @@
   }
 
   .header-title-mobile > * {
+    padding:1px;
     height: 22px;
   }
 

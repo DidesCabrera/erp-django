@@ -34,7 +34,7 @@
     height: 22px;
     width: 22px;
     flex-shrink: 0;
-    color: rgb(134, 134, 134);
+    color: rgb(176, 176, 176);
     stroke-width: 1.5;
   }
   
@@ -512,8 +512,8 @@
   
   @media (max-width: 768px) {
     .label-icon {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       stroke-width: 2;
     }
   
@@ -534,7 +534,7 @@
     }
   
     .mobile-menu-btn {
-      padding-right: 10px;
+      padding-right: 8px;
     }
   
     .back-header-icon {
