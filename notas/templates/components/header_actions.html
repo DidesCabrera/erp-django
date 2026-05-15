@@ -42,7 +42,7 @@
                   {% for action in header.desktop_menu_actions %}
                       {% if action.method == "get" %}
                           <a href="{{ action.url }}" class="overflow-action">
-                              <i data-lucide="{{ action.icon }}"></i>
+                              <i data-lucide="{{ action.icon }}" class="overflow-dropdown-icons"></i>
                               <span>{{ action.label }}</span>
                           </a>
                       {% elif action.method == "post" %}
@@ -54,7 +54,7 @@
                                   value="1"
                                   class="overflow-action"
                               >
-                                  <i data-lucide="{{ action.icon }}"></i>
+                                  <i data-lucide="{{ action.icon }}"  class="overflow-dropdown-icons"></i>
                                   <span>{{ action.label }}</span>
                               </button>
                           </form>
@@ -110,7 +110,7 @@
                   {% for action in header.mobile_menu_actions %}
                       {% if action.method == "get" %}
                           <a href="{{ action.url }}" class="overflow-action">
-                              <i data-lucide="{{ action.icon }}"></i>
+                              <i data-lucide="{{ action.icon }}"  class="overflow-dropdown-icons"></i>
                               <span>{{ action.label }}</span>
                           </a>
                       {% elif action.method == "post" %}
@@ -122,7 +122,7 @@
                                   value="1"
                                   class="overflow-action"
                               >
-                                  <i data-lucide="{{ action.icon }}"></i>
+                                  <i data-lucide="{{ action.icon }}"  class="overflow-dropdown-icons"></i>
                                   <span>{{ action.label }}</span>
                               </button>
                           </form>

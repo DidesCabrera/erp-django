@@ -146,6 +146,32 @@ document.addEventListener("DOMContentLoaded", () => {
     return foods.find(food => Number(food.id) === Number(foodId)) || null;
   }
 
+  function normalizeSearchValue(value) {
+    return String(value ?? "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  }
+
+  function getFoodSearchText(food) {
+    return normalizeSearchValue(
+      food?.search_text || food?.name || ""
+    );
+  }
+
+  function filterFoodsBySearch(value) {
+    const normalizedValue = normalizeSearchValue(value);
+
+    if (!normalizedValue) {
+      return foods;
+    }
+
+    return foods.filter(food => {
+      return getFoodSearchText(food).includes(normalizedValue);
+    });
+  }
+
   // ---------------------------
   // Food list
   // ---------------------------
@@ -235,10 +261,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   input.addEventListener("input", () => {
-    const value = input.value.toLowerCase();
-
     renderFoodList(
-      foods.filter(food => food?.name?.toLowerCase().includes(value))
+      filterFoodsBySearch(input.value)
     );
 
     openList();

@@ -289,6 +289,7 @@ def foods_json(request):
             "visibility": item.visibility,
             "data_quality_score": item.data_quality_score,
             "source": item.source,
+            "search_text": item.search_text,
         })
 
     return JsonResponse(foods, safe=False)

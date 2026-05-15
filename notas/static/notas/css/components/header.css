@@ -1,5 +1,58 @@
 /* ===== HEADER PAGE ===== */
 
+
+
+
+
+
+
+.overflow-menu{
+  position:relative;
+}
+
+.overflow-btn{
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+
+.overflow-dropdown{
+  display:none;
+  position:absolute;
+  right:0;
+  top:100%;
+  background:white;
+  border:1px solid var(--border-soft);
+  border-radius:8px;
+  padding:2px 8px;
+  min-width:200px;
+  z-index:20;
+}
+
+
+@media (max-width: 768px) {
+
+  .overflow-dropdown{
+    padding:4px;
+  }
+}
+
+.overflow-menu:hover .overflow-dropdown{
+  display:block;
+}
+
+.overflow-action{
+  display:block;
+  width:100%;
+  padding:6px 10px;
+  text-align:left;
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+
+
+
 .page-header {
   position: fixed;
   top: 0;
@@ -138,7 +191,7 @@
   align-items: center;
   gap: 8px;
 
-  padding: 6px 10px;
+  padding: 12px 10px;
   width: 100%;
 
   background: none;
@@ -152,11 +205,6 @@
   background: var(--interactive-hover);
 }
 
-.overflow-action i {
-  width: 16px;
-  height: 16px;
-  stroke-width: 1.8;
-}
 
 .actions {
   display: flex;
@@ -284,10 +332,10 @@
   .overflow-dropdown .overflow-action {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   
     width: 100%;
-    padding: 8px 10px;
+    padding: 12px 10px;
   
     background: transparent;
     border: none;
@@ -349,3 +397,6 @@
   .page-header-right .overflow-dropdown .overflow-action .header-action-icon {
     color: currentColor;
   }
+
+
+  

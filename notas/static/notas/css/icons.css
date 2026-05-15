@@ -496,6 +496,15 @@
     width: 100%;
     box-sizing: border-box;
   }
+
+
+  .overflow-dropdown-icons{
+    width: 16px;
+    height: 16px;
+    color: var(--text-main);
+    flex-shrink: 0;
+    stroke-width: 2;
+  }
   
   /* =========================
      Mobile
@@ -564,6 +573,8 @@
       height: 18px;
       width: 18px;
     }
+
+
   }
 
 /* Structural indicators icons should follow theme text color */

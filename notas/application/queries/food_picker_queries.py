@@ -30,6 +30,7 @@ class FoodPickerItemDTO:
     visibility: str
     data_quality_score: int
     source: str
+    search_text: str
 
     def as_dict(self) -> dict:
         return asdict(self)
@@ -91,6 +92,7 @@ def get_food_picker_queryset(user) -> QuerySet:
                 visibility__in=visible_global_values,
             )
         )
+        .prefetch_related("aliases")
         .annotate(
             picker_source_priority=Case(
                 When(created_by=user, then=Value(0)),
@@ -204,6 +206,31 @@ def build_food_picker_item_dto(
         visibility=food.visibility,
         data_quality_score=food.data_quality_score,
         source=_resolve_source(food),
+        search_text=build_food_picker_search_text(food),
+    )
+
+
+def build_food_picker_search_text(food: Food) -> str:
+    parts = [
+        food.name,
+        food.canonical_name,
+    ]
+
+    prefetched_aliases = getattr(food, "_prefetched_objects_cache", {}).get("aliases")
+
+    if prefetched_aliases is not None:
+        aliases = prefetched_aliases
+    else:
+        aliases = food.aliases.all()
+
+    for alias in aliases:
+        parts.append(alias.name)
+        parts.append(alias.normalized_name)
+
+    return " ".join(
+        str(part).strip().lower()
+        for part in parts
+        if part
     )
 
 

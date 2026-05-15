@@ -318,3 +318,14 @@ class FoodPickerQueryTests(TestCase):
 
         self.assertEqual(global_items[0].visibility, Food.VISIBILITY_CORE)
         self.assertTrue(global_items[0].is_verified)
+
+    def test_list_food_picker_items_includes_search_text_with_aliases(self):
+        result = list_food_picker_items(
+            user=self.user,
+            search="avena",
+        )
+
+        item = result.foods[0]
+
+        self.assertIn("global oats core", item.search_text)
+        self.assertIn("avena", item.search_text)

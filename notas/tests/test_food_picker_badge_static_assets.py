@@ -40,3 +40,29 @@ class FoodPickerBadgeStaticAssetsTests(SimpleTestCase):
         self.assertIn(".picker-item-badge--global", content)
         self.assertIn(".picker-item-badge--verified", content)
         self.assertIn(".picker-item-badge--core", content)
+
+
+    def test_food_picker_js_filters_by_search_text(self):
+        food_picker_path = (
+            Path(__file__).resolve().parents[1]
+            / "static"
+            / "notas"
+            / "js"
+            / "food_picker.js"
+        )
+        dpm_picker_path = (
+            Path(__file__).resolve().parents[1]
+            / "static"
+            / "notas"
+            / "js"
+            / "dpm_food_picker.js"
+        )
+
+        food_picker_content = food_picker_path.read_text(encoding="utf-8")
+        dpm_picker_content = dpm_picker_path.read_text(encoding="utf-8")
+
+        for content in [food_picker_content, dpm_picker_content]:
+            self.assertIn("filterFoodsBySearch", content)
+            self.assertIn("getFoodSearchText", content)
+            self.assertIn("search_text", content)
+            self.assertIn("normalize(\"NFD\")", content)
