@@ -2,9 +2,8 @@
   background: var(--surface-card-muted);
   color: var(--text-main);
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  border-radius: 18px;
+  margin: 12px -8px;
 }
 
 .section_picker.is-collapsed {
@@ -1011,3 +1010,4 @@ p.h3-table2 {
     padding: 3px 7px;
   }
 }
+

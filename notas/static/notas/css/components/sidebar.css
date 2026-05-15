@@ -47,8 +47,7 @@
     height: 100px;
     padding: 14px 14px;
     padding-bottom: 15px;
-    border: 1px solid var(--sidebar-card-border);
-    background-color: var(--sidebar-card-bg);
+    background-color: var(--surface-card-profile-sidebar);
     border-radius: 18px;
     position: relative;
 }

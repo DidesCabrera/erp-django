@@ -294,3 +294,27 @@ class FoodPickerQueryTests(TestCase):
 
         self.assertEqual(result.count, 1)
         self.assertEqual(result.foods[0].name, self.core_global_food.name)
+
+
+    def test_promoted_core_global_foods_are_prioritized_in_picker(self):
+        self.extended_global_food.visibility = Food.VISIBILITY_CORE
+        self.extended_global_food.is_verified = True
+        self.extended_global_food.save(
+            update_fields=[
+                "visibility",
+                "is_verified",
+            ]
+        )
+
+        result = list_food_picker_items(
+            user=self.user,
+        )
+
+        global_items = [
+            food
+            for food in result.foods
+            if food.is_global_food
+        ]
+
+        self.assertEqual(global_items[0].visibility, Food.VISIBILITY_CORE)
+        self.assertTrue(global_items[0].is_verified)

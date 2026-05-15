@@ -97,3 +97,21 @@ Recommended initial catalog:
 Historical nutrition snapshots must remain stable.
 
 If a USDA source changes later, My Scoope should compare metadata and hashes before deciding whether to update, version or mark the food for review.
+
+
+## Initial core catalog policy
+
+Core foods should be explicit.
+
+Imported foods should not become core only because they come from USDA.
+
+A food may become core when:
+
+- it is common enough for normal users
+- nutrition values are complete enough
+- it has a useful Spanish alias
+- it is active
+- it is verified
+- it is useful in picker search
+
+The initial core catalog is maintained by canonical_name.

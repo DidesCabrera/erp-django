@@ -58,11 +58,12 @@
    --surface-app: #f5f5f5;
    --surface-page: #f8f8f8;
    --surface-card: #ffffff;
+   --surface-card-profile-sidebar: #121212;
    --surface-card-muted: #fafafa;
    --surface-elevated: #ffffff;
    --surface-picker: rgb(255, 251, 245);
    --surface-picker-muted: rgba(0, 0, 0, 0.010);
-   --surface-sidebar: rgb(32, 32, 32);
+   --surface-sidebar: #080808;
 
    /* Text */
    --text-main: #1f2937;
@@ -79,8 +80,8 @@
    --border-inverted: rgba(255, 255, 255, 0.18);
 
    /* Internal separators */
-   --panel-row-separator: #e6e6e6;
-   --kpi-row-separator: #e6e6e6;
+   --panel-row-separator: #f0f0f0;
+   --kpi-row-separator: #f0f0f0;
 
    /* Panel tabs */
    --panel-tab-bg: var(--surface-card-muted);
@@ -160,14 +161,15 @@ html[data-theme="dark"] {
       ========================================================= */
 
    /* Surfaces */
-   --surface-app: #101010;
+   --surface-app: #000000;
    --surface-page: #121212;
-   --surface-card: #181818;
+   --surface-card: #121212;
+   --surface-card-profile-sidebar: #121212;
    --surface-card-muted: #202020;
    --surface-elevated: #242424;
    --surface-picker: #1f1b16;
    --surface-picker-muted: rgba(255, 255, 255, 0.035);
-   --surface-sidebar: #111111;
+   --surface-sidebar: #080808;
 
    /* Text */
    --text-main: #f5f5f5;
