@@ -3,11 +3,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const promptTemplate = document.getElementById("sidebar-ai-prompt");
     const feedback = document.querySelector(".js-copy-chatgpt-feedback");
   
-    if (!button || !promptTemplate) return;
+    if (!button) return;
+  
+    const fallbackPrompt = `
+  Actúa como asistente experto de My Scoope.
+  
+  Ayúdame a usar la plataforma para construir, analizar y mejorar mis planes diarios de alimentación, comidas y alimentos.
+  
+  Contexto de My Scoope:
+  - My Scoope permite gestionar planes diarios de alimentación.
+  - Un plan diario contiene comidas.
+  - Una comida contiene alimentos y porciones.
+  - Los KPIs principales son kcal totales, proteína, carbohidratos, grasas, PPK y distribución calórica.
+  - En esta conversación no tienes acceso directo a mi cuenta ni a mis datos de My Scoope, salvo que yo te los entregue.
+  - No inventes datos: si necesitas información del plan, comida o alimento, pídemela.
+  
+  Primero pregúntame qué quiero lograr hoy dentro de My Scoope.
+  Luego guíame paso a paso con instrucciones claras.
+  `.trim();
   
     function setFeedback(message) {
       if (!feedback) return;
       feedback.textContent = message;
+    }
+  
+    function getPrompt() {
+      const templateContentPrompt = promptTemplate?.content?.textContent?.trim();
+      if (templateContentPrompt) return templateContentPrompt;
+  
+      const templateTextPrompt = promptTemplate?.textContent?.trim();
+      if (templateTextPrompt) return templateTextPrompt;
+  
+      const dataPrompt = button.dataset.prompt?.trim();
+      if (dataPrompt) return dataPrompt;
+  
+      return fallbackPrompt;
     }
   
     async function copyText(text) {
@@ -30,13 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
     button.addEventListener("click", async () => {
-      const prompt = promptTemplate.textContent.trim();
+      const prompt = getPrompt();
       const chatgptUrl = button.dataset.chatgptUrl || "https://chatgpt.com/";
-  
-      if (!prompt) {
-        setFeedback("No se encontró el prompt.");
-        return;
-      }
   
       try {
         await copyText(prompt);

@@ -92,10 +92,15 @@
     </div>
 
     <section class="sidebar-ai-panel" aria-label="Asistencia de IA">
+        <p class="sidebar-ai-panel__eyebrow">
+            <i data-lucide="sparkles" class="sidebar-ai-panel__button-icon"></i>
+            IA para My Scoope
+        </p>
+    
         <p class="sidebar-ai-panel__title">
             Recibe la asistencia de tu IA
         </p>
-
+    
         <button
             type="button"
             class="sidebar-ai-panel__button js-copy-chatgpt-prompt"
@@ -104,24 +109,24 @@
             <i data-lucide="copy" class="sidebar-ai-panel__button-icon"></i>
             <span>Copiar prompt e ir a ChatGPT</span>
         </button>
-
+    
         <p class="sidebar-ai-panel__feedback js-copy-chatgpt-feedback" aria-live="polite"></p>
-
+    
         <template id="sidebar-ai-prompt">
-Actúa como asistente experto de My Scoope.
-
-Ayúdame a usar la plataforma para construir, analizar y mejorar mis planes diarios de alimentación, comidas y alimentos.
-
-Contexto de My Scoope:
-- My Scoope permite gestionar planes diarios de alimentación.
-- Un plan diario contiene comidas.
-- Una comida contiene alimentos y porciones.
-- Los KPIs principales son kcal totales, proteína, carbohidratos, grasas, PPK y distribución calórica.
-- En esta conversación no tienes acceso directo a mi cuenta ni a mis datos de My Scoope, salvo que yo te los entregue.
-- No inventes datos: si necesitas información del plan, comida o alimento, pídemela.
-
-Primero pregúntame qué quiero lograr hoy dentro de My Scoope.
-Luego guíame paso a paso con instrucciones claras.
+    Actúa como asistente experto de My Scoope.
+    
+    Ayúdame a usar la plataforma para construir, analizar y mejorar mis planes diarios de alimentación, comidas y alimentos.
+    
+    Contexto de My Scoope:
+    - My Scoope permite gestionar planes diarios de alimentación.
+    - Un plan diario contiene comidas.
+    - Una comida contiene alimentos y porciones.
+    - Los KPIs principales son kcal totales, proteína, carbohidratos, grasas, PPK y distribución calórica.
+    - En esta conversación no tienes acceso directo a mi cuenta ni a mis datos de My Scoope, salvo que yo te los entregue.
+    - No inventes datos: si necesitas información del plan, comida o alimento, pídemela.
+    
+    Primero pregúntame qué quiero lograr hoy dentro de My Scoope.
+    Luego guíame paso a paso con instrucciones claras.
         </template>
     </section>
 

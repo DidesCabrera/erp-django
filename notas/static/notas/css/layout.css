@@ -61,11 +61,14 @@ header {
 
 .sidebar {
   width: var(--sidebar-width);
+  height: 100dvh;
+
   background-color: var(--surface-sidebar);
   border-right: 1px solid var(--sidebar-edge-border);
   color: var(--sidebar-text-active);
 
   padding: 12px;
+  box-sizing: border-box;
 
   position: fixed;
   top: 0;
@@ -81,10 +84,12 @@ header {
 }
 
 .sidebar-scroll-region {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0;
+
   overflow-y: auto;
   overflow-x: hidden;
+
   padding-right: 2px;
 }
 
