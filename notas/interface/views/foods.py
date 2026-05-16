@@ -276,6 +276,7 @@ def foods_json(request):
         foods.append({
             "id": item.id,
             "name": item.name,
+            "display_name": item.display_name,
             "protein": item.protein,
             "carbs": item.carbs,
             "fat": item.fat,

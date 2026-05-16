@@ -2,6 +2,9 @@ from dataclasses import asdict, dataclass
 
 from django.db.models import Case, IntegerField, Q, QuerySet, Value, When
 
+from notas.application.services.food_imports.localized_names import (
+    get_primary_food_localized_name,
+)
 from notas.domain.models import Food
 
 
@@ -17,6 +20,7 @@ MAX_FOOD_PICKER_LIMIT = 250
 class FoodPickerItemDTO:
     id: int
     name: str
+    display_name: str
     protein: float
     carbs: float
     fat: float
@@ -92,7 +96,10 @@ def get_food_picker_queryset(user) -> QuerySet:
                 visibility__in=visible_global_values,
             )
         )
-        .prefetch_related("aliases")
+        .prefetch_related(
+            "aliases",
+            "localized_names",
+        )
         .annotate(
             picker_source_priority=Case(
                 When(created_by=user, then=Value(0)),
@@ -133,7 +140,7 @@ def list_food_picker_items(
     Return food picker items as DTOs.
 
     This is the contract that picker payload builders and JSON endpoints
-    should use when they need enriched metadata for UI labels/badges.
+    should use when they need enriched metadata for UI labels/badges/display.
     """
 
     safe_limit = _normalize_limit(limit)
@@ -190,6 +197,7 @@ def build_food_picker_item_dto(
     return FoodPickerItemDTO(
         id=food.id,
         name=food.name,
+        display_name=resolve_food_picker_display_name(food),
         protein=float(food.protein),
         carbs=float(food.carbs),
         fat=float(food.fat),
@@ -208,6 +216,16 @@ def build_food_picker_item_dto(
         source=_resolve_source(food),
         search_text=build_food_picker_search_text(food),
     )
+
+
+def resolve_food_picker_display_name(food: Food) -> str:
+    localized_name = get_primary_food_localized_name(
+        food=food,
+        language="es",
+        country="CL",
+    )
+
+    return localized_name or food.name
 
 
 def build_food_picker_search_text(food: Food) -> str:
@@ -277,6 +295,8 @@ def _apply_food_picker_search(
         | Q(canonical_name__icontains=search)
         | Q(aliases__name__icontains=search)
         | Q(aliases__normalized_name__icontains=search)
+        | Q(localized_names__name__icontains=search)
+        | Q(localized_names__normalized_name__icontains=search)
     )
 
 

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from notas.domain.models import DailyPlan, Food, Meal, MealFood
+from notas.domain.models import DailyPlan, Food, Meal, MealFood, FoodLocalizedName
 
 
 User = get_user_model()
@@ -279,3 +279,47 @@ class PickerPayloadTests(TestCase):
         self.assertTrue(item["is_global_food"])
         self.assertTrue(item["is_verified"])
         self.assertEqual(item["visibility"], Food.VISIBILITY_CORE)
+
+
+def test_meal_detail_foods_json_includes_display_name(self):
+    meal = Meal.objects.create(
+        name="Editable meal",
+        created_by=self.user,
+        is_draft=True,
+    )
+
+    global_food = Food.objects.create(
+        name="Chicken breast, cooked",
+        canonical_name="chicken breast cooked",
+        protein=31,
+        carbs=0,
+        fat=3.6,
+        created_by=None,
+        is_global=True,
+        is_verified=True,
+        is_active=True,
+        visibility=Food.VISIBILITY_CORE,
+        data_quality_score=90,
+    )
+
+    FoodLocalizedName.objects.create(
+        food=global_food,
+        name="Pechuga de pollo cocida",
+        normalized_name="pechuga de pollo cocida",
+        language="es",
+        country="CL",
+        is_primary=True,
+    )
+
+    response = self.client.get(
+        reverse("meal_detail", args=[meal.id])
+    )
+
+    foods_payload = json.loads(response.context["foods_json"])
+    item = next(
+        food
+        for food in foods_payload
+        if food["name"] == "Chicken breast, cooked"
+    )
+
+    self.assertEqual(item["display_name"], "Pechuga de pollo cocida")

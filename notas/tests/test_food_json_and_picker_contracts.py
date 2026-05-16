@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from notas.domain.models import Food, FoodAlias
+from notas.domain.models import Food, FoodAlias, FoodLocalizedName
 
 
 User = get_user_model()
@@ -45,6 +45,7 @@ class FoodJsonAndPickerContractTests(TestCase):
 
         self.assertIn("id", item)
         self.assertIn("name", item)
+        self.assertIn("display_name", item)
         self.assertIn("protein", item)
         self.assertIn("carbs", item)
         self.assertIn("fat", item)
@@ -88,6 +89,7 @@ class FoodJsonAndPickerContractTests(TestCase):
         item = payload[0]
         self.assertEqual(item["id"], food.id)
         self.assertEqual(item["name"], "Egg updated")
+        self.assertEqual(item["display_name"], "Egg updated")
         self.assertEqual(item["protein"], 12)
         self.assertEqual(item["carbs"], 3)
         self.assertEqual(item["fat"], 6)
@@ -334,3 +336,60 @@ class FoodJsonAndPickerContractTests(TestCase):
         self.assertIn("chicken breast cooked", item["search_text"])
         self.assertIn("pechuga de pollo", item["search_text"])
         self.assertIn("pollo", item["search_text"])
+
+    def test_foods_json_uses_name_as_display_name_without_localized_name(self):
+        Food.objects.create(
+            name="Egg",
+            canonical_name="egg",
+            protein=10,
+            carbs=2,
+            fat=5,
+            created_by=self.user,
+        )
+
+        response = self.client.get(reverse("foods_json"))
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+        item = payload[0]
+
+        self.assertEqual(item["name"], "Egg")
+        self.assertEqual(item["display_name"], "Egg")
+
+    def test_foods_json_includes_localized_display_name(self):
+        global_food = Food.objects.create(
+            name="Chicken breast, cooked",
+            canonical_name="chicken breast cooked",
+            protein=31,
+            carbs=0,
+            fat=3.6,
+            created_by=None,
+            is_global=True,
+            is_verified=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_CORE,
+            data_quality_score=90,
+        )
+
+        FoodLocalizedName.objects.create(
+            food=global_food,
+            name="Pechuga de pollo cocida",
+            normalized_name="pechuga de pollo cocida",
+            language="es",
+            country="CL",
+            is_primary=True,
+        )
+
+        response = self.client.get(reverse("foods_json"))
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+        item = next(
+            food
+            for food in payload
+            if food["name"] == "Chicken breast, cooked"
+        )
+
+        self.assertEqual(item["display_name"], "Pechuga de pollo cocida")
