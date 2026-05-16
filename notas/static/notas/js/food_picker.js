@@ -70,6 +70,40 @@ document.addEventListener("DOMContentLoaded", () => {
     list.style.display = "none";
   }
 
+  function findFoodById(foodId) {
+    return foods.find(food => Number(food.id) === Number(foodId)) || null;
+  }
+
+  function getFoodDisplayName(food) {
+    return food?.display_name || food?.name || "";
+  }
+
+  function normalizeSearchValue(value) {
+    return String(value ?? "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  }
+
+  function getFoodSearchText(food) {
+    return normalizeSearchValue(
+      food?.search_text || food?.display_name || food?.name || ""
+    );
+  }
+
+  function filterFoodsBySearch(value) {
+    const normalizedValue = normalizeSearchValue(value);
+
+    if (!normalizedValue) {
+      return foods;
+    }
+
+    return foods.filter(food => {
+      return getFoodSearchText(food).includes(normalizedValue);
+    });
+  }
+
   function syncHiddenState() {
     if (hiddenPickerMode) {
       hiddenPickerMode.value = ctx.mode || "add";
@@ -126,50 +160,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function resetPickerState() {
     selectedFood = null;
-  
+
     hiddenFoodId.value = "";
     hiddenQuantity.value = "";
-  
+
     input.value = "";
     quantityInput.value = "100";
-  
+
     preview.style.display = "none";
-  
+
     if (btnCancelInline) {
       btnCancelInline.style.display = "inline-block";
     }
-  
+
     closeList();
-  }
-
-  function findFoodById(foodId) {
-    return foods.find(food => Number(food.id) === Number(foodId)) || null;
-  }
-
-  function normalizeSearchValue(value) {
-    return String(value ?? "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  }
-
-  function getFoodSearchText(food) {
-    return normalizeSearchValue(
-      food?.search_text || food?.name || ""
-    );
-  }
-
-  function filterFoodsBySearch(value) {
-    const normalizedValue = normalizeSearchValue(value);
-
-    if (!normalizedValue) {
-      return foods;
-    }
-
-    return foods.filter(food => {
-      return getFoodSearchText(food).includes(normalizedValue);
-    });
   }
 
   // ---------------------------
@@ -187,12 +191,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       li.addEventListener("click", () => {
         selectedFood = food;
-        input.value = food.name;
-      
+        input.value = getFoodDisplayName(food);
+
         if (btnCancelInline) {
           btnCancelInline.style.display = "none";
         }
-      
+
         closeList();
         showPreview();
       });
@@ -208,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectedFood) return;
 
     preview.style.display = "block";
-    document.getElementById("preview-name").textContent = selectedFood.name;
+    document.getElementById("preview-name").textContent = getFoodDisplayName(selectedFood);
 
     hiddenFoodId.value = selectedFood.id;
 
@@ -223,32 +227,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateQuantity() {
     if (!selectedFood) return;
-  
+
     const rawQuantity = Number(quantityInput.value);
     const quantity = !rawQuantity || rawQuantity <= 0 ? 0 : rawQuantity;
-  
+
     hiddenQuantity.value = String(quantity);
-  
+
     const newPortion = portionFromFood(selectedFood, quantity);
     renderPortion(newPortion);
-  
+
     let baseMeal = ctx.meal.kpis;
-  
+
     if (isEdit()) {
       const oldPortion = portionFromFoodById(
         foods,
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
-  
+
       baseMeal = removePortionTotals(ctx.meal.kpis, oldPortion);
     }
-  
+
     const previewMeal = previewTotals(baseMeal, newPortion);
-  
+
     const weight = ctx.meal.kpis.weight;
     previewMeal.ppk = computePPK(previewMeal.protein, weight);
-  
+
     renderPreviewTotals(previewMeal);
   }
 
@@ -287,19 +291,18 @@ document.addEventListener("DOMContentLoaded", () => {
         originalQuantity: button.dataset.qty,
         updateUrl: button.dataset.updateUrl
       });
-  
+
       document.dispatchEvent(new CustomEvent("picker:open", {
         detail: { sectionId: "meal-picker-section" }
       }));
-  
+
       selectedFood = findFoodById(ctx.editing.food_id);
       if (!selectedFood) return;
-  
-      input.value = selectedFood.name;
+
+      input.value = getFoodDisplayName(selectedFood);
       showPreview();
     });
   });
-
 
   // ---------------------------
   // Cancel
@@ -307,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCancel.addEventListener("click", () => {
     setAddMode();
     resetPickerState();
-  
+
     document.dispatchEvent(new CustomEvent("picker:close", {
       detail: { sectionId: "meal-picker-section" }
     }));
@@ -317,13 +320,12 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCancelInline.addEventListener("click", () => {
       setAddMode();
       resetPickerState();
-  
+
       document.dispatchEvent(new CustomEvent("picker:close", {
         detail: { sectionId: "meal-picker-section" }
       }));
     });
   }
-  
 
   // ---------------------------
   // Init

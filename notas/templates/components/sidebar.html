@@ -1,91 +1,130 @@
 {% load static %}
 
 <aside class="sidebar">
-                
-    <div class="block-logo-sidebar">
-        <a href="{% url 'home_view' %}">
-            <img src="{% static 'img/logo-white.png' %}" alt="Logo" class="brand-logo">
-        </a>
-        <button class="collapse-sidebar-btn" onclick="toggleSidebar()">
-            <i data-lucide="panel-right" class="collapse-sidebar-icon"></i>
-        </button>
-    </div>
 
-    <div class="user-block">     
-        {% if request.user.is_authenticated %}
-            <div class="user">
-                <a href="{% url 'profile_detail' %}" class="user">
-                    <i data-lucide="circle-user-round" class="profile-icon"></i>
-                    <h2>{{ request.user.username }}</h2>
-                    <div class="label-rol">
-                        {% if request.user.profile.role == "member" %}Member{% endif %}
-                        {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
-                    </div>
-                    <i data-lucide="chevron-right" class="enter-user-icon"></i>
-                </a>
-            </div>
-        {% endif %}
-        
-        <p class="personal-metrics">
-            <i data-lucide="scale" class="sidebar-weight-icon"></i> {{ current_weight }}kg
-        </p>
-    </div>
+    <div class="sidebar-scroll-region">
 
-    <nav class="sidebar-nav">
-        {% for section in vm.ui.sidebar_sections %}
-            {% if section.key != "admin" or request.user.is_staff or request.user.is_superuser %}
-                <p class="group-name-sidebar">{{ section.label }}</p>
+        <div class="block-logo-sidebar">
+            <a href="{% url 'home_view' %}">
+                <img src="{% static 'img/logo-white.png' %}" alt="Logo" class="brand-logo">
+            </a>
+            <button class="collapse-sidebar-btn" onclick="toggleSidebar()">
+                <i data-lucide="panel-right" class="collapse-sidebar-icon"></i>
+            </button>
+        </div>
 
-                {% for group in section.groups %}
-                <div class="sidebar-group {% if group.is_open %}is-open{% endif %} {% if group.is_link %}sidebar-group--link{% endif %} {% if group.is_active and not group.is_link %}is-current{% endif %}">
-                
-                        {% if group.is_link %}
-                            <a href="{{ group.url }}"
-                            class="sidebar-main sidebar-main--link {% if group.is_active %}is-active{% endif %}">
-                                <span class="sidebar-left">
-                                    <i data-lucide="chevron-right" class="sidebar-icon"></i>
-                                    <i data-lucide="{{ group.icon }}" class="sidebar-main-icon"></i>
-                                    <span class="sidebar-label">{{ group.label }}</span>
-                                </span>
-                            </a>
-                        {% else %}
-                            <div class="sidebar-group-head">
-                                <button type="button" class="sidebar-main">
+        <div class="user-block">
+            {% if request.user.is_authenticated %}
+                <div class="user">
+                    <a href="{% url 'profile_detail' %}" class="user">
+                        <i data-lucide="circle-user-round" class="profile-icon"></i>
+                        <h2>{{ request.user.username }}</h2>
+                        <div class="label-rol">
+                            {% if request.user.profile.role == "member" %}Member{% endif %}
+                            {% if request.user.profile.role == "nutritionist" %}Nutri{% endif %}
+                        </div>
+                        <i data-lucide="chevron-right" class="enter-user-icon"></i>
+                    </a>
+                </div>
+            {% endif %}
+
+            <p class="personal-metrics">
+                <i data-lucide="scale" class="sidebar-weight-icon"></i> {{ current_weight }}kg
+            </p>
+        </div>
+
+        <nav class="sidebar-nav">
+            {% for section in vm.ui.sidebar_sections %}
+                {% if section.key != "admin" or request.user.is_staff or request.user.is_superuser %}
+                    <p class="group-name-sidebar">{{ section.label }}</p>
+
+                    {% for group in section.groups %}
+                        <div class="sidebar-group {% if group.is_open %}is-open{% endif %} {% if group.is_link %}sidebar-group--link{% endif %} {% if group.is_active and not group.is_link %}is-current{% endif %}">
+
+                            {% if group.is_link %}
+                                <a href="{{ group.url }}"
+                                   class="sidebar-main sidebar-main--link {% if group.is_active %}is-active{% endif %}">
                                     <span class="sidebar-left">
                                         <i data-lucide="chevron-right" class="sidebar-icon"></i>
                                         <i data-lucide="{{ group.icon }}" class="sidebar-main-icon"></i>
                                         <span class="sidebar-label">{{ group.label }}</span>
                                     </span>
-                                </button>
-                        
-                                {% if group.action_url %}
-                                    <a href="{{ group.action_url }}"
-                                    class="sidebar-group-action"
-                                    aria-label="{{ group.action_label|default:'Crear' }}"
-                                    title="{{ group.action_label|default:'Crear' }}">
-                                        <i data-lucide="{{ group.action_icon|default:'plus' }}" class="sidebar-group-action-icon"></i>
-                                    </a>
-                                {% endif %}
-                            </div>
-                        
-                            <div class="sidebar-sub">
-                                {% for item in group.items %}
-                                <a href="{{ item.url }}"
-                                    class="nav-tab tab-list nav-tab--{{ item.nav_root }} {% if item.is_active %}is-active{% endif %}">
-                                    <span class="nav-item-leading">
-                                        <span class="nav-item-dot"></span>
-                                        <i data-lucide="{{ item.icon }}" class="sidebar-leading-icon"></i>
-                                    </span>
-                                    <span class="nav-text">{{ item.label }}</span>
                                 </a>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-    </nav>
+                            {% else %}
+                                <div class="sidebar-group-head">
+                                    <button type="button" class="sidebar-main">
+                                        <span class="sidebar-left">
+                                            <i data-lucide="chevron-right" class="sidebar-icon"></i>
+                                            <i data-lucide="{{ group.icon }}" class="sidebar-main-icon"></i>
+                                            <span class="sidebar-label">{{ group.label }}</span>
+                                        </span>
+                                    </button>
+
+                                    {% if group.action_url %}
+                                        <a href="{{ group.action_url }}"
+                                           class="sidebar-group-action"
+                                           aria-label="{{ group.action_label|default:'Crear' }}"
+                                           title="{{ group.action_label|default:'Crear' }}">
+                                            <i data-lucide="{{ group.action_icon|default:'plus' }}" class="sidebar-group-action-icon"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+
+                                <div class="sidebar-sub">
+                                    {% for item in group.items %}
+                                        <a href="{{ item.url }}"
+                                           class="nav-tab tab-list nav-tab--{{ item.nav_root }} {% if item.is_active %}is-active{% endif %}">
+                                            <span class="nav-item-leading">
+                                                <span class="nav-item-dot"></span>
+                                                <i data-lucide="{{ item.icon }}" class="sidebar-leading-icon"></i>
+                                            </span>
+                                            <span class="nav-text">{{ item.label }}</span>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </nav>
+
+    </div>
+
+    <section class="sidebar-ai-panel" aria-label="Asistencia de IA">
+        <p class="sidebar-ai-panel__title">
+            Recibe la asistencia de tu IA
+        </p>
+
+        <button
+            type="button"
+            class="sidebar-ai-panel__button js-copy-chatgpt-prompt"
+            data-chatgpt-url="https://chatgpt.com/"
+        >
+            <i data-lucide="copy" class="sidebar-ai-panel__button-icon"></i>
+            <span>Copiar prompt e ir a ChatGPT</span>
+        </button>
+
+        <p class="sidebar-ai-panel__feedback js-copy-chatgpt-feedback" aria-live="polite"></p>
+
+        <template id="sidebar-ai-prompt">
+Actúa como asistente experto de My Scoope.
+
+Ayúdame a usar la plataforma para construir, analizar y mejorar mis planes diarios de alimentación, comidas y alimentos.
+
+Contexto de My Scoope:
+- My Scoope permite gestionar planes diarios de alimentación.
+- Un plan diario contiene comidas.
+- Una comida contiene alimentos y porciones.
+- Los KPIs principales son kcal totales, proteína, carbohidratos, grasas, PPK y distribución calórica.
+- En esta conversación no tienes acceso directo a mi cuenta ni a mis datos de My Scoope, salvo que yo te los entregue.
+- No inventes datos: si necesitas información del plan, comida o alimento, pídemela.
+
+Primero pregúntame qué quiero lograr hoy dentro de My Scoope.
+Luego guíame paso a paso con instrucciones claras.
+        </template>
+    </section>
+
 </aside>
 
 

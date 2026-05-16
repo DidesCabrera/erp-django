@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const ctx = window.FOOD_PICKER_CONTEXT;
   const foods = Array.isArray(window.FOOD_PICKER_FOODS)
-  ? window.FOOD_PICKER_FOODS
-  : [];
+    ? window.FOOD_PICKER_FOODS
+    : [];
 
   const picker = document.getElementById("food-picker");
   if (!picker) return;
@@ -72,11 +72,45 @@ document.addEventListener("DOMContentLoaded", () => {
     list.style.display = "none";
   }
 
+  function findFoodById(foodId) {
+    return foods.find(food => Number(food.id) === Number(foodId)) || null;
+  }
+
+  function getFoodDisplayName(food) {
+    return food?.display_name || food?.name || "";
+  }
+
+  function normalizeSearchValue(value) {
+    return String(value ?? "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  }
+
+  function getFoodSearchText(food) {
+    return normalizeSearchValue(
+      food?.search_text || food?.display_name || food?.name || ""
+    );
+  }
+
+  function filterFoodsBySearch(value) {
+    const normalizedValue = normalizeSearchValue(value);
+
+    if (!normalizedValue) {
+      return foods;
+    }
+
+    return foods.filter(food => {
+      return getFoodSearchText(food).includes(normalizedValue);
+    });
+  }
+
   function syncHiddenState() {
     if (hiddenPickerMode) {
       hiddenPickerMode.value = ctx.mode || "add";
     }
-  
+
     if (ctx.editing) {
       if (hiddenEditingMealfoodId) {
         hiddenEditingMealfoodId.value = String(ctx.editing.mealfood_id ?? "");
@@ -115,63 +149,33 @@ document.addEventListener("DOMContentLoaded", () => {
       food_id: Number(foodId),
       original_quantity: Number(originalQuantity)
     };
-  
+
     title.textContent = "Edita el Alimento";
     btnAdd.style.display = "none";
     btnUpdate.style.display = "inline-block";
     btnCancel.style.display = "inline-block";
-  
+
     form.action = updateUrl;
-  
+
     syncHiddenState();
   }
 
   function resetPickerState() {
     selectedFood = null;
-  
+
     hiddenFoodId.value = "";
     hiddenQuantity.value = "";
-  
+
     input.value = "";
     quantityInput.value = "100";
-  
+
     preview.style.display = "none";
-  
+
     if (btnCancelInline) {
       btnCancelInline.style.display = "inline-block";
     }
-  
+
     closeList();
-  }
-
-  function findFoodById(foodId) {
-    return foods.find(food => Number(food.id) === Number(foodId)) || null;
-  }
-
-  function normalizeSearchValue(value) {
-    return String(value ?? "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  }
-
-  function getFoodSearchText(food) {
-    return normalizeSearchValue(
-      food?.search_text || food?.name || ""
-    );
-  }
-
-  function filterFoodsBySearch(value) {
-    const normalizedValue = normalizeSearchValue(value);
-
-    if (!normalizedValue) {
-      return foods;
-    }
-
-    return foods.filter(food => {
-      return getFoodSearchText(food).includes(normalizedValue);
-    });
   }
 
   // ---------------------------
@@ -189,12 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       li.addEventListener("click", () => {
         selectedFood = food;
-        input.value = food.name;
-      
+        input.value = getFoodDisplayName(food);
+
         if (btnCancelInline) {
           btnCancelInline.style.display = "none";
         }
-      
+
         closeList();
         showPreview();
       });
@@ -210,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectedFood) return;
 
     preview.style.display = "block";
-    document.getElementById("preview-name").textContent = selectedFood.name;
+    document.getElementById("preview-name").textContent = getFoodDisplayName(selectedFood);
 
     hiddenFoodId.value = selectedFood.id;
 
@@ -225,57 +229,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateQuantity() {
     if (!selectedFood) return;
-  
+
     const rawQuantity = Number(quantityInput.value);
     const quantity = !rawQuantity || rawQuantity <= 0 ? 0 : rawQuantity;
-  
+
     hiddenQuantity.value = String(quantity);
-  
+
     // -------- FOOD PORTION --------
     const newPortion = portionFromFood(selectedFood, quantity);
     renderPortion(newPortion);
-  
+
     // -------- MEAL BASE --------
     let baseMeal = ctx.meal.kpis;
-  
+
     if (isEdit()) {
       const oldPortion = portionFromFoodById(
         foods,
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
-  
+
       baseMeal = removePortionTotals(ctx.meal.kpis, oldPortion);
     }
-  
+
     const previewMeal = previewTotals(baseMeal, newPortion);
 
     const mealWeight = ctx.meal?.kpis?.weight;
     previewMeal.ppk = computePPK(previewMeal.protein, mealWeight);
 
     renderPreviewTotals(previewMeal);
-  
+
     // -------- DAILYPLAN BASE --------
     let baseDailyPlan = ctx.dailyplan.kpis;
-  
+
     if (isEdit()) {
       const oldPortion = portionFromFoodById(
         foods,
         ctx.editing.food_id,
         ctx.editing.original_quantity
       );
-  
+
       baseDailyPlan = removePortionTotals(
         ctx.dailyplan.kpis,
         oldPortion
       );
     }
-  
+
     const previewDailyPlan = previewTotals(baseDailyPlan, newPortion);
 
     const dailyPlanWeight = ctx.dailyplan?.kpis?.weight;
     previewDailyPlan.ppk = computePPK(previewDailyPlan.protein, dailyPlanWeight);
-    
+
     renderDailyPlanPreview(previewDailyPlan, newPortion);
     renderDpmAlloc(previewMeal, previewDailyPlan);
   }
@@ -319,11 +323,11 @@ document.addEventListener("DOMContentLoaded", () => {
       document.dispatchEvent(new CustomEvent("picker:open", {
         detail: { sectionId: "dpm-picker-section" }
       }));
-  
+
       selectedFood = findFoodById(ctx.editing.food_id);
       if (!selectedFood) return;
-  
-      input.value = selectedFood.name;
+
+      input.value = getFoodDisplayName(selectedFood);
       showPreview();
     });
   });
@@ -344,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCancelInline.addEventListener("click", () => {
       setAddMode();
       resetPickerState();
-  
+
       document.dispatchEvent(new CustomEvent("picker:close", {
         detail: { sectionId: "dpm-picker-section" }
       }));

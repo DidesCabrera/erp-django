@@ -10,6 +10,21 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function getFoodDisplayName(food) {
+  return food?.display_name || food?.name || "";
+}
+
+function shouldShowOriginalName(food) {
+  const displayName = getFoodDisplayName(food);
+  const originalName = food?.name || "";
+
+  return Boolean(
+    displayName &&
+    originalName &&
+    displayName !== originalName
+  );
+}
+
 function normalizeSourceLabel(source) {
   if (!source) return "";
 
@@ -110,6 +125,7 @@ function renderFoodBadges(food) {
 export function renderFoodItem(food) {
   if (!food || !food.name) return "";
 
+  const displayName = getFoodDisplayName(food);
   const kcal = getFoodKcal(food);
 
   const proteinPct = food.alloc?.protein ?? 0;
@@ -120,9 +136,15 @@ export function renderFoodItem(food) {
     <div class="picker-item">
 
       <div class="picker-item-header">
-        <div class="picker-item-name">${escapeHtml(food.name)}</div>
+        <div class="picker-item-name">${escapeHtml(displayName)}</div>
         <div class="picker-item-unit">100g</div>
       </div>
+
+      ${shouldShowOriginalName(food) ? `
+        <div class="picker-item-original-name">
+          ${escapeHtml(food.name)}
+        </div>
+      ` : ""}
 
       ${renderFoodBadges(food)}
 
