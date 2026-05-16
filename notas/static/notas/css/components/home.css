@@ -46,9 +46,6 @@
   border-radius: 16px;
 }
 
-.home-hero-copy h1 {
-  margin-bottom: 24px;
-}
 
 .home-eyebrow {
   margin: 0;
@@ -57,13 +54,6 @@
   letter-spacing: 0.08em;
   opacity: 0.6;
   color: var(--text-muted);
-}
-
-.home-hero h1 {
-  margin: 0;
-  font-size: 32px;
-  line-height: 1.1;
-  color: var(--text-main);
 }
 
 .home-hero-subtitle {
@@ -465,33 +455,40 @@
    BANNER CAROUSEL
    ========================= */
 
-.home-banner-carousel {
-  position: relative;
-  width: 100%;
-  height: 320px;
-  overflow: hidden;
-  border-radius: 18px;
-  touch-action: pan-y;
-}
+   .home-banner-carousel {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    border-radius: 18px;
+    touch-action: pan-y;
+  }
+  
+  .home-banner-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transform: translateX(0);
+    transition: transform 0.65s ease;
+    will-change: transform;
+  }
+  
+  .home-banner-slide {
+    position: relative;
+    min-width: 100%;
+    width: 100%;
+    height: 100%;
+    flex: 0 0 100%;
+    pointer-events: none;
+  }
+  
+  .home-banner-slide.is-active {
+    pointer-events: auto;
+  }
 
-.home-banner-track {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.home-banner-slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-
-.home-banner-slide.is-active {
-  opacity: 1;
-  pointer-events: auto;
-}
+  .home-banner-slide.is-clone {
+    pointer-events: none;
+  }
 
 .home-banner-overlay {
   position: absolute;
@@ -499,37 +496,41 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 14px;
   padding: 28px;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0.1) 45%,
-    rgba(0, 0, 0, 0.04) 100%
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.1) 100%
   );
 }
 
 .home-banner-logo {
-  width: 400px;
+  width: 320px;
   object-fit: contain;
+  transform: translateY(-16px);
 }
 
 .home-banner-title {
   margin: 0;
-  color: rgb(0, 0, 0);
-  font-size: 32px;
+  color: rgb(255, 255, 255);
+  font-size: 28px;
   line-height: 1.05;
   font-weight: 700;
   max-width: 560px;
+  text-align: center;
 }
 
 .home-banner-text {
   margin: 0;
-  color: rgba(0, 0, 0, 0.92);
+  color: rgb(255, 255, 255);
   font-size: 16px;
   line-height: 1.45;
   max-width: 620px;
+  margin-bottom: 25px;
+  text-align: center;
 }
 
 .home-banner-controls {
@@ -600,7 +601,7 @@
 @media (max-width: 900px) {
   .home-banner-carousel {
     height: 420px;
-    border-radius: 18px;
+    border-radius: 22px;
   }
 
   .home-banner-overlay {
@@ -609,7 +610,8 @@
   }
 
   .home-banner-logo {
-    width: 150px;
+    width: 250px;
+    transform: translateY(-100px);
   }
 
   .home-banner-title {
@@ -618,7 +620,7 @@
   }
 
   .home-banner-text {
-    font-size: 14px;
+    font-size: 16px;
     max-width: 100%;
   }
 
