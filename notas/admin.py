@@ -6,6 +6,7 @@ from .domain.models import (
     Food,
     FoodAlias,
     FoodImportBatch,
+    FoodLocalizedName,
     FoodPortion,
     FoodSourceMetadata,
     Meal,
@@ -174,6 +175,19 @@ class FoodAliasInline(admin.TabularInline):
     )
 
 
+class FoodLocalizedNameInline(admin.TabularInline):
+    model = FoodLocalizedName
+    extra = 0
+
+    fields = (
+        "name",
+        "normalized_name",
+        "language",
+        "country",
+        "is_primary",
+    )
+
+
 @admin.register(Food)
 class FoodAdmin(admin.ModelAdmin):
     list_display = (
@@ -284,6 +298,7 @@ class FoodAdmin(admin.ModelAdmin):
         FoodSourceMetadataInline,
         FoodPortionInline,
         FoodAliasInline,
+        FoodLocalizedNameInline,
     )
 
     actions = (
@@ -370,6 +385,31 @@ class FoodAliasAdmin(admin.ModelAdmin):
     list_filter = (
         "language",
         "country",
+    )
+
+    search_fields = (
+        "food__name",
+        "food__canonical_name",
+        "name",
+        "normalized_name",
+    )
+
+
+@admin.register(FoodLocalizedName)
+class FoodLocalizedNameAdmin(admin.ModelAdmin):
+    list_display = (
+        "food",
+        "name",
+        "normalized_name",
+        "language",
+        "country",
+        "is_primary",
+    )
+
+    list_filter = (
+        "language",
+        "country",
+        "is_primary",
     )
 
     search_fields = (

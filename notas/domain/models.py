@@ -565,6 +565,63 @@ class FoodAlias(models.Model):
         return f"{self.name} → {self.food}"
 
 
+class FoodLocalizedName(models.Model):
+    food = models.ForeignKey(
+        Food,
+        on_delete=models.CASCADE,
+        related_name="localized_names",
+    )
+
+    name = models.CharField(
+        max_length=255,
+        help_text="Localized display name for this food.",
+    )
+
+    normalized_name = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Normalized localized name for search and deduplication.",
+    )
+
+    language = models.CharField(
+        max_length=10,
+        default="es",
+    )
+
+    country = models.CharField(
+        max_length=10,
+        blank=True,
+        help_text="Optional country code. Example: CL, AR, MX.",
+    )
+
+    is_primary = models.BooleanField(
+        default=True,
+        help_text="Primary localized name for this language/country.",
+    )
+
+    class Meta:
+        verbose_name = "Food localized name"
+        verbose_name_plural = "Food localized names"
+        ordering = [
+            "food",
+            "language",
+            "country",
+            "-is_primary",
+            "name",
+        ]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["food", "normalized_name", "language", "country"],
+                condition=~models.Q(normalized_name=""),
+                name="unique_food_localized_name_per_language_country",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.name} → {self.food}"
+
+
 class FoodImportBatch(models.Model):
     STATUS_PENDING = "pending"
     STATUS_RUNNING = "running"
