@@ -48,10 +48,27 @@ CORE_FOOD_SEED_CATALOG = [
         ],
     ),
     CoreFoodSeedItem(
-        canonical_name="rice white cooked",
+        canonical_name="eggs grade a large egg whole",
         localized_names=[
             FoodLocalizedNameInput(
-                name="Arroz blanco cocido",
+                name="Huevo entero",
+                language="es",
+                country="CL",
+                is_primary=True,
+            ),
+        ],
+        aliases=[
+            FoodAliasInput(name="Huevo", language="es", country="CL"),
+            FoodAliasInput(name="Huevos", language="es", country="CL"),
+            FoodAliasInput(name="Huevo entero", language="es", country="CL"),
+            FoodAliasInput(name="Huevo grande", language="es", country="CL"),
+        ],
+    ),
+    CoreFoodSeedItem(
+        canonical_name="rice white long grain unenriched raw",
+        localized_names=[
+            FoodLocalizedNameInput(
+                name="Arroz blanco crudo",
                 language="es",
                 country="CL",
                 is_primary=True,
@@ -60,25 +77,72 @@ CORE_FOOD_SEED_CATALOG = [
         aliases=[
             FoodAliasInput(name="Arroz", language="es", country="CL"),
             FoodAliasInput(name="Arroz blanco", language="es", country="CL"),
-            FoodAliasInput(name="Arroz blanco cocido", language="es", country="CL"),
-            FoodAliasInput(name="Arroz cocido", language="es", country="CL"),
+            FoodAliasInput(name="Arroz blanco crudo", language="es", country="CL"),
+            FoodAliasInput(name="Arroz crudo", language="es", country="CL"),
         ],
     ),
     CoreFoodSeedItem(
-        canonical_name="bananas raw",
+        canonical_name="rice brown long grain unenriched raw",
         localized_names=[
             FoodLocalizedNameInput(
-                name="Plátano",
+                name="Arroz integral crudo",
                 language="es",
                 country="CL",
                 is_primary=True,
             ),
         ],
         aliases=[
-            FoodAliasInput(name="Plátano", language="es", country="CL"),
-            FoodAliasInput(name="Platano", language="es", country="CL"),
-            FoodAliasInput(name="Banana", language="es", country="CL"),
-            FoodAliasInput(name="Plátano crudo", language="es", country="CL"),
+            FoodAliasInput(name="Arroz integral", language="es", country="CL"),
+            FoodAliasInput(name="Arroz integral crudo", language="es", country="CL"),
+            FoodAliasInput(name="Arroz café", language="es", country="CL"),
+            FoodAliasInput(name="Arroz cafe", language="es", country="CL"),
+        ],
+    ),
+    CoreFoodSeedItem(
+        canonical_name="nuts almonds whole raw",
+        localized_names=[
+            FoodLocalizedNameInput(
+                name="Almendras crudas",
+                language="es",
+                country="CL",
+                is_primary=True,
+            ),
+        ],
+        aliases=[
+            FoodAliasInput(name="Almendra", language="es", country="CL"),
+            FoodAliasInput(name="Almendras", language="es", country="CL"),
+            FoodAliasInput(name="Almendras crudas", language="es", country="CL"),
+        ],
+    ),
+    CoreFoodSeedItem(
+        canonical_name="kale raw",
+        localized_names=[
+            FoodLocalizedNameInput(
+                name="Kale crudo",
+                language="es",
+                country="CL",
+                is_primary=True,
+            ),
+        ],
+        aliases=[
+            FoodAliasInput(name="Kale", language="es", country="CL"),
+            FoodAliasInput(name="Kale crudo", language="es", country="CL"),
+            FoodAliasInput(name="Col rizada", language="es", country="CL"),
+        ],
+    ),
+    CoreFoodSeedItem(
+        canonical_name="hummus commercial",
+        localized_names=[
+            FoodLocalizedNameInput(
+                name="Hummus",
+                language="es",
+                country="CL",
+                is_primary=True,
+            ),
+        ],
+        aliases=[
+            FoodAliasInput(name="Hummus", language="es", country="CL"),
+            FoodAliasInput(name="Humus", language="es", country="CL"),
         ],
     ),
 ]
