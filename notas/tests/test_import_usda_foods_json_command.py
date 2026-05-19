@@ -106,3 +106,65 @@ class ImportUSDAFoodsJSONCommandTests(TestCase):
                     str(path),
                     source_version="2026-04",
                 )
+
+
+    def test_command_imports_usda_foods_from_foundation_foods_root_json_file(self):
+        payloads = [
+            {
+                "fdcId": 2101,
+                "description": "Oats, raw",
+                "foodCategory": {
+                    "description": "Cereal Grains and Pasta",
+                },
+                "foodNutrients": [
+                    {
+                        "nutrient": {"number": USDA_NUTRIENT_PROTEIN},
+                        "amount": 16.9,
+                    },
+                    {
+                        "nutrient": {"number": USDA_NUTRIENT_CARBS},
+                        "amount": 66.3,
+                    },
+                    {
+                        "nutrient": {"number": USDA_NUTRIENT_FAT},
+                        "amount": 6.9,
+                    },
+                ],
+            }
+        ]
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "foundation_foods.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "FoundationFoods": payloads,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            call_command(
+                "import_usda_foods_json",
+                str(path),
+                source_version="2026-04",
+                source_dataset="foundation_foods",
+                notes="Foundation Foods root import",
+            )
+
+        self.assertEqual(Food.objects.count(), 1)
+        self.assertEqual(FoodSourceMetadata.objects.count(), 1)
+        self.assertEqual(FoodImportBatch.objects.count(), 1)
+
+        food = Food.objects.get(canonical_name="oats raw")
+        metadata = FoodSourceMetadata.objects.get(food=food)
+        batch = FoodImportBatch.objects.get()
+
+        self.assertEqual(metadata.source_food_id, "2101")
+        self.assertEqual(metadata.source_dataset, "foundation_foods")
+        self.assertEqual(metadata.source_version, "2026-04")
+        self.assertEqual(batch.total_rows, 1)
+        self.assertEqual(batch.imported_rows, 1)
+        self.assertEqual(batch.skipped_rows, 0)
+        self.assertEqual(batch.failed_rows, 0)
+        self.assertEqual(batch.status, FoodImportBatch.STATUS_COMPLETED)

@@ -3,9 +3,11 @@ from typing import Iterable
 
 from django.utils import timezone
 
-from notas.domain.models import FoodImportBatch
-from notas.application.services.commands.import_food_from_source import import_food_from_source
 from notas.application.dto.imported_food_dto import ImportedFoodDTO
+from notas.application.services.commands.import_food_from_source import (
+    import_food_from_source,
+)
+from notas.domain.models import FoodImportBatch
 
 
 @dataclass(frozen=True)
@@ -23,6 +25,8 @@ def import_food_batch(
     source_version: str,
     foods: Iterable[ImportedFoodDTO],
     notes: str = "",
+    total_rows_override: int | None = None,
+    initial_failed_rows: int = 0,
 ) -> ImportFoodBatchResult:
     """
     Imports a collection of ImportedFoodDTO records and tracks the process
@@ -36,24 +40,31 @@ def import_food_batch(
     - Invalid rows are skipped by the individual import command.
     - Unexpected exceptions are counted as failed rows.
     - Existing user foods are not modified.
+
+    Optional counters:
+    - total_rows_override lets source-specific importers preserve the original
+      source row count when some rows failed before DTO creation.
+    - initial_failed_rows lets source-specific importers include mapping-level
+      failures in the same FoodImportBatch.
     """
 
     food_list = list(foods)
+    total_rows = total_rows_override if total_rows_override is not None else len(food_list)
 
     batch = FoodImportBatch.objects.create(
         source=source,
         source_version=source_version,
         status=FoodImportBatch.STATUS_RUNNING,
-        total_rows=len(food_list),
+        total_rows=total_rows,
         imported_rows=0,
         skipped_rows=0,
-        failed_rows=0,
+        failed_rows=initial_failed_rows,
         notes=notes,
     )
 
     imported_rows = 0
     skipped_rows = 0
-    failed_rows = 0
+    failed_rows = initial_failed_rows
 
     for dto in food_list:
         try:

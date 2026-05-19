@@ -276,3 +276,61 @@ class USDAFoodPayloadImportCommandTests(TestCase):
 
         self.assertEqual(Food.objects.count(), 2)
         self.assertEqual(FoodSourceMetadata.objects.count(), 2)
+
+
+    def test_import_usda_food_payloads_counts_mapping_failures_without_aborting_batch(self):
+        payloads = [
+            {
+                "fdcId": 4001,
+                "description": "Rice, white, cooked",
+                "foodCategory": {
+                    "description": "Cereal Grains and Pasta",
+                },
+                "foodNutrients": [
+                    {
+                        "nutrient": {"number": USDA_NUTRIENT_PROTEIN},
+                        "amount": 2.69,
+                    },
+                    {
+                        "nutrient": {"number": USDA_NUTRIENT_CARBS},
+                        "amount": 28.2,
+                    },
+                    {
+                        "nutrient": {"number": USDA_NUTRIENT_FAT},
+                        "amount": 0.28,
+                    },
+                ],
+            },
+            {
+                "fdcId": 4002,
+                "description": "Broken nutrient payload",
+                "foodNutrients": [
+                    "this item is not a nutrient object",
+                ],
+            },
+        ]
+
+        result = import_usda_food_payloads(
+            payloads=payloads,
+            source_version="2026-04",
+            source_dataset="foundation_foods",
+            notes="Mapping failure resilience test",
+        )
+
+        self.assertEqual(result.total_rows, 2)
+        self.assertEqual(result.imported_rows, 1)
+        self.assertEqual(result.skipped_rows, 0)
+        self.assertEqual(result.failed_rows, 1)
+        self.assertEqual(result.mapping_failed_rows, 1)
+
+        self.assertEqual(Food.objects.count(), 1)
+        self.assertEqual(FoodSourceMetadata.objects.count(), 1)
+        self.assertEqual(FoodImportBatch.objects.count(), 1)
+
+        batch = FoodImportBatch.objects.get()
+
+        self.assertEqual(batch.total_rows, 2)
+        self.assertEqual(batch.imported_rows, 1)
+        self.assertEqual(batch.skipped_rows, 0)
+        self.assertEqual(batch.failed_rows, 1)
+        self.assertEqual(batch.status, FoodImportBatch.STATUS_COMPLETED_WITH_ERRORS)
