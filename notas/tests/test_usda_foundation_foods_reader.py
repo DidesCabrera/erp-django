@@ -78,16 +78,19 @@ class FoundationFoodsReaderTests(SimpleTestCase):
                 }
             )
 
-    def test_rejects_list_items_that_are_not_objects(self):
-        with self.assertRaises(FoundationFoodsReaderError):
-            extract_foundation_food_payloads(
-                [
-                    {
-                        "fdcId": 1001,
-                    },
-                    "invalid item",
-                ]
-            )
+    def test_allows_non_object_items_so_import_pipeline_can_count_mapping_failures(self):
+        payloads = [
+            {
+                "fdcId": 1001,
+            },
+            "invalid item",
+        ]
+
+        result = extract_foundation_food_payloads(payloads)
+
+        self.assertEqual(result, payloads)
+
+    
 
     def test_reads_payloads_from_json_file(self):
         payloads = [
