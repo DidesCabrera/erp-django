@@ -139,6 +139,30 @@ def get_primary_food_localized_name(
     return ""
 
 
+def resolve_food_display_name(
+    food: Food,
+    *,
+    language: str = "es",
+    country: str = "CL",
+) -> str:
+    """
+    Return the user-facing display name for a food.
+
+    Fallback order:
+    1. primary localized name for language + country
+    2. primary localized name for language only
+    3. original food.name
+    """
+
+    localized_name = get_primary_food_localized_name(
+        food=food,
+        language=language,
+        country=country,
+    )
+
+    return localized_name or food.name
+
+
 def _clean_display_name(value: str | None) -> str:
     if value is None:
         return ""

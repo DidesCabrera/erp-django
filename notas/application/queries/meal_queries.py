@@ -15,6 +15,10 @@ from notas.application.dto.meal_dto import (
 from notas.application.services.nutrition.nutrition_kpis import get_ppk_meal
 from notas.domain.models import Meal
 
+from notas.application.services.food_imports.localized_names import (
+    resolve_food_display_name,
+)
+
 
 def _cached_or_computed(value, fallback):
     return value if value is not None else fallback
@@ -108,7 +112,7 @@ def build_meal_food_dto(meal_food) -> MealFoodDTO:
     return MealFoodDTO(
         mealfood_id=meal_food.id,
         food_id=food.id,
-        food_name=food.name,
+        food_name=resolve_food_display_name(food),
         quantity=quantity,
         protein=protein,
         carbs=carbs,

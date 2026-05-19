@@ -1,3 +1,8 @@
+from notas.application.services.food_imports.localized_names import (
+    resolve_food_display_name,
+)
+
+
 def build_dailyplanmeal_table_item(dpm):
     dailyplan = dpm.dailyplan
     meal = dpm.meal
@@ -39,9 +44,6 @@ def build_dailyplanmeal_table_item(dpm):
     }
 
 
-
-
-
 def build_mealfood_table_item(mf):
     food = mf.food
 
@@ -65,7 +67,7 @@ def build_mealfood_table_item(mf):
             "id": mf.id,
             "quantity": mf.quantity,
 
-            "name": food.name,
+            "name": resolve_food_display_name(food),
 
             "total_kcal": mf_total_kcal,
             "g_protein": mf_protein,

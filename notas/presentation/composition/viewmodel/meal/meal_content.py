@@ -23,6 +23,9 @@ from notas.presentation.composition.viewmodel.components.builder_table_items imp
 )
 from notas.presentation.config.icons import CONTENT_ICON_REGISTRY
 from notas.presentation.resolvers.title_resolvers import resolve_category_badge
+from notas.application.services.food_imports.localized_names import (
+    resolve_food_display_name,
+)
 
 
 @dataclass
@@ -134,7 +137,7 @@ def build_meal_detail_content_data(
                     "alloc_fat": float(food_alloc["fat"]),
                 },
                 "title": {
-                    "name": food.name,
+                    "name": resolve_food_display_name(food),
                     "label": "Food",
                     "icon": CONTENT_ICON_REGISTRY.get("food"),
                     "category": getattr(food, "category", None),

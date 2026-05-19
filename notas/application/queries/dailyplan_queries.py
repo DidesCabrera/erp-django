@@ -21,6 +21,10 @@ from notas.application.queries.meal_queries import (
 from notas.application.services.nutrition.nutrition_kpis import get_ppk_dailyplan
 from notas.domain.models import DailyPlan
 
+from notas.application.services.food_imports.localized_names import (
+    resolve_food_display_name,
+)
+
 
 def _cached_or_computed(value, fallback):
     return value if value is not None else fallback
@@ -97,7 +101,7 @@ def build_dailyplan_foods_aggregation_dto(
             if food.id not in aggregation:
                 aggregation[food.id] = {
                     "food_id": food.id,
-                    "food_name": food.name,
+                    "food_name": resolve_food_display_name(food),
                     "quantity": 0.0,
                     "protein": 0.0,
                     "carbs": 0.0,

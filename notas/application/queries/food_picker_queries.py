@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass
 from django.db.models import Case, IntegerField, Q, QuerySet, Value, When
 
 from notas.application.services.food_imports.localized_names import (
-    get_primary_food_localized_name,
+    resolve_food_display_name,
 )
 from notas.domain.models import Food
 
@@ -219,13 +219,7 @@ def build_food_picker_item_dto(
 
 
 def resolve_food_picker_display_name(food: Food) -> str:
-    localized_name = get_primary_food_localized_name(
-        food=food,
-        language="es",
-        country="CL",
-    )
-
-    return localized_name or food.name
+    return resolve_food_display_name(food)
 
 
 def build_food_picker_search_text(food: Food) -> str:
