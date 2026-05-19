@@ -28,6 +28,16 @@ document.addEventListener("DOMContentLoaded", () => {
     ? window.FOOD_PICKER_FOODS
     : [];
 
+  const foodSearchCache = new Map();
+  let activeSearchController = null;
+  let searchDebounceTimer = null;
+
+  foods.forEach(food => {
+    if (food?.id) {
+      foodSearchCache.set(Number(food.id), food);
+    }
+  });
+
   const picker = document.getElementById("food-picker");
   if (!picker) return;
 
@@ -73,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function findFoodById(foodId) {
-    return foods.find(food => Number(food.id) === Number(foodId)) || null;
+    return foodSearchCache.get(Number(foodId)) || null;
   }
 
   function getFoodDisplayName(food) {
@@ -105,6 +115,80 @@ document.addEventListener("DOMContentLoaded", () => {
       return getFoodSearchText(food).includes(normalizedValue);
     });
   }
+
+
+  function getInitialFoodResults() {
+    return foods;
+  }
+
+  function getFoodSearchUrl(value) {
+    const params = new URLSearchParams();
+    params.set("search", value);
+    params.set("limit", "50");
+
+    return `/app/api/foods/?${params.toString()}`;
+  }
+
+  async function searchFoodsFromServer(value) {
+    const normalizedValue = normalizeSearchValue(value);
+
+    if (!normalizedValue) {
+      return getInitialFoodResults();
+    }
+
+    if (activeSearchController) {
+      activeSearchController.abort();
+    }
+
+    activeSearchController = new AbortController();
+
+    const response = await fetch(getFoodSearchUrl(value), {
+      headers: {
+        "Accept": "application/json"
+      },
+      signal: activeSearchController.signal
+    });
+
+    if (!response.ok) {
+      return filterFoodsBySearch(value);
+    }
+
+    const results = await response.json();
+
+    if (!Array.isArray(results)) {
+      return filterFoodsBySearch(value);
+    }
+
+    results.forEach(food => {
+      if (food?.id) {
+        foodSearchCache.set(Number(food.id), food);
+      }
+    });
+
+    return results;
+  }
+
+  function scheduleServerSearch(value) {
+    window.clearTimeout(searchDebounceTimer);
+
+    searchDebounceTimer = window.setTimeout(async () => {
+      try {
+        const results = await searchFoodsFromServer(value);
+        renderFoodList(results);
+        openList();
+      } catch (error) {
+        if (error.name === "AbortError") {
+          return;
+        }
+
+        renderFoodList(filterFoodsBySearch(value));
+        openList();
+      }
+    }, 180);
+  }
+
+
+
 
   function syncHiddenState() {
     if (hiddenPickerMode) {
@@ -293,11 +377,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   input.addEventListener("input", () => {
-    renderFoodList(
-      filterFoodsBySearch(input.value)
-    );
+    const value = input.value;
 
+    if (!normalizeSearchValue(value)) {
+      renderFoodList(getInitialFoodResults());
+      openList();
+      return;
+    }
+
+    renderFoodList(filterFoodsBySearch(value));
     openList();
+
+    scheduleServerSearch(value);
   });
 
   quantityInput.addEventListener("input", updateQuantity);

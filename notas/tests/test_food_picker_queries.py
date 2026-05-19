@@ -411,3 +411,23 @@ class FoodPickerQueryTests(TestCase):
 
         self.assertEqual(item.name, "Global Chicken Extended")
         self.assertEqual(item.display_name, "Pechuga de pollo cocida")
+
+
+    def test_list_food_picker_items_includes_localized_names_in_search_text(self):
+        FoodLocalizedName.objects.create(
+            food=self.extended_global_food,
+            name="Pechuga de pollo cocida",
+            normalized_name="pechuga de pollo cocida",
+            language="es",
+            country="CL",
+            is_primary=True,
+        )
+
+        result = list_food_picker_items(
+            user=self.user,
+            search="pechuga",
+        )
+
+        item = result.foods[0]
+
+        self.assertIn("pechuga de pollo cocida", item.search_text)

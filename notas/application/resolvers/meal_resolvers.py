@@ -243,7 +243,6 @@ MEAL_ENTITY_ACTION_DEFINITIONS = {
 
 MEAL_ENTITY_ACTIONS_BY_VIEWMODE = {
     MEAL_VIEWMODE_PERSONAL_LIST: [
-        "add_to_dailyplan",
         "detail",
         # "share",
     ],

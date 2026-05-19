@@ -266,8 +266,18 @@ def download_food_template(request):
 
 @login_required
 def foods_json(request):
+    search = request.GET.get("search")
+    raw_limit = request.GET.get("limit")
+
+    try:
+        limit = int(raw_limit) if raw_limit else 80
+    except (TypeError, ValueError):
+        limit = 80
+
     picker_items = list_food_picker_items(
         user=request.user,
+        search=search,
+        limit=limit,
     )
 
     foods = []

@@ -245,11 +245,28 @@ def build_food_picker_search_text(food: Food) -> str:
         parts.append(alias.name)
         parts.append(alias.normalized_name)
 
+    prefetched_localized_names = getattr(
+        food,
+        "_prefetched_objects_cache",
+        {},
+    ).get("localized_names")
+
+    if prefetched_localized_names is not None:
+        localized_names = prefetched_localized_names
+    else:
+        localized_names = food.localized_names.all()
+
+    for localized_name in localized_names:
+        parts.append(localized_name.name)
+        parts.append(localized_name.normalized_name)
+
     return " ".join(
         str(part).strip().lower()
         for part in parts
         if part
     )
+
+
 
 
 def resolve_food_picker_source(

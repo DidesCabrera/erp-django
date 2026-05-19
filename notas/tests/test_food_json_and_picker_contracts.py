@@ -393,3 +393,127 @@ class FoodJsonAndPickerContractTests(TestCase):
         )
 
         self.assertEqual(item["display_name"], "Pechuga de pollo cocida")
+
+
+    def test_foods_json_accepts_search_query(self):
+        fish = Food.objects.create(
+            name="Fish, tuna, light, canned in water, drained solids",
+            canonical_name="fish tuna light canned in water drained solids",
+            protein=25,
+            carbs=0,
+            fat=1,
+            created_by=None,
+            is_global=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=80,
+        )
+
+        Food.objects.create(
+            name="Global Oats",
+            canonical_name="global oats",
+            protein=16.9,
+            carbs=66.3,
+            fat=6.9,
+            created_by=None,
+            is_global=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_CORE,
+            data_quality_score=90,
+        )
+
+        response = self.client.get(
+            reverse("foods_json"),
+            {
+                "search": "fish",
+                "limit": "20",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+        names = [item["name"] for item in payload]
+
+        self.assertIn(fish.name, names)
+        self.assertNotIn("Global Oats", names)
+
+    def test_foods_json_accepts_spanish_localized_search_query(self):
+        fish = Food.objects.create(
+            name="Fish, tuna, light, canned in water, drained solids",
+            canonical_name="fish tuna light canned in water drained solids",
+            protein=25,
+            carbs=0,
+            fat=1,
+            created_by=None,
+            is_global=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=80,
+        )
+
+        FoodLocalizedName.objects.create(
+            food=fish,
+            name="Pescado, atún, enlatado en agua",
+            normalized_name="pescado atun enlatado en agua",
+            language="es",
+            country="CL",
+            is_primary=True,
+        )
+
+        response = self.client.get(
+            reverse("foods_json"),
+            {
+                "search": "pescado",
+                "limit": "20",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+
+        self.assertEqual(len(payload), 1)
+        self.assertEqual(payload[0]["name"], fish.name)
+        self.assertEqual(payload[0]["display_name"], "Pescado, atún, enlatado en agua")
+
+    def test_foods_json_accepts_limit_query_param(self):
+        Food.objects.create(
+            name="Fish, tuna",
+            canonical_name="fish tuna",
+            protein=25,
+            carbs=0,
+            fat=1,
+            created_by=None,
+            is_global=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=80,
+        )
+
+        Food.objects.create(
+            name="Fish, halibut",
+            canonical_name="fish halibut",
+            protein=20,
+            carbs=0,
+            fat=2,
+            created_by=None,
+            is_global=True,
+            is_active=True,
+            visibility=Food.VISIBILITY_EXTENDED,
+            data_quality_score=80,
+        )
+
+        response = self.client.get(
+            reverse("foods_json"),
+            {
+                "search": "fish",
+                "limit": "1",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content)
+
+        self.assertEqual(len(payload), 1)
