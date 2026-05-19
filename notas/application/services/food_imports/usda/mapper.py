@@ -60,7 +60,7 @@ def map_usda_food_to_imported_food_dto(
         name=str(payload.get("description", "")).strip(),
         canonical_name=str(payload.get("description", "")).strip(),
         protein=_get_nutrient_amount(nutrients, USDA_NUTRIENT_PROTEIN),
-        carbs=_get_nutrient_amount(nutrients, USDA_NUTRIENT_CARBS),
+        carbs=_get_usda_required_macro_amount(nutrients, USDA_NUTRIENT_CARBS),
         fat=_get_nutrient_amount(nutrients, USDA_NUTRIENT_FAT),
         food_group=_extract_food_group(payload),
         food_subgroup="",
@@ -101,6 +101,30 @@ def _get_nutrient_amount(
     nutrient_number: str,
 ) -> Decimal:
     return nutrients.get(nutrient_number, Decimal("0"))
+
+
+def _get_usda_required_macro_amount(
+    nutrients: dict[str, Decimal],
+    nutrient_number: str,
+) -> Decimal:
+    """
+    Return a required USDA macro amount normalized for app usage.
+
+    Some USDA Foundation Foods can report negative carbohydrate values for
+    animal-based foods due to analytical/calculation details. My Scoope should
+    never expose negative macro grams to users, and for carbohydrates the
+    operationally correct value is zero.
+
+    Protein and fat remain handled by the generic getter so unexpected negative
+    values still fail quality validation.
+    """
+
+    amount = _get_nutrient_amount(nutrients, nutrient_number)
+
+    if nutrient_number == USDA_NUTRIENT_CARBS and amount < 0:
+        return Decimal("0")
+
+    return amount
 
 
 def _get_optional_nutrient_amount(

@@ -160,3 +160,42 @@ class USDAFoodMapperTests(SimpleTestCase):
         )
 
         self.assertEqual(dto.food_group, "Fruits and Fruit Juices")
+
+    def test_map_usda_food_to_imported_food_dto_clamps_negative_carbs_to_zero(self):
+        payload = {
+            "fdcId": 2727566,
+            "description": "Chicken, drumstick, meat and skin, raw",
+            "foodCategory": {
+                "description": "Poultry Products",
+            },
+            "foodNutrients": [
+                {
+                    "nutrient": {
+                        "number": USDA_NUTRIENT_PROTEIN,
+                    },
+                    "amount": 18.1,
+                },
+                {
+                    "nutrient": {
+                        "number": USDA_NUTRIENT_CARBS,
+                    },
+                    "amount": -0.01,
+                },
+                {
+                    "nutrient": {
+                        "number": USDA_NUTRIENT_FAT,
+                    },
+                    "amount": 15.9,
+                },
+            ],
+        }
+
+        dto = map_usda_food_to_imported_food_dto(
+            payload,
+            source_version="2026-04",
+            source_dataset="foundation_foods",
+        )
+
+        self.assertEqual(dto.carbs, Decimal("0"))
+        self.assertEqual(dto.protein, Decimal("18.1"))
+        self.assertEqual(dto.fat, Decimal("15.9"))
