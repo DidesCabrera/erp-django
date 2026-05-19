@@ -56,14 +56,81 @@ class USDASpanishDisplayNamesTests(TestCase):
             translate_usda_food_name_to_spanish(
                 "Chicken, drumstick, meat and skin, raw"
             ),
-            "Pollo, Trutro corto, carne y piel, crudo",
+            "Trutro corto de pollo con piel crudo",
         )
 
         self.assertEqual(
             translate_usda_food_name_to_spanish(
                 "Beans, snap, green, canned, regular pack, drained solids"
             ),
-            "Porotos, Snap, verde, enlatado, envase regular, sólidos drenados",
+            "Porotos verdes enlatados drenados",
+        )
+
+    def test_translate_usda_food_name_to_spanish_simplifies_fish_names(self):
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Fish, cod, Atlantic, wild caught, raw"
+            ),
+            "Bacalao atlántico silvestre crudo",
+        )
+
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Fish, tuna, light, canned in water, drained solids"
+            ),
+            "Atún liviano en agua drenado",
+        )
+
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Fish, salmon, sockeye, wild caught, raw"
+            ),
+            "Salmón sockeye silvestre crudo",
+        )
+
+    def test_translate_usda_food_name_to_spanish_simplifies_flour_names(self):
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Flour, wheat, all-purpose, enriched, bleached"
+            ),
+            "Harina de trigo todo uso enriquecida blanqueada",
+        )
+
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Flour, whole wheat, unenriched"
+            ),
+            "Harina de trigo integral no enriquecida",
+        )
+
+    def test_translate_usda_food_name_to_spanish_simplifies_rice_names(self):
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Rice, white, long grain, unenriched, raw"
+            ),
+            "Arroz blanco",
+        )
+
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Rice, black, unenriched, raw"
+            ),
+            "Arroz negro crudo no enriquecido",
+        )
+
+    def test_translate_usda_food_name_to_spanish_simplifies_pork_names(self):
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Pork, chop, center cut, raw"
+            ),
+            "Chuleta de cerdo centro crudo",
+        )
+
+        self.assertEqual(
+            translate_usda_food_name_to_spanish(
+                "Pork, belly, with skin, raw"
+            ),
+            "Panceta de cerdo con piel crudo",
         )
 
     def test_apply_usda_spanish_display_names_to_foods_creates_localized_names(self):
@@ -101,11 +168,43 @@ class USDASpanishDisplayNamesTests(TestCase):
 
         self.assertEqual(result.matched_foods, 1)
         self.assertEqual(result.created_localized_names, 0)
+        self.assertEqual(result.updated_localized_names, 0)
         self.assertEqual(result.skipped_localized_names, 1)
 
         localized_name = FoodLocalizedName.objects.get(food=self.core_oats)
 
         self.assertEqual(localized_name.name, "Avena")
+
+    def test_apply_usda_spanish_display_names_can_overwrite_existing_primary_name(self):
+        FoodLocalizedName.objects.create(
+            food=self.chicken,
+            name="Nombre anterior",
+            normalized_name="nombre anterior",
+            language="es",
+            country="CL",
+            is_primary=True,
+        )
+
+        result = apply_usda_spanish_display_names_to_foods(
+            foods=[self.chicken],
+            overwrite=True,
+        )
+
+        self.assertEqual(result.matched_foods, 1)
+        self.assertEqual(result.created_localized_names, 0)
+        self.assertEqual(result.updated_localized_names, 1)
+        self.assertEqual(result.skipped_localized_names, 0)
+
+        localized_name = FoodLocalizedName.objects.get(food=self.chicken)
+
+        self.assertEqual(
+            localized_name.name,
+            "Trutro corto de pollo con piel crudo",
+        )
+        self.assertEqual(
+            localized_name.normalized_name,
+            "trutro corto de pollo con piel crudo",
+        )
 
     def test_apply_usda_spanish_display_names_is_idempotent(self):
         first_result = apply_usda_spanish_display_names_to_foods(

@@ -8,8 +8,17 @@ from notas.application.services.food_imports.usda.spanish_display_names import (
 class Command(BaseCommand):
     help = "Apply generated Spanish display names to visible USDA/global foods."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--overwrite",
+            action="store_true",
+            help="Overwrite existing primary Spanish display names generated for USDA foods.",
+        )
+
     def handle(self, *args, **options):
-        result = apply_usda_spanish_display_names_to_visible_global_foods()
+        result = apply_usda_spanish_display_names_to_visible_global_foods(
+            overwrite=options["overwrite"],
+        )
 
         self.stdout.write(
             self.style.SUCCESS(
@@ -20,4 +29,3 @@ class Command(BaseCommand):
                 f"skipped_localized_names={result.skipped_localized_names}"
             )
         )
-        

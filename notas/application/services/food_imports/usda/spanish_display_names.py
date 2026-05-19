@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from typing import Callable
 
 from notas.application.services.food_imports.localized_names import (
     FoodLocalizedNameInput,
@@ -20,12 +21,320 @@ EXACT_DISPLAY_NAME_TRANSLATIONS = {
     "oats, raw": "Avena",
     "chicken breast, cooked": "Pechuga de pollo cocida",
     "eggs, grade a, large, egg whole": "Huevo entero",
-    "rice, white, long grain, unenriched, raw": "Arroz blanco crudo",
-    "rice, brown, long grain, unenriched, raw": "Arroz integral crudo",
+    "rice, white, long grain, unenriched, raw": "Arroz blanco",
+    "rice, brown, long grain, unenriched, raw": "Arroz integral",
     "nuts, almonds, whole, raw": "Almendras crudas",
     "kale, raw": "Kale crudo",
     "hummus, commercial": "Hummus",
 }
+
+
+PatternTranslator = Callable[[list[str]], str | None]
+
+
+def _translate_fish_pattern(parts: list[str]) -> str | None:
+    if not parts or parts[0] != "fish":
+        return None
+
+    species = parts[1] if len(parts) > 1 else ""
+
+    species_translations = {
+        "cod": "Bacalao",
+        "haddock": "Eglefino",
+        "pollock": "Abadejo",
+        "tuna": "Atún",
+        "salmon": "Salmón",
+        "tilapia": "Tilapia",
+        "catfish": "Bagre",
+        "halibut": "Halibut",
+    }
+
+    base = species_translations.get(species)
+
+    if not base:
+        return None
+
+    descriptors = []
+
+    if "atlantic" in parts:
+        descriptors.append("atlántico")
+
+    if "sockeye" in parts:
+        descriptors.append("sockeye")
+
+    if "light" in parts:
+        descriptors.append("liviano")
+
+    if "canned in water" in parts:
+        descriptors.append("en agua")
+
+    if "drained solids" in parts:
+        descriptors.append("drenado")
+
+    if "wild caught" in parts:
+        descriptors.append("silvestre")
+
+    if "farm raised" in parts:
+        descriptors.append("de cultivo")
+
+    if "raw" in parts:
+        descriptors.append("crudo")
+
+    return _join_display_name(base, descriptors)
+
+
+def _translate_chicken_pattern(parts: list[str]) -> str | None:
+    if not parts or parts[0] != "chicken":
+        return None
+
+    cut_translations = {
+        "breast": "Pechuga de pollo",
+        "drumstick": "Trutro corto de pollo",
+        "thigh": "Trutro de pollo",
+        "wing": "Ala de pollo",
+        "ground": "Pollo molido",
+    }
+
+    base = None
+
+    for key, value in cut_translations.items():
+        if key in parts:
+            base = value
+            break
+
+    if not base:
+        base = "Pollo"
+
+    descriptors = []
+
+    if "boneless" in parts:
+        descriptors.append("sin hueso")
+
+    if "skinless" in parts:
+        descriptors.append("sin piel")
+
+    if "meat and skin" in parts:
+        descriptors.append("con piel")
+
+    if "meat only" in parts:
+        descriptors.append("solo carne")
+
+    if "cooked" in parts:
+        descriptors.append("cocido")
+
+    if "raw" in parts:
+        descriptors.append("crudo")
+
+    if "braised" in parts:
+        descriptors.append("braseado")
+
+    return _join_display_name(base, descriptors)
+
+
+def _translate_pork_pattern(parts: list[str]) -> str | None:
+    if not parts or parts[0] != "pork":
+        return None
+
+    if "belly" in parts:
+        base = "Panceta de cerdo"
+    elif "chop" in parts:
+        base = "Chuleta de cerdo"
+    elif "loin" in parts and "tenderloin" in parts:
+        base = "Solomillo de cerdo"
+    elif "loin" in parts:
+        base = "Lomo de cerdo"
+    elif "ground" in parts:
+        base = "Cerdo molido"
+    elif "bacon" in parts:
+        base = "Tocino"
+    else:
+        base = "Cerdo"
+
+    descriptors = []
+
+    if "center cut" in parts:
+        descriptors.append("centro")
+
+    if "with skin" in parts:
+        descriptors.append("con piel")
+
+    if "boneless" in parts:
+        descriptors.append("sin hueso")
+
+    if "raw" in parts:
+        descriptors.append("crudo")
+
+    if "cooked" in parts:
+        descriptors.append("cocido")
+
+    return _join_display_name(base, descriptors)
+
+
+def _translate_beans_pattern(parts: list[str]) -> str | None:
+    if not parts or parts[0] != "beans":
+        return None
+
+    if "snap" in parts and "green" in parts:
+        base = "Porotos verdes"
+    elif "black" in parts:
+        base = "Porotos negros"
+    elif "pinto" in parts:
+        base = "Porotos pinto"
+    elif "kidney" in parts or "red kidney" in parts:
+        base = "Porotos rojos"
+    elif "navy" in parts:
+        base = "Porotos blancos"
+    elif "cannellini" in parts:
+        base = "Porotos cannellini"
+    else:
+        base = "Porotos"
+
+    descriptors = []
+
+    if "dry" in parts:
+        descriptors.append("secos")
+
+    if "raw" in parts:
+        descriptors.append("crudos")
+
+    if "canned" in parts:
+        descriptors.append("enlatados")
+
+    if "drained solids" in parts or "drained and rinsed" in parts:
+        descriptors.append("drenados")
+
+    return _join_display_name(base, descriptors)
+
+
+def _translate_flour_pattern(parts: list[str]) -> str | None:
+    if not parts or parts[0] != "flour":
+        return None
+
+    flour_types = {
+        "whole wheat": "Harina de trigo integral",
+        "brown rice": "Harina de arroz integral",
+        "wheat": "Harina de trigo",
+        "rice": "Harina de arroz",
+        "corn": "Harina de maíz",
+        "soy": "Harina de soya",
+        "almond": "Harina de almendra",
+        "oat": "Harina de avena",
+        "potato": "Harina de papa",
+        "amaranth": "Harina de amaranto",
+        "spelt": "Harina de espelta",
+        "semolina": "Sémola",
+    }
+
+    joined = " ".join(parts)
+
+    base = None
+
+    for source, target in sorted(
+        flour_types.items(),
+        key=lambda item: len(item[0]),
+        reverse=True,
+    ):
+        if source in joined:
+            base = target
+            break
+
+    if not base:
+        base = "Harina"
+
+    descriptors = []
+
+    if "all-purpose" in parts:
+        descriptors.append("todo uso")
+
+    if "bread" in parts:
+        descriptors.append("para pan")
+
+    if "pastry" in parts:
+        descriptors.append("para pastelería")
+
+    if "enriched" in parts:
+        descriptors.append("enriquecida")
+
+    if "unenriched" in parts:
+        descriptors.append("no enriquecida")
+
+    if "bleached" in parts:
+        descriptors.append("blanqueada")
+
+    if "unbleached" in parts:
+        descriptors.append("sin blanquear")
+
+    return _join_display_name(base, descriptors)
+
+
+def _translate_rice_pattern(parts: list[str]) -> str | None:
+    if not parts or parts[0] != "rice":
+        return None
+
+    if "white" in parts:
+        base = "Arroz blanco"
+    elif "brown" in parts:
+        base = "Arroz integral"
+    elif "black" in parts:
+        base = "Arroz negro"
+    elif "red" in parts:
+        base = "Arroz rojo"
+    else:
+        base = "Arroz"
+
+    descriptors = []
+
+    if "long grain" in parts:
+        descriptors.append("grano largo")
+
+    if "raw" in parts or "dry" in parts:
+        descriptors.append("crudo")
+
+    if "unenriched" in parts:
+        descriptors.append("no enriquecido")
+
+    return _join_display_name(base, descriptors)
+
+
+def _translate_egg_pattern(parts: list[str]) -> str | None:
+    if not parts or parts[0] not in {"egg", "eggs"}:
+        return None
+
+    if "white" in parts:
+        base = "Clara de huevo"
+    elif "yolk" in parts:
+        base = "Yema de huevo"
+    elif "whole" in parts or "egg whole" in parts:
+        base = "Huevo entero"
+    else:
+        base = "Huevo"
+
+    descriptors = []
+
+    if "dried" in parts:
+        descriptors.append("seco")
+
+    if "frozen" in parts:
+        descriptors.append("congelado")
+
+    if "raw" in parts:
+        descriptors.append("crudo")
+
+    if "pasteurized" in parts:
+        descriptors.append("pasteurizado")
+
+    return _join_display_name(base, descriptors)
+
+
+PATTERN_TRANSLATORS: tuple[PatternTranslator, ...] = (
+    _translate_fish_pattern,
+    _translate_chicken_pattern,
+    _translate_pork_pattern,
+    _translate_beans_pattern,
+    _translate_flour_pattern,
+    _translate_rice_pattern,
+    _translate_egg_pattern,
+)
 
 
 EXACT_PART_TRANSLATIONS = {
@@ -163,6 +472,10 @@ PHRASE_TRANSLATIONS = {
     "chicken thigh": "trutro de pollo",
     "chicken wing": "ala de pollo",
     "chicken drumstick": "trutro corto de pollo",
+    "drumstick": "trutro corto",
+    "thigh": "trutro",
+    "wing": "ala",
+    "breast": "pechuga",
     "chicken": "pollo",
     "fish": "pescado",
     "tuna": "atún",
@@ -170,6 +483,8 @@ PHRASE_TRANSLATIONS = {
     "haddock": "eglefino",
     "pollock": "abadejo",
     "salmon": "salmón",
+    "cod": "bacalao",
+    "catfish": "bagre",
     "pork belly": "panceta de cerdo",
     "pork chop": "chuleta de cerdo",
     "pork loin": "lomo de cerdo",
@@ -235,10 +550,6 @@ PHRASE_TRANSLATIONS = {
     "cannellini": "cannellini",
     "black": "negro",
     "red kidney": "riñón rojo",
-    "drumstick": "trutro corto",
-    "thigh": "trutro",
-    "wing": "ala",
-    "breast": "pechuga",
 }
 
 
@@ -307,10 +618,10 @@ def translate_usda_food_name_to_spanish(name: str) -> str:
     """
     Translate a USDA display name into an operational Spanish display name.
 
-    This is intentionally deterministic and glossary-based. It is not meant to
-    be a perfect natural-language translation layer; it gives My Scoope a
-    stable Spanish display name for imported USDA foods that can later be
-    curated manually.
+    Priority:
+    1. exact curated names
+    2. pattern-based names for common Foundation Foods groups
+    3. glossary fallback
     """
 
     cleaned_name = _clean_text(name)
@@ -323,6 +634,14 @@ def translate_usda_food_name_to_spanish(name: str) -> str:
     if exact_key in EXACT_DISPLAY_NAME_TRANSLATIONS:
         return EXACT_DISPLAY_NAME_TRANSLATIONS[exact_key]
 
+    parts = _split_usda_name_parts(cleaned_name)
+
+    for translator in PATTERN_TRANSLATORS:
+        translated_name = translator(parts)
+
+        if translated_name:
+            return translated_name
+
     translated_parts = [
         _translate_part(part)
         for part in cleaned_name.split(",")
@@ -334,6 +653,7 @@ def translate_usda_food_name_to_spanish(name: str) -> str:
 def apply_usda_spanish_display_names_to_foods(
     *,
     foods,
+    overwrite: bool = False,
 ) -> ApplyUSDASpanishDisplayNamesResult:
     matched_foods = 0
     created_localized_names = 0
@@ -343,7 +663,7 @@ def apply_usda_spanish_display_names_to_foods(
     for food in foods:
         matched_foods += 1
 
-        if _has_primary_spanish_localized_name(food):
+        if _has_primary_spanish_localized_name(food) and not overwrite:
             skipped_localized_names += 1
             continue
 
@@ -351,6 +671,19 @@ def apply_usda_spanish_display_names_to_foods(
 
         if not display_name:
             skipped_localized_names += 1
+            continue
+
+        if overwrite and _has_primary_spanish_localized_name(food):
+            localized_name = _get_primary_spanish_localized_name(food)
+
+            if localized_name is None:
+                skipped_localized_names += 1
+                continue
+
+            localized_name.name = display_name
+            localized_name.normalized_name = _normalize_localized_name(display_name)
+            localized_name.save(update_fields=["name", "normalized_name"])
+            updated_localized_names += 1
             continue
 
         result = ensure_food_localized_names(
@@ -377,7 +710,10 @@ def apply_usda_spanish_display_names_to_foods(
     )
 
 
-def apply_usda_spanish_display_names_to_visible_global_foods() -> ApplyUSDASpanishDisplayNamesResult:
+def apply_usda_spanish_display_names_to_visible_global_foods(
+    *,
+    overwrite: bool = False,
+) -> ApplyUSDASpanishDisplayNamesResult:
     foods = (
         Food.objects
         .filter(
@@ -395,10 +731,15 @@ def apply_usda_spanish_display_names_to_visible_global_foods() -> ApplyUSDASpani
 
     return apply_usda_spanish_display_names_to_foods(
         foods=foods,
+        overwrite=overwrite,
     )
 
 
 def _has_primary_spanish_localized_name(food: Food) -> bool:
+    return _get_primary_spanish_localized_name(food) is not None
+
+
+def _get_primary_spanish_localized_name(food: Food) -> FoodLocalizedName | None:
     prefetched_localized_names = getattr(
         food,
         "_prefetched_objects_cache",
@@ -410,12 +751,15 @@ def _has_primary_spanish_localized_name(food: Food) -> bool:
     else:
         localized_names = food.localized_names.all()
 
-    return any(
-        localized_name.language == "es"
-        and localized_name.country == "CL"
-        and localized_name.is_primary
-        for localized_name in localized_names
-    )
+    for localized_name in localized_names:
+        if (
+            localized_name.language == "es"
+            and localized_name.country == "CL"
+            and localized_name.is_primary
+        ):
+            return localized_name
+
+    return None
 
 
 def _translate_part(part: str) -> str:
@@ -463,6 +807,32 @@ def _capitalize_display_part(value: str) -> str:
     return value[0].upper() + value[1:]
 
 
+def _split_usda_name_parts(name: str) -> list[str]:
+    return [
+        _normalize_translation_key(part)
+        for part in name.split(",")
+        if _normalize_translation_key(part)
+    ]
+
+
+def _join_display_name(base: str, descriptors: list[str]) -> str:
+    clean_descriptors = []
+
+    for descriptor in descriptors:
+        descriptor = _clean_text(descriptor)
+
+        if descriptor and descriptor.lower() not in {
+            item.lower()
+            for item in clean_descriptors
+        }:
+            clean_descriptors.append(descriptor)
+
+    if not clean_descriptors:
+        return base
+
+    return _clean_text(f"{base} {' '.join(clean_descriptors)}")
+
+
 def _normalize_translation_key(value: str) -> str:
     value = _clean_text(value).lower()
     value = value.replace("/", " ")
@@ -471,6 +841,14 @@ def _normalize_translation_key(value: str) -> str:
     value = re.sub(r"\s+", " ", value)
 
     return value.strip()
+
+
+def _normalize_localized_name(value: str) -> str:
+    from notas.application.services.food_imports.normalization import (
+        normalize_food_name,
+    )
+
+    return normalize_food_name(value)
 
 
 def _clean_text(value: str | None) -> str:
