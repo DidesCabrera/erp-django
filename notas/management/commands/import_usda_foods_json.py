@@ -1,10 +1,13 @@
-import json
 from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
 
 from notas.application.services.commands.import_usda_food_payloads import (
     import_usda_food_payloads,
+)
+from notas.application.services.food_imports.usda.foundation_foods_reader import (
+    FoundationFoodsReaderError,
+    read_foundation_food_payloads_from_json,
 )
 
 
@@ -15,7 +18,10 @@ class Command(BaseCommand):
         parser.add_argument(
             "path",
             type=str,
-            help="Path to a JSON file containing a list of USDA-like food payloads.",
+            help=(
+                "Path to a JSON file containing USDA Foundation Foods payloads. "
+                "Supports either a direct list or a FoundationFoods root object."
+            ),
         )
 
         parser.add_argument(
@@ -49,13 +55,9 @@ class Command(BaseCommand):
             raise CommandError(f"Path is not a file: {path}")
 
         try:
-            with path.open("r", encoding="utf-8") as file:
-                payloads = json.load(file)
-        except json.JSONDecodeError as exc:
-            raise CommandError(f"Invalid JSON file: {exc}") from exc
-
-        if not isinstance(payloads, list):
-            raise CommandError("JSON root must be a list of USDA-like food payloads.")
+            payloads = read_foundation_food_payloads_from_json(path)
+        except FoundationFoodsReaderError as exc:
+            raise CommandError(str(exc)) from exc
 
         result = import_usda_food_payloads(
             payloads=payloads,
