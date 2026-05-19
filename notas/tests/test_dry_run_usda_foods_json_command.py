@@ -148,3 +148,50 @@ class DryRunUSDAFoodsJSONCommandTests(TestCase):
                     str(path),
                     source_version="2026-04",
                 )
+
+
+    def test_command_can_show_issue_samples(self):
+        payloads = [
+            _usda_payload(
+                fdc_id=3101,
+                description="Rice, white, cooked",
+            ),
+            "invalid non object row",
+        ]
+
+        out = StringIO()
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "foundation_foods.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "FoundationFoods": payloads,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            call_command(
+                "dry_run_usda_foods_json",
+                str(path),
+                source_version="2026-04",
+                source_dataset="foundation_foods",
+                show_samples=True,
+                sample_size=3,
+                stdout=out,
+            )
+
+        output = out.getvalue()
+
+        self.assertIn("USDA dry-run completed.", output)
+        self.assertIn("total=2", output)
+        self.assertIn("valid=1", output)
+        self.assertIn("failed=1", output)
+        self.assertIn("- mapping_failed: 1", output)
+        self.assertIn("samples:", output)
+        self.assertIn("- mapping_failed:", output)
+        self.assertIn("index=1", output)
+        self.assertIn("payload_type=str", output)
+        self.assertIn("source_food_id=(none)", output)
+        self.assertIn("description=(none)", output)

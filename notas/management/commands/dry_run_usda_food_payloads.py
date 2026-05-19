@@ -1,6 +1,6 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from typing import Iterable
+from typing import Any, Iterable
 
 from notas.application.dto.imported_food_dto import ImportedFoodDTO
 from notas.application.services.food_imports.normalization import normalize_imported_food
@@ -17,8 +17,18 @@ from notas.domain.models import Food, FoodSourceMetadata
 
 @dataclass(frozen=True)
 class DryRunPreparedFood:
+    index: int
     dto: ImportedFoodDTO
     quality_score: int
+
+
+@dataclass(frozen=True)
+class DryRunIssueSample:
+    index: int
+    reason: str
+    payload_type: str
+    source_food_id: str = ""
+    description: str = ""
 
 
 @dataclass(frozen=True)
@@ -32,6 +42,7 @@ class DryRunUSDAFoodPayloadsResult:
     extended_rows: int
     hidden_rows: int
     reason_counts: dict[str, int] = field(default_factory=dict)
+    issue_samples: dict[str, list[DryRunIssueSample]] = field(default_factory=dict)
 
     @property
     def skipped_rows(self) -> int:
@@ -40,9 +51,10 @@ class DryRunUSDAFoodPayloadsResult:
 
 def dry_run_usda_food_payloads(
     *,
-    payloads: Iterable[dict],
+    payloads: Iterable[Any],
     source_version: str,
     source_dataset: str = USDA_SOURCE_DATASET_DEFAULT,
+    sample_size: int = 0,
 ) -> DryRunUSDAFoodPayloadsResult:
     """
     Simulate a USDA import without writing anything to the database.
@@ -54,6 +66,7 @@ def dry_run_usda_food_payloads(
     - detect duplicates already imported in the database
     - detect duplicates inside the same file
     - estimate initial visibility for rows that would be imported
+    - optionally collect small issue samples for operational reporting
 
     Data safety:
     - does not create Food records
@@ -64,12 +77,15 @@ def dry_run_usda_food_payloads(
 
     payload_list = list(payloads)
     reason_counts: Counter[str] = Counter()
+    issue_samples: dict[str, list[DryRunIssueSample]] = defaultdict(list)
     prepared_foods: list[DryRunPreparedFood] = []
 
     invalid_rows = 0
     failed_rows = 0
 
-    for payload in payload_list:
+    normalized_sample_size = max(sample_size, 0)
+
+    for index, payload in enumerate(payload_list):
         try:
             dto = map_usda_food_to_imported_food_dto(
                 payload,
@@ -81,11 +97,22 @@ def dry_run_usda_food_payloads(
 
             if not quality_result.is_valid:
                 invalid_rows += 1
-                reason_counts[quality_result.reason or "invalid"] += 1
+                reason = quality_result.reason or "invalid"
+                reason_counts[reason] += 1
+                _append_issue_sample(
+                    issue_samples=issue_samples,
+                    sample_size=normalized_sample_size,
+                    reason=reason,
+                    index=index,
+                    payload=payload,
+                    source_food_id=normalized_dto.source_food_id,
+                    description=normalized_dto.name,
+                )
                 continue
 
             prepared_foods.append(
                 DryRunPreparedFood(
+                    index=index,
                     dto=normalized_dto,
                     quality_score=quality_result.score,
                 )
@@ -94,6 +121,13 @@ def dry_run_usda_food_payloads(
         except Exception:
             failed_rows += 1
             reason_counts["mapping_failed"] += 1
+            _append_issue_sample(
+                issue_samples=issue_samples,
+                sample_size=normalized_sample_size,
+                reason="mapping_failed",
+                index=index,
+                payload=payload,
+            )
 
     source_food_ids = [
         prepared_food.dto.source_food_id
@@ -121,6 +155,15 @@ def dry_run_usda_food_payloads(
         if source_food_id in seen_source_ids:
             duplicate_rows += 1
             reason_counts["duplicate_in_file"] += 1
+            _append_issue_sample(
+                issue_samples=issue_samples,
+                sample_size=normalized_sample_size,
+                reason="duplicate_in_file",
+                index=prepared_food.index,
+                payload=None,
+                source_food_id=source_food_id,
+                description=prepared_food.dto.name,
+            )
             continue
 
         seen_source_ids.add(source_food_id)
@@ -128,6 +171,15 @@ def dry_run_usda_food_payloads(
         if source_food_id in already_imported_source_ids:
             duplicate_rows += 1
             reason_counts["already_imported"] += 1
+            _append_issue_sample(
+                issue_samples=issue_samples,
+                sample_size=normalized_sample_size,
+                reason="already_imported",
+                index=prepared_food.index,
+                payload=None,
+                source_food_id=source_food_id,
+                description=prepared_food.dto.name,
+            )
             continue
 
         would_import_rows += 1
@@ -151,4 +203,43 @@ def dry_run_usda_food_payloads(
         extended_rows=extended_rows,
         hidden_rows=hidden_rows,
         reason_counts=dict(reason_counts),
+        issue_samples={
+            reason: samples
+            for reason, samples in issue_samples.items()
+            if samples
+        },
+    )
+
+
+def _append_issue_sample(
+    *,
+    issue_samples: dict[str, list[DryRunIssueSample]],
+    sample_size: int,
+    reason: str,
+    index: int,
+    payload: Any,
+    source_food_id: str = "",
+    description: str = "",
+) -> None:
+    if sample_size <= 0:
+        return
+
+    if len(issue_samples[reason]) >= sample_size:
+        return
+
+    extracted_source_food_id = source_food_id
+    extracted_description = description
+
+    if isinstance(payload, dict):
+        extracted_source_food_id = extracted_source_food_id or str(payload.get("fdcId") or "")
+        extracted_description = extracted_description or str(payload.get("description") or "")
+
+    issue_samples[reason].append(
+        DryRunIssueSample(
+            index=index,
+            reason=reason,
+            payload_type=type(payload).__name__,
+            source_food_id=extracted_source_food_id,
+            description=extracted_description,
+        )
     )
