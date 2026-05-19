@@ -43,49 +43,14 @@ class NavSectionSpec:
 
 
 APP_NAVIGATION = (
-        NavSectionSpec(
-        key="admin",
-        label="Admin Workspace",
-        groups=(     
-            NavGroupSpec(
-                key="admin",
-                label="Admin",
-                icon="shield",
-                show_in_sidebar=True,
-                items=(
-                    NavItemSpec(
-                        key="admin_home",
-                        label="Admin Home",
-                        icon="shield",
-                        page_icon="shield",
-                        url_name="admin_home",
-                        nav_root="admin",
-                        scope="admin",
-                        show_in_sidebar=True,
-                    ),
-                    NavItemSpec(
-                        key="admin_food_catalog",
-                        label="Foods Catalog",
-                        icon="database",
-                        page_icon="database",
-                        url_name="admin_food_catalog",
-                        nav_root="admin",
-                        scope="foods",
-                        show_in_sidebar=True,
-                    ),
-                ),
-            ),
-        ),
-    ),
- 
 
     NavSectionSpec(
         key="account",
-        label="Cuenta",
+        label="Main",
         groups=(
             NavGroupSpec(
                 key="home",
-                label="Inicio",
+                label="Home",
                 icon="house",
                 page_icon="house",
                 url_name="home_view",
@@ -101,6 +66,85 @@ APP_NAVIGATION = (
                 scope="personal",
                 page_icon="circle-user-round",
                 show_in_sidebar=False,
+            ),
+            NavGroupSpec(
+                key="explore",
+                label="Explorar",
+                icon="search",
+                items=(
+                    NavItemSpec(
+                        key="dailyplan_explore",
+                        label="Explorar Planes",
+                        icon="clipboard-list",
+                        page_icon="search",
+                        url_name="dailyplan_explore_list",
+                        nav_root="dailyplan",
+                        scope="explore",
+                    ),
+                    NavItemSpec(
+                        key="meal_explore",
+                        label="Explorar Comidas",
+                        icon="utensils",
+                        page_icon="search",
+                        url_name="meal_explore_list",
+                        nav_root="meal",
+                        scope="explore",
+                    ),
+                ),
+            ),
+                        NavGroupSpec(
+                key="proposal",
+                label="Propuestas AI",
+                icon="sparkles",
+                page_icon="sparkles",
+                url_name="proposal_list",
+                nav_root="proposal",
+                scope="personal",
+            ),
+
+            NavGroupSpec(
+                key="create",
+                label="Crear",
+                icon="circle-fading-plus",
+                show_in_sidebar=False,
+                items=(
+                    NavItemSpec(
+                        key="dailyplan_create",
+                        label="Nuevo Plan",
+                        icon="clipboard-list",
+                        page_icon="circle-fading-plus",
+                        url_name="dailyplan_create",
+                        nav_root="dailyplan",
+                        scope="create",
+                    ),
+                    NavItemSpec(
+                        key="meal_create",
+                        label="Nueva Comida",
+                        icon="utensils",
+                        page_icon="circle-fading-plus",
+                        url_name="meal_create",
+                        nav_root="meal",
+                        scope="create",
+                    ),
+                    NavItemSpec(
+                        key="food_create",
+                        label="Nuevo Alimento",
+                        icon="carrot",
+                        page_icon="circle-fading-plus",
+                        url_name="food_create",
+                        nav_root="food",
+                        scope="create",
+                    ),
+                    NavItemSpec(
+                        key="food_import",
+                        label="Importar Alimentos",
+                        icon="file-down",
+                        page_icon="file-down",
+                        url_name="import_foods",
+                        nav_root="food",
+                        scope="import",
+                    ),
+                ),
             ),
         ),
     ),
@@ -166,97 +210,44 @@ APP_NAVIGATION = (
                     ),
                 ),
             ),
-
-            NavGroupSpec(
-                key="proposal",
-                label="Propuestas",
-                icon="sparkles",
-                page_icon="sparkles",
-                url_name="proposal_list",
-                nav_root="proposal",
-                scope="personal",
-            ),
-
-            NavGroupSpec(
-                key="create",
-                label="Crear",
-                icon="circle-fading-plus",
-                show_in_sidebar=False,
-                items=(
-                    NavItemSpec(
-                        key="dailyplan_create",
-                        label="Nuevo Plan",
-                        icon="clipboard-list",
-                        page_icon="circle-fading-plus",
-                        url_name="dailyplan_create",
-                        nav_root="dailyplan",
-                        scope="create",
-                    ),
-                    NavItemSpec(
-                        key="meal_create",
-                        label="Nueva Comida",
-                        icon="utensils",
-                        page_icon="circle-fading-plus",
-                        url_name="meal_create",
-                        nav_root="meal",
-                        scope="create",
-                    ),
-                    NavItemSpec(
-                        key="food_create",
-                        label="Nuevo Alimento",
-                        icon="carrot",
-                        page_icon="circle-fading-plus",
-                        url_name="food_create",
-                        nav_root="food",
-                        scope="create",
-                    ),
-                    NavItemSpec(
-                        key="food_import",
-                        label="Importar Alimentos",
-                        icon="file-down",
-                        page_icon="file-down",
-                        url_name="import_foods",
-                        nav_root="food",
-                        scope="import",
-                    ),
-                ),
-            ),
         ),
     ),
-
 
     NavSectionSpec(
-        key="explore",
-        label="Explorar",
-        groups=(
+        key="admin",
+        label="Admin Workspace",
+        groups=(     
             NavGroupSpec(
-                key="explore",
-                label="Explorar",
-                icon="search",
+                key="admin",
+                label="Admin",
+                icon="shield",
+                show_in_sidebar=True,
                 items=(
                     NavItemSpec(
-                        key="dailyplan_explore",
-                        label="Explorar Planes",
-                        icon="clipboard-list",
-                        page_icon="search",
-                        url_name="dailyplan_explore_list",
-                        nav_root="dailyplan",
-                        scope="explore",
+                        key="admin_home",
+                        label="Admin Home",
+                        icon="shield",
+                        page_icon="shield",
+                        url_name="admin_home",
+                        nav_root="admin",
+                        scope="admin",
+                        show_in_sidebar=True,
                     ),
                     NavItemSpec(
-                        key="meal_explore",
-                        label="Explorar Comidas",
-                        icon="utensils",
-                        page_icon="search",
-                        url_name="meal_explore_list",
-                        nav_root="meal",
-                        scope="explore",
+                        key="admin_food_catalog",
+                        label="Foods Catalog",
+                        icon="database",
+                        page_icon="database",
+                        url_name="admin_food_catalog",
+                        nav_root="admin",
+                        scope="foods",
+                        show_in_sidebar=True,
                     ),
                 ),
             ),
         ),
     ),
-
+ 
 )
 
 

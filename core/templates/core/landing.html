@@ -2,8 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>My Scoope</title>
+  <title>My Scoope | Alimentación precisa para objetivos corporales</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="My Scoope te ayuda a crear comidas, organizar planes diarios y ajustar tu alimentación con precisión para avanzar hacia tus objetivos corporales."
+  >
 
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/landing.css' %}">
@@ -11,234 +15,605 @@
 
 <body>
 
-  <!-- HEADER -->
   <header class="header">
     <div class="container header-inner">
-      <div class="logo">My Scoope</div>
+      <a href="/" class="logo" aria-label="My Scoope">
+        <span class="logo-mark">MS</span>
+        <span>My Scoope</span>
+      </a>
 
-      <nav class="nav">
-        <a href="#product">Producto</a>
-        <a href="#how">Cómo funciona</a>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#precision">Precisión</a>
+        <a href="#system">Sistema</a>
+        <a href="#ai">IA</a>
+        <a href="#plans">Planes</a>
         <a href="/accounts/login/" class="login">Ingresar</a>
       </nav>
     </div>
   </header>
 
+  <main>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container hero-inner">
-  
-      <img src="{% static 'img/logo.png' %}" alt="My Scoope" class="hero-logo">
-  
-      <h1>Diseña tu nutrición<br>como un sistema</h1>
-  
-      <p>
-        Construye planes diarios entendiendo exactamente cómo cada alimento
-        impacta tus calorías y macronutrientes.
-      </p>
-  
-      <div class="hero-actions">
-        <a href="/accounts/login/" class="btn-primary">Comenzar</a>
-        <a href="#how" class="btn-secondary">Ver cómo funciona</a>
-      </div>
-  
-    </div>
-  </section>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
 
+        <div class="hero-copy">
+          <p class="eyebrow">Nutrición precisa para objetivos reales</p>
 
-  <!-- PRODUCT PREVIEW -->
-<!-- PRODUCT PREVIEW -->
-<section id="product" class="product">
-    <div class="container">
-  
-      <h2>Construye tu día visualmente</h2>
-  
-      <p class="section-desc">
-        Agrega alimentos y observa en tiempo real cómo impactan tus macros y calorías.
-      </p>
-  
-      <div class="planner-preview">
-  
-        <div class="planner-header">
-          <span>Plan diario</span>
-          <span class="kcal">2340 kcal</span>
-        </div>
-  
-        <div class="meal">
-  
-          <div class="meal-title">Desayuno</div>
-  
-          <div class="food-row">
-            <span>Huevos (3)</span>
-            <span>210 kcal</span>
+          <h1>Tu cuerpo cambia cuando tu alimentación deja de ser improvisada.</h1>
+
+          <p class="hero-lead">
+            My Scoope te ayuda a crear comidas, organizar planes diarios y ajustar calorías
+            y macronutrientes con precisión para avanzar hacia tus objetivos corporales.
+          </p>
+
+          <div class="hero-actions">
+            <a href="/accounts/login/" class="btn btn-primary">Comenzar gratis</a>
+            <a href="#how" class="btn btn-secondary">Ver cómo funciona</a>
           </div>
-  
-          <div class="food-row">
-            <span>Avena (80 g)</span>
-            <span>300 kcal</span>
-          </div>
-  
-          <div class="food-row">
-            <span>Plátano</span>
-            <span>110 kcal</span>
-          </div>
-  
-        </div>
-  
-        <div class="meal">
-  
-          <div class="meal-title">Almuerzo</div>
-  
-          <div class="food-row">
-            <span>Pollo (200 g)</span>
-            <span>330 kcal</span>
-          </div>
-  
-          <div class="food-row">
-            <span>Arroz (150 g)</span>
-            <span>180 kcal</span>
-          </div>
-  
-          <div class="food-row">
-            <span>Aceite de oliva</span>
-            <span>120 kcal</span>
-          </div>
-  
-        </div>
-  
-        <div class="macros">
-  
-          <div class="macro">
+
+          <div class="hero-tags" aria-label="Métricas principales">
+            <span>Calorías</span>
             <span>Proteína</span>
-            <strong>165 g</strong>
+            <span>Macros</span>
+            <span>PPK</span>
+            <span>Planes diarios</span>
           </div>
-  
-          <div class="macro">
-            <span>Carbohidratos</span>
-            <strong>220 g</strong>
+        </div>
+
+        <div class="hero-visual" aria-label="Vista previa del dashboard de My Scoope">
+          <!--
+            Espacio futuro para imagen real:
+            <img src="{% static 'img/landing/dashboard-preview.png' %}" alt="Vista previa del dashboard de My Scoope">
+          -->
+
+          <div class="product-mockup">
+            <div class="mockup-topbar">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+
+            <div class="mockup-header">
+              <div>
+                <p>Plan diario</p>
+                <strong>Objetivo corporal</strong>
+              </div>
+              <div class="mockup-kcal">2.450 kcal</div>
+            </div>
+
+            <div class="mockup-kpis">
+              <div>
+                <span>Proteína</span>
+                <strong>180 g</strong>
+              </div>
+              <div>
+                <span>Carbos</span>
+                <strong>260 g</strong>
+              </div>
+              <div>
+                <span>Grasa</span>
+                <strong>72 g</strong>
+              </div>
+              <div>
+                <span>PPK</span>
+                <strong>1.9</strong>
+              </div>
+            </div>
+
+            <div class="mockup-meal">
+              <div class="mockup-meal-header">
+                <strong>Desayuno</strong>
+                <span>640 kcal</span>
+              </div>
+              <div class="mockup-food-row">
+                <span>Avena · 80 g</span>
+                <span>300 kcal</span>
+              </div>
+              <div class="mockup-food-row">
+                <span>Huevos · 3 unidades</span>
+                <span>210 kcal</span>
+              </div>
+              <div class="mockup-food-row">
+                <span>Plátano · 1 unidad</span>
+                <span>130 kcal</span>
+              </div>
+            </div>
+
+            <div class="mockup-meal">
+              <div class="mockup-meal-header">
+                <strong>Almuerzo</strong>
+                <span>780 kcal</span>
+              </div>
+              <div class="mockup-food-row">
+                <span>Pollo · 200 g</span>
+                <span>330 kcal</span>
+              </div>
+              <div class="mockup-food-row">
+                <span>Arroz · 180 g</span>
+                <span>230 kcal</span>
+              </div>
+              <div class="mockup-food-row">
+                <span>Aceite de oliva · 14 g</span>
+                <span>120 kcal</span>
+              </div>
+            </div>
           </div>
-  
-          <div class="macro">
-            <span>Grasa</span>
-            <strong>70 g</strong>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- VALUE STRIP -->
+    <section class="value-strip" aria-label="Propuesta de valor">
+      <div class="container value-grid">
+
+        <article class="value-card">
+          <div class="value-icon">01</div>
+          <h2>Precisión nutricional</h2>
+          <p>Controla calorías, macronutrientes y cantidades reales sin perder claridad.</p>
+        </article>
+
+        <article class="value-card">
+          <div class="value-icon">02</div>
+          <h2>Objetivos corporales</h2>
+          <p>Ajusta tu alimentación según el cuerpo que quieres construir, mantener o mejorar.</p>
+        </article>
+
+        <article class="value-card">
+          <div class="value-icon">03</div>
+          <h2>Asistencia IA</h2>
+          <p>Recibe propuestas para crear o modificar planes sin perder el control final.</p>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- CONTEXT -->
+    <section id="precision" class="section section-soft">
+      <div class="container split-section">
+
+        <div class="image-panel image-panel-human">
+          <!--
+            Espacio futuro para imagen:
+            <img src="{% static 'img/landing/meal-prep.jpg' %}" alt="Persona preparando comida de forma ordenada">
+          -->
+
+          <div class="image-placeholder">
+            <span>Imagen sugerida</span>
+            <strong>Persona preparando comida / rutina nutricional</strong>
+            <p>Espacio pensado para una fotografía humana, clara y limpia.</p>
           </div>
-  
-        </div>
-  
-      </div>
-  
-    </div>
-  </section>
-
-
-  <!-- HOW IT WORKS -->
-  <section id="how" class="how">
-    <div class="container">
-
-      <h2>Cómo funciona</h2>
-
-      <div class="steps">
-
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Crea tus comidas</h3>
-          <p>Define desayuno, almuerzo, cena o snacks dentro del día.</p>
         </div>
 
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Agrega alimentos</h3>
-          <p>Selecciona alimentos y ajusta sus porciones.</p>
-        </div>
-
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Observa el impacto</h3>
-          <p>Las calorías y macros se actualizan automáticamente.</p>
-        </div>
-
-        <div class="step">
-          <div class="step-number">4</div>
-          <h3>Ajusta tu día</h3>
-          <p>Refina tu plan hasta alcanzar tu objetivo nutricional.</p>
+        <div class="section-copy">
+          <p class="eyebrow">Contexto</p>
+          <h2>La alimentación es una de las variables principales de tu composición corporal.</h2>
+          <p>
+            Puedes entrenar duro y tener disciplina, pero si no sabes cuánto estás comiendo,
+            tus resultados quedan parcialmente a ciegas.
+          </p>
+          <p>
+            My Scoope convierte tu alimentación diaria en información clara para que puedas
+            decidir mejor, ajustar con criterio y construir un sistema que puedas sostener.
+          </p>
         </div>
 
       </div>
-
-    </div>
-  </section>
+    </section>
 
 
-  <!-- EXAMPLE PLAN -->
-  <section class="example">
-    <div class="container example-inner">
+    <!-- PAIN -->
+    <section class="section">
+      <div class="container">
 
-      <div class="example-text">
+        <div class="section-heading">
+          <p class="eyebrow">El problema</p>
+          <h2>Comer “más sano” no siempre significa comer de acuerdo a tu objetivo.</h2>
+          <p>
+            El problema no siempre es la falta de esfuerzo. Muchas veces es la falta de precisión.
+          </p>
+        </div>
 
-        <h2>Ejemplo de plan diario</h2>
+        <div class="pain-grid">
+          <article class="pain-card">
+            <span></span>
+            <h3>No sabes si llegas a tus calorías</h3>
+            <p>Sin números claros, es difícil saber si estás en déficit, mantención o superávit.</p>
+          </article>
 
-        <p class="section-desc">
-          Un día construido con alimentos simples y balance nutricional claro.
-        </p>
+          <article class="pain-card">
+            <span></span>
+            <h3>No sabes si tu proteína es suficiente</h3>
+            <p>Para objetivos corporales, la proteína necesita medirse con más claridad.</p>
+          </article>
 
-        <ul class="plan">
-          <li><strong>Desayuno</strong> — Huevos, Avena, Plátano</li>
-          <li><strong>Almuerzo</strong> — Pollo, Arroz, Aceite de oliva</li>
-          <li><strong>Cena</strong> — Salmón, Papas, Verduras</li>
-        </ul>
+          <article class="pain-card">
+            <span></span>
+            <h3>No sabes qué cambiar cuando te estancas</h3>
+            <p>Cuando no tienes estructura, cada ajuste se vuelve una suposición.</p>
+          </article>
 
-        <div class="macro-box">
-          <p>Proteína: 165 g</p>
-          <p>Carbohidratos: 220 g</p>
-          <p>Grasa: 70 g</p>
-          <p>Calorías: 2340 kcal</p>
+          <article class="pain-card">
+            <span></span>
+            <h3>No sabes si tu plan calza con tu objetivo</h3>
+            <p>My Scoope te ayuda a conectar tus comidas con indicadores concretos.</p>
+          </article>
+        </div>
+
+        <div class="comparison-panel">
+          <!--
+            Espacio futuro para imagen comparativa:
+            <img src="{% static 'img/landing/improvisar-vs-medir.png' %}" alt="Comparación entre improvisar y medir la alimentación">
+          -->
+
+          <div class="comparison-column">
+            <span>Antes</span>
+            <strong>Comidas sueltas</strong>
+            <p>Decisiones aisladas, poca visibilidad y ajustes difíciles de evaluar.</p>
+          </div>
+
+          <div class="comparison-arrow">→</div>
+
+          <div class="comparison-column comparison-column-highlight">
+            <span>Con My Scoope</span>
+            <strong>Plan diario medible</strong>
+            <p>Alimentos, comidas, calorías y macros conectados dentro de un sistema.</p>
+          </div>
         </div>
 
       </div>
+    </section>
 
-      <div class="plan-shot">
-        <!-- Screenshot ejemplo plan -->
-        <div class="mock">Captura del plan</div>
+
+    <!-- HOW -->
+    <section id="how" class="section section-warm">
+      <div class="container">
+
+        <div class="section-heading section-heading-centered">
+          <p class="eyebrow">Cómo funciona</p>
+          <h2>Construye tu alimentación desde piezas simples.</h2>
+          <p>
+            La lógica es clara: alimentos, comidas, plan diario, objetivos y ajustes.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+          <article class="step-card">
+            <div class="step-number">1</div>
+            <h3>Crea alimentos</h3>
+            <p>Registra ingredientes con cantidades y valores nutricionales claros.</p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">2</div>
+            <h3>Arma comidas</h3>
+            <p>Combina alimentos en desayunos, almuerzos, cenas o snacks reutilizables.</p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">3</div>
+            <h3>Organiza tu día</h3>
+            <p>Distribuye comidas dentro de un plan diario y revisa el total acumulado.</p>
+          </article>
+
+          <article class="step-card">
+            <div class="step-number">4</div>
+            <h3>Ajusta con precisión</h3>
+            <p>Modifica alimentos o cantidades hasta acercarte a tus objetivos.</p>
+          </article>
+        </div>
+
       </div>
-
-    </div>
-  </section>
+    </section>
 
 
-  <!-- PHILOSOPHY -->
-  <section class="philosophy">
-    <div class="container philosophy-inner">
+    <!-- SYSTEM -->
+    <section id="system" class="section">
+      <div class="container">
 
-      <h2>La nutrición es comprensión</h2>
+        <div class="section-heading">
+          <p class="eyebrow">Sistema My Scoope</p>
+          <h2>My Scoope ordena tu alimentación como un sistema.</h2>
+          <p>
+            Cada pieza se conecta con la siguiente. Así puedes entender el impacto real
+            de tus decisiones alimentarias.
+          </p>
+        </div>
 
-      <p>
-        My Scoope no está diseñado para que dependas de una aplicación.
-        Su propósito es ayudarte a entender cómo funcionan los alimentos,
-        para que puedas construir tu propio sistema nutricional.
-      </p>
+        <div class="system-diagram">
+          <!--
+            Espacio futuro para diagrama real:
+            <img src="{% static 'img/landing/system-flow.png' %}" alt="Flujo alimentos, comidas, plan diario y objetivo corporal">
+          -->
 
-    </div>
-  </section>
+          <div class="system-node">
+            <span>01</span>
+            <strong>Alimentos</strong>
+            <p>Ingredientes y datos nutricionales.</p>
+          </div>
+
+          <div class="system-connector"></div>
+
+          <div class="system-node">
+            <span>02</span>
+            <strong>Comidas</strong>
+            <p>Preparaciones reutilizables.</p>
+          </div>
+
+          <div class="system-connector"></div>
+
+          <div class="system-node">
+            <span>03</span>
+            <strong>Plan diario</strong>
+            <p>Tu día completo organizado.</p>
+          </div>
+
+          <div class="system-connector"></div>
+
+          <div class="system-node system-node-highlight">
+            <span>04</span>
+            <strong>Objetivo</strong>
+            <p>Calorías, macros y ajustes.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
 
 
-  <!-- CTA -->
-  <section class="cta">
-    <div class="container cta-inner">
+    <!-- METRICS -->
+    <section class="section section-soft">
+      <div class="container split-section split-section-reverse">
 
-      <h2>Empieza a construir tu sistema nutricional</h2>
-      <p>Crea tu primer plan diario en minutos.</p>
+        <div class="section-copy">
+          <p class="eyebrow">Precisión</p>
+          <h2>Ajusta con datos, no con suposiciones.</h2>
+          <p>
+            Cada plan diario te muestra los números que necesitas para evaluar
+            tu alimentación y tomar mejores decisiones.
+          </p>
 
-      <a href="/accounts/login/" class="btn-primary">Comenzar ahora</a>
+          <div class="metric-list">
+            <div>
+              <strong>Calorías totales</strong>
+              <span>Para entender la energía real de tu día.</span>
+            </div>
+            <div>
+              <strong>Proteína</strong>
+              <span>Para revisar si estás cubriendo tus necesidades.</span>
+            </div>
+            <div>
+              <strong>Carbohidratos y grasas</strong>
+              <span>Para evaluar la distribución de tu alimentación.</span>
+            </div>
+            <div>
+              <strong>PPK</strong>
+              <span>Proteína por kilo como métrica avanzada.</span>
+            </div>
+          </div>
+        </div>
 
-    </div>
-  </section>
+        <div class="image-panel">
+          <!--
+            Espacio futuro para screenshot real:
+            <img src="{% static 'img/landing/kpi-dashboard.png' %}" alt="Indicadores nutricionales de My Scoope">
+          -->
+
+          <div class="kpi-preview">
+            <div class="kpi-card">
+              <span>Total kcal</span>
+              <strong>2.450</strong>
+            </div>
+            <div class="kpi-card">
+              <span>Proteína</span>
+              <strong>180 g</strong>
+            </div>
+            <div class="kpi-card">
+              <span>Carbos</span>
+              <strong>260 g</strong>
+            </div>
+            <div class="kpi-card">
+              <span>Grasa</span>
+              <strong>72 g</strong>
+            </div>
+            <div class="kpi-card kpi-card-wide">
+              <span>Distribución</span>
+              <div class="macro-bars">
+                <i style="width: 32%"></i>
+                <i style="width: 46%"></i>
+                <i style="width: 22%"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
 
 
-  <!-- FOOTER -->
+    <!-- AI -->
+    <section id="ai" class="section ai-section">
+      <div class="container split-section">
+
+        <div class="section-copy">
+          <p class="eyebrow">Asistencia IA</p>
+          <h2>Recibe asistencia de tu IA sin perder el control.</h2>
+          <p>
+            My Scoope está diseñado para que una IA pueda analizar tus planes,
+            comparar tus objetivos y generar propuestas de modificación dentro
+            de un entorno seguro.
+          </p>
+          <p>
+            La IA no reemplaza tu criterio. Lo potencia dentro de un sistema medible:
+            la IA propone, tú revisas y tú apruebas.
+          </p>
+        </div>
+
+        <div class="ai-proposal">
+          <!--
+            Espacio futuro para screenshot real:
+            <img src="{% static 'img/landing/ai-proposal.png' %}" alt="Propuesta IA pendiente de revisión">
+          -->
+
+          <div class="proposal-header">
+            <span>Propuesta IA</span>
+            <strong>Pendiente de revisión</strong>
+          </div>
+
+          <div class="proposal-item">
+            <span>1</span>
+            <p>Aumentar proteína en almuerzo para acercarse al objetivo diario.</p>
+          </div>
+
+          <div class="proposal-item">
+            <span>2</span>
+            <p>Reducir grasa en cena para mejorar la distribución del plan.</p>
+          </div>
+
+          <div class="proposal-item">
+            <span>3</span>
+            <p>Ajustar calorías totales manteniendo alimentos preferidos.</p>
+          </div>
+
+          <div class="proposal-actions">
+            <button type="button">Revisar propuesta</button>
+            <button type="button">Descartar</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- USE CASES -->
+    <section class="section">
+      <div class="container">
+
+        <div class="section-heading section-heading-centered">
+          <p class="eyebrow">Casos de uso</p>
+          <h2>Úsalo según tu objetivo.</h2>
+        </div>
+
+        <div class="use-grid">
+          <article class="use-card">
+            <div class="use-image">
+              <span>Imagen</span>
+            </div>
+            <h3>Ganar masa muscular</h3>
+            <p>Construye planes con suficiente energía, proteína y estructura diaria.</p>
+          </article>
+
+          <article class="use-card">
+            <div class="use-image">
+              <span>Imagen</span>
+            </div>
+            <h3>Reducir grasa</h3>
+            <p>Controla calorías sin perder visibilidad sobre tus macros.</p>
+          </article>
+
+          <article class="use-card">
+            <div class="use-image">
+              <span>Imagen</span>
+            </div>
+            <h3>Mantener tu físico</h3>
+            <p>Repite estructuras que funcionan y ajusta cuando sea necesario.</p>
+          </article>
+
+          <article class="use-card">
+            <div class="use-image">
+              <span>Imagen</span>
+            </div>
+            <h3>Ordenar tu alimentación</h3>
+            <p>Convierte comidas sueltas en un sistema diario medible.</p>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- PLANS -->
+    <section id="plans" class="section plans-section">
+      <div class="container">
+
+        <div class="section-heading section-heading-centered">
+          <p class="eyebrow">Planes</p>
+          <h2>Empieza gratis. Escala cuando necesites más potencia.</h2>
+        </div>
+
+        <div class="plans-grid">
+          <article class="plan-card">
+            <div class="plan-card-header">
+              <h3>Free</h3>
+              <span>Actual</span>
+            </div>
+
+            <p class="plan-price">$0</p>
+            <p class="plan-description">
+              Para comenzar a construir y medir tu alimentación.
+            </p>
+
+            <ul>
+              <li>Crear alimentos.</li>
+              <li>Crear comidas.</li>
+              <li>Organizar planes diarios.</li>
+              <li>Revisar calorías y macronutrientes.</li>
+            </ul>
+
+            <a href="/accounts/login/" class="btn btn-primary btn-full">Comenzar gratis</a>
+          </article>
+
+          <article class="plan-card plan-card-featured">
+            <div class="plan-card-header">
+              <h3>Pro</h3>
+              <span>Próximamente</span>
+            </div>
+
+            <p class="plan-price">Por definir</p>
+            <p class="plan-description">
+              Para usuarios que quieran más asistencia, automatización y propuestas inteligentes.
+            </p>
+
+            <ul>
+              <li>Asistencia IA avanzada.</li>
+              <li>Propuestas de modificación.</li>
+              <li>Herramientas para programas.</li>
+              <li>Funciones premium futuras.</li>
+            </ul>
+
+            <a href="/accounts/login/" class="btn btn-secondary btn-full">Crear cuenta</a>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+      <div class="container final-cta-inner">
+        <p class="eyebrow">My Scoope</p>
+        <h2>Deja de improvisar tu alimentación.</h2>
+        <p>Construye un sistema diario que puedas medir, ajustar y mejorar.</p>
+        <a href="/accounts/login/" class="btn btn-primary">Comenzar gratis</a>
+      </div>
+    </section>
+
+  </main>
+
   <footer class="footer">
     <div class="container footer-inner">
       <p>© My Scoope</p>
+
+      <div class="footer-links">
+        <a href="/privacy/">Privacidad</a>
+        <a href="/terms/">Términos</a>
+        <a href="/support/">Soporte</a>
+      </div>
     </div>
   </footer>
 
