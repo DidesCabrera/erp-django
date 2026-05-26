@@ -21,6 +21,7 @@ html,
 body {
   min-height: 100%;
   margin: 0;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -39,7 +40,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100svh;
 }
 
 /* ===== HEADER ===== */
@@ -55,15 +56,15 @@ header {
   width: 100%;
   flex: 1;
   margin-top: 0;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 0;
 }
 
 /* ===== SIDEBAR ===== */
 
 .sidebar {
   width: var(--sidebar-width);
-  height: 100dvh;
+  height: 100vh;
+  height: 100svh;
 
   background-color: var(--surface-sidebar);
   border-right: 1px solid var(--sidebar-edge-border);
@@ -75,7 +76,7 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
+  bottom: auto;
   z-index: 300;
 
   display: flex;
