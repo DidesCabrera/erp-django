@@ -12,7 +12,7 @@
             </div>
 
             <div class="data-grid-cell data-grid-cell--qty">
-                {{ row.rel.quantity|floatformat:0 }}
+                {{ row.rel.quantity|floatformat:0 }} {{ row.rel.quantity_unit }}
             </div>
         </div>
     {% empty %}

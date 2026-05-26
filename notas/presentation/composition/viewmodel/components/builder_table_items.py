@@ -66,6 +66,7 @@ def build_mealfood_table_item(mf):
         "rel": {
             "id": mf.id,
             "quantity": mf.quantity,
+            "quantity_unit": "g",
 
             "name": resolve_food_display_name(food),
 

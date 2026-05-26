@@ -6,7 +6,7 @@
     <thead>
       <tr>
         <th class="food-name-col">Alimentos</th>
-        <th class="qty-col-food-table">g|ml</th>
+        <th class="qty-col-food-table">Cantidad</th>
         <th class="kcal-col-food-table">Kcal</th>
         <th class="grams-col-food-table">P g</th>
         <th class="grams-col-food-table">C g</th>
@@ -23,7 +23,7 @@
       {% for row in items %}
       <tr>
         <td class="food-name-col">{{ row.rel.name }}</td>
-        <td><div class="cell-qty">{{ row.rel.quantity|floatformat:0 }}</div></td>
+        <td><div class="cell-qty">{{ row.rel.quantity|floatformat:0 }} {{ row.rel.quantity_unit }}</div></td>
         <td><div class="cell-kcal">{{ row.rel.total_kcal|floatformat:0 }}</div></td>
         <td>{{ row.rel.g_protein|floatformat:1 }}</td>
         <td>{{ row.rel.g_carbs|floatformat:1 }}</td>

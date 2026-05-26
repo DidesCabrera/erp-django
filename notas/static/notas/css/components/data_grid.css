@@ -333,12 +333,19 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
         color: var(--text-inverted);
         border-color: var(--text-main);
     }
+
+    .card-table-foods-mobile .data-grid-row:not(.data-grid-header) .data-grid-cell--qty {
+        justify-content: flex-end;
+        text-align: right;
+        padding-right: 4px;
+    }
 }
 
 @media (min-width: 981px) {
     .block-mobile-grid-tabs {
         display: none !important;
     }
+    
 }
 
 /* =========================================================

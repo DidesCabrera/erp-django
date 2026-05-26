@@ -54,3 +54,4 @@ class BuilderTableItemsTests(TestCase):
         item = build_mealfood_table_item(meal_food)
 
         self.assertEqual(item["rel"]["name"], "Avena")
+        self.assertEqual(item["rel"]["quantity_unit"], "g")
