@@ -291,19 +291,36 @@ header {
 }
 
 /* =========================
-   MOBILE NAV EXPERIMENT
+   MOBILE NAV
    ========================= */
 
 @media (max-width: 768px) {
 
   .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
     width: 320px;
+    max-width: calc(100vw - 32px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transform: translate3d(-16px, 0, 0);
+    transition:
+      opacity 0.18s ease,
+      visibility 0s linear 0.18s,
+      transform 0.18s ease;
   }
 
   body.sidebar-open .sidebar {
-    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transform: translate3d(0, 0, 0);
+    transition:
+      opacity 0.18s ease,
+      visibility 0s linear 0s,
+      transform 0.18s ease;
   }
 
   .app-content {
@@ -332,14 +349,22 @@ header {
   background: rgba(0, 0, 0, 0.4);
 
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 
-  transition: opacity 0.2s ease;
+  transition:
+    opacity 0.18s ease,
+    visibility 0s linear 0.18s;
 
   z-index: 299;
 }
 
 body.sidebar-open .sidebar-backdrop {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
+
+  transition:
+    opacity 0.18s ease,
+    visibility 0s linear 0s;
 }
