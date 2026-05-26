@@ -22,8 +22,8 @@
 .data-grid-row--foods {
     grid-template-columns:
         minmax(180px, 1.8fr)
-        minmax(56px, 0.7fr)
-        minmax(76px, 0.9fr)
+        minmax(62px, 0.8fr)
+        minmax(80px, 0.1fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
@@ -37,8 +37,8 @@
     grid-template-columns:
         34px
         minmax(150px, 1.8fr)
-        minmax(56px, 0.7fr)
-        minmax(76px, 0.9fr)
+        minmax(62px, 0.8fr)
+        minmax(90px, 1fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
@@ -124,6 +124,7 @@
 .data-grid-col--qty,
 .data-grid-col--kcal,
 .data-grid-col--macro,
+.data-grid-col--alloc,
 .data-grid-cell--time,
 .data-grid-cell--qty,
 .data-grid-cell--kcal,
@@ -133,7 +134,8 @@
 
 .data-grid-cell--alloc {
     min-width: 0;
-    margin-right: 8px;
+    margin-right: 4px;
+    margin-left: 4px;
 }
 
 .alloc-cell--grid {
@@ -339,6 +341,11 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
         text-align: right;
         padding-right: 4px;
     }
+
+    .data-grid-cell--alloc {
+        margin-right: 1px;
+        margin-left: 1px;
+    }
 }
 
 @media (min-width: 981px) {
@@ -513,16 +520,18 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
     color: var(--text-main);
 }
 
-.data-grid-cell--kcal,
-.data-grid-col--kcal {
+.data-grid-cell--kcal {
     padding: 0 8px;
 }
 
-
 @media (max-width: 980px) {
-    .data-grid-cell--kcal,
-    .data-grid-col--kcal {
+
+    .data-grid-cell--kcal {
         padding: 0px 4px 0px 0px;
+    }
+
+    .data-grid-col--kcal {
+        padding-right: 4px;
     }
 }
 

@@ -28,9 +28,6 @@
 
       <div class="dailyplan-detail__children-list">
         {% for child in vm.content.child_cards %}
-          <div class="dpm-mini-card-list">
-            {% include "components/card_mini_dpm.html" with child=child %}
-          </div>
 
           <div class="dailyplan-detail__child-card">
             {% include "components/card_child_meal.html" with child_card=child dpm_meal="dpm_meal" %}

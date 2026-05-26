@@ -48,22 +48,6 @@
     color: var(--text-main);
 }
 
-.page--detail.dpm_meal{
-    border-radius: 22px;
-    margin-top: 0;
-    border-width: 1px;
-}
-
-
-.page--minicard{
-    max-width: 900px;
-    margin: 0 auto;
-    margin-top: 14px;
-}
-
-.page--minicard.edit {
-    margin-top: 32px;
-}
 
 .page.project-page {
     margin-top: -65px;
