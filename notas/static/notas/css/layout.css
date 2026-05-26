@@ -134,16 +134,19 @@ header {
   flex: 1;
 
   margin-left: var(--sidebar-width);
-  margin-top: var(--header-height);
+  margin-top: 0;
+
+  padding-top: var(--header-height);
   padding-bottom: 40px;
 
+  height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
 
+  overscroll-behavior-y: contain;
+
   background-color: var(--surface-app);
   color: var(--text-main);
-
-  overscroll-behavior-y: contain;
 }
 
 .sidebar-group {
@@ -308,8 +311,10 @@ header {
   }
 
   .app-content {
-    margin-top: 54px;
     margin-left: 0;
+    margin-top: 0;
+    padding-top: 54px;
+    height: 100vh;
   }
 
   .nav-tab.tab-list .nav-text,
