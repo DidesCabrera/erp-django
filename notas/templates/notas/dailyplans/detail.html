@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<div class="page page--detail {% if meal_picker_data_json and meal_picker_data_json != '{}' %}edit{% endif %}" data-page="dailyplan-detail">
+<div class="page page--detail has-collapsible-panels {% if meal_picker_data_json and meal_picker_data_json != '{}' %}edit{% endif %}" data-page="dailyplan-detail">
 
   {% if meal_picker_data_json and meal_picker_data_json != "{}" %}
     {% include "components/card_main_dailyplan_edit.html" with main_card=vm.content.main_card %}
@@ -49,7 +49,6 @@
 
 </div>
 
-<script src="{% static 'notas/js/collapse_cards.js' %}"></script>
 <script src="{% static 'notas/js/dpm_sortable.js' %}"></script>
 
 {% endblock %}

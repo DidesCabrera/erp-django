@@ -4,6 +4,18 @@
 }
 
 /* =========================
+   PANEL PAGE HYDRATION
+   ========================= */
+
+.page--detail.has-collapsible-panels {
+  opacity: 0;
+}
+
+.page--detail.has-collapsible-panels.is-panels-ready {
+  opacity: 1;
+}
+
+/* =========================
    PANEL TAB WRAPPERS
    ========================= */
 
