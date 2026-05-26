@@ -115,8 +115,8 @@ def dailyplan_meal_detail(request, dailyplan_id, pk):
         back_config={
             "type": "url",
             "value": reverse(
-                "dailyplan_meal_detail",
-                args=[page.dailyplan.id, page.dpm.id],
+                "dailyplan_detail",
+                args=[page.dailyplan.id],
             ),
         },
     )

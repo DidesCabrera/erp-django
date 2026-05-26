@@ -44,7 +44,7 @@ class DailyPlanMealNavigationTests(TestCase):
             order=1,
         )
 
-    def test_dailyplan_meal_detail_sets_back_url_to_dpm_detail(self):
+    def test_dailyplan_meal_detail_sets_back_url_to_parent_dailyplan(self):
         response = self.client.get(
             reverse(
                 "dailyplan_meal_detail",
@@ -55,8 +55,8 @@ class DailyPlanMealNavigationTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         expected_back_url = reverse(
-            "dailyplan_meal_detail",
-            args=[self.dailyplan.id, self.dpm.id],
+            "dailyplan_detail",
+            args=[self.dailyplan.id],
         )
 
         self.assertEqual(
