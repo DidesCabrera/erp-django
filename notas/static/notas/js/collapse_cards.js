@@ -115,28 +115,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const hideButtons = Array.from(
       detailBlock.querySelectorAll("[data-panel-action='hide']")
     );
-  
+
     const isHiddenState = activeKey === HIDDEN_PANEL_KEY;
     const iconName = isHiddenState ? "chevron-right" : "chevron-down";
-  
+
     hideButtons.forEach((button) => {
       const icon = button.querySelector("[data-lucide]");
-  
+
       if (!icon) return;
-  
+
       icon.setAttribute("data-lucide", iconName);
     });
-  
+
     if (window.lucide) {
       window.lucide.createIcons();
     }
   }
-  
+
   function syncButtons(detailBlock, activeKey) {
     getButtons(detailBlock).forEach((button) => {
       button.classList.toggle("is-active", getButtonKey(button) === activeKey);
     });
-  
+
     syncHideButtonIcon(detailBlock, activeKey);
   }
 
@@ -215,12 +215,31 @@ document.addEventListener("DOMContentLoaded", function () {
     return null;
   }
 
+  function getConfiguredDefaultSelector(detailBlock) {
+    if (isMobileViewport()) {
+      return detailBlock.dataset.defaultMobile || null;
+    }
+
+    return detailBlock.dataset.defaultDesktop || null;
+  }
+
   function getDefaultKey(detailBlock) {
     const viewportButtons = getButtonsForViewport(detailBlock);
     if (!viewportButtons.length) return null;
 
     const requestedSelector = getRequestedSelector(detailBlock);
     if (requestedSelector) return requestedSelector;
+
+    const configuredDefaultSelector = getConfiguredDefaultSelector(detailBlock);
+    const configuredDefaultButton = configuredDefaultSelector
+      ? viewportButtons.find(
+          (button) => button.dataset.target === configuredDefaultSelector
+        )
+      : null;
+
+    if (configuredDefaultButton) {
+      return getButtonKey(configuredDefaultButton);
+    }
 
     const activeButton =
       viewportButtons.find((button) => button.classList.contains("is-active")) ||
