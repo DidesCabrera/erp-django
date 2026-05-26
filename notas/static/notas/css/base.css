@@ -1,19 +1,29 @@
 /* --- Reset suave --- */
 
+html {
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                Inter, Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100%;
   margin: 0;
   padding: 0;
-  padding-bottom: 40px;
+  overflow-x: hidden;
   background-color: var(--surface-app);
   color: var(--text-main);
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 main {
-  top: 0;
-  left: 0;
-  right: 0;
+  display: block;
 }
 
 /* --- Tipografía --- */
@@ -83,13 +93,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* --- Utilities --- */
-
-.truncate {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
+/* --- Forms --- */
 
 input {
   width: 100%;
@@ -100,4 +104,12 @@ textarea,
 select,
 button {
   font-size: 16px;
+}
+
+/* --- Utilities --- */
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
