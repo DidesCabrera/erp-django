@@ -19,12 +19,12 @@ html[data-theme="dark"] {
 
 html,
 body {
-  min-height: 100%;
+  height: 100%;
   margin: 0;
 }
 
 body {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 *,
@@ -38,7 +38,8 @@ body {
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 /* ===== HEADER ===== */
@@ -53,8 +54,8 @@ header {
   display: flex;
   width: 100%;
   flex: 1;
-  margin-top: 0;
   min-height: 0;
+  overflow: hidden;
 }
 
 /* ===== SIDEBAR ===== */
@@ -92,6 +93,7 @@ header {
   padding-right: 2px;
 
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 /* ===== SIDEBAR NAV ===== */
@@ -136,13 +138,19 @@ header {
   min-width: 0;
 
   margin-left: var(--sidebar-width);
-  padding-top: var(--header-height);
+  margin-top: var(--header-height);
+
+  height: calc(100% - var(--header-height));
   padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
 
-  overflow: visible;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   background-color: var(--surface-app);
   color: var(--text-main);
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: auto;
 }
 
 .sidebar-group {
@@ -297,35 +305,22 @@ header {
 @media (max-width: 768px) {
 
   .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
     width: 320px;
     max-width: calc(100vw - 32px);
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-
-    transform: translate3d(-16px, 0, 0);
-    transition:
-      opacity 0.18s ease,
-      visibility 0s linear 0.18s,
-      transform 0.18s ease;
   }
 
   body.sidebar-open .sidebar {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-
-    transform: translate3d(0, 0, 0);
-    transition:
-      opacity 0.18s ease,
-      visibility 0s linear 0s,
-      transform 0.18s ease;
+    transform: translateX(0);
   }
 
   .app-content {
-    padding-top: 54px;
     margin-left: 0;
+    margin-top: 54px;
+
+    height: calc(100% - 54px);
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .nav-tab.tab-list .nav-text,
@@ -349,22 +344,14 @@ header {
   background: rgba(0, 0, 0, 0.4);
 
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
 
-  transition:
-    opacity 0.18s ease,
-    visibility 0s linear 0.18s;
+  transition: opacity 0.2s ease;
 
   z-index: 299;
 }
 
 body.sidebar-open .sidebar-backdrop {
   opacity: 1;
-  visibility: visible;
   pointer-events: auto;
-
-  transition:
-    opacity 0.18s ease,
-    visibility 0s linear 0s;
 }
