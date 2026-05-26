@@ -23,7 +23,7 @@
     grid-template-columns:
         minmax(180px, 1.8fr)
         minmax(56px, 0.7fr)
-        minmax(56px, 0.7fr)
+        minmax(76px, 0.9fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
@@ -38,7 +38,7 @@
         34px
         minmax(150px, 1.8fr)
         minmax(56px, 0.7fr)
-        minmax(56px, 0.7fr)
+        minmax(76px, 0.9fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
         minmax(56px, 0.7fr)
@@ -53,7 +53,7 @@
 .data-grid-row--meals {
     grid-template-columns:
         minmax(180px, 1.6fr)
-        minmax(60px, 0.65fr)
+        minmax(80px, 0.85fr)
         minmax(60px, 0.65fr)
         minmax(60px, 0.65fr)
         minmax(60px, 0.65fr)
@@ -67,7 +67,7 @@
     grid-template-columns:
         34px
         minmax(140px, 1.6fr)
-        minmax(60px, 0.65fr)
+        minmax(80px, 1fr)
         minmax(60px, 0.65fr)
         minmax(60px, 0.65fr)
         minmax(60px, 0.65fr)
@@ -355,8 +355,8 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
 .data-grid-header--mobile-macros,
 .data-grid-row--mobile-macros {
     grid-template-columns:
-        minmax(140px, 1.8fr)
-        minmax(30px, 1fr)
+        minmax(140px, 1.6fr)
+        minmax(45px, 1.3fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr);
@@ -365,7 +365,7 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
 .data-grid-header--mobile-alloc,
 .data-grid-row--mobile-alloc {
     grid-template-columns:
-        minmax(140px, 1.8fr)
+        minmax(140px, 1.6fr)
         minmax(40px, 1fr)
         minmax(40px, 1fr)
         minmax(40px, 1fr);
@@ -382,8 +382,8 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
 .data-grid-header--mobile-foods-macros,
 .data-grid-row--mobile-foods-macros {
     grid-template-columns:
-        minmax(140px, 1.8fr)
-        minmax(30px, 1fr)
+        minmax(140px, 1.6fr)
+        minmax(45px, 1.3fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr)
         minmax(30px, 1fr);
@@ -392,7 +392,7 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
 .data-grid-header--mobile-foods-alloc,
 .data-grid-row--mobile-foods-alloc {
     grid-template-columns:
-        minmax(140px, 1.8fr)
+        minmax(140px, 1.6fr)
         minmax(40px, 1fr)
         minmax(40px, 1fr)
         minmax(40px, 1fr);
@@ -511,6 +511,19 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
 .data-grid-cell--foods,
 .data-grid-meal-name {
     color: var(--text-main);
+}
+
+.data-grid-cell--kcal,
+.data-grid-col--kcal {
+    padding: 0 8px;
+}
+
+
+@media (max-width: 980px) {
+    .data-grid-cell--kcal,
+    .data-grid-col--kcal {
+        padding: 0px 4px 0px 0px;
+    }
 }
 
 .data-grid-empty {
