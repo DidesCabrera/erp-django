@@ -924,6 +924,15 @@ class MealFood(models.Model):
             "fat": self.alloc_fat,
         }
 
+    @property
+    def kcal_share(self):
+        total = self.meal.total_kcal
+        if not total or total <= 0:
+            return 0.0
+        return self.total_kcal / total * 100
+
+    
+
 
 # ==================================================
 # DAILY PLAN + PROGRAM
@@ -1133,6 +1142,14 @@ class DailyPlanMeal(models.Model):
             "carbs": self.alloc_carbs,
             "fat": self.alloc_fat,
         }
+
+    @property
+    def kcal_share(self):
+        total = self.dailyplan.total_kcal
+        if not total or total <= 0:
+            return 0.0
+        return self.total_kcal / total * 100
+
 
 
 # ==================================================

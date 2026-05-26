@@ -15,7 +15,7 @@
             </div>
 
             <div class="data-grid-cell data-grid-cell--kcal">
-                {{ row.rel.total_kcal|floatformat:0 }}
+                {% include "components/grid_kcal_share_item.html" with value=row.rel.kcal_share kcal=row.rel.total_kcal %}
             </div>
 
             <div class="data-grid-cell data-grid-cell--macro">

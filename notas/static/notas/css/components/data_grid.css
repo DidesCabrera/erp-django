@@ -545,3 +545,44 @@ html[data-theme="dark"] .js-mealfood-sortable-row.is-dragging {
     background: rgba(255, 255, 255, 0.055);
 }
 
+
+/* =========================================================
+   Kcal share cell
+   ========================================================= */
+
+.kcal-share-cell {
+  position: relative;
+  isolation: isolate;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 22px;
+  width: 100%;
+
+  overflow: hidden;
+
+  border-radius: 6px;
+  background: var(--alloc-cell-bg);
+}
+
+.kcal-share-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: -1;
+
+  width: calc(min(max(var(--kcal-share, 0), 0), 100) * 1%);
+
+  background: var(--kpi-total-border);
+}
+
+.kcal-share-text {
+  position: relative;
+  z-index: 1;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+}

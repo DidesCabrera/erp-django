@@ -33,6 +33,8 @@ def build_dailyplanmeal_table_item(dpm):
             "name": meal.name,
 
             "total_kcal": meal_total_kcal,
+            "kcal_share": dpm.kcal_share,
+
             "g_protein": meal_protein,
             "g_carbs": meal_carbs,
             "g_fat": meal_fat,
@@ -71,6 +73,8 @@ def build_mealfood_table_item(mf):
             "name": resolve_food_display_name(food),
 
             "total_kcal": mf_total_kcal,
+            "kcal_share": mf.kcal_share,
+
             "g_protein": mf_protein,
             "g_carbs": mf_carbs,
             "g_fat": mf_fat,
@@ -78,5 +82,5 @@ def build_mealfood_table_item(mf):
             "alloc_protein": mf_alloc["protein"],
             "alloc_carbs": mf_alloc["carbs"],
             "alloc_fat": mf_alloc["fat"],
-        },
+        }
     }
