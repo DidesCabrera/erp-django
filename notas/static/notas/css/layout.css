@@ -21,7 +21,6 @@ html,
 body {
   min-height: 100%;
   margin: 0;
-  overscroll-behavior-y: none;
 }
 
 body {
@@ -39,8 +38,7 @@ body {
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  min-height: 100svh;
+  min-height: 100%;
 }
 
 /* ===== HEADER ===== */
@@ -63,8 +61,6 @@ header {
 
 .sidebar {
   width: var(--sidebar-width);
-  height: 100vh;
-  height: 100svh;
 
   background-color: var(--surface-sidebar);
   border-right: 1px solid var(--sidebar-edge-border);
@@ -76,7 +72,7 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: auto;
+  bottom: 0;
   z-index: 300;
 
   display: flex;
@@ -87,13 +83,15 @@ header {
 }
 
 .sidebar-scroll-region {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-height: 0;
 
   overflow-y: auto;
   overflow-x: hidden;
 
   padding-right: 2px;
+
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ===== SIDEBAR NAV ===== */
