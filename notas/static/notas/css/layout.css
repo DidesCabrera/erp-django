@@ -19,7 +19,7 @@ html[data-theme="dark"] {
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
 }
 
@@ -38,7 +38,8 @@ body {
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ===== HEADER ===== */
@@ -54,7 +55,8 @@ header {
   width: 100%;
   flex: 1;
   margin-top: 0;
-  min-height: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ===== SIDEBAR ===== */
@@ -132,18 +134,16 @@ header {
 
 .app-content {
   flex: 1;
+  min-width: 0;
 
   margin-left: var(--sidebar-width);
-  margin-top: var(--header-height);
-  padding-bottom: 40px;
+  padding-top: var(--header-height);
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
 
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: visible;
 
   background-color: var(--surface-app);
   color: var(--text-main);
-
-  overscroll-behavior-y: contain;
 }
 
 .sidebar-group {
@@ -308,7 +308,7 @@ header {
   }
 
   .app-content {
-    margin-top: 54px;
+    padding-top: 54px;
     margin-left: 0;
   }
 

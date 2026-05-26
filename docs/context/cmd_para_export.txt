@@ -30,20 +30,25 @@ source /Users/felipedides/Desktop/proyecto_django/venv/bin/activate
 
 python manage.py runserver
 
-cd proyecto_django
-python manage.py runserver
+--- 
+
+git add .
+git commit -m "Mejora Scroll Mobile"
+git push origin main
+
+--- 
+
+
+git branch --show-current
 
 git status
 git checkout main
-git pull origin main
+git push origin main
+
 
 git ls-files | grep "notas/actions"
 
-git branch --show-current
-git status
-git add .
-git commit -m "Ultima version estable previo a pruebas con codex"
-git push origin main
+
 git log --oneline -n 5 #ver ultimos commit
 git checkout -b feature/ux-improvements #crear nuevo branch
 
@@ -250,3 +255,26 @@ https://www.myscoope.com
 
 
 
+
+
+
+This usually means your organization verification status hasn’t propagated to the API/app submission flow yet or you’re submitting under a different org/key.
+
+Please try:
+
+Wait up to 30 minutes for the status to update
+
+Generate a new API key (old keys can keep the “not verified” state)
+
+Refresh, log out/in, and confirm you’re on the correct organization in Platform settings
+
+If it still shows “not verified,” tell me: are you submitting via platform.openai.com (API) or publishing a GPT in ChatGPT, and what exact error text do you see?
+
+
+
+
+
+
+test_core_food_seed_service.py
+
+test_apply_core_food_seed_command.py
