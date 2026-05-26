@@ -19,7 +19,7 @@ html[data-theme="dark"] {
 
 html,
 body {
-  min-height: 100%;
+  height: 100%;
   margin: 0;
 }
 
@@ -38,7 +38,7 @@ body {
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 100vh;
 }
 
 /* ===== HEADER ===== */
@@ -61,6 +61,7 @@ header {
 
 .sidebar {
   width: var(--sidebar-width);
+  height: 100dvh;
 
   background-color: var(--surface-sidebar);
   border-right: 1px solid var(--sidebar-edge-border);
@@ -83,15 +84,13 @@ header {
 }
 
 .sidebar-scroll-region {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0;
 
   overflow-y: auto;
   overflow-x: hidden;
 
   padding-right: 2px;
-
-  -webkit-overflow-scrolling: touch;
 }
 
 /* ===== SIDEBAR NAV ===== */
@@ -133,16 +132,18 @@ header {
 
 .app-content {
   flex: 1;
-  min-width: 0;
 
   margin-left: var(--sidebar-width);
-  padding-top: var(--header-height);
-  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  margin-top: var(--header-height);
+  padding-bottom: 40px;
 
-  overflow: visible;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   background-color: var(--surface-app);
   color: var(--text-main);
+
+  overscroll-behavior-y: contain;
 }
 
 .sidebar-group {
@@ -291,40 +292,23 @@ header {
 }
 
 /* =========================
-   MOBILE NAV
+   MOBILE NAV EXPERIMENT
    ========================= */
 
 @media (max-width: 768px) {
 
   .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
     width: 320px;
-    max-width: calc(100vw - 32px);
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-
-    transform: translate3d(-16px, 0, 0);
-    transition:
-      opacity 0.18s ease,
-      visibility 0s linear 0.18s,
-      transform 0.18s ease;
   }
 
   body.sidebar-open .sidebar {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-
-    transform: translate3d(0, 0, 0);
-    transition:
-      opacity 0.18s ease,
-      visibility 0s linear 0s,
-      transform 0.18s ease;
+    transform: translateX(0);
   }
 
   .app-content {
-    padding-top: 54px;
+    margin-top: 54px;
     margin-left: 0;
   }
 
@@ -349,22 +333,14 @@ header {
   background: rgba(0, 0, 0, 0.4);
 
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
 
-  transition:
-    opacity 0.18s ease,
-    visibility 0s linear 0.18s;
+  transition: opacity 0.2s ease;
 
   z-index: 299;
 }
 
 body.sidebar-open .sidebar-backdrop {
   opacity: 1;
-  visibility: visible;
   pointer-events: auto;
-
-  transition:
-    opacity 0.18s ease,
-    visibility 0s linear 0s;
 }
