@@ -43,10 +43,10 @@ header {
   width: var(--sidebar-width);
 
   background-color: var(--surface-sidebar);
-  border-right: 1px solid var(--sidebar-edge-border);
+  border-right: 1px solid var(--panel-row-separator);
   color: var(--sidebar-text-active);
 
-  padding: 12px;
+  padding: 4px 12px 12px 12px;
   box-sizing: border-box;
 
   position: fixed;
@@ -283,6 +283,7 @@ header {
     transition: transform 0.25s ease;
     width: 320px;
     max-width: calc(100vw - 32px);
+    padding-top: 2px;
   }
 
   body.sidebar-open .sidebar {
