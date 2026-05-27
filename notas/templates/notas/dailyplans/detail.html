@@ -28,9 +28,15 @@
 
       <div class="dailyplan-detail__children-list">
         {% for child in vm.content.child_cards %}
-
-          <div class="dailyplan-detail__child-card">
-            {% include "components/card_child_meal.html" with child_card=child dpm_meal="dpm_meal" %}
+          <div class="dailyplan-detail__meal-step">
+            <div class="dailyplan-detail__meal-step-marker" aria-hidden="true">
+              <span class="dailyplan-detail__meal-step-line"></span>
+              <span class="dailyplan-detail__meal-step-number">{{ forloop.counter }}</span>
+            </div>
+        
+            <div class="dailyplan-detail__child-card">
+              {% include "components/card_child_meal.html" with child_card=child dpm_meal="dpm_meal" %}
+            </div>
           </div>
         {% empty %}
           <p>No meals added yet.</p>
