@@ -3,7 +3,7 @@
   color: var(--text-main);
   border: 1px solid var(--border-soft);
   border-radius: 18px;
-  margin: 12px -8px;
+  margin: 12px 0px;
 }
 
 .section_picker.is-collapsed {
@@ -36,20 +36,19 @@
 .selector-list {
   display: none;
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  top: 36px;
+  left: -16px;
+  right: -16px;
   background: var(--surface-elevated);
   color: var(--text-main);
-  border: 1px solid var(--border-soft);
-  border-radius: 6px;
+  border: 1px solid var(--panel-row-separator);
+  border-radius: 18px;
   max-height: 340px;
   overflow-y: auto;
   padding: 0;
   margin: 4px 0 0;
   list-style: none;
   z-index: 250;
-  box-shadow: var(--shadow-elevated);
 }
 
 p.h3-table {
@@ -503,6 +502,10 @@ p.h3-table2 {
 
   .actions-row {
     padding: 8px 12px 20px 12px;
+  }
+
+  .section_picker {
+    margin: 12px -8px;
   }
 }
 
@@ -1115,5 +1118,27 @@ p.h3-table2 {
     .picker-item-badge {
       font-size: 11px;
       padding: 3px 7px;
+    }
+  }
+
+
+
+/* =========================================================
+   Desktop picker dropdown width
+   ========================================================= */
+
+   @media (min-width: 981px) {
+    .add-row .selector {
+      position: relative;
+      overflow: visible;
+    }
+  
+    .add-row .selector-list {
+      top: 40px;
+      left: -12px;
+      right: auto;
+  
+      width: min(816px, calc(100vw - var(--sidebar-width) - 360px));
+      max-width: calc(100vw - var(--sidebar-width) - 360px);
     }
   }

@@ -1,14 +1,10 @@
 import { getFoodKcal } from "./food_math.js";
-import { renderAllocBar } from "./alloc_bar_component.js";
-
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+import {
+  escapeHtml,
+  renderPickerResultBadges,
+  renderPickerResultKpis,
+  renderPickerResultTitle,
+} from "./picker_result_components.js";
 
 function getFoodDisplayName(food) {
   return food?.display_name || food?.name || "";
@@ -106,60 +102,34 @@ function buildBadges(food) {
   return badges;
 }
 
-function renderFoodBadges(food) {
-  const badges = buildBadges(food);
-
-  if (!badges.length) return "";
-
-  return `
-    <div class="picker-item-badges" aria-label="Características del alimento">
-      ${badges.map(badge => `
-        <span class="picker-item-badge picker-item-badge--${escapeHtml(badge.modifier)}">
-          ${escapeHtml(badge.label)}
-        </span>
-      `).join("")}
-    </div>
-  `;
-}
-
 export function renderFoodItem(food) {
   if (!food || !food.name) return "";
 
   const displayName = getFoodDisplayName(food);
   const kcal = getFoodKcal(food);
 
-  const proteinPct = food.alloc?.protein ?? 0;
-  const carbsPct = food.alloc?.carbs ?? 0;
-  const fatPct = food.alloc?.fat ?? 0;
-
   return `
-    <div class="picker-item">
+    <div class="picker-item picker-result picker-result--food">
 
-      <div class="picker-item-header">
-        <div class="picker-item-name">${escapeHtml(displayName)}</div>
-        <div class="picker-item-unit">100g</div>
+      ${renderPickerResultTitle({
+        name: displayName,
+        subtitle: shouldShowOriginalName(food) ? food.name : "",
+        icon: "carrot",
+        iconClass: "food",
+        badges: buildBadges(food),
+      })}
+
+      <div class="picker-result__unit">
+        100g
       </div>
 
-      ${shouldShowOriginalName(food) ? `
-        <div class="picker-item-original-name">
-          ${escapeHtml(food.name)}
-        </div>
-      ` : ""}
-
-      ${renderFoodBadges(food)}
-
-      <div class="picker-item-meta">
-        ${kcal} kcal ·
-        P ${Math.round(food.protein ?? 0)}g ·
-        C ${Math.round(food.carbs ?? 0)}g ·
-        F ${Math.round(food.fat ?? 0)}g
-      </div>
-
-      <div class="picker-alloc-group">
-        ${renderAllocBar({ value: proteinPct, kind: "protein", kind2: "P" })}
-        ${renderAllocBar({ value: carbsPct, kind: "carbs", kind2: "C" })}
-        ${renderAllocBar({ value: fatPct, kind: "fat", kind2: "F" })}
-      </div>
+      ${renderPickerResultKpis({
+        kcal,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat,
+        alloc: food.alloc,
+      })}
 
     </div>
   `;

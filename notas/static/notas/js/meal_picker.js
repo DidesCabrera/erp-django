@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         const li = document.createElement("li");
-        li.className = "food-item";
+        li.className = "picker-list-item meal-item";
         li.innerHTML = renderMealItem(meal);
 
         li.addEventListener("click", () => {

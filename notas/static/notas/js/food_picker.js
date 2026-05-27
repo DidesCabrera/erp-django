@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!food || !food.name) return;
 
       const li = document.createElement("li");
-      li.className = "food-item";
+      li.className = "picker-list-item food-item";
       li.innerHTML = renderFoodItem(food);
 
       li.addEventListener("click", () => {
