@@ -34,13 +34,13 @@
     font-size: 12px;
     padding: 3px 8px;
     margin: 0;
-    border-radius: 6px;
+    border-radius: 7px;
     color: var(--sidebar-text-active);
     font-weight: 400;
     background-color: rgb(57, 57, 57);
 
     position: absolute;
-    top: 12px;
+    top: 14px;
     right: 12px;
 }
 
