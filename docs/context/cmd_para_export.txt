@@ -33,9 +33,12 @@ python manage.py runserver
 --- 
 
 git add .
-git commit -m "Mejora Scroll Mobile"
+git commit -m "Mejoras menores CSS v2"
 git push origin main
 
+git add .
+git commit -m "Prueba 1 resize profile card en sidebar 4"
+git push origin main
 --- 
 
 

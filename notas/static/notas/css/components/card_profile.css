@@ -40,13 +40,14 @@
     background-color: rgb(57, 57, 57);
 
     position: absolute;
-    top: 14px;
+    top: 12px;
     right: 12px;
 }
 
 .personal-metrics {
     height: 34px;
     width: 86px;
+    margin-left: -2px;
     border-radius: 10px;
     background-color:  rgb(57, 57, 57);
     position: relative;
@@ -104,7 +105,7 @@
 @media (max-width: 768px) {
 
     .user-block {
-        height: 115px;
+        height: 118px;
     }
 
 
