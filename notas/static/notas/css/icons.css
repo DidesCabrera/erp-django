@@ -574,6 +574,13 @@
       width: 18px;
     }
 
+    .profile-icon {
+      height: 26px;
+      width: 26px;
+      flex-shrink: 0;
+      color: #ffffff;
+      stroke-width: 1.5;
+    }
 
   }
 

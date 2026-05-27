@@ -17,6 +17,12 @@
 
 @media (max-width: 768px) {
 
+    .brand-logo {
+        width: 140px;
+        padding-top: 0px;
+        margin-left: 6px;
+    }
+
     .collapse-sidebar-btn {
         background: none;
         border: none;
@@ -44,7 +50,7 @@
 }
 
 .user-block {
-    height: 100px;
+    height: 110px;
     padding: 14px 14px;
     padding-bottom: 15px;
     background-color: var(--surface-card-profile-sidebar);
@@ -329,5 +335,9 @@ body.sidebar-collapsed .sidebar-ai-panel {
 
     .sidebar-ai-panel__title {
         font-size: 14px;
+    }
+
+    .user h2 {
+        font-size: 28px;
     }
 }

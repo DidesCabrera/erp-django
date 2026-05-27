@@ -25,9 +25,7 @@
   </div> 
 
   <div class="icons-title">
-    <div class="label-entity label-entity--{{ titulo.label|lower|cut:" " }}">
-      <i data-lucide="{{ titulo.icon }}" class="card-icon"></i>
-    </div>
+      <i data-lucide="{{ titulo.icon }}" class="home-section-header-icon {{ titulo.label|lower|cut:" " }}"></i>
     
     {% if titulo.category_badge %}
       <div
