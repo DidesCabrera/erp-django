@@ -262,11 +262,6 @@ header {
   --tab-color: var(--color-protein);
 }
 
-.personal-metrics {
-  font-size: 20px;
-  font-weight: 300;
-  color: var(--sidebar-text);
-}
 
 .group-name-sidebar {
   margin-left: 8px;

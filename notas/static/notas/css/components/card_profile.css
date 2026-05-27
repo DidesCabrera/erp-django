@@ -1,0 +1,123 @@
+  
+.user-block {
+    height: 102px;
+    padding: 14px 14px;
+    padding-bottom: 15px;
+    background-color: var(--surface-card-profile-sidebar);
+    border-radius: 18px;
+    position: relative;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.user h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--sidebar-text-active);
+}
+
+.user p {
+    font-size: 13px;
+    font-weight: 300;
+    margin: 0;
+    padding-right: 10px;
+    color: var(--sidebar-text);
+}
+
+.label-rol {
+    font-size: 12px;
+    padding: 3px 8px;
+    margin: 0;
+    border-radius: 6px;
+    color: var(--sidebar-text-active);
+    font-weight: 400;
+    background-color: rgb(57, 57, 57);
+
+    position: absolute;
+    top: 14px;
+    right: 12px;
+}
+
+.personal-metrics {
+    height: 34px;
+    width: 86px;
+    border-radius: 10px;
+    background-color:  rgb(57, 57, 57);
+    position: relative;
+}
+
+  /* =========================
+     User / profile icons
+     ========================= */
+  
+     .profile-icon {
+        height: 20px;
+        width: 20px;
+        flex-shrink: 0;
+        color: #ffffff;
+        stroke-width: 1.5;
+      }
+    
+      .sidebar-weight-icon {
+        height: 14px;
+        width: 14px;
+        flex-shrink: 0;
+        color: white;
+        stroke-width: 1.5;
+    
+        position: absolute;
+        top: 8px;
+        left: 8px;
+      }
+      
+      .weight-sidebar{
+        font-size: 16px;
+        font-weight: 250;
+        color: white;
+    
+        position: absolute;
+        top: 7px;
+        right: 10px;
+      }
+    
+    
+      .enter-user-icon {
+        height: 18px;
+        width: 18px;
+        flex-shrink: 0;
+        color: #ffffff;
+        stroke-width: 1.5;
+      
+        position: absolute;
+        bottom: 14px;
+        right: 12px;
+      }
+
+
+      
+@media (max-width: 768px) {
+
+    .user-block {
+        height: 115px;
+    }
+
+
+    .user h2 {
+        font-size: 28px;
+    }
+
+    .weight-sidebar{
+        font-size: 18px;
+    }
+
+    .personal-metrics {
+        height: 36px;
+        width: 90px;
+    }
+}

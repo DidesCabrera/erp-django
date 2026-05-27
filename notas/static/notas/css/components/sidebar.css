@@ -49,67 +49,8 @@
     align-items: center;
 }
 
-.user-block {
-    height: 110px;
-    padding: 14px 14px;
-    padding-bottom: 15px;
-    background-color: var(--surface-card-profile-sidebar);
-    border-radius: 18px;
-    position: relative;
-}
 
-.user {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 10px;
-}
 
-.user h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 400;
-    color: var(--sidebar-text-active);
-}
-
-.user p {
-    font-size: 13px;
-    font-weight: 300;
-    margin: 0;
-    padding-right: 10px;
-    color: var(--sidebar-text);
-}
-
-.user input {
-    padding: 3px 4px;
-    width: 30px;
-    text-align: center;
-    background-color: var(--color-qty);
-    border-radius: 5px;
-    color: #000;
-    font-weight: 1000;
-    border: 0;
-    margin: 0 20x;
-}
-
-.label-rol {
-    font-size: 12px;
-    padding: 1px 6px;
-    margin: 0;
-    border-radius: 3px;
-    color: var(--sidebar-text-active);
-    font-weight: 400;
-    background-color: rgb(57, 57, 57);
-}
-
-.btn-weight {
-    background-color: var(--color-qty);
-    border-radius: 5px;
-    border-width: 0;
-    height: 22px;
-    font-weight: 600;
-    color: black;
-}
 
 .sidebar-group-head {
     display: flex;
@@ -335,9 +276,5 @@ body.sidebar-collapsed .sidebar-ai-panel {
 
     .sidebar-ai-panel__title {
         font-size: 14px;
-    }
-
-    .user h2 {
-        font-size: 28px;
     }
 }
