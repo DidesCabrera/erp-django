@@ -185,6 +185,16 @@ gap: 4px;
 line-height: 1;
 }
 
+.structural-icon{
+  width: 13px;
+  height: 13px;
+  display: block;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  stroke-width: 2;
+  color: var(--text-muted);
+}
+
 .structural-divider {
 width: 1px;
 height: 12px;
@@ -218,7 +228,7 @@ margin: 0;
   gap: 6px;
 }
 
-.structural-indicators .card-icon.main {
+.structural-icon.main {
   width: 12px;
   height: 12px;
   stroke-width: 2.5;

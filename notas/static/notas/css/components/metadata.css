@@ -9,6 +9,16 @@
     margin-left: 5px;
     margin-top: 0;
     margin-bottom: 0;
+    color: var(--text-muted);
+}
+
+.metadata-icon {
+    padding: 0;
+    height: 16px;
+    width: 16px;
+    stroke-width: 1.8;
+    flex-shrink: 0;
+    color: var(--text-muted);
 }
 
 .page-metadata{
@@ -27,7 +37,13 @@
 
 
 @media (max-width: 768px) {
-.metadata p{
-    font-size: 14px;
-}
+    
+    .metadata p{
+        font-size: 16px;
+    }
+    
+    .metadata-icon {
+        height: 18px;
+        width: 18px;
+    }
 }

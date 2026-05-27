@@ -339,7 +339,7 @@ body.is-mealfood-sorting .js-mealfood-sortable-row {
     .card-table-foods-mobile .data-grid-row:not(.data-grid-header) .data-grid-cell--qty {
         justify-content: flex-end;
         text-align: right;
-        padding-right: 4px;
+        padding-right: 8px;
     }
 
     .data-grid-cell--alloc {

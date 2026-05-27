@@ -82,7 +82,7 @@
     height: 18px;
     width: 18px;
     margin: 0 4px;
-    stroke-width: 2;
+    stroke-width: 1.5;
     flex-shrink: 0;
     color: var(--text-main);
   }
@@ -95,7 +95,7 @@
     width: 18px;
     color: var(--text-main);
     flex-shrink: 0;
-    stroke-width: 2;
+    stroke-width: 1.5;
   }
   
   .header-action-icon {
@@ -327,7 +327,7 @@
     width: 22px;
     color: var(--text-main);
     flex-shrink: 0;
-    stroke-width: 2;
+    stroke-width: 1.5;
   }
   
   .collapse-list-icon {
@@ -339,17 +339,8 @@
   }
   
   /* =========================
-     Metadata / page / table icons
+     page / table icons
      ========================= */
-  
-  .metadata-icon {
-    padding: 0;
-    height: 16px;
-    width: 16px;
-    stroke-width: 1.8;
-    flex-shrink: 0;
-    color: var(--text-main);
-  }
   
   .page-icon {
     height: 22px;
@@ -537,11 +528,6 @@
       padding: 3px;
       border-radius: 5px;
     }
-  
-    .metadata-icon {
-      height: 18px;
-      width: 18px;
-    }
 
     .profile-icon {
       height: 26px;
@@ -557,5 +543,5 @@
 .structural-indicators .card-icon,
 .structural-indicators .card-icon.main,
 .structural-indicators svg {
-  color: var(--text-main);
+  color: var(--text-muted);
 }
