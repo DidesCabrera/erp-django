@@ -237,6 +237,10 @@
   gap: 8px;
 }
 
+.home-section-title.detail-dp{
+  margin-bottom: 8px;
+}
+
 .home-section-title h2 {
   margin: 0;
   font-size: 22px;

@@ -14,6 +14,16 @@
     color: inherit;
 }
 
+@media (max-width: 768px) {
+    #food-form-title,
+    #meal-form-title {
+      display: none;
+    }
+}
+
+
+
+
 .title-section-panels .add-title {
     display: flex;
     align-items: center;
@@ -22,10 +32,22 @@
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
-    padding: 6px 10px;
-    border-radius: 8px;
-    color: var(--text-muted);
-    transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+
+    padding: 5px 12px;
+    border-radius: 10px;
+
+    background: var(--text-main);
+    color: var(--surface-app);
+    border: 1px solid var(--text-main);
+
+    font-weight: 500;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        opacity 0.15s ease,
+        transform 0.12s ease;
 }
 
 .title-section-panels .add-title h4 {
@@ -33,21 +55,26 @@
     display: flex;
     align-items: center;
     color: inherit;
+    font-weight: inherit;
+}
+
+.title-section-panels .add-title svg,
+.title-section-panels .add-title i {
+    color: currentColor;
 }
 
 .title-section-panels .add-title:hover {
-    background-color: var(--interactive-hover);
-    color: var(--text-main);
+    background: var(--text-main);
+    color: var(--surface-app);
+    border-color: var(--text-main);
+    opacity: 0.66;
+}
+
+.title-section-panels .add-title:active {
+    transform: translateY(1px);
 }
 
 .title-section-panels .add-title:focus-visible {
     outline: 2px solid var(--interactive-primary);
     outline-offset: 2px;
-}
-
-@media (max-width: 768px) {
-    #food-form-title,
-    #meal-form-title {
-      display: none;
-    }
 }

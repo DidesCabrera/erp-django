@@ -1,10 +1,9 @@
 hr {
   border: none;
   width: 100%;
-  border-top: 1px solid var(--color-border-1);
-  border-top: 1px solid white;
-  margin-top: 0px;
-  margin-bottom: 20px
+  border-top: 1px solid var(--panel-row-separator);
+  margin-top: 20px;
+  margin-bottom: 24px
 }
 
 ul { padding-left: 20px; }

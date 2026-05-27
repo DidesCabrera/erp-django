@@ -1,7 +1,13 @@
-.dailyplan-detail__children-header,
-.dailyplan-detail__foods-aggregation {
+.dailyplan-detail__children-header {
     padding-left: 0;
     padding-right: 0;
+    margin: 12px 0px 24px 0px;
+}
+
+.dailyplan-detail__foods-aggregation{
+    padding-left: 0;
+    padding-right: 0;
+    margin: 12px 0px 24px 0px;
 }
 
 .dailyplan-detail__children-list {
@@ -16,10 +22,8 @@
         margin-right: -12px;
     }
 
-    .dailyplan-detail__children-header,
-    .dailyplan-detail__foods-aggregation {
-        margin-left: 16px;
-        margin-right: 16px;
+    .dailyplan-detail__children-header {
+        margin: 12px 12px 24px 12px;
     }
 
     .dailyplan-detail__child-card {
@@ -102,11 +106,13 @@
     .dailyplan-detail__meal-step-marker {
       min-height: 36px;
       padding-right: 6px;
+      padding-left: 4px;
     }
   
     .dailyplan-detail__meal-step-number {
       width: 36px;
       height: 36px;
       font-size: 18px;
+      margin-left: 4px;
     }
   }
