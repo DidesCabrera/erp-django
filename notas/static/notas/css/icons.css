@@ -190,18 +190,30 @@
     padding: 4px;
     border-radius: 6px;
   }
-  
-  .home-section-header-icon.food {
+
+  .picker-result-title__icon {
+    color: #ffffff;
+    height: 20px;
+    width: 20px;
+    flex-shrink: 0;
+    padding: 4px;
+    border-radius: 5px;
+  }
+
+  .home-section-header-icon.food,
+  .picker-result-title__icon.food {
     background-color: var(--color-food);
     color: #ffffff;
   }
   
-  .home-section-header-icon.meal {
+  .home-section-header-icon.meal,
+  .picker-result-title__icon.meal {
     background-color: var(--color-meal);
     color: #ffffff;
   }
   
-  .home-section-header-icon.dailyplan {
+  .home-section-header-icon.dailyplan,
+  .picker-result-title__icon.dailyplan {
     background-color: var(--color-dailyplan);
     color: #ffffff;
   }

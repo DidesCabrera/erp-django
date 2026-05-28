@@ -1,0 +1,2 @@
+Me gustaría que cada item estuviera separado visualmente por una linea (de color var(--panel-row-separator))
+El icono .picker-result-title__icon por algun motivo no se ve blaco, solo el fondo toma el color correspondiente

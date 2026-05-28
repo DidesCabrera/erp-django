@@ -145,14 +145,15 @@ def get_dailyplan_detail_page_data(
         browse_meals = _ensure_cached_state(list(browse_meals_qs))
         existing_meals = _ensure_cached_state(list(existing_meals_qs))
 
-        meal_picker_data = build_meal_picker_data_payload(
-            browse_meals_qs=browse_meals,
-            existing_meals_qs=existing_meals,
-        )
-
         dailyplan_kpis = build_nutrition_kpis_from_dailyplan(
             dailyplan,
             user,
+        )
+
+        meal_picker_data = build_meal_picker_data_payload(
+            browse_meals_qs=browse_meals,
+            existing_meals_qs=existing_meals,
+            current_weight=dailyplan_kpis.get("weight"),
         )
 
         meal_picker_context = build_meal_picker_context_payload(

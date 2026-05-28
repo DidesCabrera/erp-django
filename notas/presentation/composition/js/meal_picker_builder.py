@@ -42,32 +42,31 @@ def build_meal_picker_context_payload(
     )
 
 
-def build_meal_picker_meals_payload(meals_qs):
+def _compute_meal_ppk(meal, current_weight):
+    if not current_weight:
+        return None
+
+    protein = meal.protein_cached
+
+    if protein is None:
+        protein = meal.protein
+
+    if not protein:
+        return None
+
+    return protein / current_weight
+
+
+def build_meal_picker_meals_payload(meals_qs, *, current_weight=None):
     return MealPickerMealsPayload(
         meals=[
-            {
-                "id": m.id,
-                "name": m.name,
-
-                "total_kcal": m.total_kcal_cached,
-                "protein": m.protein_cached,
-                "carbs": m.carbs_cached,
-                "fat": m.fat_cached,
-
-                "alloc": {
-                    "protein": m.alloc_protein_cached,
-                    "carbs": m.alloc_carbs_cached,
-                    "fat": m.alloc_fat_cached,
-                },
-
-                "foods": m.foods_aggregation_cached,
-            }
+            serialize_meal(m, current_weight=current_weight)
             for m in meals_qs
         ]
     )
 
 
-def serialize_meal(m):
+def serialize_meal(m, *, current_weight=None):
     return {
         "id": m.id,
         "name": m.name,
@@ -75,6 +74,7 @@ def serialize_meal(m):
         "protein": m.protein_cached,
         "carbs": m.carbs_cached,
         "fat": m.fat_cached,
+        "ppk": _compute_meal_ppk(m, current_weight),
         "alloc": {
             "protein": m.alloc_protein_cached,
             "carbs": m.alloc_carbs_cached,
@@ -84,8 +84,22 @@ def serialize_meal(m):
     }
 
 
-def build_meal_picker_data_payload(*, browse_meals_qs, existing_meals_qs):
+def build_meal_picker_data_payload(
+    *,
+    browse_meals_qs,
+    existing_meals_qs,
+    current_weight=None,
+):
     return {
-        "browse_meals": [serialize_meal(m) for m in browse_meals_qs],
-        "existing_meals": [serialize_meal(m) for m in existing_meals_qs],
+        "browse_meals": [
+            serialize_meal(m, current_weight=current_weight)
+            for m in browse_meals_qs
+        ],
+        "existing_meals": [
+            serialize_meal(m, current_weight=current_weight)
+            for m in existing_meals_qs
+        ],
     }
+
+
+

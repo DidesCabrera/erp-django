@@ -10,7 +10,7 @@
     color: var(--text-main);
     background: transparent;
   
-    border-bottom: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--panel-row-separator);
   
     cursor: pointer;
   
@@ -27,14 +27,14 @@
     position: relative;
   
     display: grid;
-    grid-template-columns: minmax(260px, 1fr) minmax(360px, 520px);
+    grid-template-columns: 320px minmax(360px, 520px);
     grid-template-areas:
       "title kpis"
       "foods kpis";
   
     gap: 8px 14px;
   
-    padding: 12px 14px;
+    padding: 12px 14px 16px 14px;
   
     background: transparent;
   }
@@ -92,22 +92,32 @@
     min-width: 0;
   }
   
+  
   .picker-result-title__icon {
     width: 18px;
     height: 18px;
     flex: 0 0 auto;
   
-    color: var(--text-muted);
+    color: #ffffff;
+    stroke: currentColor;
   }
   
   .picker-result-title__icon.food {
-    color: var(--color-food);
+    color: #ffffff;
   }
   
   .picker-result-title__icon.meal {
-    color: var(--color-meal);
+    color: #ffffff;
   }
   
+  .picker-result-title__icon svg,
+  svg.picker-result-title__icon {
+    color: currentColor;
+    stroke: currentColor;
+  }
+
+
+
   .picker-result-title__name {
     min-width: 0;
   
@@ -193,7 +203,8 @@
   .picker-result-structural__icon {
     width: 14px;
     height: 14px;
-    color: currentColor;
+    color: var(--panel-row-separator);
+    stroke: currentColor;
   }
   
   /* ===============================
@@ -324,7 +335,7 @@
      Foods summary
      =============================== */
   
-  .picker-result-foods {
+    .picker-result-foods {
     grid-area: foods;
   
     color: var(--text-muted);
@@ -332,9 +343,9 @@
     font-size: 12px;
     line-height: 1.35;
   
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
   
   /* ===============================

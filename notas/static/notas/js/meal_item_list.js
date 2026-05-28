@@ -30,6 +30,7 @@ export function renderMealItem(meal) {
         carbs: meal.carbs,
         fat: meal.fat,
         alloc: meal.alloc,
+        ppk: meal.ppk,
       })}
 
       ${renderPickerResultFoods(meal.foods)}

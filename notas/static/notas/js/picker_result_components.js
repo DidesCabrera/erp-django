@@ -124,7 +124,7 @@ export function renderPickerResultKpis({
           </div>
 
           <div class="picker-result-kpi__alloc">
-            ${renderAllocBar({ value: proteinPct, kind: "protein", kind2: "P" })}
+            ${renderAllocBar({ value: proteinPct, kind: "protein" })}
           </div>
         </div>
 
@@ -137,7 +137,7 @@ export function renderPickerResultKpis({
           </div>
 
           <div class="picker-result-kpi__alloc">
-            ${renderAllocBar({ value: carbsPct, kind: "carbs", kind2: "C" })}
+            ${renderAllocBar({ value: carbsPct, kind: "carbs" })}
           </div>
         </div>
 
@@ -150,7 +150,7 @@ export function renderPickerResultKpis({
           </div>
 
           <div class="picker-result-kpi__alloc">
-            ${renderAllocBar({ value: fatPct, kind: "fat", kind2: "F" })}
+            ${renderAllocBar({ value: fatPct, kind: "fat" })}
           </div>
         </div>
 
