@@ -113,15 +113,11 @@ export function renderFoodItem(food) {
 
       ${renderPickerResultTitle({
         name: displayName,
-        subtitle: shouldShowOriginalName(food) ? food.name : "",
         icon: "carrot",
         iconClass: "food",
         badges: buildBadges(food),
+        unitLabel: "100g",
       })}
-
-      <div class="picker-result__unit">
-        100g
-      </div>
 
       ${renderPickerResultKpis({
         kcal,

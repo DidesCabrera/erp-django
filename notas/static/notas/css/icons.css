@@ -203,21 +203,27 @@
   .home-section-header-icon.food,
   .picker-result-title__icon.food {
     background-color: var(--color-food);
-    color: #ffffff;
+    color: #ffffff !important;
   }
   
   .home-section-header-icon.meal,
   .picker-result-title__icon.meal {
     background-color: var(--color-meal);
-    color: #ffffff;
+    color: #ffffff !important;
   }
   
   .home-section-header-icon.dailyplan,
   .picker-result-title__icon.dailyplan {
     background-color: var(--color-dailyplan);
-    color: #ffffff;
+    color: #ffffff !important;
   }
   
+  svg.picker-result-title__icon,
+  .picker-result-title__icon svg {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
   .view-list-icon {
     color: currentColor;
     height: 18px;

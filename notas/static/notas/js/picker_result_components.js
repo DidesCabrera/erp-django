@@ -44,7 +44,11 @@ export function renderPickerResultTitle({
   iconClass = "",
   badges = [],
   structuralIndicators = null,
+  unitLabel = "",
 }) {
+  const shouldRenderStructural =
+    structuralIndicators || unitLabel;
+
   return `
     <div class="picker-result-title">
       <div class="picker-result-title__main">
@@ -67,16 +71,22 @@ export function renderPickerResultTitle({
         ${renderPickerResultBadges(badges)}
       </div>
 
-      ${structuralIndicators ? `
+      ${shouldRenderStructural ? `
         <div class="picker-result-structural">
-          ${Number.isFinite(Number(structuralIndicators.mealsCount)) ? `
+          ${unitLabel ? `
+            <span class="picker-result-structural__item picker-result-structural__item--unit">
+              <span>${escapeHtml(unitLabel)}</span>
+            </span>
+          ` : ""}
+
+          ${structuralIndicators && Number.isFinite(Number(structuralIndicators.mealsCount)) ? `
             <span class="picker-result-structural__item">
               <span>${roundNumber(structuralIndicators.mealsCount)}</span>
               <i data-lucide="utensils" class="picker-result-structural__icon"></i>
             </span>
           ` : ""}
 
-          ${Number.isFinite(Number(structuralIndicators.foodsCount)) ? `
+          ${structuralIndicators && Number.isFinite(Number(structuralIndicators.foodsCount)) ? `
             <span class="picker-result-structural__item">
               <span>${roundNumber(structuralIndicators.foodsCount)}</span>
               <i data-lucide="carrot" class="picker-result-structural__icon"></i>

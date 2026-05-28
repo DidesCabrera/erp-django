@@ -27,14 +27,14 @@
     position: relative;
   
     display: grid;
-    grid-template-columns: 320px minmax(360px, 520px);
+    grid-template-columns: 380px minmax(360px, 520px);
     grid-template-areas:
       "title kpis"
       "foods kpis";
   
     gap: 8px 14px;
   
-    padding: 12px 14px 16px 14px;
+    padding: 14px 20px 14px 20px;
   
     background: transparent;
   }
@@ -42,23 +42,6 @@
   .picker-result--food {
     grid-template-areas:
       "title kpis"
-      "unit kpis";
-  }
-  
-  .picker-result__unit {
-    grid-area: unit;
-  
-    width: fit-content;
-    padding: 2px 8px;
-  
-    border-radius: 999px;
-    background: var(--surface-card-muted);
-    border: 1px solid var(--border-soft);
-  
-    color: var(--text-muted);
-  
-    font-size: 11px;
-    font-weight: 600;
   }
   
   /* ===============================
@@ -67,6 +50,7 @@
   
   .picker-result-title {
     grid-area: title;
+    margin-top: 4px;
   
     display: flex;
     align-items: flex-start;
@@ -91,32 +75,6 @@
   
     min-width: 0;
   }
-  
-  
-  .picker-result-title__icon {
-    width: 18px;
-    height: 18px;
-    flex: 0 0 auto;
-  
-    color: #ffffff;
-    stroke: currentColor;
-  }
-  
-  .picker-result-title__icon.food {
-    color: #ffffff;
-  }
-  
-  .picker-result-title__icon.meal {
-    color: #ffffff;
-  }
-  
-  .picker-result-title__icon svg,
-  svg.picker-result-title__icon {
-    color: currentColor;
-    stroke: currentColor;
-  }
-
-
 
   .picker-result-title__name {
     min-width: 0;
@@ -190,7 +148,7 @@
     min-height: 22px;
     padding: 2px 7px;
   
-    border-radius: 999px;
+    border-radius: 6px;
     border: 1px solid var(--border-soft);
   
     background: var(--surface-card-muted);
@@ -201,9 +159,9 @@
   }
   
   .picker-result-structural__icon {
-    width: 14px;
-    height: 14px;
-    color: var(--panel-row-separator);
+    width: 12px;
+    height: 12px;
+    color: var(--text-muted);
     stroke: currentColor;
   }
   
@@ -216,7 +174,7 @@
   
     display: flex;
     align-items: stretch;
-    gap: 8px;
+    gap: 12px;
   
     width: 100%;
     min-width: 0;
@@ -231,7 +189,8 @@
     align-items: center;
   
     min-height: 72px;
-    padding: 8px 8px;
+    max-width: 74px;
+    padding: 4px;
   
     border-radius: 20px;
   
@@ -268,14 +227,19 @@
   
   .picker-result-kpi__row {
     display: grid;
-    grid-template-columns: 58px 54px 48px minmax(90px, 1fr);
+    grid-template-columns: 58px 54px 40px minmax(100px, 1fr);
     align-items: center;
-    gap: 5px;
+    gap: 14px;
   
     min-height: 23px;
   
     border-bottom: 1px solid var(--kpi-row-separator);
   }
+
+  .picker-result--food .picker-result-kpi__row {
+    grid-template-columns: 58px 0 48px minmax(90px, 1fr);
+  }
+
   
   .picker-result-kpi__row:last-child {
     border-bottom: none;
@@ -309,8 +273,8 @@
     background: var(--nutrition-ppk);
     color: #111111;
   
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
     line-height: 1;
   }
   
@@ -392,15 +356,20 @@
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas:
         "title"
-        "unit"
         "foods"
         "kpis";
-  
+    
       gap: 8px;
-  
-      padding: 12px;
+    
+      padding: 14px 14px 18px 14px;
     }
-  
+    
+    .picker-result--food {
+      grid-template-areas:
+        "title"
+        "kpis";
+    }
+    
     .picker-result--meal {
       grid-template-areas:
         "title"
@@ -409,7 +378,7 @@
     }
   
     .picker-result-title__name {
-      font-size: 15px;
+      font-size: 16px;
       white-space: normal;
     }
   
@@ -419,18 +388,23 @@
     }
   
     .picker-result-kpi {
-      gap: 6px;
+      gap: 12px;
     }
   
     .picker-result-kpi__total {
-      flex-basis: 82px;
-      min-height: 76px;
+      flex-basis: 76px;
     }
   
     .picker-result-kpi__row {
-      grid-template-columns: 56px 44px 46px minmax(70px, 1fr);
-      gap: 4px;
+      grid-template-columns: 48px 46px 34px minmax(64px, 1fr);
+      gap: 10px;
     }
+
+    .picker-result--food .picker-result-kpi__row {
+      grid-template-columns: 48px 0 42px minmax(64px, 1fr);
+      gap: 14px;
+    }
+
   }
   
   @media (max-width: 520px) {
@@ -447,12 +421,15 @@
       font-size: 10px;
     }
   
-    .picker-result-kpi__row {
-      grid-template-columns: 48px 0 42px minmax(64px, 1fr);
+    .picker-result-kpi__label,
+    .picker-result-kpi__grams {
+      font-size: 11px;
     }
   
     .picker-result-kpi__ppk {
-      display: none;
+      display: flex;
+      font-size: 10px;
+      padding: 0 3px;
     }
   
     .picker-result-kpi__label,

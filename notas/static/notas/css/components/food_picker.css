@@ -56,14 +56,14 @@
 .selector-list {
   display: none;
   position: absolute;
-  top: 60px;
+  top: 38px;
   left: -16px;
   right: -16px;
   background: var(--surface-elevated);
   color: var(--text-main);
   border: 2px solid var(--panel-row-separator);
   border-radius: 18px;
-  height: 500px;
+  height: 592px;
   overflow-y: auto;
   padding: 0;
   margin: 4px 0 0;
@@ -466,7 +466,7 @@ p.h3-table2 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
+    gap: 10px;
   }
 
   .add-row--meal-picker #meal-picker.selector {
@@ -1136,3 +1136,15 @@ p.h3-table2 {
   }
 
 
+
+
+  /* =========================================================
+   Mobile picker scroll breathing room
+   ========================================================= */
+
+  @media (max-width: 768px) {
+    #meal-picker-section:focus-within,
+    #dpm-picker-section:focus-within {
+      margin-bottom: calc(42vh + env(safe-area-inset-bottom, 0px));
+    }
+  }

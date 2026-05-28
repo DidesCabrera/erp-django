@@ -85,6 +85,52 @@ document.addEventListener("DOMContentLoaded", () => {
     list.style.display = "none";
   }
 
+  function isMobileViewport() {
+    return window.innerWidth <= 768;
+  }
+
+  function getPickerSection() {
+    return (
+      picker.closest(".section-picker") ||
+      picker.closest("[id$='picker-section']") ||
+      picker.closest(".add-row") ||
+      picker
+    );
+  }
+
+  function getPickerScrollTarget() {
+    const pickerSection = getPickerSection();
+
+    return (
+      pickerSection.querySelector(".title-section-panels") ||
+      title?.closest(".title-section-panels") ||
+      pickerSection
+    );
+  }
+
+  function scrollPickerIntoMobileView() {
+    if (!isMobileViewport()) return;
+
+    const targetElement = getPickerScrollTarget();
+    if (!targetElement) return;
+
+    const headerOffset = 66;
+    const rect = targetElement.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top - headerOffset;
+
+    window.scrollTo({
+      top: Math.max(targetY, 0),
+      behavior: "smooth",
+    });
+  }
+
+  function schedulePickerScrollIntoMobileView() {
+    if (!isMobileViewport()) return;
+
+    window.setTimeout(scrollPickerIntoMobileView, 80);
+    window.setTimeout(scrollPickerIntoMobileView, 260);
+  }
+
   function clearSelection() {
     selectedMeal = null;
     hidden.value = "";
@@ -158,35 +204,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderMealList(items) {
     list.innerHTML = "";
-
+  
     if (!Array.isArray(items) || !items.length) {
       list.innerHTML = `<li class="empty">No meals found</li>`;
       return;
     }
-
+  
     items.forEach(meal => {
       if (!meal || !meal.name) return;
-
+  
       try {
         const li = document.createElement("li");
         li.className = "picker-list-item meal-item";
         li.innerHTML = renderMealItem(meal);
-
+  
         li.addEventListener("click", () => {
           applySelectedMeal(meal);
-
+  
           if (btnCancelInline) {
             btnCancelInline.style.display = "none";
           }
-
+  
           closeList();
         });
-
+  
         list.appendChild(li);
       } catch (error) {
-        console.error("Error renderizando meal del selector:", meal, error);
+        console.error("Error rendering meal item", error, meal);
       }
     });
+  
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
   }
 
   // ---------------------------
@@ -248,6 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
   input.addEventListener("focus", () => {
     openList();
     renderMealList(browseMeals);
+    schedulePickerScrollIntoMobileView();
   });
 
   input.addEventListener("input", () => {
@@ -314,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       enterEditMode();
       applySelectedMeal(meal);
+      schedulePickerScrollIntoMobileView();
 
       if (btnCancelInline) {
         btnCancelInline.style.display = "none";

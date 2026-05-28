@@ -90,6 +90,52 @@ document.addEventListener("DOMContentLoaded", () => {
     return food?.display_name || food?.name || "";
   }
 
+  function isMobileViewport() {
+    return window.innerWidth <= 768;
+  }
+
+  function getPickerSection() {
+    return (
+      picker.closest(".section-picker") ||
+      picker.closest("[id$='picker-section']") ||
+      picker.closest(".add-row") ||
+      picker
+    );
+  }
+
+  function getPickerScrollTarget() {
+    const pickerSection = getPickerSection();
+
+    return (
+      pickerSection.querySelector(".title-section-panels") ||
+      title?.closest(".title-section-panels") ||
+      pickerSection
+    );
+  }
+
+  function scrollPickerIntoMobileView() {
+    if (!isMobileViewport()) return;
+
+    const targetElement = getPickerScrollTarget();
+    if (!targetElement) return;
+
+    const headerOffset = 66;
+    const rect = targetElement.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top - headerOffset;
+
+    window.scrollTo({
+      top: Math.max(targetY, 0),
+      behavior: "smooth",
+    });
+  }
+
+  function schedulePickerScrollIntoMobileView() {
+    if (!isMobileViewport()) return;
+
+    window.setTimeout(scrollPickerIntoMobileView, 80);
+    window.setTimeout(scrollPickerIntoMobileView, 260);
+  }
+
   function normalizeSearchValue(value) {
     return String(value ?? "")
       .toLowerCase()
@@ -115,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return getFoodSearchText(food).includes(normalizedValue);
     });
   }
-
 
   function getInitialFoodResults() {
     return foods;
@@ -186,9 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }, 180);
   }
-
-
-
 
   function syncHiddenState() {
     if (hiddenPickerMode) {
@@ -267,28 +309,32 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------------------
   function renderFoodList(items) {
     list.innerHTML = "";
-
+  
     items.forEach(food => {
       if (!food || !food.name) return;
-
+  
       const li = document.createElement("li");
       li.className = "picker-list-item food-item";
       li.innerHTML = renderFoodItem(food);
-
+  
       li.addEventListener("click", () => {
         selectedFood = food;
         input.value = getFoodDisplayName(food);
-
+  
         if (btnCancelInline) {
           btnCancelInline.style.display = "none";
         }
-
+  
         closeList();
         showPreview();
       });
-
+  
       list.appendChild(li);
     });
+  
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
   }
 
   // ---------------------------
@@ -374,6 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
   input.addEventListener("focus", () => {
     renderFoodList(foods);
     openList();
+    schedulePickerScrollIntoMobileView();
   });
 
   input.addEventListener("input", () => {
@@ -420,6 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       input.value = getFoodDisplayName(selectedFood);
       showPreview();
+      schedulePickerScrollIntoMobileView();
     });
   });
 
