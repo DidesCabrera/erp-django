@@ -203,6 +203,7 @@
   
   .picker-result-kpi__total p {
     margin: 0;
+    margin-bottom: 2px;
     font-size: 11px;
     font-weight: 600;
     color: inherit;
@@ -211,6 +212,7 @@
   .picker-result-kpi__total strong {
     margin: 0;
     color: inherit;
+    padding-bottom: 6px;
   
     font-size: 24px;
     font-weight: 650;
@@ -274,7 +276,7 @@
     color: #111111;
   
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1;
   }
   
@@ -336,15 +338,8 @@
   }
   
   .alloc-pct.micro {
-    font-size: 10.5px;
+    font-size: 11px;
     height: 18px;
-  }
-  
-  .kind2 {
-    font-size: 10.5px;
-    font-weight: 600;
-    padding-right: 2px;
-    color: var(--text-muted);
   }
   
   /* ===============================
@@ -378,7 +373,7 @@
     }
   
     .picker-result-title__name {
-      font-size: 16px;
+      font-size: 18px;
       white-space: normal;
     }
   
@@ -414,26 +409,22 @@
     }
   
     .picker-result-kpi__total strong {
-      font-size: 22px;
+      font-size: 24px;
     }
   
     .picker-result-kpi__total p {
-      font-size: 10px;
+      font-size: 11px;
     }
   
     .picker-result-kpi__label,
     .picker-result-kpi__grams {
-      font-size: 11px;
+      font-size: 13px;
     }
   
     .picker-result-kpi__ppk {
       display: flex;
-      font-size: 10px;
+      font-size: 12px;
       padding: 0 3px;
     }
-  
-    .picker-result-kpi__label,
-    .picker-result-kpi__grams {
-      font-size: 11px;
-    }
+
   }
