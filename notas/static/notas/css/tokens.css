@@ -186,7 +186,7 @@ html[data-theme="dark"] {
    --border-inverted: rgba(0, 0, 0, 0.18);
 
    /* Internal separators */
-   --panel-row-separator: #34343485;
+   --panel-row-separator: #35353585;
    --kpi-row-separator: #2f2f2f85;
 
    /* Panel tabs */

@@ -43,6 +43,8 @@
     grid-template-areas:
       "title kpis"
   }
+
+
   
   /* ===============================
      Title area
@@ -103,6 +105,8 @@
      =============================== */
   
   .picker-result-badges {
+    margin-top: 4px;
+    margin-left: -4px;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
@@ -114,16 +118,16 @@
   
     width: fit-content;
     min-height: 18px;
-    padding: 2px 7px;
+    padding: 5px 10px;
   
     border-radius: 999px;
-    border: 1px solid var(--border-soft);
+    border: 1px solid var(--panel-row-separator);
   
-    background: var(--surface-card-muted);
+    background: var(--alloc-bar-bg);
     color: var(--text-muted);
   
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1;
   }
   
@@ -149,9 +153,9 @@
     padding: 2px 7px;
   
     border-radius: 6px;
-    border: 1px solid var(--border-soft);
+    border: 1px solid var(--panel-row-separator);
   
-    background: var(--surface-card-muted);
+    background: var(--alloc-bar-bg);
     color: var(--text-muted);
   
     font-size: 12px;
@@ -181,15 +185,15 @@
   }
   
   .picker-result-kpi__total {
-    flex: 0 0 78px;
+    flex: 0 0 80px;
   
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   
-    min-height: 72px;
-    max-width: 74px;
+    min-height: 74px;
+    max-width: 76px;
     padding: 4px;
   
     border-radius: 20px;
@@ -340,6 +344,7 @@
   .alloc-pct.micro {
     font-size: 11px;
     height: 18px;
+    font-weight: 700;
   }
   
   /* ===============================
@@ -356,7 +361,7 @@
     
       gap: 8px;
     
-      padding: 14px 14px 18px 14px;
+      padding: 14px 14px 24px 14px;
     }
     
     .picker-result--food {
@@ -391,8 +396,9 @@
     }
   
     .picker-result-kpi__row {
-      grid-template-columns: 48px 46px 34px minmax(64px, 1fr);
+      grid-template-columns: 48px 54px 34px minmax(64px, 1fr);
       gap: 10px;
+      min-height: 25px;;
     }
 
     .picker-result--food .picker-result-kpi__row {
@@ -404,7 +410,7 @@
   
   @media (max-width: 520px) {
     .picker-result-kpi__total {
-      flex-basis: 72px;
+      flex-basis: 76px;
       padding: 7px 6px;
     }
   
@@ -425,6 +431,22 @@
       display: flex;
       font-size: 12px;
       padding: 0 3px;
+    }
+
+    .alloc-pct.micro {
+      font-size: 12px;
+      height: 18px;
+    }
+
+    .alloc-pct.micro p{
+      font-size: 12px;
+      height: 18px;
+    }
+
+
+    .picker-result-title,
+    .picker-result-foods {
+      padding: 0 0 0 4px;
     }
 
   }
