@@ -2,9 +2,7 @@
 
 .page-header {
   position: fixed;
-  top: 0;
-  left: var(--sidebar-width);
-  right: 0;
+  inset: 0 0 auto var(--sidebar-width);
 
   height: var(--header-height);
 
@@ -19,7 +17,7 @@
 
   z-index: var(--z-header);
 
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -246,14 +244,17 @@
 
   .page-header {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    inset: 0 0 auto 0;
 
     height: 54px;
     padding: 0 10px;
 
     z-index: var(--z-header);
+
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   .mobile-menu-btn {
