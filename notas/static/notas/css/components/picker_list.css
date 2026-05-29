@@ -27,7 +27,7 @@
     position: relative;
   
     display: grid;
-    grid-template-columns: 380px minmax(360px, 520px);
+    grid-template-columns: 364px minmax(360px, 520px);
     grid-template-areas:
       "title kpis"
       "foods kpis";
@@ -118,7 +118,7 @@
   
     width: fit-content;
     min-height: 18px;
-    padding: 5px 10px;
+    padding: 4px 10px;
   
     border-radius: 999px;
     border: 1px solid var(--panel-row-separator);
