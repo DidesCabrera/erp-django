@@ -127,16 +127,13 @@
             <!--    SIDEBAR    -->
             <!--===============-->
             {% include "components/sidebar.html" with vm=vm %}
-
-            <!--===============-->
-            <!--    HEADER     -->
-            <!--===============-->
-            {% include "components/header.html" with header=vm.content.header ui=vm.ui %}
+            
             
             <!--===================-->
             <!--    APP CONTENT    -->
             <!--===================-->
             <main class="app-content">
+                {% include "components/header.html" with header=vm.content.header ui=vm.ui %}
                 {% block content %}{% endblock %}
             </main>
 
